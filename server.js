@@ -19,6 +19,9 @@ app.get('/api/movies', (req, res) => {
       
   let e = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
   files = fs.readdirSync(e.path);
+  files.forEach(function (file, i) {
+    files[i] = tnp(file).title
+	});
   res.json({ files: files });
 });
 
