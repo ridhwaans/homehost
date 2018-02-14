@@ -5,7 +5,7 @@
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 
-> Flatten nested arrays.
+> Flatten an array of nested arrays into a single flat array. Accepts an optional depth.
 
 ## Installation
 
@@ -21,20 +21,13 @@ var flatten = require('array-flatten')
 flatten([1, [2, [3, [4, [5], 6], 7], 8], 9])
 //=> [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-flatten.depth([1, [2, [3, [4, [5], 6], 7], 8], 9], 2)
+flatten([1, [2, [3, [4, [5], 6], 7], 8], 9], 2)
 //=> [1, 2, 3, [4, [5], 6], 7, 8, 9]
 
 (function () {
-  flatten.from(arguments) //=> [1, 2, 3]
+  flatten(arguments) //=> [1, 2, 3]
 })(1, [2, 3])
 ```
-
-### Methods
-
-* **flatten(array)** Flatten a nested array structure
-* **flatten.from(arrayish)** Flatten an array-like structure (E.g. arguments)
-* **flatten.depth(array, depth)** Flatten a nested array structure with a specific depth
-* **flatten.fromDepth(arrayish, depth)** Flatten an array-like structure with a specific depth
 
 ## License
 

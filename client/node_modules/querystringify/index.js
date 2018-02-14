@@ -3,6 +3,17 @@
 var has = Object.prototype.hasOwnProperty;
 
 /**
+ * Decode a URI encoded string.
+ *
+ * @param {String} input The URI encoded string.
+ * @returns {String} The decoded string.
+ * @api private
+ */
+function decode(input) {
+  return decodeURIComponent(input.replace(/\+/g, ' '));
+}
+
+/**
  * Simple query string parser.
  *
  * @param {String} query The query string that needs to be parsed.
@@ -21,7 +32,7 @@ function querystring(query) {
   //
   for (;
     part = parser.exec(query);
-    result[decodeURIComponent(part[1])] = decodeURIComponent(part[2])
+    result[decode(part[1])] = decode(part[2])
   );
 
   return result;

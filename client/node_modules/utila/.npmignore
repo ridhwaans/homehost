@@ -1,10 +1,10 @@
 *.bat
 .htaccess
 
-src
+xeno/**
+node_modules
+
+-p
 
 npm-debug.log
 !*.gitkeep
-
-node_modules
-xeno

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './stylesheet.css';
 import * as utils from './utils.js'
 
 class Grid extends Component {
@@ -17,8 +18,8 @@ class Grid extends Component {
 
 	return ( //{this.state.response}
 		<div>
-		<ul>{items.map(item => 
-			<li key={item}>{item}</li>
+		<ul class="grid">{items.map(item => 
+			<li class="grid-item grid-item--light" key={item}>{item}</li>
 			)}
 		</ul>
 		</div>
