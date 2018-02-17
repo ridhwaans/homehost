@@ -46,10 +46,10 @@ class Grid extends Component {
 		for (var i = 0; i < items.length; i++) {
 			//listitems.push(<li onClick={this.handleClick.bind(this)} className={this.state.liClass} id={i}>{i} {items[i]}</li>);
 			listitems.push(<MovieItem MovieItemData={{ id: i, filename: items[i] }}/>)
-			if ((i+1) % 4 === 0) {
+			let id = Math.floor(parseInt(i/12));
+			if ((i+1) % 12 === 0) {
 			    //listitems.push(<div id={'row' + ((i+1)/4 - 1)} className={this.state.rowClass}></div>); //key={'row' + ((i+1)/4 - 1)}
-			    console.log('row' + ((i+1)/4 - 1));
-			    listitems.push(<MovieDetails MovieDetailsData={{ id: 'row' + ((i+1)/4 - 1), classname: this.state.rowClass }}/>)
+			    listitems.push(<MovieDetails MovieDetailsData={{ id: id, classname: this.state.rowClass }}/>)
 			}
 		    // note: we add a key prop here to allow react to uniquely identify each
 		    // element in this array. see: https://reactjs.org/docs/lists-and-keys.html

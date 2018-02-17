@@ -14,9 +14,10 @@ class MovieItem extends Component {
 
 	handleClick(e){
 	    	console.log(e.target.id);
-	    	let id = Math.floor(parseInt(e.target.id)/4);
+	    	let id = Math.floor(parseInt(e.target.id)/12); //4
 	    	console.log(id);
 	    	var movieDetails = document.getElementById('row' + id);
+	    	console.log(movieDetails);
 	    movieDetails.classList.contains('active') ? movieDetails.className='row' : movieDetails.className='row active' ;
 	  }
 
