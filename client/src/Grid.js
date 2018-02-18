@@ -33,11 +33,11 @@ class Grid extends Component {
 	    // }
   	}
 
-	componentWillMount() {
-		utils.callApi('/api/movies')
-		.then(res => this.setState({ files: res.files })) //this.setState({ files: res.files })
-		.catch(err => console.log(err));
-	}
+	// componentWillMount() {
+	// 	utils.callApi('/api/movies')
+	// 	.then(res => this.setState({ files: res.files })) //this.setState({ files: res.files })
+	// 	.catch(err => console.log(err));
+	// }
 
 	render() {
 		let items = this.state.files
