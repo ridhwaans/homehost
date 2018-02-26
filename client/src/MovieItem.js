@@ -8,25 +8,28 @@ class MovieItem extends Component {
     super(props)
 
     this.state = {
-      liClass: "grid-item grid-item--light"	
+      liClass: "grid-item grid-item--light",
+      imgClass: "grid-item__link hoverZoomLink",
+      h2Class: "grid-item__title"
     }
   }
 
 	handleClick(e){
-	    	console.log(e.target.id);
-	    	let id = Math.floor(parseInt(e.target.id)/12); //4
-	    	console.log(id);
-	    	var movieDetails = document.getElementById('row' + id);
-	    	console.log(movieDetails);
+    	console.log(e.target.id);
+    	let row_i = Math.floor(parseInt(e.target.id)/12); //4
+    	console.log(row_i);
+    	var movieDetails = document.getElementById('row' + row_i);
+    	console.log(movieDetails);
 	    movieDetails.classList.contains('active') ? movieDetails.className='row' : movieDetails.className='row active' ;
 	  }
 
+	//width="72" height="110"
 	render() {
 		let data = this.props.MovieItemProps
 		return (
 			<div id={data.id} className={this.state.liClass} onClick={this.handleClick.bind(this)}>
-				<img src={data.fileposter} class="grid-item__link hoverZoomLink" alt="tester" width="72" height="110"/>
-				<h2 class="grid-item__title">{data.filename}</h2>
+				<img src={data.poster_path} class={this.state.imgClass} /> 
+				<h2 class={this.state.h2Class}>{data.title}</h2>
 			</div>
 		);
 	}

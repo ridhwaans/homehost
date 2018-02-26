@@ -220,17 +220,19 @@ a.share-button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1rem;
+  padding: 0; /*1rem*/
   text-align: center;
 }
 .grid-item--light {
   color: #FFF;
+  width: 100%;
 }
 .grid-item--dark {
   color: #222;
 }
 .grid-item__link {
   color: inherit;
+  width: 100%;
 }
 @supports not (display: grid) {
   .grid-item {

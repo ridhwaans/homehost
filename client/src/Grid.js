@@ -42,20 +42,30 @@ class Grid extends Component {
 	}
 
 	render() {
-		let items = this.state.files
+		let items = this.state.files,
+		    listitems = [];
 
-		var listitems = [];
 		for (var i = 0; i < items.length; i++) {
-			//listitems.push(<li onClick={this.handleClick.bind(this)} className={this.state.liClass} id={i}>{i} {items[i]}</li>);
-			listitems.push(<MovieItem MovieItemProps={{ id: i, filename: items[i]["original_title"], fileposter: "https://image.tmdb.org/t/p/w500" + items[i]["poster_path"] }}/>)
-			let id = Math.floor(parseInt(i/12));
+			let itemProps = {
+				tmdb_id: items[i]["id"],
+				imdb_id: items[i]["imdb_id"], 
+				title: items[i]["title"],
+				poster_path: "https://image.tmdb.org/t/p/w500" + items[i]["poster_path"],
+				backdrop_path: "https://image.tmdb.org/t/p/original" + items[i]["backdrop_path"],
+				file_path: items[i]["file_path"],
+				release_date: items[i]["release_date"],
+				runtime: items[i]["runtime"],
+				revenue: items[i]["revenue"],
+				file_path: items[i]["file_path"],
+				overview: items[i]["overview"],
+				tagline: items[i]["tagline"]
+			};
+			itemProps.id = i;
+			listitems.push(<MovieItem MovieItemProps={itemProps}/>)
+			let row_i = Math.floor(parseInt(i/12));
 			if ((i+1) % 12 === 0) {
-			    //listitems.push(<div id={'row' + ((i+1)/4 - 1)} className={this.state.rowClass}></div>); //key={'row' + ((i+1)/4 - 1)}
-			    listitems.push(<MovieDetails MovieDetailsProps={{ id: id, classname: this.state.rowClass }}/>)
+			    listitems.push(<MovieDetails MovieDetailsProps={{id: row_i}}/>)
 			}
-		    // note: we add a key prop here to allow react to uniquely identify each
-		    // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
-		    //rows.push(<li datalink={i} onClick={this.onItemClickHandler} className={this.state.textClass} key={items[i]}>{i} {items[i]}</li>);
 		}
 
 	return ( //{this.state.response}
