@@ -21,35 +21,37 @@ class Grid extends Component {
 
 	onItemClickHandler(event){
 	    console.log("test");
-	    // this.setState({
-	    //   condition: !this.state.condition
-	    // });
-	    // if (event.target.classList.contains('active')){ //this.myClass
-	    // 	event.target.removeClass('active');
-	    // }
-	    // else {
-	    // 	event.target.removeClass('active');
-	    // 	event.target.getAttribute('data-link').addClass('active');
-	    // }
+	    this.setState({
+	      condition: !this.state.condition
+	    });
+	    if (event.target.classList.contains('active')){ //this.myClass
+	    	event.target.removeClass('active');
+	    }
+	    else {
+	    	event.target.removeClass('active');
+	    	event.target.getAttribute('data-link').addClass('active');
+	    }
   	}
 
-	// componentWillMount() {
-	// 	utils.callApi('/api/movies')
-	// 	.then(res => this.setState({ files: res.files })) //this.setState({ files: res.files })
-	// 	.catch(err => console.log(err));
-	// }
+	componentWillMount() {
+		utils.callApi('/api/movies')
+		.then(response => {
+		this.setState({ files: response });
+		})
+		.catch(err => console.log(err));
+	}
 
 	render() {
 		let items = this.state.files
-		
+
 		var listitems = [];
 		for (var i = 0; i < items.length; i++) {
 			//listitems.push(<li onClick={this.handleClick.bind(this)} className={this.state.liClass} id={i}>{i} {items[i]}</li>);
-			listitems.push(<MovieItem MovieItemData={{ id: i, filename: items[i] }}/>)
+			listitems.push(<MovieItem MovieItemProps={{ id: i, filename: items[i]["original_title"], fileposter: "https://image.tmdb.org/t/p/w500" + items[i]["poster_path"] }}/>)
 			let id = Math.floor(parseInt(i/12));
 			if ((i+1) % 12 === 0) {
 			    //listitems.push(<div id={'row' + ((i+1)/4 - 1)} className={this.state.rowClass}></div>); //key={'row' + ((i+1)/4 - 1)}
-			    listitems.push(<MovieDetails MovieDetailsData={{ id: id, classname: this.state.rowClass }}/>)
+			    listitems.push(<MovieDetails MovieDetailsProps={{ id: id, classname: this.state.rowClass }}/>)
 			}
 		    // note: we add a key prop here to allow react to uniquely identify each
 		    // element in this array. see: https://reactjs.org/docs/lists-and-keys.html

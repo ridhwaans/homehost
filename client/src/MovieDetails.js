@@ -12,10 +12,10 @@ class MovieDetails extends Component {
   }
 
   render() {
-		let data = this.props.MovieDetailsData
+		let data = this.props.MovieDetailsProps
 
 		let posterIMG = 'https://image.tmdb.org/t/p/w500/y5vVYKrcXtlrBEPMasHvxsIVoSI.jpg', //'https://image.tmdb.org/t/p/w500' + data.poster,
-			backdropIMG = 'https://image.tmdb.org/t/p/original' + data.backdrop,
+			backdropIMG = 'https://image.tmdb.org/t/p/original/76ZUJdlSUISSapiKXK3uG3Y8cuO.jpg', //'https://image.tmdb.org/t/p/original/' + data.backdrop,
 			overview = 'overview of the movie', //data.overview
 			title = 'movie title'; //data.title
 

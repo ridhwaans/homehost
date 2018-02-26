@@ -1,5 +1,6 @@
 var yaml = require('js-yaml');
 const express = require('express');
+var movies = require('./movies.json');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -16,11 +17,12 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/api/movies', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+  //generateMovieMetaData();
+  res.json(movies.movies);
 });
 
 var generateMovieMetaData = function(){
-  var fs = require('fs'),
+  var fs = require('fs');
       path = require('path');
       bluebird = require('bluebird');
       re = new RegExp(/(\d+)(.mp4|.mkv)$/);
@@ -38,7 +40,7 @@ var generateMovieMetaData = function(){
            });
   })
   .then(function(movies){
-    fs.writeFile('movies.json', JSON.stringify(json), 'utf8', null);
+    fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', null);
     return json;
   })
   .catch(function(err){

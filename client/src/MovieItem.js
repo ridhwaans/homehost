@@ -22,10 +22,10 @@ class MovieItem extends Component {
 	  }
 
 	render() {
-		let data = this.props.MovieItemData
+		let data = this.props.MovieItemProps
 		return (
 			<div id={data.id} className={this.state.liClass} onClick={this.handleClick.bind(this)}>
-				<img src="https://i.stack.imgur.com/3UsOq.png?s=48&amp;g=1" class="grid-item__link hoverZoomLink" alt="tester" width="24" height="24"/>
+				<img src={data.fileposter} class="grid-item__link hoverZoomLink" alt="tester" width="72" height="110"/>
 				<h2 class="grid-item__title">{data.filename}</h2>
 			</div>
 		);
