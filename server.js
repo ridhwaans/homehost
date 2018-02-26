@@ -16,31 +16,33 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/api/movies', (req, res) => {
-  generateMovieMetaData();
-
-  res.json({ files: [] });
+  res.send({ express: 'Hello From Express' });
 });
 
 var generateMovieMetaData = function(){
   var fs = require('fs'),
       path = require('path');
+      bluebird = require('bluebird');
       re = new RegExp(/(\d+)(.mp4|.mkv)$/);
       json = { movies: [] };
 
   let e = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
   files = walkSync(e.path, files)
-  console.log('bump');
-  files.forEach(function (file, i) {
-    console.log(file + " " + file.match(re)[1]);
-    // client.send(new tmdb.requests.Movie(file.match(re)[1]))
-    // .then((movie) => {
-    //   movie.file_path = e.path + '/' + file
-    //   json.movies.push(movie);
-    // })
-    // .catch((error) => {
-    //   console.error(error);
-    //   // Use fallback
-    // });
+
+  bluebird.mapSeries(files, function(file){
+    return client.send(new tmdb.requests.Movie(file.match(re)[1]), 250, null)
+           .then((movie) => {
+           console.log(e.path + '/' + file);
+           movie.file_path = e.path + '/' + file
+           json.movies.push(movie);
+           });
+  })
+  .then(function(movies){
+    fs.writeFile('movies.json', JSON.stringify(json), 'utf8', null);
+    return json;
+  })
+  .catch(function(err){
+    console.log("Movie metadata could not be generated due to some error", err);
   });
 };
 
