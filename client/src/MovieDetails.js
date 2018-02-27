@@ -9,18 +9,16 @@ class MovieDetails extends Component {
     super(props)
 
     this.state = {
-      classname: "row"
+      rowClass: "row",
+      imgClass: "row"
     }
   }
 
   render() {
 		let data = this.props.MovieDetailsProps
 
-				// <div class={data.classname + ' poster-container'}>
-				// 	<img id={'poster' + data.id} class={data.classname + ' poster'} src={posterIMG}></img>
-				// </div>
 		return (
-			<div id={'row' + data.id} ref={'row' + data.id} className={this.state.classname}>
+			<div id={'row' + data.id} ref={'row' + data.id} class={this.state.rowClass}>
 			</div>
 		);
 	}
