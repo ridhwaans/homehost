@@ -31,8 +31,6 @@ class App extends Component {
 
   render() {
     var items = this.state.files;
-
-    //document.getElementById("root").innerHTML += JSON.stringify(items);
     var data = [];
     for (var i = 0; i < items.length; i++) {
       data.push({
@@ -52,15 +50,12 @@ class App extends Component {
     }
 
     var data_string = JSON.stringify(data);
-    //document.getElementById("root").innerHTML += data_string;
-    console.log(data);
-    //data_string = '[{"tmdb_id":62,"imdb_id":"tt0062622","title":"2001: A Space Odyssey","img":"https://image.tmdb.org/t/p/w500/90T7b2LIrL07ndYQBmSm09yqVEH.jpg","backdrop_path":"https://image.tmdb.org/t/p/original/pckdZ29bHj11hBsV3SbVVfmCB6C.jpg","file_path":"/mnt/d/Film/2001.A.Space.Odyssey.1968.720p.BrRip.x264.YIFY.62.mp4","release_date":"1968-04-09","runtime":149,"revenue":68700000,"description":"Humanity finds a mysterious object buried beneath the lunar surface and sets off to find its origins with the help of HAL 9000, the world's most advanced super computer.","tagline":"An epic drama of adventure and exploration","link":"https://www.google.com"}]';
     return (
       <div>
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React {Math.random()}</h1>
+          <h1 className="App-title">Welcome to React</h1>
         </header>
       </div>  
       <SearchBox/>
