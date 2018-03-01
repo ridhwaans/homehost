@@ -1,6 +1,9 @@
-var yaml = require('js-yaml');
 const express = require('express');
 var movies = require('./movies.json');
+
+var _ = require('underscore');
+var fs = require('fs');
+var yaml = require('js-yaml');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -17,13 +20,52 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/api/movies', (req, res) => {
-  //generateMovieMetaData();
+  //generateMovieMetaData(); one-off script
   res.json(movies.movies);
 });
 
+app.get('/api/movies/:id', function(req, res) {
+  var movie = _.where(movies.movies, {id: parseInt(req.params.id)});
+  res.json(movie);
+});
+
+
+app.get('/movies/:id', function(req, res) {
+  var movie_file_path = _.where(movies.movies, {id: parseInt(req.params.id)}); // Get movie
+  movie_file_path = _.pluck(movie_file_path, 'file_path'); // Get movie.file_path
+  
+  const path = String(movie_file_path)
+  const stat = fs.statSync(path)
+  const fileSize = stat.size
+  const range = req.headers.range
+  if (range) {
+    const parts = range.replace(/bytes=/, "").split("-")
+    const start = parseInt(parts[0], 10)
+    const end = parts[1] 
+      ? parseInt(parts[1], 10)
+      : fileSize-1
+    const chunksize = (end-start)+1
+    const file = fs.createReadStream(path, {start, end})
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'video/mp4',
+    }
+    res.writeHead(206, head);
+    file.pipe(res);
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'video/mp4',
+    }
+    res.writeHead(200, head)
+    fs.createReadStream(path).pipe(res)
+  }
+});
+
 var generateMovieMetaData = function(){
-  var fs = require('fs');
-      path = require('path');
+  var path = require('path');
       bluebird = require('bluebird');
       re = new RegExp(/(\d+)(.mp4|.mkv)$/);
       json = { movies: [] };
@@ -49,8 +91,7 @@ var generateMovieMetaData = function(){
 };
 
 var walkSync = function(dir, filelist) {
-  var fs = fs || require('fs'),
-      files = fs.readdirSync(dir);
+  var files = fs.readdirSync(dir);
   filelist = filelist || [];
   files.forEach(function(file) {
     if (fs.statSync(dir + '/' + file).isDirectory()) {
