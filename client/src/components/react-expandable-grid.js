@@ -28,13 +28,29 @@ class SingleGridCell extends React.Component {
       width: this.props.cellSize,
       height: this.props.cellSize,
       display: 'inline-block',
-      margin: this.props.cellMargin,
-      marginBottom: 25,
+      margin: 0,
+      marginBottom: 0,
       position: 'relative'
+    }
+    var SingleGridCellTitleStyle = {
+      fontSize: '0.75rem',
+      fontWeight: 600,
+      lineHeight: '1rem',
+      margin: 0
+    }
+    var SingleGridCellDivStyle = {
+      width: this.props.cellSize,
+      height: this.props.cellSize,
+      display: 'inline-block',
+      margin: this.props.cellMargin,
+      marginBottom: 25
     }
 
     return (
-      <li className='SingleGridCell' style={SingleGridCellStyle} id={this.props.id} onClick={this.cellClick.bind(this)} />
+      <div className='SingleGridCellDiv' style={SingleGridCellDivStyle} id={this.props.id}>
+      <li className='SingleGridCell' style={SingleGridCellStyle}  onClick={this.cellClick.bind(this)}> </li>
+      <h2 style={SingleGridCellTitleStyle}> {this.props.SingleGridCellData['title']} </h2>
+      </div>
     )
   }
  }
@@ -85,7 +101,7 @@ class ReactExpandableGrid extends React.Component {
   renderExpandedDetail (target) {
     var thisId = target.id
     var thisIdNumber = parseInt(thisId.substring(10))
-    var detail = document.getElementById('expandedDetail')
+    var detail = document.getElementById('expandedDetailDiv')
     var ol = target.parentNode
     var lengthOfList = parseInt(ol.childNodes.length)
     var startingIndex = thisIdNumber + 1
@@ -95,7 +111,7 @@ class ReactExpandableGrid extends React.Component {
     ol.insertBefore(detail, ol.childNodes[lengthOfList])
 
     for (var i = startingIndex; i < lengthOfList; i++) {
-      if (ol.childNodes[i].className === 'SingleGridCell') {
+      if (ol.childNodes[i].className === 'SingleGridCellDiv') {
         if (ol.childNodes[i].offsetTop !== ol.childNodes[thisIdNumber].offsetTop) {
           ol.childNodes[i].insertAdjacentElement('beforebegin', detail)
           insertedFlag = true
@@ -127,17 +143,23 @@ class ReactExpandableGrid extends React.Component {
   }
 
   handleCellClick (event) {
-    var target = event.target
-    var thisIdNumber = parseInt(event.target.id.substring(10))
+    var target = event.target.parentNode
+    var thisIdNumber = parseInt(target.id.substring(10))
+
+    // console.log("event.target.parentNode " + target.id.substring(10))
+    // console.log("event.target " + event.target.id.substring(10))
+    // console.log("thisIdNumber " + thisIdNumber)
+    // console.log("this.state.selected_id " + this.state.selected_id)
 
     if (this.state.expanded) { // expanded == true
-      if (this.state.selected_id === event.target.id) { // Clicking on already opened detail
+      if (this.state.selected_id === target.id) { // Clicking on already opened detail
+        console.log("Clicking on already opened detail")
         this.closeExpandedDetail()
         this.renderExpandedDetail(target)
       } else { // Clicking on a different thumbnail, when detail is already expanded
         this.setState({
           expanded: true,
-          selected_id: event.target.id
+          selected_id: target.id
         }, function afterStateChange () {
           var detail = document.getElementById('expandedDetail')
           var description = document.getElementById('ExpandedDetailDescription')
@@ -159,7 +181,7 @@ class ReactExpandableGrid extends React.Component {
     } else { // expanded == false
       this.setState({
         expanded: true,
-        selected_id: event.target.id
+        selected_id: target.id
       }, function afterStateChange () {
         var detail = document.getElementById('expandedDetail')
         var description = document.getElementById('ExpandedDetailDescription')
@@ -211,7 +233,8 @@ class ReactExpandableGrid extends React.Component {
       bottom: 0,
       left: 0,
       right: 0,
-      margin: 'auto'
+      margin: 'auto',
+      maxHeight:'100%'
     }
 
     var cssforExpandedDetailTitle = {
@@ -287,6 +310,10 @@ class ReactExpandableGrid extends React.Component {
       }
     }
 
+    var cssforExpandedDetailDiv = {
+      display: 'block'
+    }
+
     var closeX
     if (this.props.ExpandedDetail_closeX_bool) {
       closeX = 'X'
@@ -295,6 +322,7 @@ class ReactExpandableGrid extends React.Component {
     }
 
     grid.push(
+      <div style={cssforExpandedDetailDiv} id='expandedDetailDiv'>
       <li style={cssforExpandedDetail} key='expandedDetail' id='expandedDetail'>
         <div id='ExpandedDetail_left'className='ExpandedDetail_left' style={cssforExpandedDetailLeft}>
           <a id='ExpandedDetailImageLink' style={cssForImageLink}>
@@ -308,6 +336,7 @@ class ReactExpandableGrid extends React.Component {
           <a id='ExpandedDetailDescriptionLink' style={cssForDescriptionLink}> → Link </a>
         </div>
       </li>
+      </div>
      )
 
     return grid
