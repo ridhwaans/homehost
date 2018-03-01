@@ -3,7 +3,51 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import ReactPlayer from 'react-player'
+import { Player } from 'video-react'
+
+class ExpandedDetailPlayer extends React.Component {
+  render () {
+    var ExpandedDetailPlayerDivStyle = {
+      position: 'relative'
+      //paddingTop: '25%' /* Player ratio: 100 / (1280 / 720) */ 
+    }
+    var ExpandedDetailPlayerStyle = {
+      position: 'absolute',
+      top: 0,
+      left: 0
+    }
+
+    // return (
+    //   <div className="PlayerDiv" style={ExpandedDetailPlayerDivStyle}>
+    //     <ReactPlayer
+    //       style={ExpandedDetailPlayerStyle}
+    //       url='https://www.youtube.com/watch?v=ysz5S6PUM-U'
+    //       width='100%'
+    //       height='100%'
+    //     />
+    //   </div>
+    // )
+
+    // return (
+    //   <div className="ExpandedDetailPlayerDiv" style={ExpandedDetailPlayerDivStyle}>
+    //   <Player>
+    //     <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
+    //   </Player>
+    //   </div>
+    // )
+
+    return (
+      <div className="ExpandedDetailPlayerDiv" style={ExpandedDetailPlayerDivStyle}>
+        <video width="100%" height="100%" controls>
+          <source src="http://localhost:5000/movies/62" type="video/mp4"/>
+        </video>
+      </div>
+    )
+
+  }
+}
 
 class SingleGridCell extends React.Component {
 
@@ -144,7 +188,6 @@ class ReactExpandableGrid extends React.Component {
 
   handleCellClick (event) {
     var target = event.target.parentNode
-    var thisIdNumber = parseInt(target.id.substring(10))
 
     // console.log("event.target.parentNode " + target.id.substring(10))
     // console.log("event.target " + event.target.id.substring(10))
@@ -157,49 +200,39 @@ class ReactExpandableGrid extends React.Component {
         this.closeExpandedDetail()
         this.renderExpandedDetail(target)
       } else { // Clicking on a different thumbnail, when detail is already expanded
-        this.setState({
-          expanded: true,
-          selected_id: target.id
-        }, function afterStateChange () {
-          var detail = document.getElementById('expandedDetail')
-          var description = document.getElementById('ExpandedDetailDescription')
-          var title = document.getElementById('ExpandedDetailTitle')
-          var img = document.getElementById('ExpandedDetailImage')
-          var DescriptionLink = document.getElementById('ExpandedDetailDescriptionLink')
-          var ImageLink = document.getElementById('ExpandedDetailImageLink')
-          description.innerHTML = this.state.gridData[thisIdNumber]['description']
-          title.innerHTML = this.state.gridData[thisIdNumber]['title']
-          img.src = this.state.gridData[thisIdNumber]['img']
-          DescriptionLink.href = this.state.gridData[thisIdNumber]['link']
-          ImageLink.href = this.state.gridData[thisIdNumber]['link']
-
-          this.renderExpandedDetail(target)
-
-          detail.style.display = 'block'
-        })
+          this.openExpandedDetail(target)
       }
     } else { // expanded == false
-      this.setState({
-        expanded: true,
-        selected_id: target.id
-      }, function afterStateChange () {
-        var detail = document.getElementById('expandedDetail')
-        var description = document.getElementById('ExpandedDetailDescription')
-        var title = document.getElementById('ExpandedDetailTitle')
-        var img = document.getElementById('ExpandedDetailImage')
-        var DescriptionLink = document.getElementById('ExpandedDetailDescriptionLink')
-        var ImageLink = document.getElementById('ExpandedDetailImageLink')
-        description.innerHTML = this.state.gridData[thisIdNumber]['description']
-        title.innerHTML = this.state.gridData[thisIdNumber]['title']
-        img.src = this.state.gridData[thisIdNumber]['img']
-        DescriptionLink.href = this.state.gridData[thisIdNumber]['link']
-        ImageLink.href = this.state.gridData[thisIdNumber]['link']
-
-        this.renderExpandedDetail(target)
-
-        detail.style.display = 'block'
-      })
+        this.openExpandedDetail(target)
     }
+  }
+
+  openExpandedDetail (target) {
+    var thisId = target.id
+    var thisIdNumber = parseInt(thisId.substring(10))
+
+    this.setState({
+      expanded: true,
+      selected_id: target.id
+    }, function afterStateChange () {
+      var detail = document.getElementById('expandedDetail')
+      var description = document.getElementById('ExpandedDetailDescription')
+      var title = document.getElementById('ExpandedDetailTitle')
+      var img = document.getElementById('ExpandedDetailImage')
+      var DescriptionLink = document.getElementById('ExpandedDetailDescriptionLink')
+      var ImageLink = document.getElementById('ExpandedDetailImageLink')
+      var Player = document.getElementById('ExpandedDetailPlayer')
+      description.innerHTML = this.state.gridData[thisIdNumber]['description']
+      title.innerHTML = this.state.gridData[thisIdNumber]['title']
+      img.src = this.state.gridData[thisIdNumber]['img']
+      DescriptionLink.href = this.state.gridData[thisIdNumber]['link']
+      ImageLink.href = this.state.gridData[thisIdNumber]['link']
+      //Player.setProps({file: this.state.gridData[thisIdNumber]['file_path']})
+
+      this.renderExpandedDetail(target)
+
+      detail.style.display = 'block'
+    })
   }
 
   generateGrid () {
@@ -248,7 +281,7 @@ class ReactExpandableGrid extends React.Component {
       backgroundColor: this.props.ExpandedDetail_description_bgColor,
       color: this.props.ExpandedDetail_font_color,
       width: 'auto%',
-      height: '80%',
+      height: '20%',
       marginRight: '30px',
       marginLeft: '30px',
       textAlign: 'justify'
@@ -331,6 +364,7 @@ class ReactExpandableGrid extends React.Component {
         </div>
         <div id='ExpandedDetail_right' className='ExpandedDetail_right' style={cssforExpandedDetailRight}>
           <div id='ExpandedDetail_close' key='ExpandedDetail_close' style={cssforExpandedDetailClose} onClick={this.closeExpandedDetail.bind(this)}>{closeX}</div>
+          <ExpandedDetailPlayer id='ExpandedDetailPlayer'/>
           <div id='ExpandedDetailTitle' className='ExpandedDetailTitle' style={cssforExpandedDetailTitle}> Title </div>
           <div id='ExpandedDetailDescription' className='ExpandedDetailDescription' style={cssforExpandedDetailDescription}> Some Description</div>
           <a id='ExpandedDetailDescriptionLink' style={cssForDescriptionLink}> → Link </a>
