@@ -99,54 +99,55 @@ class SingleGridCell extends React.Component {
   }
  }
 
-class ReactExpandableGrid extends React.Component {
-
+class ExpandedDetail extends React.Component {
   constructor (props) {
     super(props)
 
+    // [{
+    //   title: "2001: A Space Odyssey",
+    //   img: "https://image.tmdb.org/t/p/w500" + "/90T7b2LIrL07ndYQBmSm09yqVEH.jpg",
+    //   backdrop_path: "https://image.tmdb.org/t/p/original" + "/pckdZ29bHj11hBsV3SbVVfmCB6C.jpg",
+    //   file_path: "/mnt/d/Film/2001.A.Space.Odyssey.1968.720p.BrRip.x264.YIFY.62.mp4",
+    //   description: "Humanity finds a mysterious object buried beneath the lunar surface and sets off to find its origins with the help of HAL 9000, the world's most advanced super computer.",
+    //   link: "http://www.imdb.com/title/" + "tt0062622"
+    // }]
+
     this.state = {
-      expanded: false,
-      selected_id: '',
-      gridData: JSON.parse(this.props.gridData)
+      selected_element: this.props.selected_element, //''
+      detailData: this.props.detailData || [] //JSON.parse()
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ gridData: JSON.parse(nextProps.gridData) });  
-  }
-
-  handleResize () {
-    if (this.state.expanded) {
-      var target = document.getElementById(this.state.selected_id)
-      this.renderExpandedDetail(target)
-    }
-    this.makeItMobileFriendly()
-  }
-
-  makeItMobileFriendly () {
-    var leftPanel = document.getElementById('ExpandedDetail_left')
-    var rightPanel = document.getElementById('ExpandedDetail_right')
-    if (window.innerWidth < this.props.show_mobile_style_from_width) {
-      leftPanel.style.display = 'none'
-      rightPanel.style.width = '100%'
-    } else {
-      leftPanel.style.display = 'block'
-      leftPanel.style.width = this.props.ExpandedDetail_left_width
-      rightPanel.style.width = this.props.ExpandedDetail_right_width
-    }
-  }
-
-  componentWillMount () {
-    window.addEventListener('resize', this.handleResize.bind(this))
-  }
-
-  componentWillUnmount () { }
-
-  renderExpandedDetail (target) {
-    var thisId = target.id
-    var thisIdNumber = parseInt(thisId.substring(10))
+  componentDidUpdate (prevProps, prevState){
     var detail = document.getElementById('expandedDetailDiv')
-    var ol = target.parentNode
+
+    if (this.state.selected_element) {
+      this.insertAdjacentExpandedDetail(this.state.selected_element)
+      
+      if (this.state.selected_element === prevProps.selected_element) {
+        detail.style.display == 'block' ? detail.style.display = 'none' : detail.style.display = 'block'
+      } else {
+        detail.style.display = 'block'
+      }
+      
+    } else {
+      detail.style.display = 'none'
+
+      var arrow = document.getElementById('selected_arrow')
+      arrow.style.display = 'none'
+    }
+  }
+
+  componentWillReceiveProps(nextProps, nextState) {
+    this.setState({ selected_element: nextProps.selected_element, detailData: nextProps.detailData });  
+  }
+
+  insertAdjacentExpandedDetail (selected_element) {
+
+    var thisIdNumber = parseInt(selected_element.substring(10))
+
+    var detail = document.getElementById('expandedDetailDiv')
+    var ol = document.getElementById(selected_element).parentNode
     var lengthOfList = parseInt(ol.childNodes.length)
     var startingIndex = thisIdNumber + 1
 
@@ -168,88 +169,20 @@ class ReactExpandableGrid extends React.Component {
       ol.childNodes[lengthOfList - 1].insertAdjacentElement('afterend', detail)
     }
 
-    var cell = document.getElementById(thisId)
+    var cell = document.getElementById(selected_element)
     var arrow = document.getElementById('selected_arrow')
     cell.append(arrow)
     arrow.style.display = 'block'
   }
 
   closeExpandedDetail () {
-    this.setState({
-      expanded: false,
-      selected_id: ''
-    }, function afterStateChange () {
-      var detail = document.getElementById('expandedDetail')
-      detail.style.display = 'none'
-      var arrow = document.getElementById('selected_arrow')
-      arrow.style.display = 'none'
-    })
+    this.setState({selected_element: ''})
   }
 
-  handleCellClick (event) {
-    var target = event.target.parentNode
-
-    // console.log("event.target.parentNode " + target.id.substring(10))
-    // console.log("event.target " + event.target.id.substring(10))
-    // console.log("thisIdNumber " + thisIdNumber)
-    // console.log("this.state.selected_id " + this.state.selected_id)
-
-    if (this.state.expanded) { // expanded == true
-      if (this.state.selected_id === target.id) { // Clicking on already opened detail
-        console.log("Clicking on already opened detail")
-        this.closeExpandedDetail()
-        this.renderExpandedDetail(target)
-      } else { // Clicking on a different thumbnail, when detail is already expanded
-          this.openExpandedDetail(target)
-      }
-    } else { // expanded == false
-        this.openExpandedDetail(target)
-    }
-  }
-
-  openExpandedDetail (target) {
-    var thisId = target.id
-    var thisIdNumber = parseInt(thisId.substring(10))
-
-    this.setState({
-      expanded: true,
-      selected_id: target.id
-    }, function afterStateChange () {
-      var detail = document.getElementById('expandedDetail')
-      var description = document.getElementById('ExpandedDetailDescription')
-      var title = document.getElementById('ExpandedDetailTitle')
-      var img = document.getElementById('ExpandedDetailImage')
-      var DescriptionLink = document.getElementById('ExpandedDetailDescriptionLink')
-      var ImageLink = document.getElementById('ExpandedDetailImageLink')
-      var Player = document.getElementById('ExpandedDetailPlayer')
-      description.innerHTML = this.state.gridData[thisIdNumber]['description']
-      title.innerHTML = this.state.gridData[thisIdNumber]['title']
-      img.src = this.state.gridData[thisIdNumber]['img']
-      DescriptionLink.href = this.state.gridData[thisIdNumber]['link']
-      ImageLink.href = this.state.gridData[thisIdNumber]['link']
-      //Player.setProps({file: this.state.gridData[thisIdNumber]['file_path']})
-
-      this.renderExpandedDetail(target)
-
-      detail.style.display = 'block'
-    })
-  }
-
-  generateGrid () {
-    var grid = []
-    var idCounter = -1 // To help simplify mapping to object array indices. For example, <li> with 0th id corresponds to 0th child of <ol>
-    var gridData = this.state.gridData
-
-    for (var i in gridData) {
-      idCounter = idCounter + 1
-      var thisUniqueKey = 'grid_cell_' + idCounter.toString()
-      grid.push(<SingleGridCell handleCellClick={this.handleCellClick.bind(this)} key={thisUniqueKey} id={thisUniqueKey} cellMargin={this.props.cellMargin} SingleGridCellData={gridData[i]} cellSize={this.props.cellSize} />)
-    }
-
+  render() {
     var cssforExpandedDetail = {
       backgroundColor: this.props.detailBackgroundColor,
       height: this.props.detailHeight,
-      display: 'none',
       position: 'relative',
       padding: '20px',
       transition: 'display 2s ease-in-out 0.5s'
@@ -353,31 +286,92 @@ class ReactExpandableGrid extends React.Component {
     } else {
       closeX = ''
     }
-
-    grid.push(
+  
+   return (
       <div style={cssforExpandedDetailDiv} id='expandedDetailDiv'>
-      <li style={cssforExpandedDetail} key='expandedDetail' id='expandedDetail'>
-        <div id='ExpandedDetail_left'className='ExpandedDetail_left' style={cssforExpandedDetailLeft}>
-          <a id='ExpandedDetailImageLink' style={cssForImageLink}>
-            <img id='ExpandedDetailImage' className='ExpandedDetailImage' style={cssforExpandedDetailImage} />
-          </a>
-        </div>
-        <div id='ExpandedDetail_right' className='ExpandedDetail_right' style={cssforExpandedDetailRight}>
-          <div id='ExpandedDetail_close' key='ExpandedDetail_close' style={cssforExpandedDetailClose} onClick={this.closeExpandedDetail.bind(this)}>{closeX}</div>
-          <ExpandedDetailPlayer id='ExpandedDetailPlayer'/>
-          <div id='ExpandedDetailTitle' className='ExpandedDetailTitle' style={cssforExpandedDetailTitle}> Title </div>
-          <div id='ExpandedDetailDescription' className='ExpandedDetailDescription' style={cssforExpandedDetailDescription}> Some Description</div>
-          <a id='ExpandedDetailDescriptionLink' style={cssForDescriptionLink}> → Link </a>
-        </div>
-      </li>
+        <li style={cssforExpandedDetail} key='expandedDetail' id='expandedDetail'>
+          <div id='ExpandedDetail_left'className='ExpandedDetail_left' style={cssforExpandedDetailLeft}>
+            <a id='ExpandedDetailImageLink' style={cssForImageLink} href={this.state.detailData['link']}>
+              <img id='ExpandedDetailImage' className='ExpandedDetailImage' style={cssforExpandedDetailImage} src={this.state.detailData['img']}/>
+            </a>
+          </div>
+          <div id='ExpandedDetail_right' className='ExpandedDetail_right' style={cssforExpandedDetailRight}>
+            <div id='ExpandedDetail_close' key='ExpandedDetail_close' style={cssforExpandedDetailClose} onClick={this.closeExpandedDetail.bind(this)}>{closeX}</div>
+            <ExpandedDetailPlayer id='ExpandedDetailPlayer'/>
+            <div id='ExpandedDetailTitle' className='ExpandedDetailTitle' style={cssforExpandedDetailTitle}> {this.state.detailData['title']} </div>
+            <div id='ExpandedDetailDescription' className='ExpandedDetailDescription' style={cssforExpandedDetailDescription}> {this.state.detailData['description']}</div>
+            <a id='ExpandedDetailDescriptionLink' style={cssForDescriptionLink} href={this.state.detailData['link']}> → Link </a>
+          </div>
+        </li>
       </div>
-     )
+    )
 
-    return grid
+  }
+}
+
+class ReactExpandableGrid extends React.Component {
+
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      selected_element: '',
+      gridData: JSON.parse(this.props.gridData)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ gridData: JSON.parse(nextProps.gridData) });  
+  }
+
+  makeItMobileFriendly () {
+    var leftPanel = document.getElementById('ExpandedDetail_left')
+    var rightPanel = document.getElementById('ExpandedDetail_right')
+    if (window.innerWidth < this.props.show_mobile_style_from_width) {
+      leftPanel.style.display = 'none'
+      rightPanel.style.width = '100%'
+    } else {
+      leftPanel.style.display = 'block'
+      leftPanel.style.width = this.props.ExpandedDetail_left_width
+      rightPanel.style.width = this.props.ExpandedDetail_right_width
+    }
+  }
+
+  componentWillMount () {
+    window.addEventListener('resize', this.handleResize.bind(this))
+  }
+
+  componentWillUnmount () { }
+
+  handleResize () {
+    this.makeItMobileFriendly()
+  }
+
+  handleCellClick (event) {
+      var element = event.target.parentNode.id.toString() // Get id of GridCell container
+
+    this.setState({
+      selected_element: element//{element}
+    })
+    
   }
 
   render () {
-    var rows = this.generateGrid()
+    var grid = []
+    var gridData = this.state.gridData
+
+    for (var i in gridData) {
+      var thisUniqueKey = 'grid_cell_' + i.toString()
+      grid.push(<SingleGridCell handleCellClick={this.handleCellClick.bind(this)} key={thisUniqueKey} id={thisUniqueKey} cellMargin={this.props.cellMargin} SingleGridCellData={gridData[i]} cellSize={this.props.cellSize} />)
+    }
+
+    var detailData = []
+    if (this.state.selected_element) {
+      detailData = parseInt(this.state.selected_element.substring(10))
+    }
+    grid.push(
+      <ExpandedDetail selected_element={this.state.selected_element} detailData={this.state.gridData[detailData]}/>
+    )
 
     var cssForGridDetailExpansion = {
       width: '100%',
@@ -412,7 +406,7 @@ class ReactExpandableGrid extends React.Component {
       <div id='GridDetailExpansion' style={cssForGridDetailExpansion}>
         <div id='theGridHolder' style={cssForTheGridHolder}>
           <ol id='gridList' style={cssForGridList}>
-            {rows}
+            {grid}
           </ol>
         </div>
         <div id='selected_arrow' style={cssForSelectedArrow} />
@@ -461,6 +455,10 @@ ReactExpandableGrid.defaultProps = {
   cellSize: 250,
   cellMargin: 25,
   bgColor: '#f2f2f2',
+  show_mobile_style_from_width: 600,
+}
+
+ExpandedDetail.defaultProps = {
   detailWidth: '100%',
   detailHeight: 300,
   detailBackgroundColor: '#D9D9D9',
