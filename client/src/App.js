@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import ReactExpandableGrid from './components/react-expandable-grid.js'
-import SearchBox from './components/Search'
+import ReactExpandableGrid from './components/ReactExpandableGrid'
+import SearchBox from './components/SearchBox'
 import * as utils from './utils/utils.js'
 import './styles/App.css'
 import logo from './logo.svg'
@@ -11,6 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       files: [
+     
       ]
     };
   }

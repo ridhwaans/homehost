@@ -69,14 +69,19 @@ var generateMovieMetaData = function(){
       re = new RegExp(/(\d+)(.mp4|.mkv)$/);
       json = { movies: [] };
 
-  let e = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
-  let files = walkSync(e.path, [])
+  let e = yaml.safeLoad(fs.readFileSync('./config.yml'));
+  let files = walkSync(e.path)
+
+  // fs.writeFile('./movies.json', JSON.stringify(files), 'utf8', (err)=>{
+  //    if(err) console.log(err)
+  //    else console.log('File saved')
+  // })
 
   bluebird.mapSeries(files, function(file){
-    console.log('GET: ' + e.path + '/' + file);
+    console.log('GET: ' + file);
     return client.send(new tmdb.requests.Movie(file.match(re)[1]), 250, null)
            .then((movie) => {
-           movie.fs_path = e.path + '/' + file;
+           movie.fs_path = file;
            movie.url_path = 'http://localhost:' + port + '/movies/' + movie["id"];
            json.movies.push(movie);
            });
@@ -92,6 +97,7 @@ var generateMovieMetaData = function(){
   .catch(function(err){
     console.log("Movie metadata could not be generated due to some error", err);
   });
+
 };
 
 var walkSync = function(dir, filelist) {
@@ -102,10 +108,11 @@ var walkSync = function(dir, filelist) {
       filelist = walkSync(dir + '/' + file, filelist);
     }
     else {
-      filelist.push(file);
+      filelist.push(dir + '/' + file);
     }
   });
   return filelist;
 };
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
