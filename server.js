@@ -1,26 +1,25 @@
-const express = require('express');
-var movies = require('./movies.json');
-
 var _ = require('underscore');
 var fs = require('fs');
 var yaml = require('js-yaml');
 
+const express = require('express');
 const app = express();
-const port = process.env.PORT || 5000;
 
-var files = [];
-//var tmdb = require('/lib/api-client.js');
+var HashTable = require('./lib/HashTable');
+var hashTable = new HashTable();
 
 var tmdb = require('./index.js');
 var client = new tmdb.ApiClient('api.themoviedb.org/3','129c09bb93839f3653b2510e55744d9f', true);
 
+var movies = require('./movies.json');
+const port = process.env.PORT || 5000;
 
 app.get('/api/hello', (req, res) => {
   res.send({ express: 'Hello From Express' });
 });
 
 app.get('/api/movies', (req, res) => {
-  //generateMovieMetaData(); one-off script
+  //generateMovieMetaData(); //one-off script
   res.json(movies.movies);
 });
 
@@ -31,10 +30,10 @@ app.get('/api/movies/:id', function(req, res) {
 
 
 app.get('/movies/:id', function(req, res) {
-  var movie_file_path = _.where(movies.movies, {id: parseInt(req.params.id)}); // Get movie
-  movie_file_path = _.pluck(movie_file_path, 'file_path'); // Get movie.file_path
+  var movie_fs_path = _.where(movies.movies, {id: parseInt(req.params.id)}); // Get movie
+  movie_fs_path = String(_.pluck(movie_fs_path, 'fs_path')); // Get movie.fs_path
   
-  const path = String(movie_file_path)
+  const path = movie_fs_path
   const stat = fs.statSync(path)
   const fileSize = stat.size
   const range = req.headers.range
@@ -71,18 +70,23 @@ var generateMovieMetaData = function(){
       json = { movies: [] };
 
   let e = yaml.safeLoad(fs.readFileSync('./config.yml', 'utf8'));
-  files = walkSync(e.path, files)
+  let files = walkSync(e.path, [])
 
   bluebird.mapSeries(files, function(file){
+    console.log('GET: ' + e.path + '/' + file);
     return client.send(new tmdb.requests.Movie(file.match(re)[1]), 250, null)
            .then((movie) => {
-           console.log(e.path + '/' + file);
-           movie.file_path = e.path + '/' + file
+           movie.fs_path = e.path + '/' + file;
+           movie.url_path = 'http://localhost:' + port + '/movies/' + movie["id"];
            json.movies.push(movie);
            });
   })
   .then(function(movies){
-    fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', null);
+    fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', (err)=>{
+       if(err) console.log(err)
+       else console.log('File saved')
+    })
+
     return json;
   })
   .catch(function(err){
@@ -91,7 +95,7 @@ var generateMovieMetaData = function(){
 };
 
 var walkSync = function(dir, filelist) {
-  var files = fs.readdirSync(dir);
+  let files = fs.readdirSync(dir);
   filelist = filelist || [];
   files.forEach(function(file) {
     if (fs.statSync(dir + '/' + file).isDirectory()) {

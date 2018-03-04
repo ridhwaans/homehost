@@ -6,48 +6,8 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import ReactPlayer from 'react-player'
 import { Player } from 'video-react'
-
-class ExpandedDetailPlayer extends React.Component {
-  render () {
-    var ExpandedDetailPlayerDivStyle = {
-      position: 'relative'
-      //paddingTop: '25%' /* Player ratio: 100 / (1280 / 720) */ 
-    }
-    var ExpandedDetailPlayerStyle = {
-      position: 'absolute',
-      top: 0,
-      left: 0
-    }
-
-    // return (
-    //   <div className="PlayerDiv" style={ExpandedDetailPlayerDivStyle}>
-    //     <ReactPlayer
-    //       style={ExpandedDetailPlayerStyle}
-    //       url='https://www.youtube.com/watch?v=ysz5S6PUM-U'
-    //       width='100%'
-    //       height='100%'
-    //     />
-    //   </div>
-    // )
-
-    // return (
-    //   <div className="ExpandedDetailPlayerDiv" style={ExpandedDetailPlayerDivStyle}>
-    //   <Player>
-    //     <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
-    //   </Player>
-    //   </div>
-    // )
-
-    return (
-      <div className="ExpandedDetailPlayerDiv" style={ExpandedDetailPlayerDivStyle}>
-        <video width="100%" height="100%" controls>
-          <source src="http://localhost:5000/movies/62" type="video/mp4"/>
-        </video>
-      </div>
-    )
-
-  }
-}
+// import './../../node_modules/bootstrap/bootstrap.scss'
+// import './../../index.css'
 
 class SingleGridCell extends React.Component {
 
@@ -99,18 +59,54 @@ class SingleGridCell extends React.Component {
   }
  }
 
-class ExpandedDetail extends React.Component {
+    // return (
+    //   <div className="PlayerDiv" style={ExpandedDetailPlayerDivStyle}>
+    //     <ReactPlayer
+    //       style={ExpandedDetailPlayerStyle}
+    //       url='https://www.youtube.com/watch?v=ysz5S6PUM-U'
+    //       width='100%'
+    //       height='100%'
+    //     />
+    //   </div>
+    // )
+
+    // return (
+    //   <div className="ExpandedDetailPlayerDiv" style={ExpandedDetailPlayerDivStyle}>
+    //   <Player>
+    //     <source src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
+    //   </Player>
+    //   </div>
+    // )
+
+class ExpandedDetailPlayer extends React.Component {
+
   constructor (props) {
     super(props)
 
-    // [{
-    //   title: "2001: A Space Odyssey",
-    //   img: "https://image.tmdb.org/t/p/w500" + "/90T7b2LIrL07ndYQBmSm09yqVEH.jpg",
-    //   backdrop_path: "https://image.tmdb.org/t/p/original" + "/pckdZ29bHj11hBsV3SbVVfmCB6C.jpg",
-    //   file_path: "/mnt/d/Film/2001.A.Space.Odyssey.1968.720p.BrRip.x264.YIFY.62.mp4",
-    //   description: "Humanity finds a mysterious object buried beneath the lunar surface and sets off to find its origins with the help of HAL 9000, the world's most advanced super computer.",
-    //   link: "http://www.imdb.com/title/" + "tt0062622"
-    // }]
+    this.state = {}
+  }
+  
+  render () {
+    var ExpandedDetailPlayerStyle = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      minWidth: '100%',
+      minHeight: '100%',
+      width: 'auto',
+      height: 'auto'
+    }
+
+    return (
+        <ReactPlayer url={this.props.src} className="ExpandedDetailPlayerStyle" style={ExpandedDetailPlayerStyle}/>
+    )
+
+  }
+}
+
+class ExpandedDetail extends React.Component {
+  constructor (props) {
+    super(props)
 
     this.state = {
       selected_element: this.props.selected_element, //''
@@ -180,6 +176,10 @@ class ExpandedDetail extends React.Component {
   }
 
   render() {
+    var cssforExpandedDetailDiv = {
+      display: 'block'
+    }
+
     var cssforExpandedDetail = {
       backgroundColor: this.props.detailBackgroundColor,
       height: this.props.detailHeight,
@@ -201,6 +201,14 @@ class ExpandedDetail extends React.Component {
       right: 0,
       margin: 'auto',
       maxHeight:'100%'
+    }
+
+    var ExpandedDetailPlayerDivStyle = {
+      position: 'relative',
+      float: 'left',
+      height: '60%',
+      marginRight: '10px'
+      //paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */ 
     }
 
     var cssforExpandedDetailTitle = {
@@ -234,7 +242,8 @@ class ExpandedDetail extends React.Component {
       width: this.props.ExpandedDetail_right_width,
       height: '100%',
       float: 'right',
-      position: 'relative'
+      position: 'relative',
+      overflow: 'hidden'
     }
 
     var cssForDescriptionLink = {
@@ -250,12 +259,19 @@ class ExpandedDetail extends React.Component {
     }
 
     var cssforExpandedDetailClose = {
-      textDecoration: 'none',
       position: 'relative',
       float: 'right',
-      top: 10,
-      right: 10,
-      cursor: 'pointer'
+      height: '60%',
+      width: '10px',
+      cursor: 'pointer',
+      textDecoration: 'none'
+    }
+
+    var closeX
+    if (this.props.ExpandedDetail_closeX_bool) {
+      closeX = 'X'
+    } else {
+      closeX = ''
     }
 
     // Make Mobile Friendly
@@ -276,17 +292,6 @@ class ExpandedDetail extends React.Component {
       }
     }
 
-    var cssforExpandedDetailDiv = {
-      display: 'block'
-    }
-
-    var closeX
-    if (this.props.ExpandedDetail_closeX_bool) {
-      closeX = 'X'
-    } else {
-      closeX = ''
-    }
-  
    return (
       <div style={cssforExpandedDetailDiv} id='expandedDetailDiv'>
         <li style={cssforExpandedDetail} key='expandedDetail' id='expandedDetail'>
@@ -297,7 +302,9 @@ class ExpandedDetail extends React.Component {
           </div>
           <div id='ExpandedDetail_right' className='ExpandedDetail_right' style={cssforExpandedDetailRight}>
             <div id='ExpandedDetail_close' key='ExpandedDetail_close' style={cssforExpandedDetailClose} onClick={this.closeExpandedDetail.bind(this)}>{closeX}</div>
-            <ExpandedDetailPlayer id='ExpandedDetailPlayer'/>
+            <div className="ExpandedDetailPlayerDiv" style={ExpandedDetailPlayerDivStyle}>
+              <ExpandedDetailPlayer id='ExpandedDetailPlayer' src={this.state.detailData['url_path']}/>
+            </div>
             <div id='ExpandedDetailTitle' className='ExpandedDetailTitle' style={cssforExpandedDetailTitle}> {this.state.detailData['title']} </div>
             <div id='ExpandedDetailDescription' className='ExpandedDetailDescription' style={cssforExpandedDetailDescription}> {this.state.detailData['description']}</div>
             <a id='ExpandedDetailDescriptionLink' style={cssForDescriptionLink} href={this.state.detailData['link']}> → Link </a>
@@ -367,10 +374,10 @@ class ReactExpandableGrid extends React.Component {
 
     var detailData = []
     if (this.state.selected_element) {
-      detailData = parseInt(this.state.selected_element.substring(10))
+      detailData = this.state.gridData[parseInt(this.state.selected_element.substring(10))]
     }
     grid.push(
-      <ExpandedDetail selected_element={this.state.selected_element} detailData={this.state.gridData[detailData]}/>
+      <ExpandedDetail selected_element={this.state.selected_element} detailData={detailData}/>
     )
 
     var cssForGridDetailExpansion = {
