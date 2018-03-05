@@ -7,4 +7,4 @@
 [![GitHub commits](https://img.shields.io/github/commits-since/ridhwaans/homehost/v0.2-alpha.svg)](https://gitHub.com/ridhwaans/homehost/commit/)
 [![GitHub license](https://img.shields.io/github/license/ridhwaans/StrapDown.js.svg)](https://github.com/ridhwaans/homehost/blob/master/LICENSE)
 
-![homehost](https://raw.githubusercontent.com/ridhwaans/homehost/master/media/movies-page-alpha.PNG)
+![homehost](https://raw.githubusercontent.com/ridhwaans/homehost/master/media/movies-page-alpha.png)
