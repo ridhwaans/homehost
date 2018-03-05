@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import ReactExpandableGrid from './components/ReactExpandableGrid'
+import Grid from './components/Grid'
 import SearchBox from './components/SearchBox'
 import * as utils from './utils/utils.js'
-import './styles/App.css'
 import logo from './logo.svg'
 
 class App extends Component {
@@ -52,10 +51,10 @@ class App extends Component {
         </header>
       </div>  
       <SearchBox/>
-      <ReactExpandableGrid
+      <Grid
           gridData={data_string}
           detailHeight={600}
-          ExpandedDetail_image_size={300}
+          CellDetail_image_size={300}
           cellSize={200}
       />
       </div>
