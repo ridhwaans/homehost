@@ -76,13 +76,6 @@ class CellDetail extends React.Component {
   }
 
   render() {
-    var closeX
-    if (this.props.CellDetail_closeX_bool) {
-      closeX = 'X'
-    } else {
-      closeX = ''
-    }
-
     // Make Mobile Friendly
     var cssforCellDetailLeft
     var cssforCellDetailRight
@@ -103,27 +96,31 @@ class CellDetail extends React.Component {
       }
     }
 
+    var backgroundImage = {   
+      backgroundImage: 'url(' + this.props.detailData['backdrop_path'] + ')'
+    }
+
    return (
       <div className="cell-detail-div" id='CellDetailDiv'>
-        <li className="cell-detail" key='CellDetail' id='CellDetail'>
+        <li className="cell-detail" key='CellDetail' id='CellDetail' style={backgroundImage}>
           <div id='CellDetail_left'className='cell-detail-left'>
             <a id='CellDetailImageLink' className='image-link' href={this.state.detailData['link']}>
               <img id='CellDetailImage' className='cell-detail-image' src={this.state.detailData['img']}/>
             </a>
           </div>
           <div id='CellDetail_right' className='cell-detail-right'>
-            <div id='CellDetail_close' key='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>{closeX}</div>
+            <div id='CellDetail_close' className='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
             <div className="CellDetailPlayerDiv" className="cell-detail-player-div">
               <ReactPlayer url={this.state.detailData['url_path']} className="cell-detail-player"/>
             </div>
             <div id='CellDetailTitle' className='cell-detail-title'> {this.state.detailData['title']} </div>
             <div id='CellDetailDescription' className='cell-detail-description'> {this.state.detailData['description']}</div>
-            <a id='CellDetailDescriptionLink' className='description-link' href={this.state.detailData['link']}> → Link </a>
           </div>
         </li>
       </div>
     )
 
+  //<a id='CellDetailDescriptionLink' className='description-link' href={this.state.detailData['link']}> → Link </a>
   }
 }
 

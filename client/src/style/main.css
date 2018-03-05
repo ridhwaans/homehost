@@ -4,6 +4,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:Light);
 @import url(https://fonts.googleapis.com/css?family=Inconsolata);
 @import url(https://fonts.googleapis.com/css?family=Cousine);
+@import url(https://fonts.googleapis.com/css?family=Lato:100,700);
 @import url(http://weloveiconfonts.com/api/?family=fontawesome);
 
 .App {
@@ -35,16 +36,12 @@
   to { transform: rotate(360deg); }
 }
 
-h2 {
-  font-family: 'Roboto Mono';
-}
-
 /* GridCell */
 .grid-cell-div {
   width: 200px;
   height: 250px;
   display: inline-block;
-  margin: 0px;
+  margin: 0 0 0 0;
 }
 
 .grid-cell {
@@ -53,18 +50,19 @@ h2 {
   width: 140px;
   height: 200px;
   display: inline-block;
-  margin: 0;
-  margin-bottom: 0;
+  margin: 0 0 0 0;
   position: relative;
 }
 
 .grid-cell-title {
+  font-family: 'Roboto Mono';
   font-size: 0.75rem;
   font-weight: 600;
-  line-height: 1rem;
-  margin: 0;
+  line-height: 1em;
+  height: 2em;
   overflow: hidden;
   display: block;
+  margin: 0 0 0 0;
 }
 
 /* CellDetail */
@@ -76,57 +74,10 @@ h2 {
   background-color: #D9D9D9;
   height: 600px;
   position: relative;
-  padding: 20px;
+  padding: none;
   transition: display 2s ease-in-out 0.5s;
 }
 
-.cell-detail-image {
-  display: inline-block;
-  max-width: 300;
-  width: 100%;
-  height: auto;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  max-height: 100%;
-}
-
-.cell-detail-player-div {
-  position: relative;
-  float: left;
-  height: 60%;
-  margin-right: 10px;
-  /*padding-top: '56.25%'; /* Player ratio: 100 / (1280 / 720) */ 
-}
-
-.cell-detail-player {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 60%;
-}
-
-.cell-detail-title {
-  background-color: #D9D9D9;
-  width: 100%;
-  height: auto;
-  margin-bottom: 15px; 
-}
-
-.cell-detail-description {
-  background-color: #D9D9D9;
-  color: #434343;
-  width: auto%;
-  height: 20%;
-  margin-right: 30px;
-  margin-left: 30px;
-  text-align: justify;
-}
-   
 .cell-detail-left {
   width: 40%;
   height: 100%;
@@ -140,9 +91,77 @@ h2 {
   float: right;
   position: relative;
   overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.8);
+  color:white;
 }
 
+.cell-detail-image {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.cell-detail-close {
+  display: block;
+  text-align:right;
+  /*margin-top: 5px;
+  margin-right: 5px;*/
+  position:absolute;
+  margin:0;
+  padding:5px;
+  top:0;
+  right:0;
+  cursor: pointer;
+}
+
+.cell-detail-player-div {
+  display: block;
+  position: relative;
+  height: 60%;
+  margin-right: 10px;
+  /*padding-top: '56.25%'; /* Player ratio: 100 / (1280 / 720) */ 
+}
+
+.cell-detail-player {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 60%;
+  margin: 0 auto;
+}
+
+.cell-detail-title {
+  font-family: 'Lato';
+  font-size: 40px;
+  font-weight: 700;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px; 
+}
+
+.cell-detail-description {
+  font-family: 'Lato';
+  font-size: 16px;
+  font-weight: 100;
+  display: block;
+  width: auto%;
+  height: 20%;
+  margin-right: 30px;
+  margin-left: 30px;
+  text-align: justify;
+  font-color:white;
+}
+   
 .description-link {
+  display: block;
   text-decoration: none;
   position: relative;
   float: bottom;
@@ -152,15 +171,6 @@ h2 {
 
 .image-link {
   cursor: pointer;
-}
-
-.cell-detail-close {
-  position: relative;
-  float: right;
-  height: 60%;
-  width: 10px;
-  cursor: pointer;
-  text-decoration: none;
 }
 
 /* Grid */
