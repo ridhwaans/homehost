@@ -25,7 +25,7 @@ class CellDetail extends React.Component {
       } else {
         detail.style.display = 'block'
       }
-      
+      document.getElementById("cellDetailPlayer").load();
     } else {
       detail.style.display = 'none'
 
@@ -72,7 +72,7 @@ class CellDetail extends React.Component {
   }
 
   closeCellDetail () {
-    this.setState({selected_element: ''})
+    this.setState({selected_element: '', detailData: [] })
   }
 
   render() {
@@ -97,7 +97,7 @@ class CellDetail extends React.Component {
     }
 
     var backgroundImage = {   
-      backgroundImage: 'url(' + this.props.detailData['backdrop_path'] + ')'
+      backgroundImage: 'url(' + this.state.detailData['backdrop_path'] + ')'
     }
 
    return (
@@ -110,8 +110,10 @@ class CellDetail extends React.Component {
           </div>
           <div id='CellDetail_right' className='cell-detail-right'>
             <div id='CellDetail_close' className='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
-            <div className="CellDetailPlayerDiv" className="cell-detail-player-div">
-              <ReactPlayer url={this.state.detailData['url_path']} className="cell-detail-player"/>
+            <div id="cellDetailPlayerDiv" className="cell-detail-player-div">
+                <video id="cellDetailPlayer" className="cell-detail-player" controls controlsList="nodownload">
+                  <source src={this.state.detailData['url_path']} type="video/mp4"/>
+                </video>
             </div>
             <div id='CellDetailTitle' className='cell-detail-title'> {this.state.detailData['title']} </div>
             <div id='CellDetailDescription' className='cell-detail-description'> {this.state.detailData['description']}</div>

@@ -7,35 +7,6 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:100,700);
 @import url(http://weloveiconfonts.com/api/?family=fontawesome);
 
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 5s linear;
-  height: 80px;
-}
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 /* GridCell */
 .grid-cell-div {
   width: 200px;
@@ -67,7 +38,8 @@
 
 /* CellDetail */
 .cell-detail-div {
-  display: block;
+  display: none;
+  transition: display 2s ease-in-out 0.5s;
 }
 
 .cell-detail {
@@ -75,7 +47,6 @@
   height: 600px;
   position: relative;
   padding: none;
-  transition: display 2s ease-in-out 0.5s;
 }
 
 .cell-detail-left {
@@ -109,14 +80,12 @@
 
 .cell-detail-close {
   display: block;
-  text-align:right;
-  /*margin-top: 5px;
-  margin-right: 5px;*/
-  position:absolute;
-  margin:0;
+  text-align:center;
+  position:relative;
   padding:5px;
   top:0;
   right:0;
+  margin-left: 95%;
   cursor: pointer;
 }
 
@@ -124,17 +93,15 @@
   display: block;
   position: relative;
   height: 60%;
-  margin-right: 10px;
-  /*padding-top: '56.25%'; /* Player ratio: 100 / (1280 / 720) */ 
 }
 
+
 .cell-detail-player {
+  width: 100%;
+  height: 100%;
   position: relative;
   top: 0;
   left: 0;
-  width: 50%;
-  height: 60%;
-  margin: 0 auto;
 }
 
 .cell-detail-title {
