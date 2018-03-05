@@ -17,27 +17,14 @@ class GridCell extends React.Component {
     this.props.handleCellClick(event)
   }
 
-  render () {
-    var GridCellStyle = {
-      background: 'url(' + this.props.GridCellData['img'] + ') no-repeat center center',
-      backgroundSize: this.props.cellSize,
-      width: this.props.cellSize,
-      height: this.props.cellSize,
-      display: 'inline-block',
-      margin: 0,
-      marginBottom: 0,
-      position: 'relative'
-    }
-    var GridCellTitleStyle = {
-      fontSize: '0.75rem',
-      fontWeight: 600,
-      lineHeight: '1rem',
-      margin: 0
+  render () {  
+    var backgroundImage = {   
+      backgroundImage: 'url(' + this.props.GridCellData['img'] + ')'
     }
 
     return (
       <div className="grid-cell-div" id={this.props.id}>
-      <li className="grid-cell" onClick={this.cellClick.bind(this)}> </li>
+      <li className="grid-cell" onClick={this.cellClick.bind(this)} style={backgroundImage}> </li>
       <h2 className="grid-cell-title"> {this.props.GridCellData['title']} </h2>
       </div>
     )

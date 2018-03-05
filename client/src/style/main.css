@@ -35,23 +35,20 @@
   to { transform: rotate(360deg); }
 }
 
-
-/* Variables */
-:root {
-  --grid-cell_background_url: "https://image.tmdb.org/t/p/w500/90T7b2LIrL07ndYQBmSm09yqVEH.jpg";
+h2 {
+  font-family: 'Roboto Mono';
 }
 
 /* GridCell */
 .grid-cell-div {
   width: 200px;
-  height: 200px;
+  height: 250px;
   display: inline-block;
-  margin: 25px;
-  margin-bottom: 25px;
+  margin: 0px;
 }
 
 .grid-cell {
-  background: url(https://image.tmdb.org/t/p/w500/90T7b2LIrL07ndYQBmSm09yqVEH.jpg) no-repeat center center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-size: cover;
   width: 140px;
   height: 200px;
@@ -66,6 +63,8 @@
   font-weight: 600;
   line-height: 1rem;
   margin: 0;
+  overflow: hidden;
+  display: block;
 }
 
 /* CellDetail */
@@ -75,7 +74,7 @@
 
 .cell-detail {
   background-color: #D9D9D9;
-  height: 300px;
+  height: 600px;
   position: relative;
   padding: 20px;
   transition: display 2s ease-in-out 0.5s;
