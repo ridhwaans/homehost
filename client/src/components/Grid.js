@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import CellDetail from './CellDetail'
+import MovieDetail from './MovieDetail'
 import GridCell from './GridCell'
 
 class Grid extends React.Component {
@@ -67,7 +67,7 @@ class Grid extends React.Component {
       detailData = this.state.gridData[parseInt(this.state.selected_element.substring(10))]
     }
     grid.push(
-      <CellDetail selected_element={this.state.selected_element} detailData={detailData}/>
+      <MovieDetail selected_element={this.state.selected_element} detailData={detailData}/>
     )
 
     return (

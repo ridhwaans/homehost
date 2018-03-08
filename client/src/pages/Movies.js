@@ -47,7 +47,6 @@ class Movies extends Component {
       <br></br>
       <Grid
           gridData={data_string}
-          detailHeight={600}
           CellDetail_image_size={300}
           cellSize={200}
       />
