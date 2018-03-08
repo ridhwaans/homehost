@@ -8,8 +8,8 @@ const app = express();
 var HashTable = require('./lib/HashTable');
 var hashTable = new HashTable();
 
-var tmdb = require('./index.js');
-var client = new tmdb.ApiClient('api.themoviedb.org/3','129c09bb93839f3653b2510e55744d9f', true);
+var lib = require('./index.js');
+var tmdbClient = new lib.ApiClient('api.themoviedb.org/3','129c09bb93839f3653b2510e55744d9f', true);
 
 var movies = require('./movies.json');
 const port = process.env.PORT || 5000;
@@ -79,7 +79,7 @@ var generateMovieMetaData = function(){
 
   bluebird.mapSeries(files, function(file){
     console.log('GET: ' + file);
-    return client.send(new tmdb.requests.Movie(file.match(re)[1]), 250, null)
+    return tmdbClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
            .then((movie) => {
            movie.fs_path = file;
            movie.url_path = 'http://localhost:' + port + '/movies/' + movie["id"];

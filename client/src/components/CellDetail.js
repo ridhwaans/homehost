@@ -16,21 +16,25 @@ class CellDetail extends React.Component {
 
   componentDidUpdate (prevProps, prevState){
     var detail = document.getElementById('CellDetailDiv')
+    var wrapper = document.querySelector('.cell-detail');
+    var arrow = document.getElementById('selected_arrow')
 
     if (this.state.selected_element) {
-      this.insertAdjacentCellDetail(this.state.selected_element)
       
       if (this.state.selected_element === prevProps.selected_element) {
-        detail.style.display == 'block' ? detail.style.display = 'none' : detail.style.display = 'block'
+        detail.clientHeight ? detail.style.height = 0 : detail.style.height = wrapper.clientHeight + "px"
       } else {
-        detail.style.display = 'block'
+        detail.style.height = 0
+        this.insertAdjacentCellDetail(this.state.selected_element)
+        detail.style.height = wrapper.clientHeight + "px"
       }
-      document.getElementById("cellDetailPlayer").load();
-    } else {
-      detail.style.display = 'none'
 
-      var arrow = document.getElementById('selected_arrow')
-      arrow.style.display = 'none'
+    } else {
+      detail.style.height = 0
+    }
+
+    if (this.state.selected_element) {
+      document.getElementById("cellDetailPlayer").load();
     }
   }
 
@@ -65,10 +69,6 @@ class CellDetail extends React.Component {
       ol.childNodes[lengthOfList - 1].insertAdjacentElement('afterend', detail)
     }
 
-    var cell = document.getElementById(selected_element)
-    var arrow = document.getElementById('selected_arrow')
-    cell.append(arrow)
-    arrow.style.display = 'block'
   }
 
   closeCellDetail () {

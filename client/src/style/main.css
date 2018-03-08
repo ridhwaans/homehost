@@ -38,8 +38,14 @@
 
 /* CellDetail */
 .cell-detail-div {
-  display: none;
-  transition: display 2s ease-in-out 0.5s;
+  -moz-transition: height .5s;
+  -ms-transition: height .5s;
+  -o-transition: height .5s;
+  -webkit-transition: height .5s;
+  transition: height .5s;
+  height: 0;
+  overflow: hidden;
+  display: block;
 }
 
 .cell-detail {
