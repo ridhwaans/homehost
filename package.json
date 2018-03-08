@@ -1,11 +1,13 @@
 {
   "name": "homehost",
-  "version": "v0.2-alpha",
+  "version": "v0.9-alpha",
   "author": "ridhwaans",
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "build": "webpack -p",
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
@@ -20,7 +22,8 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "torrent-name-parser": "^0.6.5",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "webpack": "^4.1.0"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"
