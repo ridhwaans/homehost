@@ -1,6 +1,8 @@
 var _ = require('underscore');
 var fs = require('fs');
+var bluebird = require('bluebird');
 var yaml = require('js-yaml');
+var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
 
 const express = require('express');
 const app = express();
@@ -9,18 +11,24 @@ var HashTable = require('./lib/HashTable');
 var hashTable = new HashTable();
 
 var lib = require('./index.js');
-var tmdbClient = new lib.ApiClient('api.themoviedb.org/3','129c09bb93839f3653b2510e55744d9f', true);
+var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
+var musicClient = new lib.ApiClient(config.music.api, config.music.key, true);
 
 var movies = require('./movies.json');
 const port = process.env.PORT || 5000;
 
 app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
+  let hello = { homehost: 'Hello', config};
+  res.json(hello);
 });
 
 app.get('/api/movies', (req, res) => {
   //generateMovieMetaData(); //one-off script
   res.json(movies.movies);
+});
+
+app.get('/api/music', (req, res) => {
+  res.json(generateMusicMetaData()); //one-off script
 });
 
 app.get('/api/movies/:id', function(req, res) {
@@ -64,22 +72,15 @@ app.get('/movies/:id', function(req, res) {
 });
 
 var generateMovieMetaData = function(){
-  var path = require('path');
-      bluebird = require('bluebird');
-      re = new RegExp(/(\d+)(.mp4|.mkv)$/);
+  var re = new RegExp(/(\d+)(.mp4|.mkv)$/);
       json = { movies: [] };
 
-  let e = yaml.safeLoad(fs.readFileSync('./config.yml'));
-  let files = walkSync(e.path)
-
-  // fs.writeFile('./movies.json', JSON.stringify(files), 'utf8', (err)=>{
-  //    if(err) console.log(err)
-  //    else console.log('File saved')
-  // })
+  
+  let files = walkSync(config.movies.path)
 
   bluebird.mapSeries(files, function(file){
     console.log('GET: ' + file);
-    return tmdbClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
+    return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
            .then((movie) => {
            movie.fs_path = file;
            movie.url_path = 'http://localhost:' + port + '/movies/' + movie["id"];
@@ -98,6 +99,14 @@ var generateMovieMetaData = function(){
     console.log("Movie metadata could not be generated due to some error", err);
   });
 
+};
+
+var generateMusicMetaData = function(){
+  var re = new RegExp(/(\d+)$/);
+      json = { music: [] };
+
+  let files = walkSync(config.music.path)
+  return files;
 };
 
 var walkSync = function(dir, filelist) {
