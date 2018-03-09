@@ -109,6 +109,12 @@ var generateMusicMetaData = function(){
   return files;
 };
 
+var generateMetaData = function(){
+  // TODO
+  // generateMovieMetaData
+  // generateMusicMetaData
+}
+
 var walkSync = function(dir, filelist) {
   let files = fs.readdirSync(dir);
   filelist = filelist || [];

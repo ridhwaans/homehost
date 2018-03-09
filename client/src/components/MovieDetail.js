@@ -31,6 +31,7 @@ class MovieDetail extends CellDetail {
     var backgroundImage = {   
       backgroundImage: 'url(' + this.state.detailData['backdrop_path'] + ')'
     }
+    var title = this.state.detailData['title'] + ' (' + parseInt(this.state.detailData['release_date']) + ')'
 
    return (
       <div className="cell-detail-div" id='CellDetailDiv'>
@@ -47,7 +48,7 @@ class MovieDetail extends CellDetail {
                   <source src={this.state.detailData['url_path']} type="video/mp4"/>
                 </video>
             </div>
-            <div id='CellDetailTitle' className='cell-detail-title'> {this.state.detailData['title']} </div>
+            <div id='CellDetailTitle' className='cell-detail-title'> {title} </div>
             <div id='CellDetailDescription' className='cell-detail-description'> {this.state.detailData['description']}</div>
           </div>
         </li>
