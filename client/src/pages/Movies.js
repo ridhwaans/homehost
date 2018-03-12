@@ -28,7 +28,7 @@ class Movies extends Component {
         tmdb_id: items[i]["id"], 
         imdb_id: items[i]["imdb_id"], 
         title: items[i]["title"], 
-        img: "https://image.tmdb.org/t/p/w500" + items[i]["poster_path"], //poster_path
+        poster_path: "https://image.tmdb.org/t/p/w500" + items[i]["poster_path"],
         backdrop_path: "https://image.tmdb.org/t/p/original" + items[i]["backdrop_path"], 
         url_path: items[i]["url_path"], 
         release_date: items[i]["release_date"], 
@@ -47,8 +47,8 @@ class Movies extends Component {
       <br></br>
       <Grid
           gridData={data_string}
-          CellDetail_image_size={300}
-          cellSize={200}
+          gridCell_width={140}
+          gridCell_height={200}
       />
       </div>
     );

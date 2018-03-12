@@ -1,0 +1,109 @@
+/* MovieDetail */
+.cell-detail-div {
+  -moz-transition: height .5s;
+  -ms-transition: height .5s;
+  -o-transition: height .5s;
+  -webkit-transition: height .5s;
+  transition: height .5s;
+  height: 0;
+  overflow: hidden;
+  display: block;
+}
+
+.cell-detail {
+  background-color: #D9D9D9;
+  height: 600px;
+  position: relative;
+  padding: none;
+}
+
+.cell-detail-left {
+  width: 40%;
+  height: 100%;
+  float: left;
+  position: relative;
+}
+
+.cell-detail-right {
+  width: 60%;
+  height: 100%;
+  float: right;
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.8);
+  color:white;
+}
+
+.cell-detail-image {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.cell-detail-close {
+  display: block;
+  text-align:center;
+  position:relative;
+  padding:5px;
+  top:0;
+  right:0;
+  margin-left: 95%;
+  cursor: pointer;
+}
+
+.cell-detail-player-div {
+  display: block;
+  position: relative;
+  height: 60%;
+}
+
+
+.cell-detail-player {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.cell-detail-title {
+  font-family: 'Lato';
+  font-size: 40px;
+  font-weight: 700;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px; 
+}
+
+.cell-detail-description {
+  font-family: 'Lato';
+  font-size: 16px;
+  font-weight: 100;
+  display: block;
+  width: auto%;
+  height: 20%;
+  margin-right: 30px;
+  margin-left: 30px;
+  text-align: justify;
+  font-color:white;
+}
+   
+.description-link {
+  display: block;
+  text-decoration: none;
+  position: relative;
+  float: bottom;
+  bottom: 20;
+  cursor: pointer;
+}
+
+.image-link {
+  cursor: pointer;
+}

@@ -1,14 +1,38 @@
-# homehost
+# homehost (in beta)
 
 [![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ridhwaans/homehost/issues)
 [![release](https://img.shields.io/github/release/ridhwaans/homehost.svg)](https://gitHub.com/ridhwaans/homehost/releases/)
 [![tag](https://img.shields.io/github/tag/ridhwaans/homehost.svg)](https://gitHub.com/ridhwaans/homehost/tags/)
-[![commits-since](https://img.shields.io/github/commits-since/ridhwaans/homehost/v1.0-beta.svg)](https://gitHub.com/ridhwaans/homehost/commit/)
+[![commits-since](https://img.shields.io/github/commits-since/ridhwaans/homehost/v0.9.9-beta.svg)](https://gitHub.com/ridhwaans/homehost/commit/)
 [![license](https://img.shields.io/github/license/ridhwaans/homehost.svg)](https://github.com/ridhwaans/homehost/blob/master/LICENSE)
 
 Self-hosted Netflix-like app in React  
 
 ![homehost](https://raw.githubusercontent.com/ridhwaans/homehost/master/media/movies-page-alpha.png)
+
+<p style="align: center;"> Made for <img src="/media/chrome.svg"  width="25" height="25"></p>
+
+## 0.9.9-BETA
+
+### What's new
+
+- Music Grid is functional
+- New music album Detail view
+- unique color palettes for album select
+
+### Bug fixes/ improvements
+
+- Streamlined metadata generation for media in node
+- Removed unused app resources
+- various minor fixes
+
+### Launch milestones
+
+- Album detail view redesign v1
+- add cdn previews and react streaming support for album hosting
+- add support for single-disc and compilation albums
+- cleanup utils & dependencies
+
 
 ## Setup
 
@@ -41,8 +65,9 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 **GET** `/api/movies`  
 **GET** `/api/movies/<id>`  
 **GET** `/movies/<id>`  
-**GET** `/api/music/*` (in development)  
-**GET** `/music/*` (in development)  
+**GET** `/api/music/`  
+**GET** `/api/music/albums/<id>`  
+**GET** `/music/albums/:album_id/tracks/:track_number` (in development)  
 
 ### Client-side
 

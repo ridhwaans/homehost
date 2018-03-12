@@ -15,7 +15,6 @@ class Home extends Component {
         <div class="inner">
           <h3 class="masthead-brand">HomeHost</h3>
           <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link active" href="#">Home</a>
             <a class="nav-link" href="movies">Movies</a>
             <a class="nav-link" href="#">TV</a>
             <a class="nav-link" href="#">Music</a>

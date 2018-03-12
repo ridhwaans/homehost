@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import ReactPlayer from 'react-player'
-import { Player } from 'video-react'
 
 class CellDetail extends React.Component {
   constructor (props) {
@@ -33,8 +31,8 @@ class CellDetail extends React.Component {
       detail.style.height = 0
     }
 
-    if (this.state.selected_element) {
-      document.getElementById("cellDetailPlayer").load();
+    if (this.state.selected_element && document.getElementById('cellDetailPlayer')) {
+      document.getElementById('cellDetailPlayer').load();
     }
   }
 

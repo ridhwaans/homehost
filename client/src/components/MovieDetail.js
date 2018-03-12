@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
-import ReactPlayer from 'react-player'
-import { Player } from 'video-react'
 import CellDetail from './CellDetail'
+import '../style/MovieDetail.css'
 
 class MovieDetail extends CellDetail {
   
   render() {
+    let data = this.state.detailData
+
     // Make Mobile Friendly
     var cssforCellDetailLeft
     var cssforCellDetailRight
@@ -29,27 +29,27 @@ class MovieDetail extends CellDetail {
     }
 
     var backgroundImage = {   
-      backgroundImage: 'url(' + this.state.detailData['backdrop_path'] + ')'
+      backgroundImage: 'url(' + data.backdrop_path + ')'
     }
-    var title = this.state.detailData['title'] + ' (' + parseInt(this.state.detailData['release_date']) + ')'
+    var title = data.title + ' (' + parseInt(data.release_date) + ')'
 
    return (
       <div className="cell-detail-div" id='CellDetailDiv'>
         <li className="cell-detail" key='CellDetail' id='CellDetail' style={backgroundImage}>
           <div id='CellDetail_left'className='cell-detail-left'>
-            <a id='CellDetailImageLink' className='image-link' href={this.state.detailData['link']}>
-              <img id='CellDetailImage' className='cell-detail-image' src={this.state.detailData['img']}/>
+            <a id='CellDetailImageLink' className='image-link' href={data.link}>
+              <img id='CellDetailImage' className='cell-detail-image' src={data.poster_path}/>
             </a>
           </div>
           <div id='CellDetail_right' className='cell-detail-right'>
             <div id='CellDetail_close' className='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
             <div id="cellDetailPlayerDiv" className="cell-detail-player-div">
                 <video id="cellDetailPlayer" className="cell-detail-player" controls controlsList="nodownload">
-                  <source src={this.state.detailData['url_path']} type="video/mp4"/>
+                  <source src={data.url_path} type="video/mp4"/>
                 </video>
             </div>
             <div id='CellDetailTitle' className='cell-detail-title'> {title} </div>
-            <div id='CellDetailDescription' className='cell-detail-description'> {this.state.detailData['description']}</div>
+            <div id='CellDetailDescription' className='cell-detail-description'> {data.description}</div>
           </div>
         </li>
       </div>

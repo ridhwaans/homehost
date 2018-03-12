@@ -21,10 +21,31 @@ class Music extends Component {
   }
   
   render() {
+    var items = this.state.files;
+    var data = [];
+    for (var i = 0; i < items.length; i++) {
+      data.push({
+        spotify_id: items[i]["id"],
+        album_name: items[i]["name"], 
+        album_art: items[i]["images"][0]["url"],
+        url_path: items[i]["url_path"], 
+        release_date: items[i]["release_date"], 
+        artist_name: items[i]["artists"][0]["name"], 
+        label: items[i]["label"],
+        tracks: items[i]["tracks"]
+      });
+    }
+
+    var data_string = JSON.stringify(data);
     return (
       <div>
       <NavBar/>
       <br></br>
+      <Grid
+          gridData={data_string}
+          gridCell_width={175}
+          gridCell_height={175}
+      />
       </div>
     );
   }

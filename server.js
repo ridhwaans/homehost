@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var fs = require('fs');
+var dir = require('node-dir');
 var bluebird = require('bluebird');
 var yaml = require('js-yaml');
 var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
@@ -7,14 +8,22 @@ var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
 const express = require('express');
 const app = express();
 
-var HashTable = require('./lib/HashTable');
-var hashTable = new HashTable();
-
 var lib = require('./index.js');
-var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
-var musicClient = new lib.ApiClient(config.music.api, config.music.key, true);
+var moviesClient = new lib.ApiClient(
+    config.movies.api, 
+    config.movies.key, 
+    true);
+
+var musicClient = new lib.ApiClient(
+    config.music.api, 
+    null, 
+    true, 
+    {
+      headers: {'Authorization': 'Bearer ' + config.music.key}
+    });
 
 var movies = require('./movies.json');
+var music = require('./music.json'); // TODO append to metadata.json
 const port = process.env.PORT || 5000;
 
 app.get('/api/hello', (req, res) => {
@@ -28,13 +37,27 @@ app.get('/api/movies', (req, res) => {
 });
 
 app.get('/api/music', (req, res) => {
-  res.json(generateMusicMetaData()); //one-off script
+  //generateMusicMetaData(); //one-off script
+  res.json(music.music)
 });
 
 app.get('/api/movies/:id', function(req, res) {
   var movie = _.where(movies.movies, {id: parseInt(req.params.id)});
   res.json(movie);
 });
+
+app.get('/api/music/albums/:id', function(req, res) {
+  var album = _.where(music.music, {id: req.params.id});
+  res.json(album);
+});
+
+app.get('/music/albums/:album_id/tracks/:track_number', function(req, res) {
+  var track_fs_path = _.where(music.music, {id: req.params.album_id}); // Get album
+  track_fs_path = String(_.pluck(movie_fs_path, 'preview_url')); // Get album.tracks.items.preview_url
+  // TODO
+  res.json(album);
+});
+
 
 
 app.get('/movies/:id', function(req, res) {
@@ -75,38 +98,73 @@ var generateMovieMetaData = function(){
   var re = new RegExp(/(\d+)(.mp4|.mkv)$/);
       json = { movies: [] };
 
-  
-  let files = walkSync(config.movies.path)
-
-  bluebird.mapSeries(files, function(file){
+  dir.files(config.movies.path, function(err, files) {
+    if (err) throw err;
+    
+    bluebird.mapSeries(files, function(file){
     console.log('GET: ' + file);
     return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
            .then((movie) => {
            movie.fs_path = file;
-           movie.url_path = 'http://localhost:' + port + '/movies/' + movie["id"];
+           movie.url_path = 'http://localhost:' + port + '/movies/' + movie['id'];
            json.movies.push(movie);
            });
-  })
-  .then(function(movies){
-    fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', (err)=>{
-       if(err) console.log(err)
-       else console.log('File saved')
     })
+    .then(function(movies){
+      fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', (err)=>{
+         if(err) console.log(err)
+         else console.log('File saved')
+      })
 
-    return json;
-  })
-  .catch(function(err){
-    console.log("Movie metadata could not be generated due to some error", err);
+      return json;
+    })
+    .catch(function(err){
+      console.log("Movie metadata could not be generated due to some error", err);
+    });
+
   });
 
 };
 
 var generateMusicMetaData = function(){
-  var re = new RegExp(/(\d+)$/);
+  var re = new RegExp(/(\w+)$/);
+      re2 = new RegExp(/([0-9]+).*/);
       json = { music: [] };
 
-  let files = walkSync(config.music.path)
-  return files;
+  dir.subdirs(config.music.path, function(err, subdirs) {
+    if (err) throw err;
+    
+    bluebird.mapSeries(subdirs, function(dir){
+    console.log('GET: ' + dir);
+    return musicClient.send(new lib.requests.Album(dir.match(re)[1]), 50, null)
+           .then((album) => {
+           album.url_path = 'http://localhost:' + port + '/albums/' + album['id'];
+
+          // fs.readdir( dir, function( err, files ) {
+          //   if(err) console.log(err)
+          //   files.forEach( function( file, index ) {
+          //     let track_number = file.match(re2)[1]);
+
+          //   });
+          // });
+
+           json.music.push(album);
+           });
+    })
+    .then(function(music){
+      fs.writeFile('./music.json', JSON.stringify(json), 'utf8', (err)=>{
+         if(err) console.log(err)
+         else console.log('File saved')
+      })
+
+      return json;
+    })
+    .catch(function(err){
+      console.log("Album metadata could not be generated due to some error", err);
+    });
+
+  });
+
 };
 
 var generateMetaData = function(){
@@ -114,20 +172,5 @@ var generateMetaData = function(){
   // generateMovieMetaData
   // generateMusicMetaData
 }
-
-var walkSync = function(dir, filelist) {
-  let files = fs.readdirSync(dir);
-  filelist = filelist || [];
-  files.forEach(function(file) {
-    if (fs.statSync(dir + '/' + file).isDirectory()) {
-      filelist = walkSync(dir + '/' + file, filelist);
-    }
-    else {
-      filelist.push(dir + '/' + file);
-    }
-  });
-  return filelist;
-};
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

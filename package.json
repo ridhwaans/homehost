@@ -16,16 +16,19 @@
     "js-yaml": "^3.10.0",
     "jssha": "^2.3.1",
     "memory-cache": "^0.2.0",
+    "node-dir": "^0.1.17",
     "react-collapse": "^4.0.3",
     "react-expandable-grid": "^1.0.3",
     "react-player": "^1.2.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "splashy": "^2.0.1",
     "torrent-name-parser": "^0.6.5",
     "underscore": "^1.8.3",
     "webpack": "^4.1.0"
   },
   "devDependencies": {
-    "concurrently": "^3.5.0"
+    "concurrently": "^3.5.0",
+    "webpack-cli": "^2.0.11"
   }
 }

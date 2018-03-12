@@ -23,6 +23,7 @@ class Comics extends Component {
       <div>
       <NavBar/>
       <br></br>
+      <p className="coming-soon">Coming Soon</p>
       </div>
     );
   }

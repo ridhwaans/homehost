@@ -3,7 +3,9 @@
 # general
 webpack.config.js
 config.yml
+metadata.json
 movies.json
+music.json
 lib/HashTable.js
 
 # dependencies

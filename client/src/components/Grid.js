@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import MovieDetail from './MovieDetail'
+import AlbumDetail from './AlbumDetail'
 import GridCell from './GridCell'
 
 class Grid extends React.Component {
@@ -11,6 +12,8 @@ class Grid extends React.Component {
 
     this.state = {
       selected_element: '',
+      gridCell_width: this.props.gridCell_width,
+      gridCell_height: this.props.gridCell_height,
       gridData: JSON.parse(this.props.gridData)
     }
   }
@@ -59,6 +62,8 @@ class Grid extends React.Component {
       grid.push(<GridCell 
         handleCellClick={this.handleCellClick.bind(this)} 
         id={gridCell}
+        width={this.state.gridCell_width}
+        height={this.state.gridCell_height}
         GridCellData={gridData[i]}/>)
     }
 
@@ -67,7 +72,7 @@ class Grid extends React.Component {
       detailData = this.state.gridData[parseInt(this.state.selected_element.substring(10))]
     }
     grid.push(
-      <MovieDetail selected_element={this.state.selected_element} detailData={detailData}/>
+      <AlbumDetail selected_element={this.state.selected_element} detailData={detailData}/>
     )
 
     return (
