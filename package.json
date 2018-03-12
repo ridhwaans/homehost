@@ -1,6 +1,6 @@
 {
   "name": "homehost",
-  "version": "v0.9.6-beta",
+  "version": "v0.9.9-BETA",
   "author": "ridhwaans",
   "scripts": {
     "client": "cd client && yarn start",
