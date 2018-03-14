@@ -7,11 +7,6 @@ import AlbumDetail from './AlbumDetail'
 import '../style/MovieDetail.css'
 import '../style/AlbumDetail.css'
 
-const SoundCloudAudio = require('soundcloud-audio');
-const streamUrl='https://s3-eu-west-1.amazonaws.com/react-soundplayer-examples/ksmtk-reborn-edit.mp3'
-const ksmtkChronemics = 'https://soundcloud.com/kosmetism/chronemics';
-const clientId = '1f4ff48a42e78f1382d83d7d91cde4ec';
-
 class Grid extends React.Component {
 
   constructor (props) {
