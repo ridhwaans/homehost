@@ -16,26 +16,37 @@ Self-hosted Netflix-like app in React
 
 ### What's new
 
-- Music Grid is functional
-- New music album Detail view
-- unique color palettes for album select
+- New react soundplayer controls in album Detail view
+- react streaming audio from cdn preview urls for albums
 
-### Bug fixes/ improvements
+### Improvements
 
-- Streamlined metadata generation for media in node
 - Removed unused app resources
 - various minor fixes
 
-### Launch milestones
+### Bugs
 
-- Finish Album detail view redesign v1
-- add cdn previews and react streaming support for album hosting
-- get music player controls to work in react component
+- Music playbutton toggle doesnt work correctly
+- track number 0 urls are null for certain albums
+- css module loader doesnt change based on Detail View change
+
+### v1.0.0 Launch milestones
+
+- ~~Finish Album detail view redesign v1~~
+- add react album streaming support from host server urls
+- ~~get music player controls to work in react component~~
 - add support for single-disc and compilation albums
 - cleanup utils & dependencies
 
 
 ## Setup
+
+### Naming conventions
+
+**Movies** `movie_file_name.<TMDB_movieID>(.mp4|.mkv)`  
+**Music** `album_folder_name <Spotify_albumID> \ <track_number> track_file_name(.mp3)`
+
+### Server-side
 
 In `./config.yml`, set the media paths, and specify a working API key for TMDB and Spotify Web API
 ```yaml

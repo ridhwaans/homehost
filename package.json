@@ -10,6 +10,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
+    "basscss": "^8.0.2",
     "bluebird": "^3.5.1",
     "classnames": "^2.2.5",
     "express": "^4.16.2",
@@ -20,6 +21,7 @@
     "react-collapse": "^4.0.3",
     "react-expandable-grid": "^1.0.3",
     "react-player": "^1.2.1",
+    "react-soundplayer": "^1.0.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "splashy": "^2.0.1",
