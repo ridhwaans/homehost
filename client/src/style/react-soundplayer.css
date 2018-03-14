@@ -1,0 +1,121 @@
+@import '~basscss/css/basscss.css';
+
+/*https://www.npmjs.com/package/react-soundplayer
+https://github.com/kosmetism/react-soundplayer*/
+
+.red {
+  color: var(--description-color); /*#ff4136;*/
+  margin-bottom: 8px;
+}
+
+.p2 {
+  text-align: left;
+}
+
+svg {
+    fill: var(--description-color);
+    stroke: var(--description-color);
+}
+
+.sb-soundplayer-btn {
+  display: inline-block;
+  background-color: transparent;
+  color: #FC561E;
+  font-size: 1em;
+  padding: 16px;
+  padding: 1rem;
+  margin: 0;
+  height: auto;
+  vertical-align: middle;
+  border-radius: 3px;
+  text-decoration: none;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  -webkit-transition: .05s ease, -webkit-transform, -webkit-box-shadow;
+  transition: .05s ease, -webkit-transform, -webkit-box-shadow;
+  transition: transform, box-shadow, .05s ease;
+  transition: transform, box-shadow, .05s ease, -webkit-transform, -webkit-box-shadow;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-appearance: none;
+}
+.sb-soundplayer-btn:hover {
+  -webkit-transform: scale(1.0625);
+          transform: scale(1.0625);
+}
+.sb-soundplayer-btn:focus {
+  -webkit-transform: scale(.9375);
+          transform: scale(.9375);
+}
+.sb-soundplayer-btn:active {
+  -webkit-box-shadow: inset 0 0 0 2px #FC561E;
+          box-shadow: inset 0 0 0 2px #FC561E;
+}
+.sb-soundplayer-btn:hover,
+.sb-soundplayer-btn:focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.sb-soundplayer-icon {
+  width: 1em;
+  height: 1em;
+  position: relative;
+  vertical-align: middle;
+}
+
+.sb-soundplayer-progress-container {
+  background-color: var(--title-color);
+  width: 100%;
+  height: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.sb-soundplayer-progress-inner {
+  background-color: var(--description-color);
+  height: 100%;
+  -webkit-transition: width .2s ease-in;
+  transition: width .2s ease-in;
+}
+
+.sb-soundplayer-volume {
+  position: relative;
+}
+.sb-soundplayer-volume:hover div {
+  width: 80px;
+}
+.sb-soundplayer-volume div {
+  overflow: hidden;
+  width:0;
+  -webkit-transition: width .2s ease-out;
+  transition: width .2s ease-out;
+  position: relative;
+}
+.sb-soundplayer-volume-range {
+  -webkit-appearance: none;
+  width: 98%;
+}
+.sb-soundplayer-volume-range:focus {
+  outline: none;
+}
+/* track */
+.sb-soundplayer-volume-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.2em;
+  cursor: pointer;
+  animate: 0.2s;
+  background: var(--title-color);
+  border-radius: 1.3px;
+}
+
+.sb-soundplayer-volume-range::-webkit-slider-thumb {
+  height: 1em;
+  width: 1em;
+  border-radius: 1em;
+  background: var(--description-color);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -0.4em;
+}

@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CellDetail from './CellDetail'
-import '../style/MovieDetail.css'
 
 class MovieDetail extends CellDetail {
   

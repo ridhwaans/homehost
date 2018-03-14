@@ -45,6 +45,7 @@ class Music extends Component {
           gridData={data_string}
           gridCell_width={175}
           gridCell_height={175}
+          type={1}
       />
       </div>
     );

@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import GridCell from './GridCell'
 import MovieDetail from './MovieDetail'
 import AlbumDetail from './AlbumDetail'
-import GridCell from './GridCell'
+import '../style/MovieDetail.css'
+import '../style/AlbumDetail.css'
 
 class Grid extends React.Component {
 
@@ -12,6 +14,7 @@ class Grid extends React.Component {
 
     this.state = {
       selected_element: '',
+      type: this.props.type,
       gridCell_width: this.props.gridCell_width,
       gridCell_height: this.props.gridCell_height,
       gridData: JSON.parse(this.props.gridData)
@@ -38,8 +41,6 @@ class Grid extends React.Component {
   componentWillMount () {
     window.addEventListener('resize', this.handleResize.bind(this))
   }
-
-  componentWillUnmount () { }
 
   handleResize () {
     this.makeItMobileFriendly()
@@ -71,9 +72,19 @@ class Grid extends React.Component {
     if (this.state.selected_element) {
       detailData = this.state.gridData[parseInt(this.state.selected_element.substring(10))]
     }
-    grid.push(
-      <AlbumDetail selected_element={this.state.selected_element} detailData={detailData}/>
-    )
+
+    switch(this.state.type) {
+      case type.MOVIES:
+        grid.push(<MovieDetail selected_element={this.state.selected_element} detailData={detailData}/>)
+        //change stylesheet
+        break;
+      case type.MUSIC:
+        grid.push(<AlbumDetail selected_element={this.state.selected_element} detailData={detailData}/>)
+        //change stylesheet
+        break;
+      default:
+        break;
+    }
 
     return (
       <div id='GridDetailExpansion' className="grid-detail-expansion">
@@ -86,6 +97,15 @@ class Grid extends React.Component {
       </div>
     )
   }
+}
+
+const type = {
+  MOVIES: 0,
+  MUSIC: 1,
+  TV: 2,
+  BOOKS: 3,
+  COMICS: 4,
+  PODCASTS: 5
 }
 
 Grid.propTypes = {

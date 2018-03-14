@@ -28,8 +28,9 @@ Self-hosted Netflix-like app in React
 
 ### Launch milestones
 
-- Album detail view redesign v1
+- Finish Album detail view redesign v1
 - add cdn previews and react streaming support for album hosting
+- get music player controls to work in react component
 - add support for single-disc and compilation albums
 - cleanup utils & dependencies
 

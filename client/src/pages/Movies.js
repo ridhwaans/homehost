@@ -49,6 +49,7 @@ class Movies extends Component {
           gridData={data_string}
           gridCell_width={140}
           gridCell_height={200}
+          type={0}
       />
       </div>
     );

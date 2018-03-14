@@ -5,19 +5,54 @@
   --description-color: #000000;
 }
 
+/* Plyr Overrides
+================================================== */
+
+.plyr--audio .plyr__controls {
+background-color:transparent;
+border:none;
+color:#fff;
+padding:20px 20px 20px 13px;
+width:100%;
+}
+
+.plyr--audio .plyr__controls button.tab-focus:focus,
+.plyr--audio .plyr__controls button:hover,
+.plyr__play-large {
+background:rgba(0,0,0,.1);
+}
+
+.plyr__progress--played, .plyr__volume--display {
+color:rgba(0,0,0,.1);
+}
+
+.plyr--audio .plyr__progress--buffer,
+.plyr--audio .plyr__volume--display {
+background:rgba(0,0,0,.1);
+}
+
+.plyr--audio .plyr__progress--buffer {
+color:rgba(0,0,0,.1);
+}
+
 #plwrap {
 margin:0 auto;
 }
 
 #plList {
   column-count: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
 }
 
 #plList li {
 cursor:pointer;
 display:block;
 margin:0;
-padding:21px 0;
+padding:0 0 21px 0;
+-webkit-column-break-inside: avoid;
+page-break-inside: avoid;
+break-inside: avoid;
 }
 
 #plList li:hover {
@@ -26,6 +61,7 @@ background-color:rgba(0,0,0,.7);
 
 .plItem {
 position:relative;
+font-size: 14px;
 }
 
 .plTitle {
@@ -74,7 +110,7 @@ cursor:default !important;
 
 .cell-detail {
   background-color: var(--background-color);
-  height: 300px;
+  height: 500px;
   position: relative;
   padding: none;
 }
@@ -106,7 +142,7 @@ cursor:default !important;
   left: 0;
   right: 0;
   margin: auto;
-  padding: 70px;
+  /*padding: 70px;*/
 }
 
 .cell-detail-close {
@@ -127,19 +163,16 @@ cursor:default !important;
   display: block;
   width: 100%;
   height: auto;
-  margin-bottom: 15px; 
+  margin-bottom: 0px; 
   color: var(--title-color);
 }
 
-.cell-detail-description {
+.cell-detail-copyright {
   font-family: 'Lato';
   font-size: 16px;
   font-weight: 700;
   display: block;
-  width: auto%;
-  height: 20%;
-  margin-right: 30px;
-  margin-left: 30px;
-  text-align: center;
+  margin: 30px;
+  text-align: right;
   color: var(--description-color);
 }

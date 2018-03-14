@@ -7,7 +7,8 @@ import TV from './pages/TV'
 import Music from './pages/Music'
 import Books from './pages/Books'
 import Comics from './pages/Comics'
-// import { Home, Movies, TV, Music, Books, Comics } from './pages/index'
+import Podcasts from './pages/Podcasts'
+// import { Home, Movies, TV, Music, Books, Comics, Podcasts } from './pages/index'
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
           <Route path="/music" component={Music}/>
           <Route path="/books" component={Books}/>
           <Route path="/comics" component={Comics}/>
+          <Route path="/podcasts" component={Podcasts}/>
         </div>
       </Router>
       )
