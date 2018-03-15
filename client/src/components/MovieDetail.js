@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CellDetail from './CellDetail'
+import MovieDetailStyle from '../style/MovieDetail.css'
 
 class MovieDetail extends CellDetail {
   
@@ -27,14 +28,18 @@ class MovieDetail extends CellDetail {
       }
     }
 
-    var backgroundImage = {   
-      backgroundImage: 'url(' + data.backdrop_path + ')'
-    }
-    var title = data.title + ' (' + parseInt(data.release_date) + ')'
+    //var backgroundImage = {   
+    //  backgroundImage: 'url(' + data.backdrop_path + ')'
+    //}
+    //<li id='CellDetail' style={backgroundImage}>
 
-   return (
-      <div className="cell-detail-div" id='CellDetailDiv'>
-        <li className="cell-detail" key='CellDetail' id='CellDetail' style={backgroundImage}>
+    let cssMovieDetail = document.documentElement.style
+    cssMovieDetail.setProperty('--background-image', 'url(' + data.backdrop_path + ')')
+    let title = data.title + ' (' + parseInt(data.release_date) + ')'
+
+    return (
+      <div id='CellDetailDiv' className='cell-detail-div'>
+        <li id='CellDetail' key='CellDetail' className='cell-detail'>
           <div id='CellDetail_left'className='cell-detail-left'>
             <a id='CellDetailImageLink' className='image-link' href={data.link}>
               <img id='CellDetailImage' className='cell-detail-image' src={data.poster_path}/>
@@ -42,9 +47,9 @@ class MovieDetail extends CellDetail {
           </div>
           <div id='CellDetail_right' className='cell-detail-right'>
             <div id='CellDetail_close' className='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
-            <div id="cellDetailPlayerDiv" className="cell-detail-player-div">
-                <video id="cellDetailPlayer" className="cell-detail-player" controls controlsList="nodownload">
-                  <source src={data.url_path} type="video/mp4"/>
+            <div id='cellDetailPlayerDiv' className='cell-detail-player-div'>
+                <video id='cellDetailPlayer' className='cell-detail-player' controls controlsList="nodownload">
+                  <source src={data.url_path} type='video/mp4'/>
                 </video>
             </div>
             <div id='CellDetailTitle' className='cell-detail-title'> {title} </div>

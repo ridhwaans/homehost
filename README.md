@@ -3,7 +3,7 @@
 [![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ridhwaans/homehost/issues)
 [![release](https://img.shields.io/github/release/ridhwaans/homehost.svg)](https://gitHub.com/ridhwaans/homehost/releases/)
 [![tag](https://img.shields.io/github/tag/ridhwaans/homehost.svg)](https://gitHub.com/ridhwaans/homehost/tags/)
-[![commits-since](https://img.shields.io/github/commits-since/ridhwaans/homehost/v0.9.9-beta.svg)](https://gitHub.com/ridhwaans/homehost/commit/)
+[![commits-since](https://img.shields.io/github/commits-since/ridhwaans/homehost/v1.0.0-beta.svg)](https://gitHub.com/ridhwaans/homehost/commit/)
 [![license](https://img.shields.io/github/license/ridhwaans/homehost.svg)](https://github.com/ridhwaans/homehost/blob/master/LICENSE)
 
 Self-hosted Netflix-like app in React  
@@ -21,14 +21,16 @@ Self-hosted Netflix-like app in React
 
 ### Improvements
 
+- Rewrote musicPlayer component and interface to fit homehost
 - Removed unused app resources
 - various minor fixes
 
 ### Bugs
 
-- Music playbutton toggle doesnt work correctly
-- track number 0 urls are null for certain albums
+- ~~Music playbutton toggle doesnt work correctly~~
+- ~~track urls in certain albums are null and crashing~~
 - css module loader doesnt change based on Detail View change
+- view height misaligned for deluxe albums
 
 ### v1.0.0 Launch milestones
 
@@ -43,8 +45,8 @@ Self-hosted Netflix-like app in React
 
 ### Naming conventions
 
-**Movies** `movie_file_name.<TMDB_movieID>(.mp4|.mkv)`  
-**Music** `album_folder_name <Spotify_albumID> \ <track_number> track_file_name(.mp3)`
+**Movies** `movie_file_name<TMDB_movieID>(.mp4|.mkv)`  
+**Music** `album_folder_name <Spotify_albumID> \ (<disc_number>-)?<track_number> track_file_name(.mp3)`
 
 ### Server-side
 

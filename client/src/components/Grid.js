@@ -4,8 +4,6 @@ import PropTypes from 'prop-types'
 import GridCell from './GridCell'
 import MovieDetail from './MovieDetail'
 import AlbumDetail from './AlbumDetail'
-import '../style/MovieDetail.css'
-import '../style/AlbumDetail.css'
 
 class Grid extends React.Component {
 
@@ -76,21 +74,13 @@ class Grid extends React.Component {
     switch(this.state.type) {
       case type.MOVIES:
         grid.push(<MovieDetail selected_element={this.state.selected_element} detailData={detailData}/>)
-        //change stylesheet
         break;
       case type.MUSIC:
         grid.push(<AlbumDetail selected_element={this.state.selected_element} detailData={detailData}/>)
-        //change stylesheet
         break;
       default:
         break;
     }
-
-// resolveUrl={ksmtkChronemics}
-// soundCloudAudio = {new SoundCloudAudio(clientId)}
-// playing = {false}
-// currentTime={500}
-// duration={800}
           
     return (
       <div id='GridDetailExpansion' className="grid-detail-expansion">

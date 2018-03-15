@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types';
 import CellDetail from './CellDetail'
-import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu'
+import AlbumDetailStyle from '../style/AlbumDetail.css'
 import { PlayButton, PrevButton, NextButton, Progress, Timer, VolumeControl } from 'react-soundplayer/components'
 import SoundCloudAudio from '../utils/soundcloud-audio'
 import WithSoundCloudAudio from '../utils/with-soundcloud-audio'
@@ -16,12 +15,6 @@ var scPlayer = new SoundCloudAudio()
 var activeIndex
 
 class AlbumDetail extends CellDetail {
-  constructor(props) {
-    super(props)
-    this.state = {
-        detailData: this.props.detailData || []
-    };
-  }
 
   playTrackAtIndex(playlistIndex) {  
     let data = this.state.detailData
@@ -81,12 +74,12 @@ class AlbumDetail extends CellDetail {
     let data = this.state.detailData
     var trackList = []
     if (data.album_art) {
-      let cssAlbumDetail = document.documentElement.style;
-      let albumColors = new AlbumColors(data.album_art); 
+      let cssAlbumDetail = document.documentElement.style
+      let albumColors = new AlbumColors(data.album_art)
       albumColors.getColors(function(colors) {
-      cssAlbumDetail.setProperty('--background-color', rgbToHex(colors[0]));
-      cssAlbumDetail.setProperty('--title-color', rgbToHex(colors[1]));
-      cssAlbumDetail.setProperty('--description-color', rgbToHex(colors[2]));
+        cssAlbumDetail.setProperty('--background-color', rgbToHex(colors[0]))
+        cssAlbumDetail.setProperty('--title-color', rgbToHex(colors[1]))
+        cssAlbumDetail.setProperty('--description-color', rgbToHex(colors[2]))
       });
 
       for (var i = 0; i < data.tracks.items.length; i++){
@@ -97,10 +90,10 @@ class AlbumDetail extends CellDetail {
         //let preview_url = data.tracks.items[i].preview_url
         //onClick={preview_url ? this.playTrackAtIndex.bind(this, i) : undefined}
         trackList.push(
-          <li><div class="plItem" onClick={this.playTrackAtIndex.bind(this, i)}>
-          <span class="plNum"> {track_number} </span>
-          <span class="plTitle"> {name} </span>
-          <span class="plLength"> {duration} </span>
+          <li><div class='plItem' onClick={this.playTrackAtIndex.bind(this, i)}>
+          <span class='plNum'> {track_number} </span>
+          <span class='plTitle'> {name} </span>
+          <span class='plLength'> {duration} </span>
           </div></li>
         )
       }
@@ -110,35 +103,35 @@ class AlbumDetail extends CellDetail {
     scPlayer.playlist(data, function (track) {});
     var MusicPlayer = WithSoundCloudAudio(props => {
       return (
-        <div class="bg-darken-1 red mt1 mb3 rounded">
-          <div className="p2">
-            <div className="flex flex-center">
-              <h2 className="h4 flex-auto nowrap m0 semibold">{data.artist_name}</h2>
-              <Timer className="h6 mr1 regular" {...props} />
+        <div className='bg-darken-1 red mt1 mb3 rounded'>
+          <div className='p2'>
+            <div className='flex flex-center'>
+              <h2 className='h4 flex-auto nowrap m0 semibold'>{data.artist_name}</h2>
+              <Timer className='h6 mr1 regular' {...props} />
             </div>
-            <h2 className="h2 nowrap caps mt0 mb2 semibold">{data.album_name}</h2>
-            <div className="flex flex-center">
+            <h2 className='h2 nowrap caps mt0 mb2 semibold'>{data.album_name}</h2>
+            <div className='flex flex-center'>
 
               <PrevButton
-                className="flex-none h3 button button-narrow button-transparent button-grow rounded"
+                className='flex-none h3 button button-narrow button-transparent button-grow rounded'
                 onPrevClick={this.prevIndex.bind(this)} {...props}
               />
               <PlayButton 
-                className="flex-none h2 button button-transparent button-grow rounded" 
+                className='flex-none h2 button button-transparent button-grow rounded'
                 {...props}
               />
               <NextButton
-                className="flex-none h3 button button-narrow button-transparent button-grow rounded"
+                className='flex-none h3 button button-narrow button-transparent button-grow rounded'
                 onNextClick={this.nextIndex.bind(this)} {...props}
               />
               <VolumeControl
                 className='flex flex-center mr2'
-                buttonClassName="flex-none h4 button button-transparent button-grow rounded" 
+                buttonClassName='flex-none h4 button button-transparent button-grow rounded'
                 {...props}
               />
               <Progress
-                className="mt1 mb1 rounded"
-                innerClassName="rounded-left"
+                className='mt1 mb1 rounded'
+                innerClassName='rounded-left'
                 {...props}
               />
 
@@ -150,8 +143,8 @@ class AlbumDetail extends CellDetail {
 
     let title = data.album_name + ' (' + parseInt(data.release_date) + ')'
     return (
-      <div className="cell-detail-div" id='CellDetailDiv'>
-        <li className="cell-detail" key='CellDetail' id='CellDetail'>
+      <div id='CellDetailDiv' className='cell-detail-div'>
+        <li id='CellDetail' key='CellDetail' className='cell-detail'>
           <div id='CellDetail_left'className='cell-detail-left'>
             <img id='CellDetailImage' className='cell-detail-image' src={data.album_art}/>
             
@@ -161,8 +154,8 @@ class AlbumDetail extends CellDetail {
 
             <MusicPlayer soundCloudAudio={scPlayer}/>
 
-            <div id="plwrap">
-              <ul id="plList">
+            <div id='plWrap'>
+              <ul id='plList'>
                 {trackList}
               </ul>
             </div>

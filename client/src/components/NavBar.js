@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
 
 class NavBar extends React.Component {
 
@@ -33,6 +32,9 @@ class NavBar extends React.Component {
 	          </li>
 	          <li class="nav-item">
 	            <a class="nav-link" href="comics">Comics</a>
+	          </li>
+	          <li class="nav-item">
+	            <a class="nav-link" href="podcasts">Podcasts</a>
 	          </li>
 	        </ul>
 	      </div>

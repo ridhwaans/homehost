@@ -37,14 +37,8 @@ background: var(--title-color);
   background: var(--description-color);
 }
 
-/* AlbumDetail */
-:root {
-  --background-color: #D9D9D9;
-  --title-color: #000000;
-  --description-color: #000000;
-}
-
-#plwrap {
+/* tracklist */
+#plWrap {
   margin:0 auto;
 }
 
@@ -74,6 +68,13 @@ background: var(--title-color);
   font-size: 14px;
 }
 
+.plNum {
+  padding-left:21px;
+  width:25px;
+  float:left;
+  color: var(--description-color);
+}
+
 .plTitle {
   left:50px;
   overflow:hidden;
@@ -85,13 +86,6 @@ background: var(--title-color);
   color: var(--title-color);
 }
 
-.plNum {
-  padding-left:21px;
-  width:25px;
-  float:left;
-  color: var(--description-color);
-}
-
 .plLength {
   padding-left:21px;
   position:absolute;
@@ -100,11 +94,11 @@ background: var(--title-color);
   color: var(--description-color);
 }
 
-.plSel,
-.plSel:hover {
-  background-color:rgba(0,0,0,.1);
-  color:#fff;
-  cursor:default !important;
+/* AlbumDetail */
+:root {
+  --background-color: #D9D9D9;
+  --title-color: #000000;
+  --description-color: #000000;
 }
 
 .cell-detail-div {
@@ -138,7 +132,7 @@ background: var(--title-color);
   float: right;
   position: relative;
   overflow: hidden;
-  background-color:transparent;
+  background-color:transparent; 
   color:white;
 }
 

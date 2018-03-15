@@ -1,36 +1,23 @@
 {
   "name": "homehost",
-  "version": "v0.9.9-BETA",
+  "version": "0.9.9-BETA",
   "author": "ridhwaans",
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "build": "webpack -p",
-    "watch": "webpack --watch"
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "dependencies": {
-    "basscss": "^8.0.2",
     "bluebird": "^3.5.1",
-    "classnames": "^2.2.5",
     "express": "^4.16.2",
     "js-yaml": "^3.10.0",
     "jssha": "^2.3.1",
-    "memory-cache": "^0.2.0",
     "node-dir": "^0.1.17",
-    "react-collapse": "^4.0.3",
-    "react-expandable-grid": "^1.0.3",
-    "react-player": "^1.2.1",
-    "react-soundplayer": "^1.0.4",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "splashy": "^2.0.1",
-    "torrent-name-parser": "^0.6.5",
-    "underscore": "^1.8.3",
-    "webpack": "^4.1.0"
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "concurrently": "^3.5.0",
-    "webpack-cli": "^2.0.11"
+    "concurrently": "^3.5.0"
   }
 }

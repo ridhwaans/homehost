@@ -1,4 +1,8 @@
 /* MovieDetail */
+:root {
+  --background-image: none;
+}
+
 .cell-detail-div {
   -moz-transition: height .5s;
   -ms-transition: height .5s;
@@ -15,6 +19,7 @@
   height: 600px;
   position: relative;
   padding: none;
+  background-image: var(--background-image);
 }
 
 .cell-detail-left {
@@ -57,21 +62,6 @@
   cursor: pointer;
 }
 
-.cell-detail-player-div {
-  display: block;
-  position: relative;
-  height: 60%;
-}
-
-
-.cell-detail-player {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 .cell-detail-title {
   font-family: 'Lato';
   font-size: 40px;
@@ -80,6 +70,20 @@
   width: 100%;
   height: auto;
   margin-bottom: 15px; 
+}
+
+.cell-detail-player-div {
+  display: block;
+  position: relative;
+  height: 60%;
+}
+
+.cell-detail-player {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 .cell-detail-description {

@@ -16,10 +16,11 @@ class Home extends Component {
           <h3 class="masthead-brand">HomeHost</h3>
           <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link" href="movies">Movies</a>
-            <a class="nav-link" href="#">TV</a>
-            <a class="nav-link" href="#">Music</a>
-            <a class="nav-link" href="#">Books</a>
-            <a class="nav-link" href="#">Comics</a>
+            <a class="nav-link" href="tv">TV</a>
+            <a class="nav-link" href="music">Music</a>
+            <a class="nav-link" href="books">Books</a>
+            <a class="nav-link" href="comics">Comics</a>
+            <a class="nav-link" href="podcasts">Podcasts</a>
           </nav>
         </div>
       </header>

@@ -23,7 +23,7 @@ class Podcasts extends Component {
       <div>
       <NavBar/>
       <br></br>
-      <p className="coming-soon">Coming Soon</p>
+      <p className="coming-soon">🚧</p>
       </div>
     );
   }

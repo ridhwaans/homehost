@@ -14,10 +14,10 @@ class CellDetail extends React.Component {
 
   componentDidUpdate (prevProps, prevState){
     var detail = document.getElementById('CellDetailDiv')
-    var wrapper = document.querySelector('.cell-detail');
+    var wrapper = document.querySelector('.cell-detail')
     var arrow = document.getElementById('selected_arrow')
 
-    if (this.state.selected_element) {
+    if (this.state.selected_element && detail && wrapper) {
       
       if (this.props.selected_element === prevProps.selected_element) {
         detail.clientHeight ? detail.style.height = 0 : detail.style.height = wrapper.clientHeight + "px"
