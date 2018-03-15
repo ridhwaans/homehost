@@ -58,8 +58,6 @@ app.get('/music/albums/:album_id/tracks/:track_number', function(req, res) {
   res.json(album);
 });
 
-
-
 app.get('/movies/:id', function(req, res) {
   var movie_fs_path = _.where(movies.movies, {id: parseInt(req.params.id)}); // Get movie
   movie_fs_path = String(_.pluck(movie_fs_path, 'fs_path')); // Get movie.fs_path

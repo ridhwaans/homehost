@@ -44,11 +44,8 @@ background: var(--title-color);
   --description-color: #000000;
 }
 
-/* Plyr Overrides
-================================================== */
-
 #plwrap {
-margin:0 auto;
+  margin:0 auto;
 }
 
 #plList {
@@ -58,56 +55,56 @@ margin:0 auto;
 }
 
 #plList li {
-cursor:pointer;
-display:block;
-margin:0;
-padding:0 0 21px 0;
--webkit-column-break-inside: avoid;
-page-break-inside: avoid;
-break-inside: avoid;
+  cursor:pointer;
+  display:block;
+  margin:0;
+  padding:0 0 21px 0;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 #plList li:hover {
-/*background-color:rgba(0,0,0,.7);*/
-box-shadow: inset 0 0 0 2px var(--title-color);
+  /*background-color:rgba(0,0,0,.7);*/
+  box-shadow: inset 0 0 0 2px var(--title-color);
 }
 
 .plItem {
-position:relative;
-font-size: 14px;
+  position:relative;
+  font-size: 14px;
 }
 
 .plTitle {
-left:50px;
-overflow:hidden;
-position:absolute;
-right:65px;
-text-overflow:ellipsis;
-top:0;
-white-space:nowrap;
-color: var(--title-color);
+  left:50px;
+  overflow:hidden;
+  position:absolute;
+  right:65px;
+  text-overflow:ellipsis;
+  top:0;
+  white-space:nowrap;
+  color: var(--title-color);
 }
 
 .plNum {
-padding-left:21px;
-width:25px;
-float:left;
-color: var(--description-color);
+  padding-left:21px;
+  width:25px;
+  float:left;
+  color: var(--description-color);
 }
 
 .plLength {
-padding-left:21px;
-position:absolute;
-right:21px;
-top:0;
-color: var(--description-color);
+  padding-left:21px;
+  position:absolute;
+  right:21px;
+  top:0;
+  color: var(--description-color);
 }
 
 .plSel,
 .plSel:hover {
-background-color:rgba(0,0,0,.1);
-color:#fff;
-cursor:default !important;
+  background-color:rgba(0,0,0,.1);
+  color:#fff;
+  cursor:default !important;
 }
 
 .cell-detail-div {

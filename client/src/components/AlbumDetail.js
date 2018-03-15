@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types';
 import CellDetail from './CellDetail'
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu'
-import { PlayButton, PrevButton, NextButton, Progress, Timer, VolumeControl, Icons } from 'react-soundplayer/components'
-import { withCustomAudio } from 'react-soundplayer/addons'
-import SoundCloudAudio from 'soundcloud-audio'
+import { PlayButton, PrevButton, NextButton, Progress, Timer, VolumeControl } from 'react-soundplayer/components'
+import SoundCloudAudio from '../utils/soundcloud-audio'
+import WithSoundCloudAudio from '../utils/with-soundcloud-audio'
 import { AlbumColors, rgbToHex } from '../utils/albumcolors'
 import * as utils from '../utils/utils.js'
 
-var MusicPlayer
+/*
+  SoundCloudAudio component state managed with global vars to avoid display toggling of CellDetail in componentDidUpdate()
+*/
 var scPlayer = new SoundCloudAudio()
 var activeIndex
 
@@ -22,35 +24,37 @@ class AlbumDetail extends CellDetail {
   }
 
   playTrackAtIndex(playlistIndex) {  
-    if (playlistIndex == activeIndex)
-      scPlayer.playing == false ? scPlayer.play({streamUrl: this.state.detailData.tracks.items[playlistIndex].preview_url}) : scPlayer.pause()
-    else {
-      scPlayer.play({streamUrl: this.state.detailData.tracks.items[playlistIndex].preview_url})
-      activeIndex = playlistIndex
-      }
-    console.log(scPlayer.playing)
+    let data = this.state.detailData
+    activeIndex = playlistIndex
+    scPlayer.play({ playlistIndex });
   }
 
   nextIndex() {
-    if (activeIndex >= this.state.detailData.tracks.items.length - 1) {
+    let data = this.state.detailData
+    
+    if (activeIndex >= data.tracks.items.length - 1) {
       return;
     }
 
     if (activeIndex || activeIndex === 0) {
       activeIndex = activeIndex + 1
-      scPlayer.play({streamUrl: this.state.detailData.tracks.items[activeIndex].preview_url});
     }
+    let playlistIndex = activeIndex
+    scPlayer.play({ playlistIndex });
   }
 
   prevIndex() {
+    let data = this.state.detailData
+    
     if (activeIndex <= 0) {
       return;
     }
 
     if (activeIndex || activeIndex === 0) {
       activeIndex = activeIndex - 1
-      scPlayer.play({streamUrl: this.state.detailData.tracks.items[activeIndex].preview_url});
     }
+    let playlistIndex = activeIndex
+    scPlayer.play({ playlistIndex });
   }
 
   render() {
@@ -74,10 +78,8 @@ class AlbumDetail extends CellDetail {
       }
     }
 
-    activeIndex = 0
     let data = this.state.detailData
     var trackList = []
-    var streamUrl
     if (data.album_art) {
       let cssAlbumDetail = document.documentElement.style;
       let albumColors = new AlbumColors(data.album_art); 
@@ -87,18 +89,15 @@ class AlbumDetail extends CellDetail {
       cssAlbumDetail.setProperty('--description-color', rgbToHex(colors[2]));
       });
 
-      streamUrl = data.tracks.items[activeIndex].preview_url
-      console.log('activeIndex ' + activeIndex)
-      console.log('streamUrl ' + streamUrl)
-
       for (var i = 0; i < data.tracks.items.length; i++){
         let track_number = data.tracks.items[i].track_number
         let name = data.tracks.items[i].name
-        let duration = utils.msToMS(data.tracks.items[i].duration_ms)
-        let preview_url = data.tracks.items[i].preview_url
-
+        let duration = Timer.prettyTime(data.tracks.items[i].duration_ms / 1000)
+        //utils.msToMS(data.tracks.items[i].duration_ms)
+        //let preview_url = data.tracks.items[i].preview_url
+        //onClick={preview_url ? this.playTrackAtIndex.bind(this, i) : undefined}
         trackList.push(
-          <li><div onClick={this.playTrackAtIndex.bind(this, i)} class="plItem">
+          <li><div class="plItem" onClick={this.playTrackAtIndex.bind(this, i)}>
           <span class="plNum"> {track_number} </span>
           <span class="plTitle"> {name} </span>
           <span class="plLength"> {duration} </span>
@@ -106,9 +105,10 @@ class AlbumDetail extends CellDetail {
         )
       }
     }
-    
-    MusicPlayer = withCustomAudio(props => {
-      //console.log(props)
+
+    activeIndex = 0
+    scPlayer.playlist(data, function (track) {});
+    var MusicPlayer = WithSoundCloudAudio(props => {
       return (
         <div class="bg-darken-1 red mt1 mb3 rounded">
           <div className="p2">
@@ -119,33 +119,23 @@ class AlbumDetail extends CellDetail {
             <h2 className="h2 nowrap caps mt0 mb2 semibold">{data.album_name}</h2>
             <div className="flex flex-center">
 
-             <div onClick={this.prevIndex.bind(this)}>
               <PrevButton
                 className="flex-none h3 button button-narrow button-transparent button-grow rounded"
-                {...props}
+                onPrevClick={this.prevIndex.bind(this)} {...props}
               />
-              </div>
-
-              <div onClick={this.playTrackAtIndex.bind(this, activeIndex)}>
               <PlayButton 
                 className="flex-none h2 button button-transparent button-grow rounded" 
                 {...props}
               />
-              </div>
-
-              <div onClick={this.nextIndex.bind(this)}>
               <NextButton
                 className="flex-none h3 button button-narrow button-transparent button-grow rounded"
-                {...props}
+                onNextClick={this.nextIndex.bind(this)} {...props}
               />
-              </div>
-
               <VolumeControl
                 className='flex flex-center mr2'
                 buttonClassName="flex-none h4 button button-transparent button-grow rounded" 
                 {...props}
               />
-
               <Progress
                 className="mt1 mb1 rounded"
                 innerClassName="rounded-left"
@@ -157,7 +147,7 @@ class AlbumDetail extends CellDetail {
         </div>
       );
     });
-    //this.props.streamUrl streamUrl={streamUrl} 
+
     let title = data.album_name + ' (' + parseInt(data.release_date) + ')'
     return (
       <div className="cell-detail-div" id='CellDetailDiv'>
