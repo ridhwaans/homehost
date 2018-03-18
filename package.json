@@ -3,7 +3,7 @@
   "version": "0.9.9-BETA",
   "author": "ridhwaans",
   "scripts": {
-    "client": "cd client && yarn start",
+    "client": "cd client && yarn dev",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },

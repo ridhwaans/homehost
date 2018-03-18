@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import GridCell from './GridCell'
 import MovieDetail from './MovieDetail'
 import AlbumDetail from './AlbumDetail'
+import style from '../style/App.css'
 
 class Grid extends React.Component {
 
@@ -57,10 +58,10 @@ class Grid extends React.Component {
     var gridData = this.state.gridData
 
     for (var i in gridData) {
-      var gridCell = 'grid_cell_' + i.toString()
+      var gridCell_id = 'grid_cell_' + i.toString()
       grid.push(<GridCell 
         handleCellClick={this.handleCellClick.bind(this)} 
-        id={gridCell}
+        id={gridCell_id}
         width={this.state.gridCell_width}
         height={this.state.gridCell_height}
         GridCellData={gridData[i]}/>)
@@ -83,13 +84,13 @@ class Grid extends React.Component {
     }
           
     return (
-      <div id='GridDetailExpansion' className="grid-detail-expansion">
-        <div id='theGridHolder' className="grid-holder">
-          <ol id='gridList' className="grid-list">
+      <div id='GridDetailExpansion' className={style.gridDetailExpansion}>
+        <div id='theGridHolder' className={style.gridHolder}>
+          <ol id='gridList' className={style.gridList}>
             {grid}
           </ol>
         </div>
-        <div id='selected_arrow' className="selected-arrow" />
+        <div id='selected_arrow' className={style.selectedArrow}/>
       </div>
     )
   }

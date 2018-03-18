@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Movies from './pages/Movies'
-import TV from './pages/TV'
-import Music from './pages/Music'
-import Books from './pages/Books'
-import Comics from './pages/Comics'
-import Podcasts from './pages/Podcasts'
-// import { Home, Movies, TV, Music, Books, Comics, Podcasts } from './pages/index'
+import Home from './Home'
+import Movies from './Movies'
+import TV from './TV'
+import Music from './Music'
+import Books from './Books'
+import Comics from './Comics'
+import Podcasts from './Podcasts'
 
 class App extends Component {
   render() {

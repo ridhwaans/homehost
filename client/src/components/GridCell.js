@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import style from '../style/App.css'
 
 class GridCell extends React.Component {
 
@@ -21,11 +22,11 @@ class GridCell extends React.Component {
   }
 
   render () {
-    let cellTitle = this.props.GridCellData['title'] // Movie 
-            || this.props.GridCellData['album_name'] // Music
+    let cellTitle = this.props.GridCellData.title // Movie 
+            || this.props.GridCellData.album_name // Music
 
-    let cellBackground = this.props.GridCellData['poster_path'] // Movie 
-            || this.props.GridCellData['album_art'] // Music
+    let cellBackground = this.props.GridCellData.poster_path // Movie 
+            || this.props.GridCellData.album_art // Music
             
     var cellStyle = {   
       backgroundImage: 'url(' + cellBackground + ')',
@@ -35,9 +36,9 @@ class GridCell extends React.Component {
     }
 
     return (
-      <div className="grid-cell-div" id={this.props.id}>
-      <li className="grid-cell" onClick={this.cellClick.bind(this)} style={cellStyle}> </li>
-      <h2 className="grid-cell-title"> {cellTitle} </h2>
+      <div className={style.gridCellDiv} id={this.props.id}>
+      <li className={style.gridCell} onClick={this.cellClick.bind(this)} style={cellStyle}> </li>
+      <h2 className={style.gridCellTitle}> {cellTitle} </h2>
       </div>
     )
   }

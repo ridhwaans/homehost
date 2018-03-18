@@ -18,27 +18,30 @@ Self-hosted Netflix-like app in React
 
 - New react soundplayer controls in album Detail view
 - react streaming audio from cdn preview urls for albums
+- new webpack for homehost client works as expected
 
 ### Improvements
 
 - Rewrote musicPlayer component and interface to fit homehost
 - Removed unused app resources
 - various minor fixes
+- better naming everywhere
 
 ### Bugs
 
 - ~~Music playbutton toggle doesnt work correctly~~
 - ~~track urls in certain albums are null and crashing~~
-- css module loader doesnt change based on Detail View change
+- ~~css module loader doesnt change based on Detail View change~~
 - view height misaligned for deluxe albums
 
 ### v1.0.0 Launch milestones
 
 - ~~Finish Album detail view redesign v1~~
-- add react album streaming support from host server urls
+- React Music currently plays cdn previews. add album streaming support from host server
+- complete music api routes for album and tracks
 - ~~get music player controls to work in react component~~
 - add support for single-disc and compilation albums
-- cleanup utils & dependencies
+- ~~cleanup utils & dependencies~~
 
 
 ## Setup

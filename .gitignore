@@ -1,15 +1,14 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # general
-webpack.config.js
 config.yml
 metadata.json
 movies.json
 music.json
-lib/HashTable.js
+lib/utils/HashTable.js
 
 # dependencies
-/node_modules
+node_modules/
 
 # testing
 /coverage

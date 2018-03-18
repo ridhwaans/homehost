@@ -1,3 +1,4 @@
+export {App} from './App';
 export {Books} from './Books';
 export {Comics} from './Comics';
 export {Home} from './Home';

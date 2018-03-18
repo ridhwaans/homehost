@@ -1,13 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CellDetail from './CellDetail'
-import MovieDetailStyle from '../style/MovieDetail.css'
+import style from '../style/MovieDetail.css'
 
 class MovieDetail extends CellDetail {
   
   render() {
-    let data = this.state.detailData
-
     // Make Mobile Friendly
     var cssforCellDetailLeft
     var cssforCellDetailRight
@@ -28,37 +26,32 @@ class MovieDetail extends CellDetail {
       }
     }
 
-    //var backgroundImage = {   
-    //  backgroundImage: 'url(' + data.backdrop_path + ')'
-    //}
-    //<li id='CellDetail' style={backgroundImage}>
-
-    let cssMovieDetail = document.documentElement.style
-    cssMovieDetail.setProperty('--background-image', 'url(' + data.backdrop_path + ')')
+    let data = this.state.detailData
     let title = data.title + ' (' + parseInt(data.release_date) + ')'
-
+    document.documentElement.style.setProperty('--background-image', 'url(' + data.backdrop_path + ')')
+    
     return (
-      <div id='CellDetailDiv' className='cell-detail-div'>
-        <li id='CellDetail' key='CellDetail' className='cell-detail'>
-          <div id='CellDetail_left'className='cell-detail-left'>
-            <a id='CellDetailImageLink' className='image-link' href={data.link}>
-              <img id='CellDetailImage' className='cell-detail-image' src={data.poster_path}/>
+      <div id='CellDetailDiv' className={style.cellDetailDiv}>
+        <li id='CellDetail' key='CellDetail' className={style.cellDetail}>
+          <div id='CellDetail_left'className={style.cellDetailLeft}>
+            <a id='CellDetailImageLink' className={style.imageLink} href={data.link}>
+              <img id='CellDetailImage' className={style.cellDetailImage} src={data.poster_path}/>
             </a>
           </div>
-          <div id='CellDetail_right' className='cell-detail-right'>
-            <div id='CellDetail_close' className='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
-            <div id='cellDetailPlayerDiv' className='cell-detail-player-div'>
-                <video id='cellDetailPlayer' className='cell-detail-player' controls controlsList="nodownload">
+          <div id='CellDetail_right' className={style.cellDetailRight}>
+            <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
+            <div id='cellDetailPlayerDiv' className={style.cellDetailPlayerDiv}>
+                <video id='cellDetailPlayer' className={style.cellDetailPlayer} controls controlsList='nodownload'>
                   <source src={data.url_path} type='video/mp4'/>
                 </video>
             </div>
-            <div id='CellDetailTitle' className='cell-detail-title'> {title} </div>
-            <div id='CellDetailDescription' className='cell-detail-description'> {data.description}</div>
+            <div id='CellDetailTitle' className={style.cellDetailTitle}> {title} </div>
+            <div id='CellDetailDescription' className={style.cellDetailDescription}> {data.overview}</div>
           </div>
         </li>
       </div>
     )
-     //<a id='CellDetailDescriptionLink' className='description-link' href={this.state.detailData['link']}> → Link </a>
+
   }
 }
 

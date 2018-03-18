@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import CellDetail from './CellDetail'
-import AlbumDetailStyle from '../style/AlbumDetail.css'
+import style from '../style/AlbumDetail.css'
+import '../style/node_modules.css'
+
 import { PlayButton, PrevButton, NextButton, Progress, Timer, VolumeControl } from 'react-soundplayer/components'
 import SoundCloudAudio from '../utils/soundcloud-audio'
 import WithSoundCloudAudio from '../utils/with-soundcloud-audio'
@@ -74,14 +76,13 @@ class AlbumDetail extends CellDetail {
     let data = this.state.detailData
     var trackList = []
     if (data.album_art) {
-      let cssAlbumDetail = document.documentElement.style
       let albumColors = new AlbumColors(data.album_art)
       albumColors.getColors(function(colors) {
-        cssAlbumDetail.setProperty('--background-color', rgbToHex(colors[0]))
-        cssAlbumDetail.setProperty('--title-color', rgbToHex(colors[1]))
-        cssAlbumDetail.setProperty('--description-color', rgbToHex(colors[2]))
+        document.documentElement.style.setProperty('--background-color', rgbToHex(colors[0]))
+        document.documentElement.style.setProperty('--title-color', rgbToHex(colors[1]))
+        document.documentElement.style.setProperty('--description-color', rgbToHex(colors[2]))
       });
-
+      
       for (var i = 0; i < data.tracks.items.length; i++){
         let track_number = data.tracks.items[i].track_number
         let name = data.tracks.items[i].name
@@ -90,10 +91,10 @@ class AlbumDetail extends CellDetail {
         //let preview_url = data.tracks.items[i].preview_url
         //onClick={preview_url ? this.playTrackAtIndex.bind(this, i) : undefined}
         trackList.push(
-          <li><div class='plItem' onClick={this.playTrackAtIndex.bind(this, i)}>
-          <span class='plNum'> {track_number} </span>
-          <span class='plTitle'> {name} </span>
-          <span class='plLength'> {duration} </span>
+          <li><div class={style.plItem} onClick={this.playTrackAtIndex.bind(this, i)}>
+          <span class={style.plNum}> {track_number} </span>
+          <span class={style.plTitle}> {name} </span>
+          <span class={style.plLength}> {duration} </span>
           </div></li>
         )
       }
@@ -141,25 +142,24 @@ class AlbumDetail extends CellDetail {
       );
     });
 
-    let title = data.album_name + ' (' + parseInt(data.release_date) + ')'
     return (
-      <div id='CellDetailDiv' className='cell-detail-div'>
-        <li id='CellDetail' key='CellDetail' className='cell-detail'>
-          <div id='CellDetail_left'className='cell-detail-left'>
-            <img id='CellDetailImage' className='cell-detail-image' src={data.album_art}/>
+      <div id='CellDetailDiv' className={style.cellDetailDiv}>
+        <li id='CellDetail' key='CellDetail' className={style.cellDetail}>
+          <div id='CellDetail_left'className={style.cellDetailLeft}>
+            <img id='CellDetailImage' className={style.cellDetailImage} src={data.album_art}/>
             
           </div>
-          <div id='CellDetail_right' className='cell-detail-right'>
-            <div id='CellDetail_close' className='cell-detail-close' onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
+          <div id='CellDetail_right' className={style.cellDetailRight}>
+            <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
 
             <MusicPlayer soundCloudAudio={scPlayer}/>
 
-            <div id='plWrap'>
-              <ul id='plList'>
+            <div id={style.plWrap}>
+              <ul id={style.plList}>
                 {trackList}
               </ul>
             </div>
-            <div id='CellDetailCopyright' className='cell-detail-copyright'>© {data.label} &#8226; {parseInt(data.release_date)}</div> 
+            <div id='CellDetailCopyright' className={style.cellDetailCopyright}>© {data.label} &#8226; {parseInt(data.release_date)}</div> 
           </div>
         </li>
       </div>
