@@ -5,6 +5,7 @@ config.yml
 metadata.json
 movies.json
 music.json
+/backup
 lib/utils/HashTable.js
 
 # dependencies

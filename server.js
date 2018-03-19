@@ -3,20 +3,19 @@ var fs = require('fs');
 var node_dir = require('node-dir');
 var bluebird = require('bluebird');
 var yaml = require('js-yaml');
-var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
 
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 5000;
 
 var lib = require('./index.js');
+var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
 
 var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
 var musicClient = new lib.ApiClient(config.music.api, null, true, { headers: {'Authorization': 'Bearer ' + config.music.key} });
 
-//TODO append to metadata.json
-var movies = require('./movies.json');
-var music = require('./music.json'); 
-const port = process.env.PORT || 5000;
+var moviesData = require('./movies.json');
+var musicData = require('./music.json'); 
 
 app.get('/api/hello', (req, res) => {
   let hello = { homehost: 'Hello', config};
@@ -29,26 +28,26 @@ app.get('/api/generate', (req, res) => {
 });
 
 app.get('/api/movies', (req, res) => {
-  res.json(movies.movies);
+  res.json(moviesData.movies);
 });
 
 app.get('/api/music', (req, res) => {
-  res.json(music.music)
+  res.json(musicData.music)
 });
 
 app.get('/api/movies/:id', function(req, res) {
-  var movie = _.where(movies.movies, {id: parseInt(req.params.id)});
+  var movie = _.where(moviesData.movies, {id: parseInt(req.params.id)});
   res.json(movie);
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
-  var album = _.where(music.music, {id: req.params.id});
+  var album = _.where(musicData.music, {id: req.params.id});
   res.json(album);
 });
 
 // test http://localhost:5000/music/albums/5zUm6nApm20NjtX913O6Nz/tracks/0g9IOJwdElaCZEvcqGRP4b
 app.get('/music/albums/:album_id/tracks/:track_id', function(req, res) {
-  var album = _.findWhere(music.music, {id: req.params.album_id}); // Get albumsbum
+  var album = _.find(musicData.music, {id: req.params.album_id}); // Get albums
   var track_fs_path = _.where(album.tracks.items, {id: req.params.track_id}); // Get track
   track_fs_path = String(_.pluck(track_fs_path, 'fs_path')); // Get track.fs_path
   
@@ -63,9 +62,9 @@ app.get('/music/albums/:album_id/tracks/:track_id', function(req, res) {
 });
 
 app.get('/movies/:id', function(req, res) {
-  var movie_fs_path = _.findWhere(movies.movies, {id: parseInt(req.params.id)}); // Get movie
+  var movie_fs_path = _.where(moviesData.movies, {id: parseInt(req.params.id)}); // Get movie
   movie_fs_path = String(_.pluck(movie_fs_path, 'fs_path')); // Get movie.fs_path
-  
+
   const path = movie_fs_path
   const stat = fs.statSync(path)
   const fileSize = stat.size
@@ -98,10 +97,14 @@ app.get('/movies/:id', function(req, res) {
 
 var generateMetaData = function(){
   generateMusicMetaData()
-   .then(() => generateMovieMetaData());
+    .then(function(result) { 
+      return generateMovieMetaData();
+    });
 }
 
-var generateMovieMetaData = async function(){
+var generateMovieMetaData = function() {
+  return new Promise(function(resolve, reject) {
+  
   var re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
       json = { movies: [] };
 
@@ -121,20 +124,22 @@ var generateMovieMetaData = async function(){
     })
     .then(function(movies){
       fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', (err)=>{
-         if(err) console.log(err)
-         else { 
-          console.log('File saved');
-          }
+        if(err) console.log(err)
+        else console.log('[MOVIES] File saved');
+        resolve(json);
       })
-      return json;
     })
     .catch(function(err){
       console.log("Movie metadata could not be generated due to some error", err);
     });
   });
+
+  });
 };
 
-var generateMusicMetaData = async function(){
+var generateMusicMetaData = function() {
+  return new Promise(function(resolve, reject) {
+
   var re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/(\d+)(-(\d+))?/); // track_number - disc_number
       json = { music: [] };
@@ -167,7 +172,7 @@ var generateMusicMetaData = async function(){
             if ( (item.track_number == file.match(re2)[1]) && 
               (item.disc_number == (file.match(re2)[3] || 1)) ) {
               item.fs_path = dir + '/' + file;
-              item.url_path = album.url_path + '/tracks/' + item.track_number;
+              item.url_path = album.url_path + '/tracks/' + item.id;
             }
           });
         });
@@ -177,16 +182,16 @@ var generateMusicMetaData = async function(){
     })
     .then(function(music){
       fs.writeFile('./music.json', JSON.stringify(json), 'utf8', (err)=>{
-         if(err) console.log(err)
-         else { 
-          console.log('File saved');
-          }
+        if(err) console.log(err)
+        else console.log('[MUSIC] File saved');
+        resolve(json);
       })
-      return json;
     })
     .catch(function(err){
       console.log("Album metadata could not be generated due to some error", err);
     });
+  });
+
   });
 };
 
