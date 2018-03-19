@@ -1,6 +1,6 @@
 {
   "name": "homehost",
-  "version": "0.9.9-BETA",
+  "version": "1.0.0-BETA",
   "author": "ridhwaans",
   "private": true,
   "dependencies": {
