@@ -4,13 +4,14 @@
   "author": "ridhwaans",
   "scripts": {
     "client": "cd client && yarn dev",
-    "server": "nodemon server.js",
-    "simple": "node server",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "nodemon server.js",
+    "prod": "node server",
+    "homehost": "concurrently --kill-others-on-fail \"yarn dev\" \"yarn client\""
   },
   "dependencies": {
     "bluebird": "^3.5.1",
     "express": "^4.16.2",
+    "figlet": "^1.2.0",
     "js-yaml": "^3.10.0",
     "jssha": "^2.3.1",
     "node-dir": "^0.1.17",

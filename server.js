@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var figlet = require('figlet');
 var fs = require('fs');
 var node_dir = require('node-dir');
 var bluebird = require('bluebird');
@@ -45,7 +46,6 @@ app.get('/api/music/albums/:id', function(req, res) {
   res.json(album);
 });
 
-// test http://localhost:5000/music/albums/5zUm6nApm20NjtX913O6Nz/tracks/0g9IOJwdElaCZEvcqGRP4b
 app.get('/music/albums/:album_id/tracks/:track_id', function(req, res) {
   var album = _.find(musicData.music, {id: req.params.album_id}); // Get albums
   var track_fs_path = _.where(album.tracks.items, {id: req.params.track_id}); // Get track
@@ -141,7 +141,7 @@ var generateMusicMetaData = function() {
   return new Promise(function(resolve, reject) {
 
   var re = new RegExp(/(\w+)$/); // album_id
-      re2 = new RegExp(/(\d+)(-(\d+))?/); // track_number - disc_number
+      re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
       json = { music: [] };
 
   console.log("Generating data for Music...")
@@ -169,8 +169,8 @@ var generateMusicMetaData = function() {
           
           album.tracks.items.forEach(function(item) {
             // if track found
-            if ( (item.track_number == file.match(re2)[1]) && 
-              (item.disc_number == (file.match(re2)[3] || 1)) ) {
+            if ( (item.disc_number == parseInt(file.match(re2)[1] || 1) ) && 
+              (item.track_number == parseInt(file.match(re2)[3]) ) ) {
               item.fs_path = dir + '/' + file;
               item.url_path = album.url_path + '/tracks/' + item.id;
             }
@@ -194,5 +194,13 @@ var generateMusicMetaData = function() {
 
   });
 };
+
+console.log(figlet.textSync('homehost', 
+  {
+    font: 'Larry 3D',
+    horizontalLayout: 'default',
+    verticalLayout: 'default'
+  }
+));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
