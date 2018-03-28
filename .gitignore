@@ -2,14 +2,14 @@
 
 # general
 config.yml
-metadata.json
 movies.json
 music.json
 /backup
-lib/utils/HashTable.js
 
 # dependencies
 node_modules/
+package-lock.json
+yarn.lock
 
 # testing
 /coverage

@@ -25,7 +25,7 @@ app.get('/api/hello', (req, res) => {
 
 app.get('/api/generate', (req, res) => {
   generateMetaData();
-  res.json('generating...');
+  res.json('Generating metadata. Please wait...');
 });
 
 app.get('/api/movies', (req, res) => {
@@ -46,11 +46,11 @@ app.get('/api/music/albums/:id', function(req, res) {
   res.json(album);
 });
 
-app.get('/music/albums/:album_id/tracks/:track_id', function(req, res) {
+app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
   var album = _.find(musicData.music, {id: req.params.album_id}); // Get albums
-  var track_fs_path = _.where(album.tracks.items, {id: req.params.track_id}); // Get track
+  var track_fs_path = _.where(album.tracks.items, {disc_number: parseInt(req.params.disc_number), track_number: parseInt(req.params.track_number)}); // Get track
   track_fs_path = String(_.pluck(track_fs_path, 'fs_path')); // Get track.fs_path
-  
+
   const path = track_fs_path
   const stat = fs.statSync(path)
   const head = {
@@ -108,13 +108,13 @@ var generateMovieMetaData = function() {
   var re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
       json = { movies: [] };
 
-  console.log("Generating data for Movies...")
+  console.log('Generating data for Movies...')
   node_dir.files(config.movies.path, function(err, files) {
     if (err) throw err;
     
     bluebird.mapSeries(files, function(file){
     console.log('GET: ' + file);
-
+    // find movie on TMDB
     return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
        .then((movie) => {
        movie.fs_path = file;
@@ -130,7 +130,7 @@ var generateMovieMetaData = function() {
       })
     })
     .catch(function(err){
-      console.log("Movie metadata could not be generated due to some error", err);
+      console.log('Movie metadata could not be generated due to some error', err);
     });
   });
 
@@ -144,41 +144,75 @@ var generateMusicMetaData = function() {
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
       json = { music: [] };
 
-  console.log("Generating data for Music...")
+  console.log('Generating data for Music...')
   node_dir.subdirs(config.music.path, function(err, subdirs) {
     if (err) throw err;
     
     bluebird.mapSeries(subdirs, function(dir){
-    console.log('GET: ' + dir);
+      console.log('GET: ' + dir);
 
-    return musicClient.send(new lib.requests.Album(dir.match(re)[1]), 50, null)
-      .then((album) => {
-      // remove unnecessary spotify json
-      delete album.available_markets;
-      for(var i=0;i<album.tracks.items.length;i++){
-        delete album.tracks.items[i].artists;
-        delete album.tracks.items[i].available_markets;}
+      if (dir.toUpperCase().endsWith('UNKNOWN ALBUM')){
+        let album = {}
 
-      album.url_path = 'http://localhost:' + port + '/music/albums/' + album.id;
-      // for each track in the album
-      node_dir.files(dir, function(err, files) {
-        if(err) console.log(err)
-        files.forEach( function( file, index ) {
-          file = file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
-          console.log('GET: ' + file);
-          
-          album.tracks.items.forEach(function(item) {
-            // if track found
-            if ( (item.disc_number == parseInt(file.match(re2)[1] || 1) ) && 
-              (item.track_number == parseInt(file.match(re2)[3]) ) ) {
-              item.fs_path = dir + '/' + file;
-              item.url_path = album.url_path + '/tracks/' + item.id;
-            }
+        album.id = 'unknown'
+        album.name = 'Unknown Album'
+        album.artists = []
+        album.artists.push({'name':'Various Artists'})
+        album.images = []
+        album.images.push({'url':'http://i.imgur.com/bVnx0IY.png'})
+        album.release_date = 'NaN'
+        album.label = 'Various Labels'
+        album.tracks = {}
+        album.tracks.items = []
+
+        node_dir.files(dir, function(err, files) {
+          files.forEach( function( file, index ) {
+            file = file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
+            console.log('GET: ' + file);
+
+            let item = {}
+            item.id = index
+            item.name = file.replace('.mp3','')
+            item.disc_number = 1
+            item.track_number = index + 1
+            item.duration_ms = 'NaN'
+            item.fs_path = dir + '/' + file
+            item.url_path = ('http://localhost:' + port + '/music/').concat(album.id, '/', item.disc_number, '/', item.track_number)
+            album.tracks.items.push(item)
           });
         });
-      });
-      json.music.push(album);
-      });
+        json.music.push(album);
+      } else {
+        // find music album on Spotify
+        return musicClient.send(new lib.requests.Album(dir.match(re)[1]), 50, null)
+        .then((album) => {
+          // remove unnecessary spotify json
+          delete album.available_markets;
+          for(var i=0;i<album.tracks.items.length;i++){
+            delete album.tracks.items[i].artists;
+            delete album.tracks.items[i].available_markets;}
+
+          // for each track in the album
+          node_dir.files(dir, function(err, files) {
+            if(err) console.log(err)
+            files.forEach( function( file, index ) {
+              file = file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
+              console.log('GET: ' + file);
+              
+              album.tracks.items.forEach(function(item) {
+                // if track found
+                if ( (item.disc_number == parseInt(file.match(re2)[1] || 1) ) && 
+                  (item.track_number == parseInt(file.match(re2)[3]) ) ) {
+                  item.fs_path = dir + '/' + file; 
+                  item.url_path = ('http://localhost:' + port + '/music/').concat(album.id, '/', item.disc_number, '/', item.track_number);
+                }
+              });
+            });
+          });
+          json.music.push(album);
+        });
+      }
+      //END mapSeries
     })
     .then(function(music){
       fs.writeFile('./music.json', JSON.stringify(json), 'utf8', (err)=>{
@@ -188,7 +222,7 @@ var generateMusicMetaData = function() {
       })
     })
     .catch(function(err){
-      console.log("Album metadata could not be generated due to some error", err);
+      console.log('Album metadata could not be generated due to some error', err);
     });
   });
 

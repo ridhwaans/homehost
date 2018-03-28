@@ -13,11 +13,11 @@
 <h4 align="center"> Features: 🎥 Movies, 🎵 Music, 📺 TV Shows, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
 # 🎥 Movies
-![](media/v1-movies-1.PNG)
+![movies](media/v1-movies-1.PNG)
 ## Demo
 ![movies-gif](media/v1-movies-demo-min-1.gif)
 # 🎵 Music
-![](media/v1-music-1.PNG)
+![music](media/v1-music-1.PNG)
 ## Demo
 ![music-gif](media/v1-music-demo-min-1.gif)
 
@@ -52,7 +52,12 @@ Your media must appear in the path set by `config.yml`
  - (album_directory_name <Spotify-album-ID>)  
    - ((<disc_number>-)?<track_number> track_file_name) (.mp3)
 ```
-
+Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number
+```
+<music_path>  
+ - Unknown Album  
+   - (track_file_name) (.mp3)
+```
 ## Generating metadata
 
 Server requires `<media>.json` file data at startup. Initial json state should be empty
@@ -78,7 +83,7 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 **GET** `/movies/<id>`  
 **GET** `/api/music/`  
 **GET** `/api/music/albums/<id>`  
-**GET** `/music/albums/:album_id/tracks/:track_id`
+**GET** `/music/:album_id/:disc_number/:track_number`
 
 ### Client-side
 
