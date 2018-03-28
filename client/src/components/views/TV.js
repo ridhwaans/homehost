@@ -22,7 +22,7 @@ class TV extends Component {
   render() {
     return (
       <div>
-      <NavBar/>
+      <NavBar type={2}/>
       <br></br>
       <p className={style.comingSoon}>🚧</p>
       </div>

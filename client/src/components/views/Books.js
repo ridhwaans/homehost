@@ -20,9 +20,12 @@ class Books extends Component {
   }
   
   render() {
+    var icon = document.getElementById('icon')
+    icon.href = '../../images/favicon-books.ico'
+
     return (
       <div>
-      <NavBar/>
+      <NavBar type={3}/>
       <br></br>
       <p className={style.comingSoon}>🚧</p>
       </div>

@@ -1,0 +1,9 @@
+# Server-side configs
+movies:
+  path  : '/path/to/movies/directory'
+  api   : 'api.themoviedb.org/3'
+  key   : '<api_key>'
+music:
+  path  : '/path/to/music/directory'
+  api   : 'api.spotify.com/v1'
+  key   : '<auth_token>'

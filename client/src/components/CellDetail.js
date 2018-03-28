@@ -15,7 +15,6 @@ class CellDetail extends React.Component {
 
   componentDidUpdate (prevProps, prevState){
     var wrapper = document.getElementById('CellDetailDiv')
-    //var detail = document.querySelector(style.cellDetail)
     var detail = document.getElementById('CellDetail')
     var arrow = document.getElementById('selected_arrow')
 

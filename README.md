@@ -5,7 +5,7 @@
   <a href="https://github.com/ridhwaans/homehost/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="contributions"></a>
   <a href="https://github.com/ridhwaans/homehost/releases/"><img src="https://img.shields.io/github/release/ridhwaans/homehost.svg" alt="release"></a>
   <a href="https://github.com/ridhwaans/homehost/tags/"><img src="https://img.shields.io/github/tag/ridhwaans/homehost.svg" alt="tag"></a>
-  <a href="https://gitHub.com/ridhwaans/homehost/commit/"><img src="https://img.shields.io/github/commits-since/ridhwaans/homehost/v1.0.0-BETA.svg" alt="commits-since"></a>
+  <a href="https://github.com/ridhwaans/homehost/commit/"><img src="https://img.shields.io/github/commits-since/ridhwaans/homehost/v1.0.0-BETA.svg" alt="commits-since"></a>
   <a href="https://github.com/ridhwaans/homehost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ridhwaans/homehost.svg" alt="license"></a>
 </p>
 
@@ -27,11 +27,11 @@ In `./config.yml`, set the media paths, and specify a working API key for TMDB A
 ```yaml
 # Server-side configs
 movies:
-  path  : '/path/to/directory'
+  path  : '/path/to/movies/directory'
   api   : 'api.themoviedb.org/3'
   key   : '<api_key>'
 music:
-  path  : '/path/to/directory'
+  path  : '/path/to/music/directory'
   api   : 'api.spotify.com/v1'
   key   : '<auth_token>'
 ```
@@ -79,10 +79,10 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 **GET** `/api/hello`  
 **GET** `/api/generate`  
 **GET** `/api/movies`  
-**GET** `/api/movies/<id>`  
-**GET** `/movies/<id>`  
+**GET** `/api/movies/:id`  
+**GET** `/movies/:id`  
 **GET** `/api/music/`  
-**GET** `/api/music/albums/<id>`  
+**GET** `/api/music/albums/:id`  
 **GET** `/music/:album_id/:disc_number/:track_number`
 
 ### Client-side

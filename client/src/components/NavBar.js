@@ -6,7 +6,9 @@ class NavBar extends React.Component {
   constructor (props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+    	type: this.props.type
+    }
   }
 
   render() {
@@ -19,22 +21,22 @@ class NavBar extends React.Component {
 	      <div class="collapse navbar-collapse" id="navbarsExample02">
 	        <ul class="navbar-nav mr-auto">
 	          <li class="nav-item">
-	            <a class="nav-link" href="movies">Movies</a>
+	            <a class={(this.state.type === type.MOVIES) ? "active nav-link" : "nav-link"} href="movies">Movies</a>
 	          </li>
 	          <li class="nav-item">
-	            <a class="nav-link" href="tv">TV</a>
+	            <a class={(this.state.type === type.TV) ? "active nav-link" : "nav-link"} href="tv">TV</a>
 	          </li>
 	          <li class="nav-item">
-	            <a class="nav-link" href="music">Music</a>
+	            <a class={(this.state.type === type.MUSIC) ? "active nav-link" : "nav-link"} href="music">Music</a>
 	          </li>
 	          <li class="nav-item">
-	            <a class="nav-link" href="books">Books</a>
+	            <a class={(this.state.type === type.BOOKS) ? "active nav-link" : "nav-link"} href="books">Books</a>
 	          </li>
 	          <li class="nav-item">
-	            <a class="nav-link" href="comics">Comics</a>
+	            <a class={(this.state.type === type.COMICS) ? "active nav-link" : "nav-link"} href="comics">Comics</a>
 	          </li>
 	          <li class="nav-item">
-	            <a class="nav-link" href="podcasts">Podcasts</a>
+	            <a class={(this.state.type === type.PODCASTS) ? "active nav-link" : "nav-link"} href="podcasts">Podcasts</a>
 	          </li>
 	        </ul>
 	      </div>
@@ -42,4 +44,14 @@ class NavBar extends React.Component {
 		)
   	}
 }
+
+const type = {
+  MOVIES: 0,
+  MUSIC: 1,
+  TV: 2,
+  BOOKS: 3,
+  COMICS: 4,
+  PODCASTS: 5
+}
+
 export default NavBar

@@ -22,7 +22,7 @@ class Comics extends Component {
   render() {
     return (
       <div>
-      <NavBar/>
+      <NavBar type={4}/>
       <br></br>
       <p className={style.comingSoon}>🚧</p>
       </div>

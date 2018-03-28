@@ -152,18 +152,15 @@ var generateMusicMetaData = function() {
       console.log('GET: ' + dir);
 
       if (dir.toUpperCase().endsWith('UNKNOWN ALBUM')){
-        let album = {}
-
-        album.id = 'unknown'
-        album.name = 'Unknown Album'
-        album.artists = []
-        album.artists.push({'name':'Various Artists'})
-        album.images = []
-        album.images.push({'url':'http://i.imgur.com/bVnx0IY.png'})
-        album.release_date = 'NaN'
-        album.label = 'Various Labels'
-        album.tracks = {}
-        album.tracks.items = []
+        let album = {
+          id: 'unknown',
+          name: 'Unknown Album',
+          artists: [{name: 'Various Artists'}],
+          images: [{url: 'http://i.imgur.com/bVnx0IY.png'}],
+          release_date: 'NaN',
+          label: 'Various Labels',
+          tracks: {items:[]}
+        }
 
         node_dir.files(dir, function(err, files) {
           files.forEach( function( file, index ) {
@@ -186,7 +183,7 @@ var generateMusicMetaData = function() {
         // find music album on Spotify
         return musicClient.send(new lib.requests.Album(dir.match(re)[1]), 50, null)
         .then((album) => {
-          // remove unnecessary spotify json
+          // remove unnecessary Spotify json
           delete album.available_markets;
           for(var i=0;i<album.tracks.items.length;i++){
             delete album.tracks.items[i].artists;
@@ -222,7 +219,7 @@ var generateMusicMetaData = function() {
       })
     })
     .catch(function(err){
-      console.log('Album metadata could not be generated due to some error', err);
+      console.log('Music metadata could not be generated due to some error', err);
     });
   });
 

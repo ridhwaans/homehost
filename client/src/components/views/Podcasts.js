@@ -22,7 +22,7 @@ class Podcasts extends Component {
   render() {
     return (
       <div>
-      <NavBar/>
+      <NavBar type={5}/>
       <br></br>
       <p className={style.comingSoon}>🚧</p>
       </div>

@@ -40,7 +40,7 @@ class Music extends Component {
     var data_string = JSON.stringify(data);
     return (
       <div>
-      <NavBar/>
+      <NavBar type={1}/>
       <br></br>
       <Grid
           gridData={data_string}

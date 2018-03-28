@@ -6,7 +6,7 @@
     "client": "cd client && yarn dev",
     "dev": "nodemon server.js",
     "prod": "node server",
-    "homehost": "concurrently --kill-others-on-fail \"yarn dev\" \"yarn client\""
+    "homehost": "concurrently --kill-others-on-fail \"yarn prod\" \"yarn client\""
   },
   "dependencies": {
     "bluebird": "^3.5.1",

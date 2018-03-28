@@ -43,7 +43,7 @@ class Movies extends Component {
     var data_string = JSON.stringify(data);
     return (
       <div>
-      <NavBar/>
+      <NavBar type={0}/>
       <br></br>
       <Grid
           gridData={data_string}
