@@ -16,10 +16,15 @@
   display: block;
 }
 
+/* ResultsBar */
+.results-bar-div {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+}
+
 /* GridCell */
 .grid-cell-div {
-  width: 200px;
-  height: 250px;
   display: inline-block;
   margin: 0 0 0 0;
 }
@@ -27,19 +32,21 @@
 .grid-cell {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   display: inline-block;
-  margin: 0 0 0 0;
   position: relative;
 }
 
-.grid-cell-title {
+.grid-cell-title, .grid-cell-subtitle {
   font-family: 'Roboto Mono';
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1em;
-  height: 2em;
-  overflow: hidden;
-  display: block;
+  height: 1em;
+  text-align: center;
   margin: 0 0 0 0;
+}
+
+.grid-cell-subtitle {
+  color: gray;
 }
 
 /* Grid */

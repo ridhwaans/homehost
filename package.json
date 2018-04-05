@@ -17,7 +17,8 @@
     "node-dir": "^0.1.17",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "yarn": "^1.5.1"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"

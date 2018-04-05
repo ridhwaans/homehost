@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import NavBar from '../NavBar'
 import Grid from '../Grid'
-import SearchBox from '../SearchBox'
+import ResultsBar from '../ResultsBar'
 import * as utils from '../../utils/utils.js'
 
 class Music extends Component {
@@ -41,7 +41,8 @@ class Music extends Component {
     return (
       <div>
       <NavBar type={1}/>
-      <br></br>
+      <br/>
+      <ResultsBar type={1}/>
       <Grid
           gridData={data_string}
           gridCell_width={175}

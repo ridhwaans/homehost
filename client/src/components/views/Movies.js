@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import NavBar from '../NavBar'
 import Grid from '../Grid'
-import SearchBox from '../SearchBox'
+import ResultsBar from '../ResultsBar'
 import * as utils from '../../utils/utils.js'
 
 class Movies extends Component {
@@ -44,7 +44,8 @@ class Movies extends Component {
     return (
       <div>
       <NavBar type={0}/>
-      <br></br>
+      <br/>
+      <ResultsBar type={0}/>
       <Grid
           gridData={data_string}
           gridCell_width={140}
