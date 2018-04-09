@@ -250,9 +250,7 @@ AlbumColors.prototype.extractMainColors = function(count) {
 };
 
 AlbumColors.AlbumImage = AlbumImage;
-
 window.AlbumColors = AlbumColors;
-
 
 function componentToHex(c) {
     var hex = c.toString(16);
@@ -262,8 +260,6 @@ function componentToHex(c) {
 function rgbToHex(rgbArr) {
     return "#" + componentToHex(rgbArr[0]) + componentToHex(rgbArr[1]) + componentToHex(rgbArr[2]);
 }
-
-
 
 module.exports = {
     AlbumColors,

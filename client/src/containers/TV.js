@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import NavBar from '../NavBar'
-import style from '../../style/App.css'
-import * as utils from '../../utils/utils.js'
+import NavBar from '../components/NavBar'
+import style from '../style/App.css'
+import * as utils from '../utils/utils.js'
 
-class Podcasts extends Component {
+class TV extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +14,7 @@ class Podcasts extends Component {
   }
 
   componentDidMount() {
-    utils.callApi('/api/podcasts')
+    utils.callApi('/api/tv')
       .then(res => this.setState({ files: res }))
       .catch(err => console.log(err));
   }
@@ -22,7 +22,7 @@ class Podcasts extends Component {
   render() {
     return (
       <div>
-      <NavBar type={5}/>
+      <NavBar type={2}/>
       <br></br>
       <p className={style.comingSoon}>🚧</p>
       </div>
@@ -31,4 +31,4 @@ class Podcasts extends Component {
 
 }
 
-export default Podcasts;
+export default TV;

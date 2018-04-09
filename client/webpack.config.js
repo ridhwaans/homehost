@@ -32,7 +32,7 @@ var config = {
             use: [
                 { 
                     loader: 'babel-loader',
-                    options: { presets: ['@babel/env', '@babel/react'] }
+                    options: { presets: ['@babel/env', '@babel/react', '@babel/stage-2'] }
                 }
             ],
             exclude: /(node_modules|bower_components)/

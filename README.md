@@ -9,8 +9,8 @@
   <a href="https://github.com/ridhwaans/homehost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ridhwaans/homehost.svg" alt="license"></a>
 </p>
 
-<h3 align="center"> homehost is made for streaming your media collection over the home network</h3>
-<h3 align="center"> It's self-hosted, it's personal, and it's going to be cross platform</h3>
+<h3 align="center"> homehost is made for streaming your media collection over the home network<br/>
+It's self-hosted, it's personal, and it's going to be cross platform</h3>
 <h4 align="center"> Features: 🎥 Movies, 🎵 Music, 📺 TV Shows, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
 # 🎥 Movies
@@ -24,8 +24,8 @@
 
 # Setup
 
-Run `npm install` under the client and server directories
-In `./config.yml`, set the media paths, and specify a working API key for TMDB API and Spotify Web API
+Run `npm install` under the client and server directories  
+In `./config.yml`, set the media paths, and specify a working API key for TMDB API and Spotify Web API  
 ```yaml
 # Server-side configs
 movies:

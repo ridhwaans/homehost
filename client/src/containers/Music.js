@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import NavBar from '../NavBar'
-import Grid from '../Grid'
-import ResultsBar from '../ResultsBar'
-import * as utils from '../../utils/utils.js'
+import NavBar from '../components/NavBar'
+import ResultsBar from '../components/ResultsBar'
+import Grid from '../components/Grid'
+import style from '../style/App.css'
+import * as utils from '../utils/utils.js'
 
 class Music extends Component {
   constructor(props) {

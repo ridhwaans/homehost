@@ -9,20 +9,27 @@
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-soundplayer": "^1.0.4",
-    "reactstrap": "^5.0.0-beta.3"
+    "reactstrap": "^5.0.0-beta.3",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1"
   },
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --hot --inline"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.42",
+    "@babel/core": "^7.0.0-beta.44",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.44",
     "@babel/preset-env": "^7.0.0-beta.42",
     "@babel/preset-react": "^7.0.0-beta.42",
-    "babel-polyfill": "^6.26.0",
+    "@babel/preset-stage-2": "^7.0.0-beta.44",
     "babel-loader": "^8.0.0-beta.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.11",
     "style-loader": "^0.20.3",
     "webpack": "^4.1.1",

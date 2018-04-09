@@ -1,0 +1,4 @@
+export const REQUEST_MOVIES = 'REQUEST_MOVIES'
+export const RECEIVE_MOVIES = 'RECEIVE_MOVIES'
+export const FILTER_MOVIES = 'FILTER_MOVIES'
+export const SORT_MOVIES = 'SORT_MOVIES'

@@ -36,7 +36,10 @@ class NavBar extends React.Component {
           <NavbarToggler onClick={this.toggle} />
           <NavbarBrand href="http://localhost:3000">HOMEHOST</NavbarBrand>
           <InputGroup>
-	        	<Input placeholder="Search..." />
+	        	<Input 
+            onChange={this.props.onChange}
+            placeholder="Search..." 
+            />
 	      </InputGroup>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
