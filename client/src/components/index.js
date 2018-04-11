@@ -4,4 +4,4 @@ export {Grid} from './Grid';
 export {GridCell} from './GridCell';
 export {MovieDetail} from './MovieDetail';
 export {NavBar} from './NavBar';
-export {SearchBox} from './SearchBox';
+export {ResultsBar} from './ResultsBar';

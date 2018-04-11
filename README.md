@@ -16,11 +16,11 @@ It's self-hosted, it's personal, and it's going to be cross platform</h3>
 # 🎥 Movies
 ![movies](media/v1-movies-1.PNG)
 ## Demo
-![movies-gif](media/v1-movies-demo-min-1.gif)
+![movies-gif](media/v1-movies-demo-1.gif)
 # 🎵 Music
 ![music](media/v1-music-1.PNG)
 ## Demo
-![music-gif](media/v1-music-demo-min-1.gif)
+![music-gif](media/v1-music-demo-1.gif)
 
 # Setup
 
@@ -92,7 +92,7 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 `/movies` and `/music` are scheduled for v1.0 release. `/books`, `/comics`, `/podcasts`, `/tv` are TODO
 
 # Powered by
-<p><img src="media/spotify_green.svg"  width="200" height="150">&emsp;<img src="media/tmdb_green.svg"  width="150" height="150"></p>
+<p><img src="media/spotify_green.svg" width="200" height="150">&emsp;<img src="media/tmdb_green.svg" width="150" height="150"></p>
 
 # License
 

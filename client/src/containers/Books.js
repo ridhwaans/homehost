@@ -20,9 +20,6 @@ class Books extends Component {
   }
   
   render() {
-    var icon = document.getElementById('icon')
-    icon.href = '../../images/favicon-books.ico'
-
     return (
       <div>
       <NavBar type={3}/>

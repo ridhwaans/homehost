@@ -23,7 +23,7 @@ class Movies extends Component {
   }
   
   render() {
-    let { displayedMovies, isFetched } = this.props.movies
+    let { displayedMovies } = this.props.moviesReducer
 
     return (
       <div>
@@ -31,10 +31,10 @@ class Movies extends Component {
       <br/>
       <ResultsBar count={displayedMovies.length} type={0}/>
       <Grid
-          gridData={JSON.stringify(displayedMovies)}
-          gridCell_width={140}
-          gridCell_height={200}
-          type={0}
+        gridData={JSON.stringify(displayedMovies)}
+        gridCell_width={140}
+        gridCell_height={200}
+        type={0}
       />
       </div>
     );
@@ -43,7 +43,7 @@ class Movies extends Component {
 
 function mapStateToProps(state) {
   return {
-    movies: state.movies
+    moviesReducer: state.moviesReducer
   }
 }
 

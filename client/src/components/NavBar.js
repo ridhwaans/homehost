@@ -66,7 +66,7 @@ class NavBar extends React.Component {
         </Navbar>
       </div>
 		)
-  	}
+  }
 }
 
 const type = {

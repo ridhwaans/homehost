@@ -1,59 +1,57 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as musicActions from '../actions/MusicActions'
+
 import NavBar from '../components/NavBar'
 import ResultsBar from '../components/ResultsBar'
 import Grid from '../components/Grid'
-import style from '../style/App.css'
 import * as utils from '../utils/utils.js'
+import style from '../style/App.css'
 
 class Music extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      files: []
-    };
+
+  handleSearch(e) {
+    this.props.musicActions.filterMusic(e.target.value)
   }
 
   componentDidMount() {
-    utils.callApi('/api/music')
-      .then(res => this.setState({ files: res }))
-      .catch(err => console.log(err));
+    this.props.musicActions.fetchMusic()
   }
   
   render() {
-    var items = this.state.files;
-    var data = [];
-    for (var i = 0; i < items.length; i++) {
-      data.push({
-        spotify_id: items[i].id,
-        album_name: items[i].name, 
-        album_art: items[i].images[0].url,
-        url_path: items[i].url_path,
-        preview_url: items[i].preview_url,
-        release_date: items[i].release_date, 
-        artist_name: items[i].artists[0].name, 
-        label: items[i].label,
-        tracks: items[i].tracks
-      });
-    }
+    let { displayedMusic } = this.props.musicReducer
 
-    var data_string = JSON.stringify(data);
     return (
       <div>
-      <NavBar type={1}/>
+      <NavBar onChange={this.handleSearch.bind(this)} type={1}/>
       <br/>
-      <ResultsBar type={1}/>
+      <ResultsBar count={displayedMusic.length} type={1}/>
       <Grid
-          gridData={data_string}
-          gridCell_width={175}
-          gridCell_height={175}
-          type={1}
+        gridData={JSON.stringify(displayedMusic)}
+        gridCell_width={175}
+        gridCell_height={175}
+        type={1}
       />
       </div>
     );
   }
-
 }
 
-export default Music;
+function mapStateToProps(state) {
+  return {
+    musicReducer: state.musicReducer
+  } 
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    musicActions: bindActionCreators(musicActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Music)
+
