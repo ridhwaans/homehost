@@ -26,7 +26,6 @@ export default function music(state = initialState, action) {
       }
 
     case FILTER_MUSIC:
-
       let displayedMusic = state.music.filter(music => {
         if (music.album_name.toLowerCase().includes(action.searchTerm.toLowerCase())) {
           return true

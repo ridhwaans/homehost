@@ -16,6 +16,14 @@
   display: block;
 }
 
+/* FooterBar */
+.footer {
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   text-align: center;
+}
+
 /* ResultsBar */
 .results-bar-div {
   display: flex;

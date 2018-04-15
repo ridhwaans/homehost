@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import FooterBar from '../components/FooterBar'
 
 class Home extends Component {
   constructor(props) {
@@ -8,14 +8,12 @@ class Home extends Component {
     this.state = {};
   }
 
-
   componentDidUpdate (prevProps, prevState){
-    var video = document.getElementById("myVideo");
+    var video = document.getElementById('myVideo');
     if (video.paused) video.play()
   }
 
   render() {
-
     let videoStyle = {
       position: 'fixed',
       right: 0, 
@@ -62,10 +60,9 @@ class Home extends Component {
         </p>
       </main>
       <footer className="mastfoot mt-auto">
-        <div className="inner">
-          <p>Made with ❤️ by <a href="https://github.com/ridhwaans">@ridhwaans</a></p>
-        </div>
+        <FooterBar/>
       </footer>
+      
       </div>
       </div>
     );

@@ -8,6 +8,7 @@ import Music from './Music'
 import Books from './Books'
 import Comics from './Comics'
 import Podcasts from './Podcasts'
+import Disclaimer from './Disclaimer'
 
 class App extends Component {
   render() {
@@ -21,6 +22,7 @@ class App extends Component {
           <Route path="/books" component={Books}/>
           <Route path="/comics" component={Comics}/>
           <Route path="/podcasts" component={Podcasts}/>
+          <Route path="/disclaimer" component={Disclaimer}/>
         </div>
       </Router>
       )

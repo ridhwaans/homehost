@@ -92,7 +92,7 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 `/movies` and `/music` are scheduled for v1.0 release. `/books`, `/comics`, `/podcasts`, `/tv` are TODO
 
 # Powered by
-<p><img src="media/spotify_green.svg" width="200" height="150">&emsp;<img src="media/tmdb_green.svg" width="150" height="150"></p>
+<p><img src="media/spotify_green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="media/tmdb_green.svg" width="150" height="150" title="TMDB API"></p>
 
 # License
 

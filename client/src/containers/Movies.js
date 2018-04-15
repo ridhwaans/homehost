@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -9,6 +8,7 @@ import * as moviesActions from '../actions/MoviesActions'
 import NavBar from '../components/NavBar'
 import ResultsBar from '../components/ResultsBar'
 import Grid from '../components/Grid'
+import FooterBar from '../components/FooterBar'
 import * as utils from '../utils/utils.js'
 import style from '../style/App.css'
 
@@ -36,6 +36,8 @@ class Movies extends Component {
         gridCell_height={200}
         type={0}
       />
+      <br/>
+      <FooterBar/>
       </div>
     );
   }
