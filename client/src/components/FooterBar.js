@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import style from '../style/App.css'
 
 class FooterBar extends React.Component {

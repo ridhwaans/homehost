@@ -26,12 +26,16 @@ export default function music(state = initialState, action) {
       }
 
     case FILTER_MUSIC:
-      let displayedMusic = state.music.filter(music => {
-        if (music.album_name.toLowerCase().includes(action.searchTerm.toLowerCase())) {
+      let displayedMusic = state.music.filter(album => {
+        if (album.album_name.toLowerCase().includes(action.searchTerm.toLowerCase())
+           || album.artist_name.toLowerCase().includes(action.searchTerm.toLowerCase())
+           || album.tracks.items.some(item => item.name.toLowerCase().includes(action.searchTerm.toLowerCase()))
+           ) {
           return true
         }
         return false
       })
+
       return {
         ...state,
         displayedMusic,

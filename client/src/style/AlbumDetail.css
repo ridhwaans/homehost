@@ -6,9 +6,6 @@
 }
 
 .cell-detail-div {
-  -moz-transition: height .5s;
-  -ms-transition: height .5s;
-  -o-transition: height .5s;
   -webkit-transition: height .5s;
   transition: height .5s;
   height: 0;
@@ -50,7 +47,6 @@
   left: 0;
   right: 0;
   margin: auto;
-  /*padding: 70px;*/
 }
 
 .cell-detail-close {

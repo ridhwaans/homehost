@@ -1,16 +1,17 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import NavBar from '../components/NavBar'
 import FooterBar from '../components/FooterBar'
 import style from '../style/App.css'
 
 class Disclaimer extends Component {
-  
+
   render() {
+    
     return (
       <div>
       <NavBar type={-1}/>
-      <p>
+      <br/>
+      <p className={style.disclaimer}>
       Disclaimer <br/>
       <br/>
       All pictures copyright to their respective owner(s). This project does not claim <br/>

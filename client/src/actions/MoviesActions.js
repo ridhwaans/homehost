@@ -20,7 +20,6 @@ function receiveMovies(json) {
 }
 
 export function fetchMovies() {
-
   return dispatch => {
     dispatch(requestMovies())
 
@@ -47,7 +46,6 @@ export function fetchMovies() {
       })
       .catch(err => console.log(err));
   }
-
 }
 
 export function filterMovies(searchTerm) {

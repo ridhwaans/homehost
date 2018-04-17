@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import * as _ from 'lodash'
 
 import { bindActionCreators } from 'redux'
@@ -14,7 +13,6 @@ import * as utils from '../utils/utils.js'
 import style from '../style/App.css'
 
 class Music extends Component {
-
   handleSearch(e) {
     this.props.musicActions.filterMusic(e.target.value)
   }
@@ -26,23 +24,28 @@ class Music extends Component {
   render() {
     let { displayedMusic } = this.props.musicReducer
 
-    const artistCount = _.uniqBy(displayedMusic, 'artist_name').length //uniqueNamesCount
+    const artistCount = _.uniqBy(displayedMusic, 'artist_name').length
     const albumCount = displayedMusic.length
-    const trackCount = _.sumBy(displayedMusic, 'tracks.items.length') //change to count frequency of url_path occurences
-
+    var trackCount = 0;
+    displayedMusic.forEach(function(album){
+      album.tracks.items.forEach(function(track){
+        if (track.url_path) trackCount++;
+      });
+    });
+    
     return (
       <div>
-      <NavBar onChange={this.handleSearch.bind(this)} type={1}/>
-      <br/>
-      <ResultsBar count={[artistCount,albumCount,trackCount]} type={1}/>
-      <Grid
-        gridData={JSON.stringify(displayedMusic)}
-        gridCell_width={175}
-        gridCell_height={175}
-        type={1}
-      />
-      <br/>
-      <FooterBar/>
+        <NavBar onChange={this.handleSearch.bind(this)} type={1}/>
+        <br/>
+        <ResultsBar count={[artistCount,albumCount,trackCount]} type={1}/>
+        <Grid
+          gridData={JSON.stringify(displayedMusic)}
+          gridCell_width={175}
+          gridCell_height={175}
+          type={1}
+        />
+        <br/>
+        <FooterBar/>
       </div>
     );
   }

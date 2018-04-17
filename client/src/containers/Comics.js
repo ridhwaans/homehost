@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import NavBar from '../components/NavBar'
 import FooterBar from '../components/FooterBar'
 import style from '../style/App.css'
@@ -22,10 +21,10 @@ class Comics extends Component {
   render() {
     return (
       <div>
-      <NavBar type={4}/>
-      <br></br>
-      <p className={style.comingSoon}>🚧</p>
-      <FooterBar/>
+        <NavBar type={4}/>
+        <br></br>
+        <p className={style.comingSoon}>🚧</p>
+        <FooterBar/>
       </div>
     );
   }

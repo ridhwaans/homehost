@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import CellDetail from './CellDetail'
 import style from '../style/MovieDetail.css'
 

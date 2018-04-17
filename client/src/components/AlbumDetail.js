@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import CellDetail from './CellDetail'
 import style from '../style/AlbumDetail.css'
 import '../style/node_modules.css'
@@ -64,7 +63,6 @@ class AlbumDetail extends CellDetail {
         position: 'relative',
         display: 'none'
       }
-
       cssforCellDetailRight = {
         width: '100%',
         height: '100%',
@@ -87,9 +85,6 @@ class AlbumDetail extends CellDetail {
         let track_number = data.tracks.items[i].track_number
         let name = data.tracks.items[i].name
         let duration = Timer.prettyTime(data.tracks.items[i].duration_ms / 1000)
-        //utils.msToMS(data.tracks.items[i].duration_ms)
-        //let preview_url = data.tracks.items[i].preview_url
-        //onClick={preview_url ? this.playTrackAtIndex.bind(this, i) : undefined}
         trackList.push(
           <li><div class={style.plItem} onClick={this.playTrackAtIndex.bind(this, i)}>
           <span class={style.plNum}> {track_number} </span>
@@ -147,7 +142,6 @@ class AlbumDetail extends CellDetail {
         <li id='CellDetail' key='CellDetail' className={style.cellDetail}>
           <div id='CellDetail_left'className={style.cellDetailLeft}>
             <img id='CellDetailImage' className={style.cellDetailImage} src={data.album_art}/>
-            
           </div>
           <div id='CellDetail_right' className={style.cellDetailRight}>
             <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>

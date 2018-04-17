@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import {
   Collapse,	
   Navbar,
@@ -13,7 +12,7 @@ import {
 
 class NavBar extends React.Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.toggle = this.toggle.bind(this);

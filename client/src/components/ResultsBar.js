@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -49,7 +48,7 @@ class ResultsBar extends React.Component {
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Artist name</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Oldest</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Newest</DropdownItem>)
-        results = this.props.count[0] + ' artists, ' + this.props.count[1] + ' albums, ' + this.props.count[2] + ' tracks' 
+        results = this.props.count[0] + ' artists, ' + this.props.count[1] + ' albums, ' + this.props.count[2] + ' local tracks' 
         break;
       default:
         break;

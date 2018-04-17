@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import GridCell from './GridCell'
 import MovieDetail from './MovieDetail'
@@ -64,7 +63,7 @@ class Grid extends React.Component {
         id={gridCell_id}
         width={this.state.gridCell_width}
         height={this.state.gridCell_height}
-        GridCellData={gridData[i]}/>)
+        gridCellData={gridData[i]}/>)
     }
 
     var detailData = []

@@ -1,10 +1,9 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import style from '../style/App.css'
 
 class GridCell extends React.Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -17,18 +16,18 @@ class GridCell extends React.Component {
     this.setState({ width: nextProps.width, height: nextProps.height });  
   }
 
-  cellClick (event) {
+  cellClick(event) {
     this.props.handleCellClick(event)
   }
 
-  render () {
-    let cellTitle = this.props.GridCellData.title // Movie 
-            || this.props.GridCellData.album_name // Music
+  render() {
+    let cellTitle = this.props.gridCellData.title // Movie 
+            || this.props.gridCellData.album_name // Music
 
-    let cellSubtitle = parseInt(this.props.GridCellData.release_date) // Movie & Music
+    let cellSubtitle = parseInt(this.props.gridCellData.release_date) // Movie & Music
 
-    let cellBackground = this.props.GridCellData.poster_path // Movie 
-            || this.props.GridCellData.album_art // Music
+    let cellBackground = this.props.gridCellData.poster_path // Movie 
+            || this.props.gridCellData.album_art // Music
             
     var cellStyle = {   
       backgroundImage: 'url(' + cellBackground + ')',
@@ -49,8 +48,6 @@ class GridCell extends React.Component {
     return (
       <div className={style.gridCellDiv} id={this.props.id}>
       <li className={style.gridCell} onClick={this.cellClick.bind(this)} style={cellStyle}> </li>
-      <h2 className={style.gridCellTitle} style={cellTitleStyle}> {cellTitle} </h2>
-      <h2 className={style.gridCellSubtitle}> {cellSubtitle} </h2>
       </div>
     )
   }

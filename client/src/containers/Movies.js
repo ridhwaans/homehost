@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -13,7 +12,6 @@ import * as utils from '../utils/utils.js'
 import style from '../style/App.css'
 
 class Movies extends Component {
-
   handleSearch(e) {
     this.props.moviesActions.filterMovies(e.target.value)
   }
@@ -27,17 +25,17 @@ class Movies extends Component {
 
     return (
       <div>
-      <NavBar onChange={this.handleSearch.bind(this)} type={0}/>
-      <br/>
-      <ResultsBar count={displayedMovies.length} type={0}/>
-      <Grid
-        gridData={JSON.stringify(displayedMovies)}
-        gridCell_width={140}
-        gridCell_height={200}
-        type={0}
-      />
-      <br/>
-      <FooterBar/>
+        <NavBar onChange={this.handleSearch.bind(this)} type={0}/>
+        <br/>
+        <ResultsBar count={displayedMovies.length} type={0}/>
+        <Grid
+          gridData={JSON.stringify(displayedMovies)}
+          gridCell_width={140}
+          gridCell_height={200}
+          type={0}
+        />
+        <br/>
+        <FooterBar/>
       </div>
     );
   }
