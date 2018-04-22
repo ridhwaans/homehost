@@ -9,19 +9,31 @@
 @import url(http://weloveiconfonts.com/api/?family=fontawesome);
 
 .coming-soon {
+  display: block;
   text-align: center;
   font-family: 'Montserrat';
   font-size: 32px;
   font-weight: 700;
-  display: block;
 }
 
 .disclaimer {
+  font-family: 'Montserrat';
   padding-left: 20px; 
   text-align: left;
-  font-family: 'Montserrat';
   font-size: 14px;
   font-weight: 700;
+}
+
+/* NotFound */
+.not-found-div {
+  display: block;
+  text-align: center;
+  font-family: 'Montserrat';
+}
+
+.not-found-image {
+  max-width:100%;
+  max-height:100%;
 }
 
 /* FooterBar */

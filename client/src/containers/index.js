@@ -6,3 +6,5 @@ export {Movies} from './Movies';
 export {Music} from './Music';
 export {Podcasts} from './Podcasts';
 export {TV} from './TV';
+export {Disclaimer} from './Disclaimer';
+export {NotFound} from './NotFound';

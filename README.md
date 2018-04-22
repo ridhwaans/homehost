@@ -5,12 +5,11 @@
   <a href="https://github.com/ridhwaans/homehost/issues"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat" alt="contributions"></a>
   <a href="https://github.com/ridhwaans/homehost/releases/"><img src="https://img.shields.io/github/release/ridhwaans/homehost.svg" alt="release"></a>
   <a href="https://github.com/ridhwaans/homehost/tags/"><img src="https://img.shields.io/github/tag/ridhwaans/homehost.svg" alt="tag"></a>
-  <a href="https://github.com/ridhwaans/homehost/commit/"><img src="https://img.shields.io/github/commits-since/ridhwaans/homehost/v1.0.0.svg" alt="commits-since"></a>
+  <a href="https://github.com/ridhwaans/homehost/commit/"><img src="https://img.shields.io/github/commits-since/ridhwaans/homehost/client-v1.1.0.svg" alt="commits-since"></a>
   <a href="https://github.com/ridhwaans/homehost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ridhwaans/homehost.svg" alt="license"></a>
 </p>
 
-<h3 align="center"> homehost is made for streaming your media collection over the home network<br/>
-It's self-hosted, it's personal, and it's going to be cross platform</h3>
+<h3 align="center"> homehost is made for streaming your media collection over the home network </h3>
 <h4 align="center"> Features: 🎥 Movies, 🎵 Music, 📺 TV Shows, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
 # 🎥 Movies
@@ -25,7 +24,7 @@ It's self-hosted, it's personal, and it's going to be cross platform</h3>
 # Setup
 
 Run `npm install` under the client and server directories  
-In `./config.yml`, set the media paths, and specify a working API key for TMDB API and Spotify Web API  
+In `./config.yml`, set the media paths, and specify a working API key for TMDb API and Spotify Web API  
 ```yaml
 # Server-side configs
 movies:
@@ -37,7 +36,7 @@ music:
   api   : 'api.spotify.com/v1'
   key   : '<auth_token>'
 ```
-If you dont have keys, you can request API authentication from Spotify at https://beta.developer.spotify.com/documentation/web-api/, and TMDB at https://developers.themoviedb.org/3/getting-started/introduction
+If you dont have keys, you can request API authentication from Spotify at https://beta.developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
 
 ## Naming conventions
 
@@ -46,7 +45,7 @@ Your media must appear in the path set by `config.yml`
 ```
 <movies_path>  
  - (subdirectory)?  
-   - (movie_file_name <TMDB-movie-ID>) (.mp4|.mkv)
+   - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)
 ```
 🎵 **Music**  
 ```
@@ -71,8 +70,9 @@ Server requires `<media>.json` file data at startup. Initial json state should b
 ```
 Start homehost by running `yarn homehost` from the base directory. Server should open at `http://localhost:5000/`  
 On the server, call `/api/generate` **once**. Wait for the async operation to finish and save  
+There is no 'watch' or 'hot reload' feature for server media. Any adding or changing media files requires a json reset and rerunning `/api/generate`
+By default, `5000` is the nodejs server port, `3000` is the react client port  
 **NOTE:** `nodemon` interrupts async data generation upon file save. Use `node server` instead for generating metadata  
-By default, `5000` is the nodejs server port, `3000` is the react client port
 
 ## Routes
 
@@ -91,8 +91,13 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 
 `/movies` and `/music` are scheduled for v1.0 release. `/books`, `/comics`, `/podcasts`, `/tv` are TODO
 
+# Development
+
+Works best in <img src="media/chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
+
 # Powered by
-<p><img src="media/spotify_green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="media/tmdb_green.svg" width="150" height="150" title="TMDB API"></p>
+
+<p><img src="media/spotify_green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="media/tmdb_green.svg" width="150" height="150" title="TMDb API"></p>
 
 # License
 
