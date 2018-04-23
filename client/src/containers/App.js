@@ -32,6 +32,3 @@ class App extends Component {
 }
 
 export default App;
-
-//<Router history={BrowserHistory}>
-//<NotFoundRoute component={NotFound}/>

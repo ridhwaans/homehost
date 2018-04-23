@@ -14,9 +14,11 @@ var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
 
 var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
 var musicClient = new lib.ApiClient(config.music.api, null, true, { headers: {'Authorization': 'Bearer ' + config.music.key} });
+var tvClient = new lib.ApiClient(config.tv.api, config.tv.key, true);
 
 var moviesData = require('./movies.json');
 var musicData = require('./music.json'); 
+var tvData = require('./tv.json'); 
 
 app.get('/api/hello', (req, res) => {
   let hello = { homehost: 'Hello', config};
@@ -36,6 +38,10 @@ app.get('/api/music', (req, res) => {
   res.json(musicData.music)
 });
 
+app.get('/api/tv', (req, res) => {
+  res.json(tvData.tv)
+});
+
 app.get('/api/movies/:id', function(req, res) {
   var movie = _.where(moviesData.movies, {id: parseInt(req.params.id)});
   res.json(movie);
@@ -44,6 +50,11 @@ app.get('/api/movies/:id', function(req, res) {
 app.get('/api/music/albums/:id', function(req, res) {
   var album = _.where(musicData.music, {id: req.params.id});
   res.json(album);
+});
+
+app.get('/api/tv/seasons/:id', function(req, res) {
+  var season = _.where(tvData.tv, {id: req.params.id});
+  res.json(season);
 });
 
 app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
@@ -96,11 +107,83 @@ app.get('/movies/:id', function(req, res) {
 });
 
 var generateMetaData = function(){
-  generateMusicMetaData()
-    .then(function(result) { 
-      return generateMovieMetaData();
-    });
+  generateTVMetaData();
+
+  // generateMusicMetaData()
+  //   .then(function(result) { 
+  //     return generateMovieMetaData();
+  //   })
+  //   .then(function(result) { 
+  //     return generateTVMetaData();
+  //   });
 }
+
+var generateTVMetaData = function() {
+  return new Promise(function(resolve, reject) {
+
+  var re = new RegExp(/(\d+)$/); // tv_id
+      re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
+      json = { tv: [] };
+
+  console.log('Generating data for TV...')
+  node_dir.subdirs(config.tv.path, function(err, subdirs) {
+    if (err) throw err;
+    
+    bluebird.mapSeries(subdirs, function(subdir){
+      console.log('GET: ' + subdir);
+      // find tv show on TMDb
+      let tv_id = parseInt(subdir.match(re)[1])
+      return tvClient.send(new lib.requests.TVShow(tv_id), 250, null)
+      .then((show) => {
+
+      show.seasons.forEach(function(season, i) {
+        show.seasons[i].episodes = []
+      });
+      json.tv.push(show);
+      
+      node_dir.files(subdir, function(err, files) {
+        if(err) console.log(err)
+
+        bluebird.mapSeries(files, function(file){
+        console.log('GET: ' + file);
+        // find tv episode on TMDb
+        let season_number = parseInt(file.match(re2)[1])
+        let episode_number = parseInt(file.match(re2)[2])
+        return tvClient.send(new lib.requests.TVEpisode(tv_id, season_number, episode_number), 250, null)
+           .then((episode) => {
+           episode.fs_path = file;
+           episode.url_path = ('http://localhost:' + port + '/tv/').concat(tv_id, '/', episode.season_number, '/', episode.episode_number);
+
+           let showIndex = _.findIndex(json.tv, { id: tv_id });
+           let seasonIndex = _.findIndex(json.tv[showIndex].seasons, { season_number: season_number });
+           json.tv[showIndex].seasons[seasonIndex].episodes.push(episode);
+           });
+        })
+        .then(function(show){
+          resolve(json);
+        })
+        .catch(function(err){
+          console.log('TV metadata could not be generated due to some error', err);
+        });
+      });
+
+      });
+    })
+    .then(function(tv){
+      fs.writeFile('./tv.json', JSON.stringify(json), 'utf8', (err)=>{
+        if(err) console.log(err)
+        else console.log('[TV] File saved');
+        resolve(json);
+      })
+    })
+    .catch(function(err){
+      console.log('TV metadata could not be generated due to some error', err);
+    });
+
+  });
+
+  });
+};
 
 var generateMovieMetaData = function() {
   return new Promise(function(resolve, reject) {
@@ -114,7 +197,7 @@ var generateMovieMetaData = function() {
     
     bluebird.mapSeries(files, function(file){
     console.log('GET: ' + file);
-    // find movie on TMDB
+    // find movie on TMDb
     return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
        .then((movie) => {
        movie.fs_path = file;

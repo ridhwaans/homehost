@@ -1,34 +1,65 @@
 import React, { Component } from 'react'
+import * as _ from 'lodash'
+
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as tvActions from '../actions/TVActions'
+
 import NavBar from '../components/NavBar'
+import ResultsBar from '../components/ResultsBar'
+import Grid from '../components/Grid'
 import FooterBar from '../components/FooterBar'
-import style from '../style/App.css'
-import * as utils from '../utils/utils.js'
 
 class TV extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      files: []
-    };
+  handleSearch(e) {
+    this.props.tvActions.fetchTV(e.target.value)
   }
 
   componentDidMount() {
-    utils.callApi('/api/tv')
-      .then(res => this.setState({ files: res }))
-      .catch(err => console.log(err));
+    this.props.tvActions.fetchTV()
   }
-  
+
   render() {
+    let { displayedTV } = this.props.tvReducer
+
+    const showCount = _.uniqBy(displayedTV, 'name').length
+    const seasonCount = displayedTV.length
+    var episodeCount = 0;
+    // displayedTV.forEach(function(season){
+    //   // season.episodes.forEach undefined
+    //   season.episodes.forEach(function(episode){
+    //     if (episode.url_path) episodeCount++;
+    //   });
+    // });
+
     return (
       <div>
-        <NavBar type={2}/>
-        <br></br>
-        <p className={style.comingSoon}>🚧</p>
+        <NavBar onChange={this.handleSearch.bind(this)} type={2}/>
+        <br/>
+        <ResultsBar count={[showCount,seasonCount,episodeCount]} type={2}/>
+        <Grid
+          gridData={JSON.stringify(displayedTV)}
+          gridCell_width={140}
+          gridCell_height={200}
+          type={2}
+        />
+        <br/>
         <FooterBar/>
       </div>
     );
   }
-
 }
 
-export default TV;
+function mapStateToProps(state) {
+  return {
+    tvReducer: state.tvReducer
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    tvActions: bindActionCreators(tvActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TV)

@@ -70,5 +70,4 @@ export default function movie(state = initialState, action) {
     default:
       return state
   }
-
 }

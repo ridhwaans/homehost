@@ -16,7 +16,6 @@ class MovieDetail extends CellDetail {
         position: 'relative',
         display: 'none'
       }
-
       cssforCellDetailRight = {
         width: '100%',
         height: '100%',

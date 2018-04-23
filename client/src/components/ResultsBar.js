@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as moviesActions from '../actions/MoviesActions'
 import * as musicActions from '../actions/MusicActions'
+import * as tvActions from '../actions/TVActions'
 
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import style from '../style/App.css'
@@ -33,6 +34,10 @@ class ResultsBar extends React.Component {
     this.props.musicActions.sortMusic(e.target.innerText)
   }
 
+  handleSortTV(e) {
+    this.props.tvActions.sortTV(e.target.innerText)
+  }
+
   render() {
   	var dropdown = []
     var results = ''
@@ -49,6 +54,12 @@ class ResultsBar extends React.Component {
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Oldest</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Newest</DropdownItem>)
         results = this.props.count[0] + ' artists, ' + this.props.count[1] + ' albums, ' + this.props.count[2] + ' local tracks' 
+        break;
+      case type.TV:
+        dropdown.push(<DropdownItem onClick={this.handleSortTV.bind(this)}>Alphabetical</DropdownItem>)
+        dropdown.push(<DropdownItem onClick={this.handleSortTV.bind(this)}>Oldest</DropdownItem>)
+        dropdown.push(<DropdownItem onClick={this.handleSortTV.bind(this)}>Newest</DropdownItem>)
+        results = this.props.count[0] + ' shows, ' + this.props.count[1] + ' seasons, ' + this.props.count[2] + ' local episodes' 
         break;
       default:
         break;
@@ -93,7 +104,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     moviesActions: bindActionCreators(moviesActions, dispatch),
-    musicActions: bindActionCreators(musicActions, dispatch)
+    musicActions: bindActionCreators(musicActions, dispatch),
+    tvActions: bindActionCreators(tvActions, dispatch)
   }
 }
 

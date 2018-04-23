@@ -8,8 +8,6 @@ import NavBar from '../components/NavBar'
 import ResultsBar from '../components/ResultsBar'
 import Grid from '../components/Grid'
 import FooterBar from '../components/FooterBar'
-import * as utils from '../utils/utils.js'
-import style from '../style/App.css'
 
 class Movies extends Component {
   handleSearch(e) {

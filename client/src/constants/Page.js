@@ -14,3 +14,8 @@ export const REQUEST_MUSIC = 'REQUEST_MUSIC'
 export const RECEIVE_MUSIC = 'RECEIVE_MUSIC'
 export const FILTER_MUSIC = 'FILTER_MUSIC'
 export const SORT_MUSIC = 'SORT_MUSIC'
+
+export const REQUEST_TV = 'REQUEST_TV'
+export const RECEIVE_TV = 'RECEIVE_TV'
+export const FILTER_TV = 'FILTER_TV'
+export const SORT_TV = 'SORT_TV'

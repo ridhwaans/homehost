@@ -4,6 +4,7 @@
 config.yml
 movies.json
 music.json
+tv.json
 /backup
 
 # dependencies

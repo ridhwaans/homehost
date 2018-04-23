@@ -81,5 +81,4 @@ export default function music(state = initialState, action) {
     default:
       return state
   }
-
 }

@@ -23,10 +23,12 @@ class GridCell extends React.Component {
   render() {
     let cellTitle = this.props.gridCellData.title // Movie 
             || this.props.gridCellData.album_name // Music
+            || this.props.gridCellData.name // TV
 
     let cellSubtitle = parseInt(this.props.gridCellData.release_date) // Movie & Music
+            || parseInt(this.props.gridCellData.air_date) // TV
 
-    let cellBackground = this.props.gridCellData.poster_path // Movie 
+    let cellBackground = this.props.gridCellData.poster_path // Movie & TV
             || this.props.gridCellData.album_art // Music
             
     var cellStyle = {   

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import GridCell from './GridCell'
 import MovieDetail from './MovieDetail'
 import AlbumDetail from './AlbumDetail'
+import SeasonDetail from './SeasonDetail'
 import style from '../style/App.css'
 
 class Grid extends React.Component {
@@ -77,6 +78,9 @@ class Grid extends React.Component {
         break;
       case type.MUSIC:
         grid.push(<AlbumDetail selected_element={this.state.selected_element} detailData={detailData}/>)
+        break;
+      case type.TV:
+        grid.push(<SeasonDetail selected_element={this.state.selected_element} detailData={detailData}/>)
         break;
       default:
         break;
