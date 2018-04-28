@@ -1,5 +1,6 @@
 import React from 'react'
 import CellDetail from './CellDetail'
+import { Container, Row, Col, Button } from 'reactstrap';
 import style from '../style/SeasonDetail.css'
 
 class SeasonDetail extends CellDetail {
@@ -25,24 +26,35 @@ class SeasonDetail extends CellDetail {
     }
 
     let data = this.state.detailData
+    console.log(JSON.stringify(data));
     document.documentElement.style.setProperty('--background-image', 'url(' + data.backdrop_path + ')')
-    // var episodeList = []
-    // if (data.poster_path) {
-      
-    //   for (var i = 0; i < data.episodes.length; i++){
-    //     let name = data.episodes[i].name
-    //     let episode_number = data.episodes[i].episode_number
 
-    //     episodeList.push(
-    //       <li><div class={style.elItem}>
-    //       <span class={style.elNum}> {episode_number} </span>
-    //       <span class={style.elTitle}> {name} </span>
-    //       </div></li>
-    //     )
-    //   }
-    // }
-    //{episodeList}
-    //<div id='CellDetailCopyright' className={style.cellDetailCopyright}>© {data.networks[0].name} &#8226; {parseInt(data.air_date)}</div> 
+    var container 
+    if (data.name) {
+      container = (
+      <Container>
+        <Row>
+          <Col>{data.name + ': ' + data.season.name}</Col>
+        </Row>
+        <Row>
+          <Col>{data.season.overview}</Col>
+        </Row>
+        <Row>
+          <Col>{'Air date: ' + data.season.air_date}</Col>
+          <Col>{'Episode count: ' + data.season.episode_count}</Col>
+        </Row>
+        <Row>
+          <Col xs="6" sm="4">
+            <Button color="primary">Show Details</Button>
+          </Col>
+          <Col xs="6" sm="4"></Col>
+          <Col sm="4">
+            <Button color="primary">View Episodes</Button>
+          </Col>
+        </Row>
+      </Container>)
+    }
+
     return (
       <div id='CellDetailDiv' className={style.cellDetailDiv}>
         <li id='CellDetail' key='CellDetail' className={style.cellDetail}>
@@ -51,13 +63,7 @@ class SeasonDetail extends CellDetail {
           </div>
           <div id='CellDetail_right' className={style.cellDetailRight}>
             <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
-
-            <div id={style.elWrap}>
-              <ul id={style.elList}>
-                
-              </ul>
-            </div>
-            
+            {container}
           </div>
         </li>
       </div>

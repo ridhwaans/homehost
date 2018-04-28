@@ -1,1 +1,121 @@
 /* EpisodeDetail */
+:root {
+  --background-image: none;
+  --title-color: #000000;
+  --description-color: #000000;
+}
+
+.cell-detail-div {
+  -webkit-transition: height .5s;
+  transition: height .5s;
+  height: 0;
+  overflow: hidden;
+  display: block;
+}
+
+.cell-detail {
+  background-color: #D9D9D9;
+  height: 500px;
+  position: relative;
+  padding: none;
+  background-image: var(--background-image);
+}
+
+.cell-detail-image {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.cell-detail-close {
+  display: block;
+  text-align:center;
+  position:relative;
+  padding:5px;
+  top:0;
+  right:0;
+  margin-left: 95%;
+  cursor: pointer;
+}
+
+.cell-detail-title {
+  font-family: 'Lato';
+  font-size: 40px;
+  font-weight: 700;
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 15px; 
+}
+
+.cell-detail-copyright {
+  font-family: 'Lato';
+  font-size: 16px;
+  font-weight: 700;
+  display: block;
+  margin: 30px;
+  text-align: right;
+}
+
+/* episodelist */
+#elWrap {
+  margin:0 auto;
+}
+
+#elList {
+  column-count: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
+
+#elList li {
+  cursor:pointer;
+  display:block;
+  margin:0;
+  padding:0 0 21px 0;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+#elList li:hover {
+  /*background-color:rgba(0,0,0,.7);*/
+  box-shadow: inset 0 0 0 2px var(--title-color);
+}
+
+.elItem {
+  position:relative;
+  font-size: 14px;
+}
+
+.elNum {
+  padding-left:21px;
+  width:25px;
+  float:left;
+  color: var(--description-color);
+}
+
+.elTitle {
+  left:50px;
+  overflow:hidden;
+  position:absolute;
+  right:65px;
+  text-overflow:ellipsis;
+  top:0;
+  white-space:nowrap;
+  color: var(--title-color);
+}
+
+.elLength {
+  padding-left:21px;
+  position:absolute;
+  right:21px;
+  top:0;
+  color: var(--description-color);
+}
