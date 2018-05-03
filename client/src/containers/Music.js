@@ -21,7 +21,7 @@ class Music extends Component {
   
   render() {
     let { displayedMusic } = this.props.musicReducer
-
+    
     const artistCount = _.uniqBy(displayedMusic, 'artist_name').length
     const albumCount = displayedMusic.length
     var trackCount = 0;
@@ -38,8 +38,6 @@ class Music extends Component {
         <ResultsBar count={[artistCount,albumCount,trackCount]} type={1}/>
         <Grid
           gridData={JSON.stringify(displayedMusic)}
-          gridCell_width={175}
-          gridCell_height={175}
           type={1}
         />
         <br/>

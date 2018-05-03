@@ -12,7 +12,7 @@ import FooterBar from '../components/FooterBar'
 
 class TV extends Component {
   handleSearch(e) {
-    this.props.tvActions.fetchTV(e.target.value)
+    this.props.tvActions.filterTV(e.target.value)
   }
 
   componentDidMount() {
@@ -39,8 +39,6 @@ class TV extends Component {
         <ResultsBar count={[showCount,seasonCount,episodeCount]} type={2}/>
         <Grid
           gridData={JSON.stringify(displayedTV)}
-          gridCell_width={140}
-          gridCell_height={200}
           type={2}
         />
         <br/>
@@ -63,3 +61,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TV)
+
+
+
+
+
+
+

@@ -35,6 +35,10 @@ music:
   path  : '/path/to/music/directory'
   api   : 'api.spotify.com/v1'
   key   : '<auth_token>'
+tv:
+  path  : '/path/to/tv/directory'
+  api   : 'api.themoviedb.org/3'
+  key   : '<api_key>'
 ```
 If you dont have keys, you can request API authentication from Spotify at https://beta.developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
 
@@ -59,19 +63,25 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
  - Unknown Album  
    - (track_file_name) (.mp3)
 ```
+📺 **TV**  
+```
+<tv_path>  
+ - (tv_show_directory_name <TMDb-tv-ID>)  
+   - (S<season_number>E<episode_number> episode_file_name) (.mp4|.mkv)
+```
 ## Generating metadata
 
 Server requires `<media>.json` file data at startup. Initial json state should be empty
 ```json
-./movies.json & ./music.json
+./movies.json, ./music.json, ./tv.json
 {
-  "movies": [], "music": []
+  "movies": [], "music": [], "tv": []
 }
 ```
 Start homehost by running `yarn homehost` from the base directory. Server should open at `http://localhost:5000/`  
 On the server, call `/api/generate` **once**. Wait for the async operation to finish and save  
 There is no 'watch' or 'hot reload' feature for server media. Any adding or changing media files requires a json reset and rerunning `/api/generate`
-By default, `5000` is the nodejs server port, `3000` is the react client port  
+By default, `5000` is the node server port, `3000` is the react client port  
 **NOTE:** `nodemon` interrupts async data generation upon file save. Use `node server` instead for generating metadata  
 
 ## Routes
@@ -85,11 +95,13 @@ By default, `5000` is the nodejs server port, `3000` is the react client port
 **GET** `/movies/:id`  
 **GET** `/api/music/`  
 **GET** `/api/music/albums/:id`  
-**GET** `/music/:album_id/:disc_number/:track_number`
+**GET** `/music/:album_id/:disc_number/:track_number`  
+**GET** `/api/tv/seasons/:id`  
+**GET** `/tv/:show_id/:season_number/:episode_number`  
 
 ### Client-side
 
-`/movies` and `/music` are scheduled for v1.0 release. `/books`, `/comics`, `/podcasts`, `/tv` are TODO
+`/movies`, `/music`, `/tv` are accessible. `/books`, `/comics`, `/podcasts` are TODO
 
 # Development
 

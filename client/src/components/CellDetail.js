@@ -15,7 +15,6 @@ class CellDetail extends React.Component {
   componentDidUpdate(prevProps, prevState){
     var wrapper = document.getElementById('CellDetailDiv')
     var detail = document.getElementById('CellDetail')
-    var arrow = document.getElementById('selected_arrow')
 
     if (this.state.selected_element && wrapper && detail) {
       if (this.props.selected_element === prevProps.selected_element) {
@@ -63,7 +62,6 @@ class CellDetail extends React.Component {
     if (insertedFlag === false) {
       ol.childNodes[lengthOfList - 1].insertAdjacentElement('afterend', wrapper)
     }
-
   }
 
   closeCellDetail() {
@@ -76,8 +74,7 @@ class CellDetail extends React.Component {
 }
 
 CellDetail.defaultProps = {
-  CellDetail_closeX_bool: true,
-  show_mobile_style_from_width: 600,
+  CellDetail_closeX_bool: true
 }
 
 export default CellDetail

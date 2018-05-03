@@ -43,7 +43,6 @@ export function fetchMusic() {
       })
       .catch(err => console.log(err));
   }
-
 }
 
 export function filterMusic(searchTerm) {

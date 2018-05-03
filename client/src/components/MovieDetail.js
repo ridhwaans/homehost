@@ -5,25 +5,6 @@ import style from '../style/MovieDetail.css'
 class MovieDetail extends CellDetail {
   
   render() {
-    // Make Mobile Friendly
-    var cssforCellDetailLeft
-    var cssforCellDetailRight
-    if (window.innerWidth < this.props.show_mobile_style_from_width) {
-      cssforCellDetailLeft = {
-        width: '0%',
-        height: '100%',
-        float: 'left',
-        position: 'relative',
-        display: 'none'
-      }
-      cssforCellDetailRight = {
-        width: '100%',
-        height: '100%',
-        float: 'right',
-        position: 'relative'
-      }
-    }
-
     let data = this.state.detailData
     let title = data.title + ' (' + parseInt(data.release_date) + ')'
     document.documentElement.style.setProperty('--background-image', 'url(' + data.backdrop_path + ')')

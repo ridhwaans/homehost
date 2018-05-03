@@ -118,72 +118,57 @@ var generateMetaData = function(){
   //   });
 }
 
-var generateTVMetaData = function() {
-  return new Promise(function(resolve, reject) {
-
-  var re = new RegExp(/(\d+)$/); // tv_id
-      re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
-      json = { tv: [] };
+const generateTVMetaData = async () => {
+  let re = new RegExp(/(\d+)$/); // tv_id
+        re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
+        json = { tv: [] };
 
   console.log('Generating data for TV...')
-  node_dir.subdirs(config.tv.path, function(err, subdirs) {
-    if (err) throw err;
-    
-    bluebird.mapSeries(subdirs, function(subdir){
-      console.log('GET: ' + subdir);
-      // find tv show on TMDb
-      let tv_id = parseInt(subdir.match(re)[1])
-      return tvClient.send(new lib.requests.TVShow(tv_id), 250, null)
-      .then((show) => {
+  let subdirs = await new Promise((resolveSubdirs) => {
+    node_dir.subdirs(config.tv.path, async (err, subdirs) => {
+      if (err) throw err;
+      resolveSubdirs(subdirs);
+    });
+  });
 
-      show.seasons.forEach(function(season, i) {
-        show.seasons[i].episodes = []
-      });
-      json.tv.push(show);
-      
-      node_dir.files(subdir, function(err, files) {
-        if(err) console.log(err)
-
-        bluebird.mapSeries(files, function(file){
-        console.log('GET: ' + file);
-        // find tv episode on TMDb
-        let season_number = parseInt(file.match(re2)[1])
-        let episode_number = parseInt(file.match(re2)[2])
-        return tvClient.send(new lib.requests.TVEpisode(tv_id, season_number, episode_number), 250, null)
-           .then((episode) => {
-           episode.fs_path = file;
-           episode.url_path = ('http://localhost:' + port + '/tv/').concat(tv_id, '/', episode.season_number, '/', episode.episode_number);
-
-           let showIndex = _.findIndex(json.tv, { id: tv_id });
-           let seasonIndex = _.findIndex(json.tv[showIndex].seasons, { season_number: season_number });
-           json.tv[showIndex].seasons[seasonIndex].episodes.push(episode);
-           });
-        })
-        .then(function(show){
-          resolve(json);
-        })
-        .catch(function(err){
-          console.log('TV metadata could not be generated due to some error', err);
-        });
-      });
-
-      });
-    })
-    .then(function(tv){
-      fs.writeFile('./tv.json', JSON.stringify(json), 'utf8', (err)=>{
-        if(err) console.log(err)
-        else console.log('[TV] File saved');
-        resolve(json);
-      })
-    })
-    .catch(function(err){
-      console.log('TV metadata could not be generated due to some error', err);
+  await bluebird.mapSeries(subdirs, async (subdir) => {
+    console.log('GET: ' + subdir);
+    // find tv show on TMDb
+    let tv_id = parseInt(subdir.match(re)[1])
+    let show = await tvClient.send(new lib.requests.TVShow(tv_id), 250, null)
+    show.seasons.forEach(function(season, i) {
+      show.seasons[i].episodes = []
     });
 
+    let files = await new Promise((resolveFiles) => {
+      node_dir.files(subdir, (err, files) => {
+        if (err) throw err;
+        resolveFiles(files);
+      });
+    });
+
+    await bluebird.mapSeries(files, async (file) => {
+      console.log('GET: ' + file);
+      // find tv episode on TMDb
+      let season_number = parseInt(file.match(re2)[1])
+      let episode_number = parseInt(file.match(re2)[2])
+      
+      let episode = await tvClient.send(new lib.requests.TVEpisode(tv_id, season_number, episode_number), 250, null)
+      episode.fs_path = file;
+      episode.url_path = ('http://localhost:' + port + '/tv/').concat(tv_id, '/', episode.season_number, '/', episode.episode_number);
+
+      let seasonIndex = _.findIndex(show.seasons, { season_number: season_number });
+      show.seasons[seasonIndex].episodes.push(episode);
+    });
+    json.tv.push(show);
   });
 
-  });
+  fs.writeFile('./tv.json', JSON.stringify(json), 'utf8', (err)=>{
+    if(err) console.log(err)
+    else console.log('[TV] File saved');
+  })
 };
+
 
 var generateMovieMetaData = function() {
   return new Promise(function(resolve, reject) {
@@ -199,11 +184,11 @@ var generateMovieMetaData = function() {
     console.log('GET: ' + file);
     // find movie on TMDb
     return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
-       .then((movie) => {
-       movie.fs_path = file;
-       movie.url_path = 'http://localhost:' + port + '/movies/' + movie.id;
-       json.movies.push(movie);
-       });
+      .then((movie) => {
+      movie.fs_path = file;
+      movie.url_path = 'http://localhost:' + port + '/movies/' + movie.id;
+      json.movies.push(movie);
+      });
     })
     .then(function(movies){
       fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', (err)=>{

@@ -28,8 +28,6 @@ class Movies extends Component {
         <ResultsBar count={displayedMovies.length} type={0}/>
         <Grid
           gridData={JSON.stringify(displayedMovies)}
-          gridCell_width={140}
-          gridCell_height={200}
           type={0}
         />
         <br/>

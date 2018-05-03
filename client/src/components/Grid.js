@@ -14,8 +14,6 @@ class Grid extends React.Component {
     this.state = {
       selected_element: '',
       type: this.props.type,
-      gridCell_width: this.props.gridCell_width,
-      gridCell_height: this.props.gridCell_height,
       gridData: JSON.parse(this.props.gridData)
     }
   }
@@ -24,25 +22,12 @@ class Grid extends React.Component {
     this.setState({ gridData: JSON.parse(nextProps.gridData) });  
   }
 
-  makeItMobileFriendly () {
-    var leftPanel = document.getElementById('CellDetail_left')
-    var rightPanel = document.getElementById('CellDetail_right')
-    if (window.innerWidth < this.props.show_mobile_style_from_width) {
-      leftPanel.style.display = 'none'
-      rightPanel.style.width = '100%'
-    } else {
-      leftPanel.style.display = 'block'
-      leftPanel.style.width = this.props.CellDetail_left_width
-      rightPanel.style.width = this.props.CellDetail_right_width
-    }
-  }
-
   componentWillMount () {
     window.addEventListener('resize', this.handleResize.bind(this))
   }
 
   handleResize () {
-    this.makeItMobileFriendly()
+    // TODO
   }
 
   handleCellClick (event) {
@@ -54,17 +39,16 @@ class Grid extends React.Component {
   }
 
   render () {
+    let gridData = this.state.gridData
     var grid = []
-    var gridData = this.state.gridData
 
     for (var i in gridData) {
       var gridCell_id = 'grid_cell_' + i.toString()
       grid.push(<GridCell 
-        handleCellClick={this.handleCellClick.bind(this)} 
         id={gridCell_id}
-        width={this.state.gridCell_width}
-        height={this.state.gridCell_height}
-        gridCellData={gridData[i]}/>)
+        handleCellClick={this.handleCellClick.bind(this)}
+        gridCellData={JSON.stringify(gridData[i])}
+        type={this.state.type}/>)
     }
 
     var detailData = []
@@ -109,21 +93,11 @@ const type = {
 }
 
 Grid.propTypes = {
-  gridData: PropTypes.string,
-  show_mobile_style_from_width: PropTypes.number,
-  CellDetail_right_width: PropTypes.string, // in %
-  CellDetail_left_width: PropTypes.string // in %
+  gridData: PropTypes.string
 }
 
-var data = []
-
 Grid.defaultProps = {
-  gridData: JSON.stringify(data),
-  show_mobile_style_from_width: 600,
-  CellDetail_right_width: '60%',
-  CellDetail_left_width: '40%'
+  gridData: JSON.stringify([])
 }
 
 export default Grid
-
-
