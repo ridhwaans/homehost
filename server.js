@@ -13,7 +13,7 @@ var lib = require('./index.js');
 var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
 
 var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
-var musicClient = new lib.ApiClient(config.music.api, null, true, { headers: {'Authorization': 'Bearer ' + config.music.key} });
+var musicClient = new lib.ApiClient(config.music.api, config.music.key, true);
 var tvClient = new lib.ApiClient(config.tv.api, config.tv.key, true);
 
 var moviesData = require('./movies.json');
@@ -107,15 +107,13 @@ app.get('/movies/:id', function(req, res) {
 });
 
 var generateMetaData = function(){
-  generateTVMetaData();
-
-  // generateMusicMetaData()
-  //   .then(function(result) { 
-  //     return generateMovieMetaData();
-  //   })
-  //   .then(function(result) { 
-  //     return generateTVMetaData();
-  //   });
+  generateMusicMetaData()
+    .then(function(result) { 
+      return generateMovieMetaData();
+    })
+    .then(function(result) { 
+      return generateTVMetaData();
+    });
 }
 
 const generateTVMetaData = async () => {
