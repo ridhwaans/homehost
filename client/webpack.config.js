@@ -40,7 +40,7 @@ var config = {
             use: [
                 { 
                     loader: 'babel-loader',
-                    options: { presets: ['@babel/env', '@babel/react', '@babel/stage-2'] }
+                    options: { presets: ['@babel/env', '@babel/react', ["@babel/preset-stage-2", { "decoratorsLegacy": true }]] }
                 }
             ],
             exclude: /(node_modules|bower_components)/

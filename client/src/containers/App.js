@@ -25,9 +25,9 @@ class App extends Component {
           <Route path="/podcasts" component={Podcasts}/>
           <Route path="/disclaimer" component={Disclaimer}/>
           <Route component={NotFound}/>
-      </Switch>
+        </Switch>
       </Router>
-      )
+    )
   }
 }
 

@@ -34,13 +34,13 @@ movies:
 music:
   path  : '/path/to/music/directory'
   api   : 'api.spotify.com/v1'
-  key   : '<auth_token>'
+  key   : '<access_token>'
 tv:
   path  : '/path/to/tv/directory'
   api   : 'api.themoviedb.org/3'
   key   : '<api_key>'
 ```
-If you dont have keys, you can request API authentication from Spotify at https://beta.developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
+If you dont have keys, you can request API authentication from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
 
 ## Naming conventions
 
@@ -82,7 +82,7 @@ Start homehost by running `yarn homehost` from the base directory. Server should
 On the server, call `/api/generate` **once**. Wait for the async operation to finish and save  
 There is no 'watch' or 'hot reload' feature for server media. Any adding or changing media files requires a json reset and rerunning `/api/generate`
 By default, `5000` is the node server port, `3000` is the react client port  
-**NOTE:** `nodemon` interrupts async data generation upon file save. Use `node server` instead for generating metadata  
+**NOTE:** `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata  
 
 ## Routes
 

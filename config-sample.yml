@@ -6,7 +6,7 @@ movies:
 music:
   path  : '/path/to/music/directory'
   api   : 'api.spotify.com/v1'
-  key   : '<auth_token>'
+  key   : '<access_token>'
 tv:
   path  : '/path/to/tv/directory'
   api   : 'api.themoviedb.org/3'
