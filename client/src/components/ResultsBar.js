@@ -1,11 +1,9 @@
 import React from 'react'
-
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as moviesActions from '../actions/MoviesActions'
 import * as musicActions from '../actions/MusicActions'
 import * as tvActions from '../actions/TVActions'
-
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import style from '../style/App.css'
 
@@ -69,14 +67,14 @@ class ResultsBar extends React.Component {
     	<div>
     		<div className={style.resultsBarDiv}>
     		<h3>
-    	    	{results}
+    	    {results}
     		</h3>
     		<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
     		<DropdownToggle caret>
-    	  		Sort options
+    	  	Sort options
     		</DropdownToggle>
     		<DropdownMenu>
-    	  		{dropdown}
+    	  	{dropdown}
     		</DropdownMenu>
     		</Dropdown>
     		</div>

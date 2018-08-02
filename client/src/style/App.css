@@ -5,30 +5,27 @@
 @import url(https://fonts.googleapis.com/css?family=Inconsolata);
 @import url(https://fonts.googleapis.com/css?family=Cousine);
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
+@import url(https://fonts.googleapis.com/css?family=Source+Code+Pro);
 @import url(https://fonts.googleapis.com/css?family=Lato:100,700);
 @import url(http://weloveiconfonts.com/api/?family=fontawesome);
 
 .coming-soon {
   display: block;
   text-align: center;
-  font-family: 'Montserrat';
   font-size: 32px;
   font-weight: 700;
 }
 
 .disclaimer {
-  font-family: 'Montserrat';
   padding-left: 20px; 
   text-align: left;
   font-size: 14px;
-  font-weight: 700;
 }
 
 /* NotFound */
 .not-found-div {
   display: block;
   text-align: center;
-  font-family: 'Montserrat';
 }
 
 .not-found-image {
@@ -44,6 +41,17 @@
    text-align: center;
 }
 
+/* NavBar */
+.nav-bar-brand {
+  font-family: 'Source Code Pro';
+  font-weight: 700;
+}
+
+.nav-bar {
+  font-family: 'Roboto Mono';
+  font-weight: 600;
+}
+
 /* ResultsBar */
 .results-bar-div {
   display: flex;
@@ -51,6 +59,11 @@
   justify-content: space-between;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.results-bar-text {
+  font-family: 'Roboto Mono';
+  font-weight: 600;
 }
 
 /* GridCell */

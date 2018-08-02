@@ -1,4 +1,5 @@
 import React from 'react'
+import { Container, Row, Col } from 'reactstrap'
 import CellDetail from './CellDetail'
 import style from '../style/MovieDetail.css'
 
@@ -20,9 +21,9 @@ class MovieDetail extends CellDetail {
           <div id='CellDetail_right' className={style.cellDetailRight}>
             <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
             <div id='cellDetailPlayerDiv' className={style.cellDetailPlayerDiv}>
-                <video id='cellDetailPlayer' className={style.cellDetailPlayer} controls controlsList='nodownload'>
-                  <source src={data.url_path} type='video/mp4'/>
-                </video>
+              <video id='cellDetailPlayer' className={style.cellDetailPlayer} controls controlsList='nodownload'>
+                <source src={data.url_path} type='video/mp4'/>
+              </video>
             </div>
             <div id='CellDetailTitle' className={style.cellDetailTitle}> {title} </div>
             <div id='CellDetailDescription' className={style.cellDetailDescription}> {data.overview}</div>

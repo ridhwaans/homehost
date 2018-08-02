@@ -1,6 +1,6 @@
 import React from 'react'
 import CellDetail from './CellDetail'
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, Button } from 'reactstrap'
 import style from '../style/SeasonDetail.css'
 
 class SeasonDetail extends CellDetail {

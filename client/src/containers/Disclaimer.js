@@ -10,7 +10,7 @@ class Disclaimer extends Component {
         <NavBar type={-1}/>
         <br/>
         <p className={style.disclaimer}>
-        Disclaimer <br/>
+        <strong>Disclaimer</strong> <br/>
         <br/>
         All pictures copyright to their respective owner(s). This project does not claim <br/>
         ownership of any of the pictures displayed on this site unless stated otherwise. <br/>
@@ -33,7 +33,7 @@ class Disclaimer extends Component {
         us and we will gladly remove the offending images immediately upon receipt <br/>
         of valid proof of copyright infringement. <br/>
         <br/>
-        General Copyright Statement <br/>
+        <strong>General Copyright Statement</strong> <br/>
         <br/>
         Most of the sourced material is posted according to the “fair use” doctrine of <br/>
         copyright law for non-commercial news reporting, education and discussion purposes. <br/>

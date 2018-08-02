@@ -8,7 +8,8 @@ import {
   NavItem,
   NavLink,
   Input,
-  InputGroup } from 'reactstrap';
+  InputGroup } from 'reactstrap'
+import style from '../style/App.css'
 
 class NavBar extends React.Component {
 
@@ -33,32 +34,32 @@ class NavBar extends React.Component {
   		<div>
         <Navbar color="dark" dark expand="md">
           <NavbarToggler onClick={this.toggle} />
-          <NavbarBrand href="http://localhost:3000">HOMEHOST</NavbarBrand>
-          <InputGroup>
+          <NavbarBrand href="http://localhost:3000" className={style.navBarBrand}>HOMEHOST</NavbarBrand>
+          <InputGroup hidden={this.state.type === -1}>
 	        	<Input 
             onChange={this.props.onChange}
             placeholder="Search..." 
             />
-	      </InputGroup>
+	        </InputGroup>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <NavLink className={(this.state.type === type.MOVIES) ? "active" : ""} href="/movies">Movies</NavLink>
+                <NavLink active={this.state.type === type.MOVIES} href="/movies">Movies</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className={(this.state.type === type.TV) ? "active" : ""} href="/tv">TV</NavLink>
+                <NavLink active={this.state.type === type.TV} href="/tv">TV</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className={(this.state.type === type.MUSIC) ? "active" : ""} href="/music">Music</NavLink>
+                <NavLink active={this.state.type === type.MUSIC} href="/music">Music</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className={(this.state.type === type.BOOKS) ? "active" : ""} href="/books">Books</NavLink>
+                <NavLink active={this.state.type === type.BOOKS} href="/books">Books</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className={(this.state.type === type.COMICS) ? "active" : ""} href="/comics">Comics</NavLink>
+                <NavLink active={this.state.type === type.COMICS} href="/comics">Comics</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className={(this.state.type === type.PODCASTS) ? "active" : ""} href="/podcasts">Podcasts</NavLink>
+                <NavLink active={this.state.type === type.PODCASTS} href="/podcasts">Podcasts</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

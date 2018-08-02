@@ -34,11 +34,12 @@ export function fetchMovies() {
             poster_path: 'https://image.tmdb.org/t/p/w500' + items[i].poster_path,
             backdrop_path: 'https://image.tmdb.org/t/p/original' + items[i].backdrop_path, 
             url_path: items[i].url_path, 
+            tagline: items[i].tagline, 
+            overview: items[i].overview,
             release_date: items[i].release_date, 
             runtime: items[i].runtime, 
             revenue: items[i].revenue,
-            overview: items[i].overview,
-            tagline: items[i].tagline, 
+            vote_average: items[i].vote_average,
             link: 'http://www.imdb.com/title/' + items[i].imdb_id
           });
         }

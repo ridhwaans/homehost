@@ -40,7 +40,7 @@ tv:
   api   : 'api.themoviedb.org/3'
   key   : '<api_key>'
 ```
-If you dont have keys, you can request API authentication from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
+If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction  
 
 ## Naming conventions
 
