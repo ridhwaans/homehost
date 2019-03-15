@@ -36,16 +36,16 @@ var config = {
             ]
         },
         {
-            test: /\.js$/,
+            test: /\.js$/i,
             use: [
                 { 
                     loader: 'babel-loader',
-                    options: { presets: ['@babel/env', '@babel/react', ["@babel/preset-stage-2", { "decoratorsLegacy": true }]] }
+                    options: { presets: ['@babel/env', '@babel/react'] }
                 }
             ],
             exclude: /(node_modules|bower_components)/
         },
-        {   test: /\.css$/,
+        {   test: /\.css$/i,
             use: [
                 {
                     loader: 'style-loader',
@@ -64,7 +64,7 @@ var config = {
             ]
         },
         {
-            test: /\.css$/,
+            test: /\.css$/i,
             use: [
                 {
                     loader: 'style-loader',
