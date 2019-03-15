@@ -7,6 +7,10 @@ music.json
 tv.json
 /backup
 
+# lock files
+package-lock.json
+yarn.lock
+
 # dependencies
 node_modules/
 
