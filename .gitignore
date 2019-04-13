@@ -2,9 +2,9 @@
 
 # general
 config.yml
-movies.json
-music.json
-tv.json
+#movies.json
+#music.json
+#tv.json
 /backup
 
 # lock files

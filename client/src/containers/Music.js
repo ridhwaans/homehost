@@ -26,9 +26,7 @@ class Music extends Component {
     const albumCount = displayedMusic.length
     var trackCount = 0;
     displayedMusic.forEach(function(album){
-      album.tracks.items.forEach(function(track){
-        if (track.url_path) trackCount++;
-      });
+      trackCount = trackCount + album.tracks.items.length;
     });
     
     return (

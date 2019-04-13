@@ -11,7 +11,7 @@ class Home extends Component {
           <h1 className="display-3">homehost</h1>
           <p className="lead">self-hosted Netflix-like app in React</p>
           <hr className="my-2" />
-          <p>homehost is made to stream your media collection over the home network</p>
+          <p>Non-profit demo purposes only</p>
           <p><strong>Features: </strong>
             <a href="movies"> 🎥 Movies </a>
             <a href="tv"> 📺 TV </a>

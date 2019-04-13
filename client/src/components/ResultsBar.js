@@ -51,13 +51,13 @@ class ResultsBar extends React.Component {
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Artist name</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Oldest</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortMusic.bind(this)}>Newest</DropdownItem>)
-        results = this.props.count[0] + ' artists, ' + this.props.count[1] + ' albums, ' + this.props.count[2] + ' local tracks' 
+        results = this.props.count[0] + ' artists, ' + this.props.count[1] + ' albums, ' + this.props.count[2] + ' tracks' 
         break;
       case type.TV:
         dropdown.push(<DropdownItem onClick={this.handleSortTV.bind(this)}>Alphabetical</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortTV.bind(this)}>Oldest</DropdownItem>)
         dropdown.push(<DropdownItem onClick={this.handleSortTV.bind(this)}>Newest</DropdownItem>)
-        results = this.props.count[0] + ' shows, ' + this.props.count[1] + ' seasons, ' + this.props.count[2] + ' local episodes' 
+        results = this.props.count[0] + ' shows, ' + this.props.count[1] + ' seasons, ' + this.props.count[2] + ' episodes' 
         break;
       default:
         break;
@@ -67,7 +67,7 @@ class ResultsBar extends React.Component {
     	<div>
     		<div className={style.resultsBarDiv}>
     		<h3>
-    	    {results}
+    	    [NON-PROFIT DEMO PURPOSES ONLY] {results}
     		</h3>
     		<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
     		<DropdownToggle caret>
