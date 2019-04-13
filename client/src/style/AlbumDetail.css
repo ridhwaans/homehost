@@ -33,8 +33,8 @@
   float: right;
   position: relative;
   overflow: auto;
-  background-color:transparent; 
-  color:white;
+  background-color: transparent; 
+  color: white;
 }
 
 .cell-detail-image {
@@ -79,6 +79,10 @@
   margin: 30px;
   text-align: right;
   color: var(--description-color);
+}
+
+#spotify-preview-url {
+  color: var(--title-color);
 }
 
 /* tracklist */

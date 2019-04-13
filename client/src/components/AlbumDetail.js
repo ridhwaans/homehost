@@ -21,6 +21,9 @@ class AlbumDetail extends CellDetail {
     let data = this.state.detailData
     activeIndex = playlistIndex
     scPlayer.play({ playlistIndex });
+
+    document.getElementById(style.spotifyPreviewUrl)
+      .innerHTML = data.tracks.items[activeIndex].external_urls.spotify
   }
 
   nextIndex() {
@@ -77,6 +80,9 @@ class AlbumDetail extends CellDetail {
     }
 
     activeIndex = 0
+    var demo = document.getElementById(style.spotifyPreviewUrl)
+    if (demo != null) demo.innerHTML = ''
+
     scPlayer.playlist(data, function (track) {});
     var MusicPlayer = WithSoundCloudAudio(props => {
       return (
@@ -126,9 +132,9 @@ class AlbumDetail extends CellDetail {
           </div>
           <div id='CellDetail_right' className={style.cellDetailRight}>
             <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
-
             <MusicPlayer soundCloudAudio={scPlayer}/>
 
+            <div id={style.spotifyPreviewUrl}/>
             <div id={style.plWrap}>
               <ul id={style.plList}>
                 {trackList}

@@ -22,7 +22,7 @@ class MovieDetail extends CellDetail {
             <div id='CellDetail_close' className={style.cellDetailClose} onClick={this.closeCellDetail.bind(this)}>&#10006;</div>
             <div id='cellDetailPlayerDiv' className={style.cellDetailPlayerDiv}>
               <video id='cellDetailPlayer' className={style.cellDetailPlayer} controls controlsList='nodownload'>
-                <source src={data.url_path} type='video/mp4'/>
+                
               </video>
             </div>
             <div id='CellDetailTitle' className={style.cellDetailTitle}> {title} </div>
