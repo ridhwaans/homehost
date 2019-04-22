@@ -12,12 +12,12 @@ var config = {
     output: {
         path: path.resolve(PATHS.public),
         filename: 'bundle.js',
-        publicPath: '/'
+        publicPath: 'some-virtual-location/'
     },
     devServer: {
         contentBase: path.resolve(PATHS.public),
-        port: 3000,
         historyApiFallback: true,
+        port: 3000,
         proxy: {
             '/api/**': {
             target: 'http://localhost:5000',
@@ -31,7 +31,7 @@ var config = {
             test: /\.(jpg|png|gif|svg|pdf|ico)$/i,
             use: [
                 {
-                    loader: 'file-loader'
+                    loader: 'url-loader'
                 }
             ]
         },

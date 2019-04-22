@@ -65,7 +65,7 @@
 
 /* episodelist */
 #elWrap {
-  margin:0 auto;
+  margin: 0 auto;
 }
 
 #elList {
@@ -75,10 +75,10 @@
 }
 
 #elList li {
-  cursor:pointer;
-  display:block;
-  margin:0;
-  padding:0 0 21px 0;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  padding: 0 0 21px 0;
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
@@ -90,32 +90,32 @@
 }
 
 .elItem {
-  position:relative;
+  position: relative;
   font-size: 14px;
 }
 
 .elNum {
-  padding-left:21px;
-  width:25px;
-  float:left;
+  padding-left: 21px;
+  width: 25px;
+  float: left;
   color: var(--description-color);
 }
 
 .elTitle {
-  left:50px;
-  overflow:hidden;
-  position:absolute;
-  right:65px;
-  text-overflow:ellipsis;
-  top:0;
-  white-space:nowrap;
+  left: 50px;
+  overflow: hidden;
+  position: absolute;
+  right: 65px;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
   color: var(--title-color);
 }
 
 .elLength {
-  padding-left:21px;
-  position:absolute;
-  right:21px;
-  top:0;
+  padding-left: 21px;
+  position: absolute;
+  right: 21px;
+  top: 0;
   color: var(--description-color);
 }

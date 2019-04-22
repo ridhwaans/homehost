@@ -14,12 +14,12 @@
 
 # 🎥 Movies
 ![movies](media/v1-movies-1.PNG)
-## Demo
-![movies-gif](media/v1-movies-demo-1.gif)
+## [Demo](https://homehost-demo.herokuapp.com/movies)
+[![movies-gif](media/v1-movies-demo-1.gif)](https://homehost-demo.herokuapp.com/movies)
 # 🎵 Music
 ![music](media/v1-music-1.PNG)
-## Demo
-![music-gif](media/v1-music-demo-1.gif)
+## [Demo](https://homehost-demo.herokuapp.com/music)
+[![music-gif](media/v1-music-demo-1.gif)](https://homehost-demo.herokuapp.com/music)
 
 # Setup
 
@@ -78,10 +78,10 @@ Server requires `<media>.json` file data at startup. Initial json state should b
   "movies": [], "music": [], "tv": []
 }
 ```
-Start homehost by running `yarn homehost` from the base directory. Server should open at `http://localhost:5000/`  
-On the server, call `/api/generate` **once**. Wait for the async operation to finish and save  
-There is no 'watch' or 'hot reload' feature for server media. Any adding or changing media files requires a json reset and rerunning `/api/generate`
-By default, `5000` is the node server port, `3000` is the react client port  
+From the base directory, run `yarn homehost` to start homehost at `http://localhost:5000/`   
+On the server, call `/api/generate` **once**. Wait for the async call to finish and save  
+There is no 'watch' or 'hot reload' for server media. Adding or changing media files requires a json reset and rerunning `/api/generate`
+By default, `5000` is the express port, `3000` is the webpack-dev-server port  
 **NOTE:** `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata  
 
 ## Routes

@@ -35,7 +35,7 @@
   position: relative;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.8);
-  color:white;
+  color: white;
 }
 
 .cell-detail-image {
@@ -52,11 +52,11 @@
 
 .cell-detail-close {
   display: block;
-  text-align:center;
-  position:relative;
-  padding:5px;
-  top:0;
-  right:0;
+  text-align: center;
+  position: relative;
+  padding: 5px;
+  top: 0;
+  right: 0;
   margin-left: 95%;
   cursor: pointer;
 }

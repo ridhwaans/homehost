@@ -33,8 +33,8 @@
   float: right;
   position: relative;
   overflow: auto;
-  background-color:transparent; 
-  color:white;
+  background-color: transparent; 
+  color: white;
 }
 
 .cell-detail-image {
@@ -51,11 +51,11 @@
 
 .cell-detail-close {
   display: block;
-  text-align:center;
-  position:relative;
-  padding:5px;
-  top:0;
-  right:0;
+  text-align: center;
+  position: relative;
+  padding: 5px;
+  top: 0;
+  right: 0;
   margin-left: 95%;
   cursor: pointer;
 }
@@ -83,7 +83,7 @@
 
 /* tracklist */
 #plWrap {
-  margin:0 auto;
+  margin: 0 auto;
 }
 
 #plList {
@@ -93,10 +93,10 @@
 }
 
 #plList li {
-  cursor:pointer;
-  display:block;
-  margin:0;
-  padding:0 0 21px 0;
+  cursor: pointer;
+  display: block;
+  margin: 0;
+  padding: 0 0 21px 0;
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   break-inside: avoid;
@@ -108,32 +108,32 @@
 }
 
 .plItem {
-  position:relative;
+  position: relative;
   font-size: 14px;
 }
 
 .plNum {
-  padding-left:21px;
-  width:25px;
-  float:left;
+  padding-left: 21px;
+  width: 25px;
+  float: left;
   color: var(--description-color);
 }
 
 .plTitle {
-  left:50px;
-  overflow:hidden;
-  position:absolute;
-  right:65px;
-  text-overflow:ellipsis;
-  top:0;
-  white-space:nowrap;
+  left: 50px;
+  overflow: hidden;
+  position: absolute;
+  right: 65px;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
   color: var(--title-color);
 }
 
 .plLength {
-  padding-left:21px;
-  position:absolute;
-  right:21px;
-  top:0;
+  padding-left: 21px;
+  position: absolute;
+  right: 21px;
+  top: 0;
   color: var(--description-color);
 }

@@ -2,6 +2,7 @@
   "name": "homehost",
   "version": "1.0.0",
   "author": "ridhwaans",
+  "license": "MIT",
   "scripts": {
     "client": "cd client && yarn dev",
     "dev": "nodemon server.js",
@@ -17,11 +18,11 @@
     "node-dir": "^0.1.17",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "underscore": "^1.9.1",
-    "yarn": "^1.13.0"
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
-    "npm-check-updates": "^3.0.8"
+    "npm-check-updates": "^3.0.8",
+    "yarn": "^1.13.0"
   }
 }
