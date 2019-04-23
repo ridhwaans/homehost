@@ -5,6 +5,7 @@ var node_dir = require('node-dir');
 var bluebird = require('bluebird');
 var yaml = require('js-yaml');
 
+const path = require('path');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,6 +20,13 @@ var tvClient = new lib.ApiClient(config.tv.api, config.tv.key, true);
 var moviesData = require('./movies.json');
 var musicData = require('./music.json'); 
 var tvData = require('./tv.json'); 
+
+// Comment out lines 25-29 to stop serving static
+app.use(express.static(path.join(__dirname, 'client/public')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client/public/index.html'));
+});
 
 app.get('/api/hello', (req, res) => {
   let hello = { homehost: 'Hello', config};
@@ -166,7 +174,6 @@ const generateTVMetaData = async () => {
     else console.log('[TV] File saved');
   })
 };
-
 
 var generateMovieMetaData = function() {
   return new Promise(function(resolve, reject) {

@@ -12,7 +12,7 @@ var config = {
     output: {
         path: path.resolve(PATHS.public),
         filename: 'bundle.js',
-        publicPath: 'some-virtual-location/'
+        publicPath: '/'
     },
     devServer: {
         contentBase: path.resolve(PATHS.public),

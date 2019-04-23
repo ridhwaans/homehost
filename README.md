@@ -78,11 +78,15 @@ Server requires `<media>.json` file data at startup. Initial json state should b
   "movies": [], "music": [], "tv": []
 }
 ```
-From the base directory, run `yarn homehost` to start homehost at `http://localhost:5000/`   
+Comment out lines 25-29 in `server.js`. By default, express port is `5000`, webpack-dev-server is on `3000`  
+From the base directory, run `yarn dev-start` to start homehost at `http://localhost:5000/`  
 On the server, call `/api/generate` **once**. Wait for the async call to finish and save  
-There is no 'watch' or 'hot reload' for server media. Adding or changing media files requires a json reset and rerunning `/api/generate`
-By default, `5000` is the express port, `3000` is the webpack-dev-server port  
-**NOTE:** `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata  
+There is no 'watch' or 'hot reload' for server media. Adding or changing media files requires a json reset and rerunning `/api/generate`  
+**NOTE** `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata.  
+
+## Run
+`cd` to `client/` and run `yarn build`  
+From the base directory, run `yarn start`
 
 ## Routes
 

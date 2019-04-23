@@ -4,10 +4,12 @@
   "author": "ridhwaans",
   "license": "MIT",
   "scripts": {
-    "client": "cd client && yarn dev",
     "dev": "nodemon server.js",
-    "prod": "node server",
-    "homehost": "concurrently --kill-others-on-fail \"yarn prod\" \"yarn client\""
+    "dev-client": "cd client && yarn dev",
+    "dev-start": "concurrently --kill-others-on-fail \"yarn start\" \"yarn dev-client\"",
+    "postinstall": "cd client && npm install",
+    "start": "node server",
+    "heroku-postbuild": "cd client && yarn build"
   },
   "dependencies": {
     "bluebird": "^3.5.3",

@@ -4,6 +4,10 @@
   "author": "ridhwaans",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack-dev-server --hot --inline"
+  },
   "dependencies": {
     "basscss": "^8.0.10",
     "hoist-non-react-statics": "^3.3.0",
@@ -18,10 +22,6 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0"
-  },
-  "scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server --hot --inline"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",

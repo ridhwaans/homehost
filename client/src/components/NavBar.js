@@ -34,7 +34,7 @@ class NavBar extends React.Component {
   		<div>
         <Navbar color="dark" dark expand="md">
           <NavbarToggler onClick={this.toggle} />
-          <NavbarBrand href="http://localhost:3000" className={style.navBarBrand}>HOMEHOST</NavbarBrand>
+          <NavbarBrand href={window.location.origin} className={style.navBarBrand}>HOMEHOST</NavbarBrand>
           <InputGroup hidden={this.state.type === -1}>
 	        	<Input 
             onChange={this.props.onChange}
