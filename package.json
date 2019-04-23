@@ -4,11 +4,12 @@
   "author": "ridhwaans",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon server.js",
-    "dev-client": "cd client && yarn dev",
-    "dev-start": "concurrently --kill-others-on-fail \"yarn start\" \"yarn dev-client\"",
+    "dev": "NODE_ENV=dev node server",
+    "client-dev": "cd client && yarn dev",
+    "start-dev": "concurrently --kill-others-on-fail \"yarn dev\" \"yarn client-dev\"",
     "postinstall": "cd client && npm install",
-    "start": "node server",
+    "prestart":"yarn heroku-postbuild",
+    "start": "NODE_ENV=prod node server",
     "heroku-postbuild": "cd client && yarn build"
   },
   "dependencies": {
