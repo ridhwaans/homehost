@@ -8,9 +8,8 @@
     "client-dev": "cd client && yarn dev",
     "start-dev": "concurrently --kill-others-on-fail \"yarn dev\" \"yarn client-dev\"",
     "postinstall": "cd client && npm install",
-    "prestart":"yarn heroku-postbuild",
-    "start": "NODE_ENV=prod node server",
-    "heroku-postbuild": "cd client && yarn build"
+    "prestart":"cd client && yarn build",
+    "start": "NODE_ENV=prod node server"
   },
   "dependencies": {
     "bluebird": "^3.5.3",

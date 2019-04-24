@@ -21,18 +21,13 @@ var moviesData = require('./movies.json');
 var musicData = require('./music.json'); 
 var tvData = require('./tv.json'); 
 
-console.log('The value of NODE_ENV is:', process.env.NODE_ENV);
-
+// Serve the static files from the React app
 if (process.env.NODE_ENV == 'prod'){
   app.use(express.static(path.join(__dirname, 'client/public')));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client/public/index.html'));
-  });
 }
 
 app.get('/api/hello', (req, res) => {
-  let hello = { homehost: 'Hello', config};
+  let hello = {homehost: 'Hello', config};
   res.json(hello);
 });
 
@@ -117,6 +112,13 @@ app.get('/movies/:id', function(req, res) {
   }
 });
 
+// Handles any requests that don't match the ones above
+if (process.env.NODE_ENV == 'prod'){
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client/public/index.html'));
+  });
+}
+
 var generateMetaData = function(){
   generateMusicMetaData()
     .then(function(result) { 
@@ -172,7 +174,7 @@ const generateTVMetaData = async () => {
     json.tv.push(show);
   });
 
-  fs.writeFile('./tv.json', JSON.stringify(json), 'utf8', (err)=>{
+  fs.writeFile('./tv.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
     if(err) console.log(err)
     else console.log('[TV] File saved');
   })
@@ -199,7 +201,7 @@ var generateMovieMetaData = function() {
       });
     })
     .then(function(movies){
-      fs.writeFile('./movies.json', JSON.stringify(json), 'utf8', (err)=>{
+      fs.writeFile('./movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
         if(err) console.log(err)
         else console.log('[MOVIES] File saved');
         resolve(json);
@@ -228,6 +230,7 @@ var generateMusicMetaData = function() {
       console.log('GET: ' + dir);
 
       if (dir.toUpperCase().endsWith('UNKNOWN ALBUM')){
+        // build music album not on Spotify
         let album = {
           id: 'unknown',
           name: 'Unknown Album',
@@ -251,6 +254,7 @@ var generateMusicMetaData = function() {
             item.duration_ms = 'NaN'
             item.fs_path = dir + '/' + file
             item.url_path = ('http://localhost:' + port + '/music/').concat(album.id, '/', item.disc_number, '/', item.track_number)
+            item.external_urls = {spotify: null}
             album.tracks.items.push(item)
           });
         });
@@ -288,7 +292,7 @@ var generateMusicMetaData = function() {
       //END mapSeries
     })
     .then(function(music){
-      fs.writeFile('./music.json', JSON.stringify(json), 'utf8', (err)=>{
+      fs.writeFile('./music.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
         if(err) console.log(err)
         else console.log('[MUSIC] File saved');
         resolve(json);

@@ -36,8 +36,7 @@ export function fetchMusic() {
             release_date: items[i].release_date, 
             artist_name: items[i].artists[0].name, 
             label: items[i].label,
-            tracks: items[i].tracks,
-            external_url: items[i].external_urls.spotify
+            tracks: items[i].tracks
           });
         }
         dispatch(receiveMusic(data))
