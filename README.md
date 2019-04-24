@@ -55,13 +55,13 @@ Your media must appear in the path set by `config.yml`
 ```
 <music_path>  
  - (album_directory_name <Spotify-album-ID>)  
-   - ((<disc_number>-)?<track_number> track_file_name) (.mp3)
+   - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)
 ```
 Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number
 ```
 <music_path>  
  - Unknown Album  
-   - (track_file_name) (.mp3)
+   - (track_file_name) (.mp3|.flac)
 ```
 📺 **TV**  
 ```

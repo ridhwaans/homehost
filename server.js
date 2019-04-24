@@ -32,8 +32,12 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/api/generate', (req, res) => {
-  generateMetaData();
-  res.json('Generating metadata. Please wait...');
+  if (process.env.NODE_ENV == 'dev'){
+    generateMetaData();
+    res.json('Generating metadata. Please wait...');
+  } else {
+    res.json('Dev mode only')
+  }
 });
 
 app.get('/api/movies', (req, res) => {
@@ -248,7 +252,7 @@ var generateMusicMetaData = function() {
 
             let item = {}
             item.id = index
-            item.name = file.replace('.mp3','')
+            item.name = file.replace(/.mp3|.flac/gi,'')
             item.disc_number = 1
             item.track_number = index + 1
             item.duration_ms = 'NaN'
