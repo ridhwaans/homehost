@@ -8,23 +8,24 @@
     "client-dev": "cd client && yarn dev",
     "start-dev": "concurrently --kill-others-on-fail \"yarn dev\" \"yarn client-dev\"",
     "postinstall": "cd client && npm install",
-    "prestart":"cd client && yarn build",
+    "prestart": "cd client && yarn build",
     "start": "NODE_ENV=prod node server"
   },
   "dependencies": {
-    "bluebird": "^3.5.3",
-    "express": "^4.16.4",
-    "figlet": "^1.2.1",
-    "js-yaml": "^3.12.2",
+    "bluebird": "^3.5.5",
+    "express": "^4.17.1",
+    "figlet": "^1.2.4",
+    "js-yaml": "^3.13.1",
     "jssha": "^2.3.1",
+    "ncu": "^0.2.1",
     "node-dir": "^0.1.17",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
-    "concurrently": "^4.1.0",
-    "npm-check-updates": "^3.0.8",
-    "yarn": "^1.13.0"
+    "concurrently": "^4.1.2",
+    "npm-check-updates": "^3.1.23",
+    "yarn": "^1.17.3"
   }
 }

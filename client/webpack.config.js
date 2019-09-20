@@ -49,7 +49,7 @@ var config = {
             use: [
                 {
                     loader: 'style-loader',
-                    options: { singleton: true }
+                    options: { injectType: 'singletonStyleTag' }
                 },
                 {
                     loader: 'css-loader',
@@ -68,14 +68,13 @@ var config = {
             use: [
                 {
                     loader: 'style-loader',
-                    options: { singleton: true }
+                    options: { injectType: 'singletonStyleTag' }
                 },
                 {
                     loader: 'css-loader',
                     options: { 
-                        modules: true,
-                        camelCase: 'dashes',
-                        localIdentName: '[path][name]__[local]' 
+                        modules: {localIdentName: '[path][name]__[local]'},
+                        localsConvention: 'camelCase'
                     }
                 }
             ],
