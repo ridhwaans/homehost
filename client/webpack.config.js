@@ -73,8 +73,10 @@ var config = {
                 {
                     loader: 'css-loader',
                     options: { 
-                        modules: {localIdentName: '[path][name]__[local]'},
-                        localsConvention: 'camelCase'
+                        modules: {
+                            localIdentName: '[path][name]__[local]',
+                            exportLocalsConvention: 'camelCaseOnly'
+                        },
                     }
                 }
             ],

@@ -124,6 +124,8 @@ if (process.env.NODE_ENV == 'prod'){
 }
 
 var generateMetaData = function(){
+  return new Promise(function(resolve, reject) {
+
   generateMusicMetaData()
     .then(function(result) { 
       return generateMovieMetaData();
@@ -131,7 +133,9 @@ var generateMetaData = function(){
     .then(function(result) { 
       return generateTVMetaData();
     });
-}
+
+  });
+};
 
 const generateTVMetaData = async () => {
   let re = new RegExp(/(\d+)$/); // tv_id

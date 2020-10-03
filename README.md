@@ -23,8 +23,10 @@
 
 # Setup
 
-Run `npm install` under the client and server directories  
-In `./config.yml`, set the media paths, and specify a working API key for TMDb API and Spotify Web API  
+Run `npm install` under the base directory and the `client/` directory  
+Create a `config.yml` file in the base directory, if it does not exist  
+In `./config.yml`, set the media paths, and set a working API key for TMDb API and Spotify Web API  
+###### **`config.yml`**
 ```yaml
 # Server-side configs
 movies:
@@ -49,13 +51,13 @@ Your media must appear in the path set by `config.yml`
 ```
 <movies_path>  
  - (subdirectory)?  
-   - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)
+   - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)  
 ```
 🎵 **Music**  
 ```
 <music_path>  
  - (album_directory_name <Spotify-album-ID>)  
-   - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)
+   - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)  
 ```
 Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number
 ```
@@ -63,30 +65,26 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
  - Unknown Album  
    - (track_file_name) (.mp3|.flac)
 ```
-📺 **TV**  
+<!-- 📺 **TV**  
 ```
 <tv_path>  
  - (tv_show_directory_name <TMDb-tv-ID>)  
    - (S<season_number>E<episode_number> episode_file_name) (.mp4|.mkv)
-```
+``` -->
 ## Generating metadata
-
-Server requires `<media>.json` file data at startup. Initial json state should be empty
-```json
-./movies.json, ./music.json, ./tv.json
-{
-  "movies": [], "music": [], "tv": []
-}
-``` 
-From the base directory, run `yarn start-dev` to start homehost at `http://localhost:5000/`  
-By default, express port is `5000`, webpack-dev-server is on `3000`  
+ 
+Run `yarn start-dev` in the base directory to start the debugger  
+ 
 On the server, call `/api/generate` **once**. Wait for the async call to finish and save  
-There is no 'watch' or 'hot reload' for server media. Adding or changing media files requires a json reset and rerunning `/api/generate`  
-**NOTE** `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata.  
+There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api/generate`  
+<!-- `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata.  
+Run `ncu` in the base directory and in the `client/` directory to check for updates for `package.json`  -->
 
 ## Run
-From the base directory, run `yarn start`
 
+Run `yarn start` in the base directory to start the application  
+The default application port is `5000`  
+ 
 ## Routes
 
 ### Server-side
@@ -99,12 +97,13 @@ From the base directory, run `yarn start`
 **GET** `/api/music/`  
 **GET** `/api/music/albums/:id`  
 **GET** `/music/:album_id/:disc_number/:track_number`  
-**GET** `/api/tv/seasons/:id`  
-**GET** `/tv/:show_id/:season_number/:episode_number`  
+<!-- **GET** `/api/tv/seasons/:id`  
+**GET** `/tv/:show_id/:season_number/:episode_number`   -->
 
 ### Client-side
 
-`/movies`, `/music`, `/tv` are accessible. `/books`, `/comics`, `/podcasts` are TODO
+`/movies`, `/music`  
+TODO `/tv`, `/books`, `/comics`, `/podcasts`  
 
 # Development
 
