@@ -7,19 +7,45 @@ var yaml = require('js-yaml');
 
 const path = require('path');
 const express = require('express');
+const chokidar = require('chokidar');
 const app = express();
 const port = process.env.PORT || 5000;
 
 var lib = require('./index.js');
-var config = yaml.safeLoad(fs.readFileSync('./config.yml'));
+var config = yaml.load(fs.readFileSync('./config.yml'));
 
 var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
 var musicClient = new lib.ApiClient(config.music.api, config.music.key, true);
 var tvClient = new lib.ApiClient(config.tv.api, config.tv.key, true);
 
-var moviesData = require('./movies.json');
-var musicData = require('./music.json'); 
-var tvData = require('./tv.json'); 
+var moviesData = require('./movies.json'); // or fs.readFileSync + JSON.parse()
+var musicData =  require('./music.json'); 
+var tvData =  require('./tv.json'); 
+
+var files = [];
+var watcher = chokidar.watch([config.movies.path, config.music.path, config.tv.path], {
+  ignored: /(^|[\/\\])\../, // ignore dotfiles
+  persistent: true
+});
+const log = console.log.bind(console);
+
+watcher.on('ready', function() {
+  log('Initial scan complete. Ready for changes');
+  collection = watcher.getWatched();
+  files = Object.entries(collection)
+      .map(groups => groups
+      .filter(group => typeof group == "object")
+      .map(files => files
+      .map(file => groups[0] + "/" + file))) // first entry will be the folder name to concatenate
+      .flat().flat()
+      .filter(x => !Object.keys(collection).includes(x));
+  //console.table(files);
+})
+
+watcher
+//.on('add', path => log(`File ${path} has been added`))
+.on('change', path => log(`File ${path} has been changed`))
+.on('unlink', path => log(`File ${path} has been removed`));
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV == 'prod'){
@@ -53,17 +79,17 @@ app.get('/api/tv', (req, res) => {
 });
 
 app.get('/api/movies/:id', function(req, res) {
-  var movie = _.where(moviesData.movies, {id: parseInt(req.params.id)});
+  var movie = moviesData.movies.filter(movie => movie.id == parseInt(req.params.id));
   res.json(movie);
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
-  var album = _.where(musicData.music, {id: req.params.id});
+  var album = musicData.music.filter(album => album.id == parseInt(req.params.id));
   res.json(album);
 });
 
 app.get('/api/tv/seasons/:id', function(req, res) {
-  var season = _.where(tvData.tv, {id: req.params.id});
+  var season = tvData.tv.filter(season => season.id == parseInt(req.params.id));
   res.json(season);
 });
 
@@ -83,9 +109,11 @@ app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
 });
 
 app.get('/movies/:id', function(req, res) {
-  var movie_fs_path = _.where(moviesData.movies, {id: parseInt(req.params.id)}); // Get movie
-  movie_fs_path = String(_.pluck(movie_fs_path, 'fs_path')); // Get movie.fs_path
-
+  var movie_fs_path = moviesData.movies
+    .filter(movie => movie.id == parseInt(req.params.id))
+    .map(movie => movie['fs_path'])
+    .toString();
+    
   const path = movie_fs_path
   const stat = fs.statSync(path)
   const fileSize = stat.size
@@ -114,6 +142,7 @@ app.get('/movies/:id', function(req, res) {
     res.writeHead(200, head)
     fs.createReadStream(path).pipe(res)
   }
+
 });
 
 // Handles any requests that don't match the ones above
@@ -124,17 +153,13 @@ if (process.env.NODE_ENV == 'prod'){
 }
 
 var generateMetaData = function(){
-  return new Promise(function(resolve, reject) {
-
-  generateMusicMetaData()
-    .then(function(result) { 
-      return generateMovieMetaData();
-    })
-    .then(function(result) { 
-      return generateTVMetaData();
-    });
-
+  //generateMusicMetaData()
+  //generateTVMetaData()
+  [generateMovieMetaData()].forEach(async (metadata) => {
+    await metadata;
   });
+  console.log("Finished async");
+
 };
 
 const generateTVMetaData = async () => {
@@ -195,123 +220,33 @@ var generateMovieMetaData = function() {
       json = { movies: [] };
 
   console.log('Generating data for Movies...')
-  node_dir.files(config.movies.path, function(err, files) {
-    if (err) throw err;
-    
-    bluebird.mapSeries(files, function(file){
-    console.log('GET: ' + file);
-    // find movie on TMDb
-    return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
-      .then((movie) => {
-      movie.fs_path = file;
-      movie.url_path = 'http://localhost:' + port + '/movies/' + movie.id;
-      json.movies.push(movie);
-      });
-    })
-    .then(function(movies){
-      fs.writeFile('./movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
-        if(err) console.log(err)
-        else console.log('[MOVIES] File saved');
-        resolve(json);
-      })
-    })
-    .catch(function(err){
-      console.log('Movie metadata could not be generated due to some error', err);
+  
+  bluebird.mapSeries(files.filter(x => x.startsWith(config.movies.path)), function(file){
+  console.log('GET: ' + file);
+  // find movie on TMDb
+  return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
+    .then((movie) => {
+    movie.fs_path = file;
+    movie.url_path = 'http://localhost:' + port + '/movies/' + movie.id;
+    json.movies.push(movie);
     });
+  })
+  .then(function(movies){
+    fs.writeFile('./movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
+      if(err) console.log(err)
+      else console.log('[MOVIES] File saved');
+      resolve(json);
+    })
+  })
+  .catch(function(err){
+    console.log('Movie metadata could not be generated due to some error', err);
   });
+
 
   });
 };
 
 var generateMusicMetaData = function() {
-  return new Promise(function(resolve, reject) {
-
-  var re = new RegExp(/(\w+)$/); // album_id
-      re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
-      json = { music: [] };
-
-  console.log('Generating data for Music...')
-  node_dir.subdirs(config.music.path, function(err, subdirs) {
-    if (err) throw err;
-    
-    bluebird.mapSeries(subdirs, function(dir){
-      console.log('GET: ' + dir);
-
-      if (dir.toUpperCase().endsWith('UNKNOWN ALBUM')){
-        // build music album not on Spotify
-        let album = {
-          id: 'unknown',
-          name: 'Unknown Album',
-          artists: [{name: 'Various Artists'}],
-          images: [{url: 'http://i.imgur.com/bVnx0IY.png'}],
-          release_date: 'NaN',
-          label: 'Various Labels',
-          tracks: {items:[]}
-        }
-
-        node_dir.files(dir, function(err, files) {
-          files.forEach( function( file, index ) {
-            file = file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
-            console.log('GET: ' + file);
-
-            let item = {}
-            item.id = index
-            item.name = file.replace(/.mp3|.flac/gi,'')
-            item.disc_number = 1
-            item.track_number = index + 1
-            item.duration_ms = 'NaN'
-            item.fs_path = dir + '/' + file
-            item.url_path = ('http://localhost:' + port + '/music/').concat(album.id, '/', item.disc_number, '/', item.track_number)
-            item.external_urls = {spotify: null}
-            album.tracks.items.push(item)
-          });
-        });
-        json.music.push(album);
-      } else {
-        // find music album on Spotify
-        return musicClient.send(new lib.requests.Album(dir.match(re)[1]), 50, null)
-        .then((album) => {
-          // remove unnecessary Spotify json
-          delete album.available_markets;
-          for(var i=0;i<album.tracks.items.length;i++){
-            delete album.tracks.items[i].artists;
-            delete album.tracks.items[i].available_markets;}
-
-          // for each track in the album
-          node_dir.files(dir, function(err, files) {
-            if(err) console.log(err)
-            files.forEach( function( file, index ) {
-              file = file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
-              console.log('GET: ' + file);
-              
-              album.tracks.items.forEach(function(item) {
-                // if track found
-                if ( (item.disc_number == parseInt(file.match(re2)[1] || 1) ) && 
-                  (item.track_number == parseInt(file.match(re2)[3]) ) ) {
-                  item.fs_path = dir + '/' + file; 
-                  item.url_path = ('http://localhost:' + port + '/music/').concat(album.id, '/', item.disc_number, '/', item.track_number);
-                }
-              });
-            });
-          });
-          json.music.push(album);
-        });
-      }
-      //END mapSeries
-    })
-    .then(function(music){
-      fs.writeFile('./music.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
-        if(err) console.log(err)
-        else console.log('[MUSIC] File saved');
-        resolve(json);
-      })
-    })
-    .catch(function(err){
-      console.log('Music metadata could not be generated due to some error', err);
-    });
-  });
-
-  });
 };
 
 console.log(figlet.textSync('homehost', 
