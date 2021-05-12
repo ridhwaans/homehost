@@ -1,7 +1,5 @@
-var _ = require('underscore');
 var figlet = require('figlet');
 var fs = require('fs');
-var node_dir = require('node-dir');
 var bluebird = require('bluebird');
 var yaml = require('js-yaml');
 
@@ -84,7 +82,7 @@ app.get('/api/movies/:id', function(req, res) {
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
-  var album = musicData.music.filter(album => album.id == parseInt(req.params.id));
+  var album = musicData.music.filter(album => album.id == req.params.id);
   res.json(album);
 });
 
@@ -94,9 +92,9 @@ app.get('/api/tv/seasons/:id', function(req, res) {
 });
 
 app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
-  var album = _.find(musicData.music, {id: req.params.album_id}); // Get albums
-  var track_fs_path = _.where(album.tracks.items, {disc_number: parseInt(req.params.disc_number), track_number: parseInt(req.params.track_number)}); // Get track
-  track_fs_path = String(_.pluck(track_fs_path, 'fs_path')); // Get track.fs_path
+  var track_fs_path = musicData.music.find(album => album.id == req.params.album_id)
+    .tracks.items.filter(item => item.disc_number == parseInt(req.params.disc_number) && item.track_number == parseInt(req.params.track_number))
+    .map(track => track.fs_path).toString();
 
   const path = track_fs_path
   const stat = fs.statSync(path)
@@ -111,8 +109,7 @@ app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
 app.get('/movies/:id', function(req, res) {
   var movie_fs_path = moviesData.movies
     .filter(movie => movie.id == parseInt(req.params.id))
-    .map(movie => movie['fs_path'])
-    .toString();
+    .map(movie => movie.fs_path).toString();
     
   const path = movie_fs_path
   const stat = fs.statSync(path)
