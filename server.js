@@ -4,11 +4,9 @@ const express = require('express');
 const chokidar = require('chokidar');
 const app = express();
 const port = process.env.PORT || 5000;
+require('dotenv').config();
 
 var fs = require('fs');
-var yaml = require('js-yaml');
-var config = yaml.load(fs.readFileSync('./config.yml'));
-
 var bluebird = require('bluebird');
 var figlet = require('figlet');
 
@@ -19,7 +17,7 @@ var musicData =  require('./music.json');
 var tvData =  require('./tv.json'); 
 
 var files = [];
-var watcher = chokidar.watch([config.movies.path, config.music.path, config.tv.path], {
+var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH], {
   ignored: /(^|[\/\\])\../, // ignore dotfiles
   persistent: true
 });
@@ -49,7 +47,7 @@ if (process.env.NODE_ENV == 'prod'){
 }
 
 app.get('/api/hello', (req, res) => {
-  let hello = {homehost: 'Hello', config};
+  let hello = {homehost: 'Hello, put env vars here'};
   res.json(hello);
 });
 
@@ -66,12 +64,12 @@ app.get('/api/movies', (req, res) => {
   res.json(moviesData.movies);
 });
 
-app.get('/api/music', (req, res) => {
-  res.json(musicData.music)
-});
-
 app.get('/api/tv', (req, res) => {
   res.json(tvData.tv)
+});
+
+app.get('/api/music', (req, res) => {
+  res.json(musicData.music)
 });
 
 app.get('/api/movies/:id', function(req, res) {
@@ -79,29 +77,14 @@ app.get('/api/movies/:id', function(req, res) {
   res.json(movie);
 });
 
-app.get('/api/music/albums/:id', function(req, res) {
-  var album = musicData.music.filter(album => album.id == req.params.id);
-  res.json(album);
-});
-
 app.get('/api/tv/seasons/:id', function(req, res) {
   var season = tvData.tv.filter(season => season.id == parseInt(req.params.id));
   res.json(season);
 });
 
-app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
-  var track_fs_path = musicData.music.find(album => album.id == req.params.album_id)
-    .tracks.items.filter(item => item.disc_number == parseInt(req.params.disc_number) && item.track_number == parseInt(req.params.track_number))
-    .map(track => track.fs_path).toString();
-
-  const path = track_fs_path
-  const stat = fs.statSync(path)
-  const head = {
-      'Content-Type': 'audio/mpeg',
-      'Content-Length': stat.size
-  }
-  res.writeHead(200, head);
-  fs.createReadStream(path).pipe(res);
+app.get('/api/music/albums/:id', function(req, res) {
+  var album = musicData.music.filter(album => album.id == req.params.id);
+  res.json(album);
 });
 
 app.get('/movies/:id', function(req, res) {
@@ -137,7 +120,59 @@ app.get('/movies/:id', function(req, res) {
     res.writeHead(200, head)
     fs.createReadStream(path).pipe(res)
   }
+});
 
+app.get('/tv/:tv_id/:season_number/:episode_number', function(req, res) {
+  var episode_fs_path = tvData.tv
+    .find(tv => tv.id == parseInt(req.params.tv_id)) 
+    .seasons.find(season => season.season_number == parseInt(req.params.season_number))
+    .episodes.find(episode => episode.episode_number == parseInt(req.params.episode_number))
+    .fs_path.toString();
+
+  const path = episode_fs_path
+  const stat = fs.statSync(path)
+  const fileSize = stat.size
+  const range = req.headers.range
+  if (range) {
+    const parts = range.replace(/bytes=/, "").split("-")
+    const start = parseInt(parts[0], 10)
+    const end = parts[1] 
+      ? parseInt(parts[1], 10)
+      : fileSize-1
+    const chunksize = (end-start)+1
+    const file = fs.createReadStream(path, {start, end})
+    const head = {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'video/mkv',
+    }
+    res.writeHead(206, head);
+    file.pipe(res);
+  } else {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'video/mkv',
+    }
+    res.writeHead(200, head)
+    fs.createReadStream(path).pipe(res)
+  }
+});
+
+app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
+  var track_fs_path = musicData.music
+    .find(album => album.id == req.params.album_id)
+    .tracks.items.filter(item => item.disc_number == parseInt(req.params.disc_number) && item.track_number == parseInt(req.params.track_number))
+    .map(track => track.fs_path).toString();
+
+  const path = track_fs_path
+  const stat = fs.statSync(path)
+  const head = {
+      'Content-Type': 'audio/mpeg',
+      'Content-Length': stat.size
+  }
+  res.writeHead(200, head);
+  fs.createReadStream(path).pipe(res);
 });
 
 // Handles any requests that don't match the ones above
@@ -148,8 +183,40 @@ if (process.env.NODE_ENV == 'prod'){
 }
 
 var generateMetaData = function(){
-  [generateMovieMetaData, generateMusicMetaData, generateTVMetaData].reduce((p, fn) => p.then(fn), Promise.resolve())
+  [generateMovieMetaData, generateTVMetaData, generateMusicMetaData].reduce((p, fn) => p.then(fn), Promise.resolve())
   console.log("Finished async");
+};
+
+var generateMovieMetaData = function() {
+  return new Promise(function(resolve, reject) {
+  
+  var re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
+      json = { movies: [] };
+
+  console.log('Generating data for Movies...')
+  
+  bluebird.mapSeries(files.filter(x => x.startsWith(process.env.MOVIES_PATH)), function(file){
+  console.log('GET: ' + file);
+  // find movie on TMDb 
+  return new metadataService().get(new Movie({ id: file.match(re)[1] }))
+    .then((movie) => {
+    movie.fs_path = file;
+    movie.url_path = `http://localhost:${port}/movies/${movie.id}`;
+    json.movies.push(movie);
+    });
+  })
+  .then(function(movies){
+    fs.writeFile('./movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
+      if(err) console.log(err)
+      else console.log('[MOVIES] File saved');
+      resolve(json);
+    })
+  })
+  .catch(function(err){
+    console.log('Movie metadata could not be generated due to some error', err);
+  });
+
+  });
 };
 
 const generateTVMetaData = async () => {
@@ -161,7 +228,7 @@ const generateTVMetaData = async () => {
 
   let tv_shows = Object.keys(collection)
     .filter(group => typeof group == "string")
-    .filter(group => group.startsWith(config.tv.path) && group != config.tv.path);
+    .filter(group => group.startsWith(process.env.TV_PATH) && group != process.env.TV_PATH);
 
   await bluebird.mapSeries(tv_shows, async (tv_show) => {
     console.log('GET: ' + tv_show);
@@ -173,7 +240,7 @@ const generateTVMetaData = async () => {
       show.seasons[i].episodes = []
     });
 
-    let episode_files = files.filter(x => x.startsWith(config.tv.path) && x.includes(tv_id))
+    let episode_files = files.filter(x => x.startsWith(process.env.TV_PATH) && x.includes(tv_id))
     await bluebird.mapSeries(episode_files, async (episode_file) => {
       console.log('GET: ' + episode_file);
       // find tv episode on TMDb
@@ -199,39 +266,6 @@ const generateTVMetaData = async () => {
   })
 };
 
-var generateMovieMetaData = function() {
-  return new Promise(function(resolve, reject) {
-  
-  var re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
-      json = { movies: [] };
-
-  console.log('Generating data for Movies...')
-  
-  bluebird.mapSeries(files.filter(x => x.startsWith(config.movies.path)), function(file){
-  console.log('GET: ' + file);
-  // find movie on TMDb 
-  return new metadataService().get(new Movie({ id: file.match(re)[1] }))
-    .then((movie) => {
-    movie.fs_path = file;
-    movie.url_path = `http://localhost:${port}/movies/${movie.id}`;
-    json.movies.push(movie);
-    });
-  })
-  .then(function(movies){
-    fs.writeFile('./movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
-      if(err) console.log(err)
-      else console.log('[MOVIES] File saved');
-      resolve(json);
-    })
-  })
-  .catch(function(err){
-    console.log('Movie metadata could not be generated due to some error', err);
-  });
-
-
-  });
-};
-
 var generateMusicMetaData = function() {
   return new Promise(function(resolve, reject) {
 
@@ -244,7 +278,7 @@ var generateMusicMetaData = function() {
 
   let album_dirs = Object.keys(collection)
     .filter(group => typeof group == "string")
-    .filter(group => group.startsWith(config.music.path) && group != config.music.path);
+    .filter(group => group.startsWith(process.env.MUSIC_PATH) && group != process.env.MUSIC_PATH);
         
     bluebird.mapSeries(album_dirs, function(album_dir){
       console.log('GET: ' + album_dir);
@@ -336,3 +370,4 @@ console.log(figlet.textSync('homehost',
 ));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
+console.log(`current NODE_ENV is ${process.env.NODE_ENV}`);

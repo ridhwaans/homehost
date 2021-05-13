@@ -1,8 +1,5 @@
 const {Album, Movie, TVEpisode, TVShow} = require('../models');
 const axios = require('axios');
-var fs = require('fs');
-var yaml = require('js-yaml');
-var config = yaml.load(fs.readFileSync('./config.yml'));
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -12,13 +9,13 @@ class Metadata {
     get(item){
         let request_url;
         if (item instanceof Movie){
-            request_url = `https://${config.movies.api}/movie/${item.id}?api_key=${config.movies.key}`
+            request_url = `https://${process.env.MOVIES_API}/movie/${item.id}?api_key=${process.env.MOVIES_KEY}`
         } else if (item instanceof TVShow) {
-            request_url = `https://${config.tv.api}/tv/${item.id}?api_key=${config.tv.key}`
+            request_url = `https://${process.env.TV_API}/tv/${item.id}?api_key=${process.env.TV_KEY}`
         } else if (item instanceof TVEpisode) {
-            request_url = `https://${config.tv.api}/tv/${item.tv_id}/season/${item.season_number}/episode/${item.episode_number}?api_key=${config.tv.key}`
+            request_url = `https://${process.env.TV_API}/tv/${item.tv_id}/season/${item.season_number}/episode/${item.episode_number}?api_key=${process.env.TV_KEY}`
         } else if (item instanceof Album) {
-            request_url = `https://${config.music.api}/albums/${item.id}?access_token=${config.music.key}` // authorization header
+            request_url = `https://${process.env.MUSIC_API}/albums/${item.id}?access_token=${process.env.MUSIC_KEY}` // authorization header
         }
 
         console.log('url: ' + request_url); 

@@ -1,15 +1,15 @@
-class Album {
-    constructor({id = 0}) {
-        this.id = id; 
-     }
- }
-
 class Movie {
-    constructor({id = 0} = {}) {
+    constructor({id = 0}) {
         this.id = id; 
     }
  }
 
+class TVShow {
+    constructor({id = 0}) {
+       this.id = id; 
+    }
+ }
+ 
 class TVEpisode {
     constructor({tv_id = 0, season_number = 0, episode_number = 0}) {
         this.tv_id = tv_id; 
@@ -18,10 +18,10 @@ class TVEpisode {
     }
 }
 
-class TVShow {
+class Album {
     constructor({id = 0}) {
-       this.id = id; 
-    }
+        this.id = id; 
+     }
  }
 
-module.exports = { Album, Movie, TVEpisode, TVShow }
+module.exports = { Movie, TVShow, TVEpisode, Album }

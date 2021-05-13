@@ -1,6 +1,7 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # general
+.env
 config.yml
 movies.json
 music.json

@@ -24,29 +24,27 @@
 # Setup
 
 Run `npm install` under the base directory and the `client/` directory  
-Create a `config.yml` file in the base directory, if it does not exist  
-In `./config.yml`, set the media paths, and set a working API key for TMDb API and Spotify Web API  
-###### **`config.yml`**
-```yaml
-# Server-side configs
-movies:
-  path  : '/path/to/movies/directory'
-  api   : 'api.themoviedb.org/3'
-  key   : '<api_key>'
-music:
-  path  : '/path/to/music/directory'
-  api   : 'api.spotify.com/v1'
-  key   : '<access_token>'
-tv:
-  path  : '/path/to/tv/directory'
-  api   : 'api.themoviedb.org/3'
-  key   : '<api_key>'
+Create a `.env` file in the base directory, if it does not exist  
+In `.env`, set the media paths, and set a working API key for TMDb API and Spotify Web API  
+###### **`.env`**
+```env
+MOVIES_PATH = '/path/to/movies/directory'
+MOVIES_API = 'api.themoviedb.org/3'
+MOVIES_KEY = '<api_key>'
+
+TV_PATH = '/path/to/tv/directory'
+TV_API = 'api.themoviedb.org/3'
+TV_KEY = '<api_key>'
+
+MUSIC_PATH = '/path/to/music/directory'
+MUSIC_API = 'api.spotify.com/v1'
+MUSIC_KEY = '<api_key>'
 ```
 If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction  
 
 ## Naming conventions
 
-Your media must appear in the path set by `config.yml`  
+Your media must appear in the path set by `.env`  
 🎥 **Movies**  
 ```
 <movies_path>  
