@@ -36,6 +36,7 @@ function Slider({ mainTitle, data, poster }) {
 
     useEffect(() => { }, [width])
 
+    console.log(data);
     return (
         <SliderContext.Provider value={contextValue}>
             <div className="sliderBox">

@@ -93,14 +93,12 @@ function SliderItem(props) {
                                 <span>{props.data.vote_average}</span>
                             </div>
                             <div className="item-overview-synopsis">
-                                {props.data.genre_ids.map((item, index) => {
+                                {props.data.genres.map((item, index) => {
                                     if (index < 3) {
-                                        let genreName = genresList.find(genre => genre.id === item)
-
                                         if (index > 0) {
-                                            return (<React.Fragment key={index}><span className="separator"></span><span>{genreName.name}</span></React.Fragment>)
+                                            return (<React.Fragment key={index}><span className="separator"></span><span>{item.name}</span></React.Fragment>)
                                         } else {
-                                            return <span key={index}>{genreName.name}</span>
+                                            return <span key={index}>{item.name}</span>
                                         }
                                     }
 

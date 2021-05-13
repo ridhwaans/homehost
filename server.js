@@ -46,6 +46,12 @@ if (process.env.NODE_ENV == 'prod'){
   app.use(express.static(path.join(__dirname, 'client/public')));
 }
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get('/api/hello', (req, res) => {
   let hello = {homehost: 'Hello, put env vars here'};
   res.json(hello);
@@ -83,9 +89,14 @@ app.get('/api/movies/highest_rated', function(req, res) {
   res.json(highest_rated);
 });
 
+app.get('/api/movies/recently_added', function(req, res) {
+  const recently_added = moviesData.movies.sort((a,b) => b.ctime - a.ctime).slice(0,25);
+  res.json(recently_added);
+});
+
+// best of year
+// by collection/franchise name
 // by certification rating
-// recently added
-// lstatSync(file).mtime
 
 app.get('/api/movies/genres', function(req, res) {
   const genres = [...new Map(moviesData.movies.map(movie => movie.genres).flat(Infinity).map(item => [item.id, item])).values()];
@@ -233,6 +244,7 @@ var generateMovieMetaData = function() {
     .then((movie) => {
     movie.fs_path = file;
     movie.url_path = `http://localhost:${port}/movies/${movie.id}`;
+    movie.ctime = fs.statSync(file).ctime;
     json.movies.push(movie);
     });
   })
@@ -281,6 +293,7 @@ const generateTVMetaData = async () => {
         let episode = await new metadataService().get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
         episode.fs_path = episode_file;
         episode.url_path = `http://localhost:${port}/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
+        episode.ctime = fs.statSync(episode_file).ctime;
 
         let seasonIndex = show.seasons.findIndex(season => season.season_number == season_number.toString()); 
         show.seasons[seasonIndex].episodes.push(episode);
@@ -341,6 +354,8 @@ var generateMusicMetaData = function() {
           item.fs_path = track_file
           item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`
           item.external_urls = {spotify: null}
+          item.ctime = fs.statSync(track_file).ctime
+
           album.tracks.items.push(item)
         });
 
@@ -370,6 +385,7 @@ var generateMusicMetaData = function() {
                 (item.track_number == parseInt(track.match(re2)[3]) ) ) {
                 item.fs_path = track_file; 
                 item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`;
+                item.ctime = fs.statSync(track_file).ctime
               }
             });
           });
