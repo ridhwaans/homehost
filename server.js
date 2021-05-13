@@ -1,7 +1,3 @@
-var figlet = require('figlet');
-var fs = require('fs');
-var bluebird = require('bluebird');
-var yaml = require('js-yaml');
 
 const path = require('path');
 const express = require('express');
@@ -9,13 +5,15 @@ const chokidar = require('chokidar');
 const app = express();
 const port = process.env.PORT || 5000;
 
-var lib = require('./index.js');
+var fs = require('fs');
+var yaml = require('js-yaml');
 var config = yaml.load(fs.readFileSync('./config.yml'));
 
-var moviesClient = new lib.ApiClient(config.movies.api, config.movies.key, true);
-var musicClient = new lib.ApiClient(config.music.api, config.music.key, true);
-var tvClient = new lib.ApiClient(config.tv.api, config.tv.key, true);
+var bluebird = require('bluebird');
+var figlet = require('figlet');
 
+const {Album, Movie, TVEpisode, TVShow} = require('./models');
+var metadataService = require('./services/metadata');
 var moviesData = require('./movies.json'); // or fs.readFileSync + JSON.parse()
 var musicData =  require('./music.json'); 
 var tvData =  require('./tv.json'); 
@@ -150,14 +148,8 @@ if (process.env.NODE_ENV == 'prod'){
 }
 
 var generateMetaData = function(){
-  //generateMovieMetaData()
-  //generateMusicMetaData()
-  //generateTVMetaData()
-  [generateMovieMetaData(), generateTVMetaData(), generateMusicMetaData()].forEach(async (metadata) => {
-    await metadata;
-  });
+  [generateMovieMetaData, generateMusicMetaData, generateTVMetaData].reduce((p, fn) => p.then(fn), Promise.resolve())
   console.log("Finished async");
-
 };
 
 const generateTVMetaData = async () => {
@@ -175,7 +167,8 @@ const generateTVMetaData = async () => {
     console.log('GET: ' + tv_show);
     // find tv show on TMDb
     let tv_id = parseInt(tv_show.match(re)[1])
-    let show = await tvClient.send(new lib.requests.TVShow(tv_id), 250, null)
+    let show = await new metadataService().get(new TVShow({ id: tv_id }))
+
     show.seasons.forEach(function(season, i) {
       show.seasons[i].episodes = []
     });
@@ -187,7 +180,7 @@ const generateTVMetaData = async () => {
       let season_number = parseInt(episode_file.match(re2)[1])
       let episode_number = parseInt(episode_file.match(re2)[2])
       try {
-        let episode = await tvClient.send(new lib.requests.TVEpisode(tv_id, season_number, episode_number), 250, null)
+        let episode = await new metadataService().get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
         episode.fs_path = episode_file;
         episode.url_path = `http://localhost:${port}/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
 
@@ -216,8 +209,8 @@ var generateMovieMetaData = function() {
   
   bluebird.mapSeries(files.filter(x => x.startsWith(config.movies.path)), function(file){
   console.log('GET: ' + file);
-  // find movie on TMDb
-  return moviesClient.send(new lib.requests.Movie(file.match(re)[1]), 250, null)
+  // find movie on TMDb 
+  return new metadataService().get(new Movie({ id: file.match(re)[1] }))
     .then((movie) => {
     movie.fs_path = file;
     movie.url_path = `http://localhost:${port}/movies/${movie.id}`;
@@ -244,6 +237,7 @@ var generateMusicMetaData = function() {
 
   var re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
+      unknown_album = "UNKNOWN ALBUM";
       json = { music: [] };
 
   console.log('Generating data for Music...')
@@ -256,7 +250,7 @@ var generateMusicMetaData = function() {
       console.log('GET: ' + album_dir);
       let track_files = [];
 
-      if (album_dir.toUpperCase().endsWith("UNKNOWN ALBUM")){
+      if (album_dir.toUpperCase().endsWith(unknown_album)){
         // build music album not on Spotify
         let album = {
           id: 'unknown',
@@ -267,7 +261,7 @@ var generateMusicMetaData = function() {
           label: 'Various Labels',
           tracks: {items:[]}
         }
-        track_files = files.filter(x => x.toUpperCase().includes("UNKNOWN ALBUM"))
+        track_files = files.filter(x => x.toUpperCase().includes(unknown_album))
 
         track_files.forEach( function( track_file, index ) {
           track = track_file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
@@ -286,34 +280,38 @@ var generateMusicMetaData = function() {
         });
 
         json.music.push(album);
-      } else {
-        // find music album on Spotify
-        return musicClient.send(new lib.requests.Album(album_dir.match(re)[1]), 50, null)
+        return true; // go next
+      } 
+      try {
+        // find the Spotify music album
+        return new metadataService().get(new Album({ id: album_dir.match(re)[1] }))
         .then((album) => {
           // remove unnecessary Spotify json
           delete album.available_markets;
           for(var i=0;i<album.tracks.items.length;i++){
             delete album.tracks.items[i].artists;
-            delete album.tracks.items[i].available_markets;}
+            delete album.tracks.items[i].available_markets;
+          }
+          album.tracks.items.map(item => {delete item.artists; delete item.available_markets});
 
           track_files = files.filter(x => x.includes(album_dir.match(re)[1]))
           track_files.forEach( function( track_file, index ) {
-              track = track_file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
-              console.log('GET: ' + track);
-              
-              // for each track in the Spotify music album
-              album.tracks.items.forEach(function(item) {
-                // if track found
-                if ( (item.disc_number == parseInt(track.match(re2)[1] || 1) ) && 
-                  (item.track_number == parseInt(track.match(re2)[3]) ) ) {
-                  item.fs_path = track_file; 
-                  item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`;
-                }
-              });
+            track = track_file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
+            console.log('GET: ' + track);
+            // for each track in the Spotify music album
+            album.tracks.items.forEach(function(item) {
+              // if track found
+              if ( (item.disc_number == parseInt(track.match(re2)[1] || 1) ) && 
+                (item.track_number == parseInt(track.match(re2)[3]) ) ) {
+                item.fs_path = track_file; 
+                item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`;
+              }
             });
-
+          });
           json.music.push(album);
         });
+      } catch(e) {
+        return true; // skip the album if there is a problem fetching metadata
       }
     }) // end of .mapSeries()
     .then(function(music){
