@@ -72,6 +72,37 @@ app.get('/api/music', (req, res) => {
   res.json(musicData.music)
 });
 
+app.get('/api/movies/most_popular', function(req, res) {
+  // trending now
+  const most_popular = moviesData.movies.sort((a,b) => b.popularity - a.popularity).slice(0,25);
+  res.json(most_popular);
+});
+
+app.get('/api/movies/highest_rated', function(req, res) {
+  const highest_rated = moviesData.movies.sort((a,b) => b.vote_average - a.vote_average).slice(0,25);
+  res.json(highest_rated);
+});
+
+// by certification rating
+// recently added
+// lstatSync(file).mtime
+
+app.get('/api/movies/genres', function(req, res) {
+  const genres = [...new Map(moviesData.movies.map(movie => movie.genres).flat(Infinity).map(item => [item.id, item])).values()];
+
+  genres.sort(function(a, b){
+    if(a.name < b.name) { return -1; }
+    if(a.name > b.name) { return 1; }
+    return 0;
+  })
+
+  res.json(genres);
+});
+
+app.get('/api/movies/genres/:name', function(req, res) {
+  res.json(moviesData.movies.filter(movie => movie.genres.some( genre => genre.name == req.params.name )));
+});
+
 app.get('/api/movies/:id', function(req, res) {
   var movie = moviesData.movies.filter(movie => movie.id == parseInt(req.params.id));
   res.json(movie);
@@ -370,4 +401,6 @@ console.log(figlet.textSync('homehost',
 ));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
-console.log(`current NODE_ENV is ${process.env.NODE_ENV}`);
+console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);
+
+// npm run start-dev
