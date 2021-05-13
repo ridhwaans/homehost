@@ -5,11 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=dev node server",
-    "client-dev": "cd client && yarn dev",
-    "start-dev": "concurrently --kill-others-on-fail \"yarn dev\" \"yarn client-dev\"",
-    "postinstall": "cd client && npm install",
-    "prestart": "cd client && yarn build",
-    "start": "NODE_ENV=prod node server"
+    "client-dev": "cd client && npm start",
+    "start-dev": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client-dev\""
   },
   "dependencies": {
     "axios": "^0.21.1",

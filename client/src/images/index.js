@@ -1,1 +1,0 @@
-export homehostLogo from './v1-homehost-logo-1.PNG'

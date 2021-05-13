@@ -6,7 +6,6 @@ config.yml
 movies.json
 music.json
 tv.json
-/backup
 
 # lock files
 package-lock.json
@@ -20,6 +19,8 @@ node_modules/
 
 # production
 /build
+/client/public/bundle.js
+/client/public/bundle.js.LICENSE.txt
 
 # misc
 .DS_Store
