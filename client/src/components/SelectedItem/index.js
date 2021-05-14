@@ -82,7 +82,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
 
                                         <button className="hasLabel play-link-secondary">
                                             <span className="play-icon"><FontAwesomeIcon icon={faPlus} /></span>
-                                            <span>My list</span>
+                                            <span>My List</span>
                                         </button>
                                     </div>
 

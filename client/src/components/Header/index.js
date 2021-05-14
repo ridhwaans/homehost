@@ -43,6 +43,10 @@ function Header() {
         };
     }, []);
 
+    var li = document.getElementsByClassName("header-list-item");
+    for (var el of li) {
+        el.addEventListener("click", (e) => e.target.classList.toggle("active"));
+    }
 
     return (
         <div className="header-height-pinned">
@@ -62,18 +66,26 @@ function Header() {
                                 <div className="topbar"></div>
                                 <ul>
                                     <li><a href={"/"} className="active">Home</a></li>
-                                    <li><a href={"/"}>TV shows</a></li>
-                                    <li><a href={"/"}>Movies</a></li>
-                                    <li><a href={"/"}>Recently added</a></li>
-                                    <li><a href={"/"}>My list</a></li>
+                                    <li><a href={"/movies"}>Movies</a></li>
+                                    <li><a href={"/tv"}>TV Shows</a></li>
+                                    <li><a href={"/music"}>Music</a></li>
+                                    <li><a href={"/podcasts"}>Podcasts</a></li>
+                                    <li><a href={"/books"}>Books</a></li>
+                                    <li><a href={"/comics"}>Comics</a></li>
+                                    <li><a href={"/recently_added"}>Recently Added</a></li>
+                                    <li><a href={"/my_list"}>My List</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li className="header-list-item"><a href={"/"} className="active">Home</a></li>
-                        <li className="header-list-item"><a href={"/"}>TV shows</a></li>
-                        <li className="header-list-item"><a href={"/"}>Movies</a></li>
-                        <li className="header-list-item"><a href={"/"}>Recently added</a></li>
-                        <li className="header-list-item"><a href={"/"}>My list</a></li>
+                        <li className="header-list-item"><a href={"/movies"}>Movies</a></li>
+                        <li className="header-list-item"><a href={"/tv"}>TV Shows</a></li>
+                        <li className="header-list-item"><a href={"/music"}>Music</a></li>
+                        <li className="header-list-item"><a href={"/podcasts"}>Podcasts</a></li>
+                        <li className="header-list-item"><a href={"/books"}>Books</a></li>
+                        <li className="header-list-item"><a href={"/comics"}>Comics</a></li>
+                        <li className="header-list-item"><a href={"/recently_added"}>Recently Added</a></li>
+                        <li className="header-list-item"><a href={"/my_list"}>My List</a></li>
                     </ul>
                 </div>
 

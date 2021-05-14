@@ -105,7 +105,7 @@ export async function getTVShowGenres() {
 
 export async function getTVShowsByGenre(genre) {
 
-    return await axios.get(`${HOMEHOST_API}/movies/genres/${genre}`)
+    return await axios.get(`${HOMEHOST_API}/tv/genres/${genre}`)
         .then(function (response) {
             return response.data
 

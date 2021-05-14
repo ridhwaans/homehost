@@ -7,7 +7,7 @@ import Search from '../Search';
 import SearchContext from "../Search/context"
 
 
-function Home() {
+function Movies() {
 
     const [recentlyAddedMovies, setRecentlyAddedMovies] = useState(null)
     const [popularMovies, setPopularMovies] = useState(null)
@@ -78,4 +78,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Movies;

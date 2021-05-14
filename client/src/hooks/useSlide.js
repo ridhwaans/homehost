@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getMovieInformation } from "../api"
+import { getMovieInformation, getTVShowInformation } from "../api"
 
 const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
 

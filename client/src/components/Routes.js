@@ -1,6 +1,7 @@
 import React from "react";
-import { Route, Switch, BrowserRouter } from "react-router-dom";
-import Home from "./Home"
+import { Route, Switch, BrowserRouter, useLocation } from "react-router-dom";
+import Movies from "./Movies"
+import TVShows from "./TVShows"
 import Header from "./Header"
 import Footer from "./Footer"
 
@@ -11,14 +12,17 @@ import { useSearch } from "../hooks/useSearch"
 const Routes = () => {
 
     const searchText = useSearch()
+    const location = useLocation()
 
+    console.log(location.pathname);
     return (
         <div className="background-app">
             <SearchContext.Provider value={searchText}>
                 <Header />
                 <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <Switch>
-                        <Route component={Home} exact path="/" />
+                        <Route component={Movies} exact path="/movies" />
+                        <Route component={TVShows} exact path="/tv" />
                     </Switch>
                 </BrowserRouter>
             </SearchContext.Provider>

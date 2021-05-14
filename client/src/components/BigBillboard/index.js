@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMovieInformation, getRandomMovie, IMAGE_BASE } from "../../api"
+import { getTVShowInformation, getRandomTVShow, getMovieInformation, getRandomMovie, IMAGE_BASE } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -13,6 +13,13 @@ function BigBillboard() {
         const movie = await getRandomMovie() // getMovieInformation()
 
         return movie
+    }
+
+    const fetchTVShow = async () => {
+
+        const tv = await getRandomTVShow() // getTVShowInformation()
+
+        return tv
     }
 
     useEffect(() => {

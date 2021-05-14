@@ -78,4 +78,4 @@ function TVShows() {
     );
 }
 
-export default Home;
+export default TVShows;

@@ -152,7 +152,7 @@ app.get('/api/tv/genres', function(req, res) {
   res.json(genres);
 });
 app.get('/api/tv/genres/:name', function(req, res) {
-  res.json(tvData.tv.filter(tv => movie.genres.some( genre => genre.name == req.params.name )));
+  res.json(tvData.tv.filter(tv => tv.genres.some( genre => genre.name == req.params.name )));
 });
 app.get('/api/tv/random', function(req, res) {
   var tv = tvData.tv[Math.floor(Math.random() * tvData.tv.length)]

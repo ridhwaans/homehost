@@ -9,11 +9,11 @@ function Footer() {
         <div className="footer">
 
             <div className="footer-content">
-                <span className="copyright">&copy; 2020 </span> made using <span className="react-icon"><FontAwesomeIcon icon={faReact} /></span> by
+                <span className="copyright">&copy; 2021 </span> made using <span className="react-icon"><FontAwesomeIcon icon={faReact} /></span> by
             </div>
 
             <div className="social-links">
-                <a href={"https://github.com/zygisS22"} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faGithub} /></a>
+                <a href={"https://github.com/ridhwaans"} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faGithub} /></a>
             </div>
         </div>
     );
