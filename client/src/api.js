@@ -33,7 +33,10 @@ export async function getRandomMovie() {
 export async function getMovieGenres() {
 
     return await axios.get(`${HOMEHOST_API}/movies/genres`)
+        .then(function (response) {
+            return response.data
 
+        })
 }
 
 export async function getMoviesByGenre(genre) {
@@ -64,12 +67,73 @@ export async function getMoviesBy(type) {
 
     }
 
+    return await axios.get(discover)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+
+export async function getTVShowInformation(id) {
+
+    return await axios.get(`${HOMEHOST_API}/tv/${id}`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getRandomTVShow() {
+
+    return await axios.get(`${HOMEHOST_API}/tv/random`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+
+export async function getTVShowGenres() {
+
+    return await axios.get(`${HOMEHOST_API}/tv/genres`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getTVShowsByGenre(genre) {
+
+    return await axios.get(`${HOMEHOST_API}/movies/genres/${genre}`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+
+export async function getTVShowsBy(type) {
+
+    let discover = null
+
+    switch (type) {
+        case "most_popular":
+            discover = `${HOMEHOST_API}/tv/most_popular`
+            break;
+        case "highest_rated":
+            discover = `${HOMEHOST_API}/tv/highest_rated`
+            break;
+        case "recently_added":
+            discover = `${HOMEHOST_API}/tv/recently_added`
+            break;
+        default:
+
+    }
 
     return await axios.get(discover)
         .then(function (response) {
             return response.data
 
         })
-
-
 }

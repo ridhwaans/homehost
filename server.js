@@ -90,6 +90,7 @@ app.get('/api/movies/highest_rated', function(req, res) {
 });
 
 app.get('/api/movies/recently_added', function(req, res) {
+  // new
   const recently_added = moviesData.movies.sort((a,b) => b.ctime - a.ctime).slice(0,25);
   res.json(recently_added);
 });
@@ -124,9 +125,43 @@ app.get('/api/movies/:id', function(req, res) {
   res.json(movie);
 });
 
-app.get('/api/tv/seasons/:id', function(req, res) {
-  var season = tvData.tv.filter(season => season.id == parseInt(req.params.id));
-  res.json(season);
+
+app.get('/api/tv/most_popular', function(req, res) {
+  // trending now
+  const most_popular = tvData.tv.sort((a,b) => b.popularity - a.popularity).slice(0,25);
+  res.json(most_popular);
+});
+app.get('/api/tv/highest_rated', function(req, res) {
+  const highest_rated = tvData.tv.sort((a,b) => b.vote_average - a.vote_average).slice(0,25);
+  res.json(highest_rated);
+});
+app.get('/api/tv/recently_added', function(req, res) {
+  // new
+  const recently_added = tvData.tv.sort((a,b) => b.ctime - a.ctime).slice(0,25);
+  res.json(recently_added);
+});
+app.get('/api/tv/genres', function(req, res) {
+  const genres = [...new Map(tvData.tv.map(tv => tv.genres).flat(Infinity).map(item => [item.id, item])).values()];
+
+  genres.sort(function(a, b){
+    if(a.name < b.name) { return -1; }
+    if(a.name > b.name) { return 1; }
+    return 0;
+  })
+
+  res.json(genres);
+});
+app.get('/api/tv/genres/:name', function(req, res) {
+  res.json(tvData.tv.filter(tv => movie.genres.some( genre => genre.name == req.params.name )));
+});
+app.get('/api/tv/random', function(req, res) {
+  var tv = tvData.tv[Math.floor(Math.random() * tvData.tv.length)]
+  res.json(tv);
+});
+
+app.get('/api/tv/:id', function(req, res) {
+  var tv = tvData.tv.filter(tv => tv.id == parseInt(req.params.id));
+  res.json(tv);
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
