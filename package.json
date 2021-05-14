@@ -1,6 +1,6 @@
 {
-  "name": "homehost",
-  "version": "1.0.0",
+  "name": "homehost-server",
+  "version": "1.3.0",
   "author": "ridhwaans",
   "license": "MIT",
   "scripts": {

@@ -87,16 +87,23 @@ By default the server port is `5000`, client port is `3000`
 
 ### Server-side
 
-**GET** `/api/hello`  
-**GET** `/api/generate`  
-**GET** `/api/movies`  
-**GET** `/api/movies/:id`  
-**GET** `/movies/:id`  
-**GET** `/api/music/`  
-**GET** `/api/music/albums/:id`  
-**GET** `/music/:album_id/:disc_number/:track_number`  
-**GET** `/api/tv/seasons/:id`  
-**GET** `/tv/:show_id/:season_number/:episode_number`  
+**GET** /api/hello
+**GET** /api/generate
+**GET** /api/movies
+**GET** /api/tv
+**GET** /api/music
+**GET** /api/movies/most_popular
+**GET** /api/movies/highest_rated
+**GET** /api/movies/recently_added
+**GET** /api/movies/genres
+**GET** /api/movies/genres/:name
+**GET** /api/movies/random
+**GET** /api/movies/:id
+**GET** /api/tv/seasons/:id
+**GET** /api/music/albums/:id
+**GET** /movies/:id
+**GET** /tv/:tv_id/:season_number/:episode_number
+**GET** /music/:album_id/:disc_number/:track_number
 
 ### Client-side
 

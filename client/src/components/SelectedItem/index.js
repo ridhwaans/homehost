@@ -1,7 +1,9 @@
-import React, { useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 
 import Similar from "../Similar"
 import Details from "../Details"
+
+import Player from "../Player"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IMAGE_BASE } from "../../api"
@@ -9,10 +11,29 @@ import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { faImdb } from '@fortawesome/free-brands-svg-icons'
 
 
+function openFullscreen() {
+    var elem = document.getElementById("player");
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+      elem.msRequestFullscreen();
+    }
+    
+  }
+
 const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindow }) => {
 
     const [menuOption, setMenuOption] = useState("general-info")
+    const [isPlaying, setIsPlaying] = useState(false)
 
+    useEffect(() => { {isPlaying && openFullscreen()} }, [isPlaying])
+
+    const toggleIsPlaying = () => {
+        setIsPlaying(!isPlaying)
+    }
+    
     return (
         <div className="additional-information">
 
@@ -27,6 +48,8 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                 <div className="ai-background-nav-shadow"></div>
             </div>
 
+            {isPlaying && <Player backToBrowse={toggleIsPlaying} currentSlide={currentSlide} />}
+            
             {additionalMovieInfo ? (
                 <React.Fragment>
                     <div className="ai-content-area">
@@ -51,7 +74,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
 
                                     <div className="actions">
                                         <div className="play-link">
-                                            <button className="hasLabel">
+                                            <button className="hasLabel" onClick={() => setIsPlaying(true)}>
                                                 <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
                                                 <span>Play</span>
                                             </button>

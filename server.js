@@ -250,6 +250,7 @@ var generateMovieMetaData = function() {
     movie.fs_path = file;
     movie.url_path = `http://localhost:${port}/movies/${movie.id}`;
     movie.ctime = fs.statSync(file).ctime;
+    movie.mtime = fs.statSync(file).mtime;
     json.movies.push(movie);
     });
   })
@@ -299,6 +300,7 @@ const generateTVMetaData = async () => {
         episode.fs_path = episode_file;
         episode.url_path = `http://localhost:${port}/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
         episode.ctime = fs.statSync(episode_file).ctime;
+        episode.mtime = fs.statSync(episode_file).mtime;
 
         let seasonIndex = show.seasons.findIndex(season => season.season_number == season_number.toString()); 
         show.seasons[seasonIndex].episodes.push(episode);
@@ -360,6 +362,7 @@ var generateMusicMetaData = function() {
           item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`
           item.external_urls = {spotify: null}
           item.ctime = fs.statSync(track_file).ctime
+          item.mtime = fs.statSync(track_file).mtime
 
           album.tracks.items.push(item)
         });
@@ -391,6 +394,7 @@ var generateMusicMetaData = function() {
                 item.fs_path = track_file; 
                 item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`;
                 item.ctime = fs.statSync(track_file).ctime
+                item.mtime = fs.statSync(track_file).mtime
               }
             });
           });
@@ -423,3 +427,7 @@ console.log(figlet.textSync('homehost',
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);
+
+console.log(app._router.stack          // registered routes
+  .filter(r => r.route)    // take out all the middleware
+  .map(r => `**GET** ${r.route.path}`))  // get all the paths
