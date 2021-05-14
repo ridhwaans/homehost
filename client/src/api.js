@@ -5,6 +5,12 @@ const URL = "https://api.themoviedb.org/3/"
 const HOMEHOST_API = "http://localhost:5000/api"
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/"
 
+export async function searchMoviesBy(text, page = 1) {
+
+    return await axios.get(`${URL}search/movie?${API}&language=en-US&query=${text}&page=${page}&include_adult=false`)
+
+}
+
 export async function getMovieInformation(id) {
 
     return await axios.get(`${HOMEHOST_API}/movies/${id}`)
@@ -14,12 +20,15 @@ export async function getMovieInformation(id) {
         })
 }
 
+export async function getRandomMovie() {
 
-export async function searchMoviesBy(text, page = 1) {
+    return await axios.get(`${HOMEHOST_API}/movies/random`)
+        .then(function (response) {
+            return response.data
 
-    return await axios.get(`${URL}search/movie?${API}&language=en-US&query=${text}&page=${page}&include_adult=false`)
-
+        })
 }
+
 
 export async function getMovieGenres() {
 

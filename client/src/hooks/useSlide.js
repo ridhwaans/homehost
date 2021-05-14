@@ -157,7 +157,7 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
         const selected = await content.filter(item => item.id === id)[0]
         setCurrentSlide(selected)
 
-        let details = await getMovieInformation(id).then(response => response.data)
+        let details = await getMovieInformation(id)
         setAdditionalMovieInfo(details)
 
     }

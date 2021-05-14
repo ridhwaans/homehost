@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMovieInformation } from "../../api"
+import { getMovieInformation, getRandomMovie, IMAGE_BASE } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,16 +10,16 @@ function BigBillboard() {
 
     const fetchMovie = async () => {
 
-        const response = await getMovieInformation(128)
+        const movie = await getRandomMovie() // getMovieInformation(128)
 
-        return response
+        return movie
     }
 
     useEffect(() => {
 
 
-        fetchMovie().then(response => {
-            setMovie(response.data)
+        fetchMovie().then(movie => {
+            setMovie(movie)
 
         })
 
@@ -32,7 +32,7 @@ function BigBillboard() {
         <div className="billboard-content-limits">
             <div className="billboard-base">
                 <div className="billboard-image-wrapper">
-                    <img src={"https://occ-0-2692-360.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABfa-QSMvnLx0U1cfYX7Yo9mZrmI2M1VeIcNMthA7AmC-EKG2sOh1fx7tkNOU0Eof6aKRF56p-5WZOd66NtatC4fWkCkN.jpg?r=6da"} alt={"hero"} />
+                    <img src={movie && `${IMAGE_BASE}original/${movie.backdrop_path}`} alt={"hero"} />
 
                     <div className="billboard-vignette"></div>
                     <div className="billboard-vignette-bottom"></div>
@@ -44,8 +44,10 @@ function BigBillboard() {
                     <div className="logo-and-text">
 
                         <div className="billboard-title">
-                            <img src={"https://occ-0-2692-360.1.nflxso.net/dnm/api/v6/TsSRXvDuraoJ7apdkH6tsHhf-ZQ/AAAABe8TY2uebJ4BFANuTXLz5IhBxCLwg8EV7ZOw4K6pCX6KBw0ifxFHAiVVXLqo0p47hX9OOhCDSplQuMfsAUCNEIZ4pDMEcDnpmBpI.png?r=d80"} alt="title" />
-                        </div>
+                            <h3>
+                                <div>{movie && movie.title}</div>
+                            </h3>
+                        </div>    
 
                         <div className="billboard-description">
                             <div className="episode-title-container"></div>

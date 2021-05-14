@@ -114,8 +114,13 @@ app.get('/api/movies/genres/:name', function(req, res) {
   res.json(moviesData.movies.filter(movie => movie.genres.some( genre => genre.name == req.params.name )));
 });
 
+app.get('/api/movies/random', function(req, res) {
+  var movie = moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
+  res.json(movie);
+});
+
 app.get('/api/movies/:id', function(req, res) {
-  var movie = moviesData.movies.filter(movie => movie.id == parseInt(req.params.id));
+  var movie = moviesData.movies.find(movie => movie.id == parseInt(req.params.id));
   res.json(movie);
 });
 
@@ -125,7 +130,7 @@ app.get('/api/tv/seasons/:id', function(req, res) {
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
-  var album = musicData.music.filter(album => album.id == req.params.id);
+  var album = musicData.music.find(album => album.id == req.params.id);
   res.json(album);
 });
 

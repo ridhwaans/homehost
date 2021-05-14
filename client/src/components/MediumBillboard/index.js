@@ -13,7 +13,7 @@ function MediumBillboard() {
 
     useEffect(async () => {
 
-        let movie = await getMovieInformation("530915").then(response => response.data)
+        let movie = await getMovieInformation("530915")
 
         setPoster(`${IMAGE_BASE}original/${movie.poster_path}`)
         setBackground(`${IMAGE_BASE}original/${movie.backdrop_path}`)
