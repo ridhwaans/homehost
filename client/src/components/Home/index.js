@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { getMoviesBy, getMoviesByGenre } from "../../api"
 import BigBillboard from "../BigBillboard"
+import MediumBillboard from "../MediumBillboard"
 import Slider from "../Slider"
 import Search from '../Search';
 import SearchContext from "../Search/context"

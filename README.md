@@ -71,7 +71,7 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 ``` -->
 ## Generating metadata
  
-Run `yarn start-dev` in the base directory to start the debugger  
+Run `npm run start-dev` from the base directory   
  
 On the server, call `/api/generate` **once**. Wait for the async call to finish and save  
 There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api/generate`  
@@ -80,8 +80,8 @@ Run `ncu` in the base directory and in the `client/` directory to check for upda
 
 ## Run
 
-Run `yarn start` in the base directory to start the application  
-The default application port is `5000`  
+Run `npm run start-dev` from the base directory to start the application  
+By default the server port is `5000`, client port is `3000`  
  
 ## Routes
 
@@ -95,8 +95,8 @@ The default application port is `5000`
 **GET** `/api/music/`  
 **GET** `/api/music/albums/:id`  
 **GET** `/music/:album_id/:disc_number/:track_number`  
-<!-- **GET** `/api/tv/seasons/:id`  
-**GET** `/tv/:show_id/:season_number/:episode_number`   -->
+**GET** `/api/tv/seasons/:id`  
+**GET** `/tv/:show_id/:season_number/:episode_number`  
 
 ### Client-side
 

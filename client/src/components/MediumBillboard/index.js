@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMovieInformation, IMAGE_BASE } from "../../api"
+import { getMovieInformation, getRandomMovie, IMAGE_BASE } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -13,7 +13,7 @@ function MediumBillboard() {
 
     useEffect(async () => {
 
-        let movie = await getMovieInformation("530915")
+        const movie = await getRandomMovie() // getMovieInformation()
 
         setPoster(`${IMAGE_BASE}original/${movie.poster_path}`)
         setBackground(`${IMAGE_BASE}original/${movie.backdrop_path}`)
@@ -54,13 +54,13 @@ function MediumBillboard() {
                             <a className="play-link" href={"/"} >
                                 <button className="hasLabel">
                                     <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
-                                    <span>Reproducir</span>
+                                    <span>Play</span>
                                 </button>
                             </a>
 
                             <button className="hasLabel play-link-secondary">
                                 <span className="play-icon"><FontAwesomeIcon icon={faQuestionCircle} /></span>
-                                <span>Más informacion</span>
+                                <span>Information</span>
                             </button>
 
                         </div>

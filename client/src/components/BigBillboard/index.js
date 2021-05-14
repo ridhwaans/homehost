@@ -10,7 +10,7 @@ function BigBillboard() {
 
     const fetchMovie = async () => {
 
-        const movie = await getRandomMovie() // getMovieInformation(128)
+        const movie = await getRandomMovie() // getMovieInformation()
 
         return movie
     }
