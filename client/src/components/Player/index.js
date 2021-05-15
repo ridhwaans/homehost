@@ -1,25 +1,48 @@
-import React from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import playerContext from "../Player/context"
 import ReactNetflixPlayer from "react-netflix-player";
 
   
-const Player = ({ backToBrowse, currentSlide }) => {
+const Player = () => {
+
+  const context = useContext(playerContext)
+
+  const openFullscreen = () => {
+    var elem = document.getElementById("player");
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+      elem.msRequestFullscreen();
+    }
+    
+  }
+
+  useEffect(() => {
+
+    {context.playerItem && openFullscreen()}
+
+  }, [])
 
     // movie -> title, episode -> name
     // dont show next episode icon if last episode
     // dont show next episode and episode list icons if movie
     return (
-        <div id={"player"}>
+      <React.Fragment>
+      {context.playerItem && (
+        <div id={"player"} >
           <ReactNetflixPlayer
-            src={currentSlide.url_path}
+            src={context.playerItem.url_path}
             // paused 
-            title={currentSlide.title}
-            subTitle={currentSlide.name}
+            title={context.playerItem.title}
+            subTitle={context.playerItem.name}
             // media bar
-            titleMedia={currentSlide.title}
+            titleMedia={context.playerItem.title}
             extraInfoMedia="Opening"
             playerLanguage="en"
-            backButton={() => { backToBrowse() }}
-            // The player use the all viewport
+            backButton={() => { context.setPlayerItem(null) }}
+            // The player uses all the viewport
             fullPlayer
             autoPlay
             startPosition={0}
@@ -40,7 +63,7 @@ const Player = ({ backToBrowse, currentSlide }) => {
                 playing: false,
               },
             ]}
-            // The function call when a item in reproductionList is clicked
+            // The function call when an item in reproductionList is clicked
             onClickItemListReproduction={(id, playing) => {
               return {
                 id,
@@ -51,7 +74,7 @@ const Player = ({ backToBrowse, currentSlide }) => {
             onEnded={() => {}}
             // The function is call when the video is playing (One time for frame)
             onTimeUpdate={() => {}}
-            // Enable the orverlay when player is paused
+            // Enable the overlay when player is paused
             overlayEnabled
             // Enabled the auto clode controlls of player
             autoControllCloseEnabled
@@ -63,6 +86,8 @@ const Player = ({ backToBrowse, currentSlide }) => {
             // subtitleMedia="/file.vtt"
           />
         </div>
+        )}
+        </React.Fragment>
       );
 }
 export default Player

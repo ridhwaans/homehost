@@ -34,19 +34,22 @@ function Header() {
 
     }
 
-
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        var li = document.getElementsByClassName("header-list-item");
+        console.log(`li is ${li.length}`)
+        for (var el of li) {
+            console.log(`el of li is ${el.firstElementChild.innerHTML}`)
+            el.firstElementChild.addEventListener("click", (e) => e.target.classList.toggle("active"));
+        }
 
+        window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', () => handleScroll);
         };
     }, []);
 
-    var li = document.getElementsByClassName("header-list-item");
-    for (var el of li) {
-        el.addEventListener("click", (e) => e.target.classList.toggle("active"));
-    }
+    
+   
 
     return (
         <div className="header-height-pinned">

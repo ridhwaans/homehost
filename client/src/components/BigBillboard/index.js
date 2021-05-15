@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { getTVShowInformation, getRandomTVShow, getMovieInformation, getRandomMovie, IMAGE_BASE } from "../../api"
+import PlayerContext from "../Player/context"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -7,6 +8,7 @@ import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 function BigBillboard() {
 
     const [movie, setMovie] = useState(null)
+    const { playerItem, setPlayerItem } = useContext(PlayerContext)
 
     const fetchMovie = async () => {
 
@@ -62,8 +64,8 @@ function BigBillboard() {
                         </div>
 
                         <div className="billboard-link">
-                            <a className="play-link" href={"/"} >
-                                <button className="hasLabel">
+                            <a className="play-link">
+                                <button className="hasLabel" onClick={() => setPlayerItem(movie)}>
                                     <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
                                     <span>Play</span>
                                 </button>
