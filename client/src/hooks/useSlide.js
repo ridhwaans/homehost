@@ -152,14 +152,19 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
     }
 
 
-    const selectSlide = async (id) => {
+    const selectSlide = async (type, id) => {
 
+        console.log(`type is ${type}`)
+        console.log(`id is ${id}`)
         const selected = await content.filter(item => item.id === id)[0]
         setCurrentSlide(selected)
-
-        let details = await getMovieInformation(id)
+        let details
+        if (type == "Movie"){
+            details = await getMovieInformation(id)
+        } else if (type == "TVShow") {
+            details = await getTVShowInformation(id)
+        }
         setAdditionalMovieInfo(details)
-
     }
 
     const closeInformationWindow = () => {

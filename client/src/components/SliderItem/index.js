@@ -75,7 +75,7 @@ function SliderItem(props) {
                 </div>
             </div>
 
-            <button onClick={() => props.onSelectSlide(props.title)} className="show-details">
+            <button onClick={() => props.onSelectSlide(props.data.type, props.title)} className="show-details">
                 <span><FontAwesomeIcon icon={faAngleDown} /></span>
             </button>
 

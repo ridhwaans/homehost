@@ -73,8 +73,8 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
  
 Run `npm run start-dev` from the base directory   
  
-On the server, call `/api/generate` **once**. Wait for the async call to finish and save  
-There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api/generate`  
+On the server, call `/api?generate` **once**. Wait for the async call to finish and save  
+There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api?generate`  
 <!-- `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata.  
 Run `ncu` in the base directory and in the `client/` directory to check for updates for `package.json`  -->
 

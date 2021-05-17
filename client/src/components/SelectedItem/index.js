@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState, useContext } from "react"
 import PlayerContext from "../Player/context"
+import SliderContext from "../Slider/context"
+import Episodes from "../Episodes"
 import Similar from "../Similar"
 import Details from "../Details"
 
 import Player from "../Player"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { IMAGE_BASE } from "../../api"
+import { IMAGE_BASE, TMDB_BASE } from "../../api"
 import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { faImdb } from '@fortawesome/free-brands-svg-icons'
 
@@ -15,7 +17,10 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
 
     const [menuOption, setMenuOption] = useState("general-info")
     const { playerItem, setPlayerItem } = useContext(PlayerContext)
+    const sliderContext = useContext(SliderContext);
 
+    //console.log(`sliderContext is ${JSON.stringify(sliderContext)}`)
+    //console.log(`additionalMovieInfo is ${JSON.stringify(additionalMovieInfo)}`)
     return (
         <div className="additional-information">
 
@@ -34,16 +39,16 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                     <div className="ai-content-area">
                         <div className="ai-content-area-container">
                             <h3>
-                                <div>{currentSlide.title}</div>
+                                <div>{additionalMovieInfo.type == "Movie" ? currentSlide.title : currentSlide.name}</div>
                             </h3>
 
                             {menuOption === "general-info" ? (
                                 <div className="jaw-bone-common">
                                     <div className="metadata">
-                                        <span className="imdb"><a href={`https://www.imdb.com/title/${additionalMovieInfo.imdb_id}`} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faImdb} /></a></span>
+                                        <span className="imdb"><a href={`${TMDB_BASE}${ additionalMovieInfo.type == "Movie" ? additionalMovieInfo.imdb_id : additionalMovieInfo.external_ids.imdb_id }`} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faImdb} /></a></span>
                                         <span className="score">{additionalMovieInfo.vote_average}</span>
                                         <span className="year">{currentSlide.release_date}</span>
-                                        <span className="duration">{additionalMovieInfo.runtime}m</span>
+                                        <span className="duration">{additionalMovieInfo.type == "Movie" ? `${additionalMovieInfo.runtime}m` : `${additionalMovieInfo.seasons.length} Seasons`}</span>
 
                                     </div>
 
@@ -53,7 +58,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
 
                                     <div className="actions">
                                         <div className="play-link">
-                                            <button className="hasLabel" onClick={() => setPlayerItem(currentSlide)}>
+                                            <button className="hasLabel" onClick={() => {additionalMovieInfo.type == "Movie" ? setPlayerItem(additionalMovieInfo) : setPlayerItem({data: additionalMovieInfo, season_number: 1, episode_number: 1})}}>
                                                 <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
                                                 <span>Play</span>
                                             </button>
@@ -85,14 +90,20 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
 
 
                                 </div>
+                            ) : menuOption === "episodes" ? (
+                                <Episodes additionalMovieInfo={additionalMovieInfo} />
                             ) : menuOption === "similar" ? (
-                                <Similar additionalMovieInfo={additionalMovieInfo} />) : menuOption === "details" ? (
-                                    <Details additionalMovieInfo={additionalMovieInfo} />
-                                ) : null}
+                                <Similar additionalMovieInfo={additionalMovieInfo} />
+                            ) : menuOption === "details" ? (
+                                <Details additionalMovieInfo={additionalMovieInfo} />
+                            ) : null}
 
                             <ul className="menu">
                                 <li className={`${menuOption === "general-info" && "current"}`} onClick={() => setMenuOption("general-info")}>
                                     <div className="menu-button" >GENERAL INFORMATION</div><span></span>
+                                </li>
+                                <li className={`${menuOption === "episodes" && "current"}`} onClick={() => setMenuOption("episodes")}>
+                                    <div className="menu-button">EPISODES</div><span></span>
                                 </li>
                                 <li className={`${menuOption === "similar" && "current"}`} onClick={() => setMenuOption("similar")}>
                                     <div className="menu-button">SIMILAR</div><span></span>

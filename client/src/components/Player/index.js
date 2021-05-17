@@ -25,21 +25,39 @@ const Player = () => {
 
   }, [])
 
-    // movie -> title, episode -> name
-    // dont show next episode icon if last episode
-    // dont show next episode and episode list icons if movie
+    //console.log(`context is ${JSON.stringify(context.playerItem)}`)
+    var episode = null;
+    if (context.playerItem && context.playerItem.data && context.playerItem.data.type == "TVShow") { 
+      console.log(`season_number is ${context.playerItem.season_number}`)
+      episode = context.playerItem.data.seasons
+      .find(season => season.season_number == context.playerItem.season_number).episodes
+      .find(episode => episode.episode_number == context.playerItem.episode_number);
+    }
+    
+    var episodeList = [];
+    if (episode != null) {
+      context.playerItem.data.seasons
+      .find(season => season.season_number == context.playerItem.season_number).episodes
+      .map(episode => episodeList.push({id: episode.episode_number, nome: episode.name, playing: false}))
+      episodeList.find(episode => episode.id == context.playerItem.episode_number).playing = true;
+    }
+
     return (
       <React.Fragment>
       {context.playerItem && (
         <div id={"player"} >
           <ReactNetflixPlayer
-            src={context.playerItem.url_path}
-            // paused 
-            title={context.playerItem.title}
-            subTitle={context.playerItem.name}
-            // media bar
-            titleMedia={context.playerItem.title}
-            extraInfoMedia="Opening"
+            src={context.playerItem.type == "Movie" ? context.playerItem.url_path : episode.url_path}
+            // Pause screen 
+            // movie or show name
+            title={context.playerItem.type == "Movie" ? context.playerItem.title : context.playerItem.data.name}
+            // episode name
+            subTitle={context.playerItem.type == "Movie" ? "" : `S${context.playerItem.season_number}E${context.playerItem.episode_number} ${episode.name}`}
+            // player bar
+            // movie or show name
+            titleMedia={context.playerItem.type == "Movie" ? context.playerItem.title : context.playerItem.data.name}
+            // episode name
+            extraInfoMedia={context.playerItem.type == "Movie" ? "" : `S${context.playerItem.season_number}E${context.playerItem.episode_number} ${episode.name}`}
             playerLanguage="en"
             backButton={() => { context.setPlayerItem(null) }}
             // The player uses all the viewport
@@ -47,22 +65,11 @@ const Player = () => {
             autoPlay
             startPosition={0}
             // The info of the next video action
-            dataNext={{ title: 'No next episode' }}
+            dataNext={context.playerItem.type == "Movie" ? {} : {title: episodeList[context.playerItem.episode_number].nome }}
             // The action call when the next video is clicked
             onNextClick={() => {}}
             // The list reproduction data, will be render in this order
-            reprodutionList={[
-              {
-                nome: 'Opening',
-                id: 1,
-                playing: true,
-              },
-              {
-                nome: 'Teste',
-                id: 2,
-                playing: false,
-              },
-            ]}
+            reprodutionList={context.playerItem.type == "Movie" ? [] : episodeList}
             // The function call when an item in reproductionList is clicked
             onClickItemListReproduction={(id, playing) => {
               return {

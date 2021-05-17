@@ -52,18 +52,19 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/api/hello', (req, res) => {
-  let hello = {homehost: 'Hello, put env vars here'};
-  res.json(hello);
-});
-
-app.get('/api/generate', (req, res) => {
-  if (process.env.NODE_ENV == 'dev'){
-    generateMetaData();
+app.get('/api', (req, res) => {
+  if (process.env.NODE_ENV == 'dev' && req.query.generate){
+    let filter = req.query.generate.split(',');
+    generateMetaData(filter);
     res.json('Generating metadata. Please wait...');
   } else {
     res.json('Dev mode only')
   }
+});
+
+app.get('/api/about', (req, res) => {
+  let hello = {homehost: 'Hello, put env vars here'};
+  res.json(hello);
 });
 
 app.get('/api/movies', (req, res) => {
@@ -91,7 +92,7 @@ app.get('/api/movies/highest_rated', function(req, res) {
 
 app.get('/api/movies/recently_added', function(req, res) {
   // new
-  const recently_added = moviesData.movies.sort((a,b) => b.ctime - a.ctime).slice(0,25);
+  const recently_added = moviesData.movies.sort((a,b) => b.mtime - a.mtime).slice(0,25);
   res.json(recently_added);
 });
 
@@ -160,7 +161,7 @@ app.get('/api/tv/random', function(req, res) {
 });
 
 app.get('/api/tv/:id', function(req, res) {
-  var tv = tvData.tv.filter(tv => tv.id == parseInt(req.params.id));
+  var tv = tvData.tv.find(tv => tv.id == parseInt(req.params.id));
   res.json(tv);
 });
 
@@ -264,8 +265,14 @@ if (process.env.NODE_ENV == 'prod'){
   });
 }
 
-var generateMetaData = function(){
-  [generateMovieMetaData, generateTVMetaData, generateMusicMetaData].reduce((p, fn) => p.then(fn), Promise.resolve())
+var generateMetaData = function(filter = [generateMovieMetaData, generateTVMetaData, generateMusicMetaData]){
+  let generators = [];
+  filter.map(media => {
+    if (media == "movies") generators.push(generateMovieMetaData);
+    if (media == "tv") generators.push(generateTVMetaData);
+    if (media == "music") generators.push(generateMusicMetaData);
+  })
+  generators.reduce((p, fn) => p.then(fn), Promise.resolve())
   console.log("Finished async");
 };
 
@@ -343,6 +350,8 @@ const generateTVMetaData = async () => {
         return true; // skip the episode if there is a problem fetching metadata
       }
     });
+    // remove seasons with no episodes
+    show.seasons = show.seasons.filter(season => season.episodes.length > 0)
     json.tv.push(show);
   });
 

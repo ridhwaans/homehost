@@ -4,6 +4,7 @@ const API = "api_key=129c09bb93839f3653b2510e55744d9f"
 const URL = "https://api.themoviedb.org/3/"
 const HOMEHOST_API = "http://localhost:5000/api"
 export const IMAGE_BASE = "https://image.tmdb.org/t/p/"
+export const TMDB_BASE = "https://www.imdb.com/title/"
 
 export async function searchMoviesBy(text, page = 1) {
 
