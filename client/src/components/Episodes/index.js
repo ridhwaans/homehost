@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from "react"
 import PlayerContext from "../Player/context"
-import { IMAGE_BASE } from "../../api"
 
 const Episodes = ({ additionalMovieInfo }) => {
     const { playerItem, setPlayerItem } = useContext(PlayerContext)
@@ -15,7 +14,7 @@ const Episodes = ({ additionalMovieInfo }) => {
     }, [])
 
     return (
-        <div className="menu-similar">
+        <div className="menu-episodes">
             <select id="seasons" onChange={changeSeason}>
             {additionalMovieInfo && additionalMovieInfo.seasons.map((season, index) => {
                 //console.log(`default season is ${seasonNumber}`)
@@ -25,25 +24,21 @@ const Episodes = ({ additionalMovieInfo }) => {
             })}
             </select>
 
-            <div className="menu-similar-content">
+            <div className="menu-episode-content">
 
                 {additionalMovieInfo && additionalMovieInfo.seasons && additionalMovieInfo.seasons
                 .find(season => season.season_number == seasonNumber).episodes.map((episode, index) => {
 
-                    if (index < 4) {
-                        return (
-                            <div className="similar-item" key={index}>
-                                <div className="similar-item-image"><img onClick={() => setPlayerItem({data: additionalMovieInfo, season_number: seasonNumber, episode_number: index+1})} src={`${IMAGE_BASE}original/${episode.still_path}`} alt={"item"} /></div>
-                                <div className="similar-item-metada">
-                                    <span className="similar-item-title">{episode.name}</span><br />
-                                    <span className="release-date">{episode.air_date}</span>
-                                </div>
-                                <div className="similar-item-synopsis">{episode.overview}</div>
+                    return (
+                        <div className="episode-item" key={index}>
+                            <div className="episode-item-image"><img onClick={() => setPlayerItem({data: additionalMovieInfo, season_number: seasonNumber, episode_number: index+1})} src={`${process.env.REACT_APP_IMAGE_BASE}original/${episode.still_path}`} alt={"item"} /></div>
+                            <div className="episode-item-metada">
+                                <span className="episode-item-title">{episode.name}</span><br />
+                                <span className="release-date">{episode.air_date}</span>
                             </div>
-                        )
-                    }
-
-                    return null
+                            <div className="episode-item-synopsis">{episode.overview}</div>
+                        </div>
+                    )
 
                 })}
             </div>

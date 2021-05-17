@@ -8,7 +8,6 @@ import Details from "../Details"
 import Player from "../Player"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { IMAGE_BASE, TMDB_BASE } from "../../api"
 import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { faImdb } from '@fortawesome/free-brands-svg-icons'
 
@@ -28,7 +27,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                 <div className={`ai-background-shadow`} />
                 <div
                     className="ai-background-image"
-                    style={{ 'backgroundImage': `url(${IMAGE_BASE}original/${currentSlide.backdrop_path})` }}
+                    style={{ 'backgroundImage': `url(${process.env.REACT_APP_IMAGE_BASE}original/${currentSlide.backdrop_path})` }}
                 />
 
                 <div className="ai-background-nav-shadow"></div>
@@ -45,7 +44,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                             {menuOption === "general-info" ? (
                                 <div className="jaw-bone-common">
                                     <div className="metadata">
-                                        <span className="imdb"><a href={`${TMDB_BASE}${ additionalMovieInfo.type == "Movie" ? additionalMovieInfo.imdb_id : additionalMovieInfo.external_ids.imdb_id }`} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faImdb} /></a></span>
+                                        <span className="imdb"><a href={`${process.env.REACT_APP_TMDB_BASE}${ additionalMovieInfo.type == "Movie" ? additionalMovieInfo.imdb_id : additionalMovieInfo.external_ids.imdb_id }`} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faImdb} /></a></span>
                                         <span className="score">{additionalMovieInfo.vote_average}</span>
                                         <span className="year">{currentSlide.release_date}</span>
                                         <span className="duration">{additionalMovieInfo.type == "Movie" ? `${additionalMovieInfo.runtime}m` : `${additionalMovieInfo.seasons.length} Seasons`}</span>
@@ -102,9 +101,11 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                                 <li className={`${menuOption === "general-info" && "current"}`} onClick={() => setMenuOption("general-info")}>
                                     <div className="menu-button" >GENERAL INFORMATION</div><span></span>
                                 </li>
+                                {additionalMovieInfo.type == "TVShow" ? (
                                 <li className={`${menuOption === "episodes" && "current"}`} onClick={() => setMenuOption("episodes")}>
                                     <div className="menu-button">EPISODES</div><span></span>
                                 </li>
+                                ) : <React.Fragment/>}
                                 <li className={`${menuOption === "similar" && "current"}`} onClick={() => setMenuOption("similar")}>
                                     <div className="menu-button">SIMILAR</div><span></span>
                                 </li>

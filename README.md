@@ -23,8 +23,16 @@
 
 # Setup
 
-Run `npm install` under the base directory and the `client/` directory  
-Create a `.env` file in the base directory, if it does not exist  
+Run `npm install` in the `client/` directory and the `server/` directory
+Create a `.env` file in the `client/` directory, if it does not exist
+In `.env`, set the base url of the homehost server 
+###### **`.env`**
+```env
+REACT_APP_HOMEHOST_API = "http://localhost:5000/api"
+REACT_APP_IMAGE_BASE = "https://image.tmdb.org/t/p/"
+REACT_APP_TMDB_BASE = "https://www.imdb.com/title/"
+```  
+Create a `.env` file in the `server/` directory, if it does not exist  
 In `.env`, set the media paths, and set a working API key for TMDb API and Spotify Web API  
 ###### **`.env`**
 ```env
@@ -39,6 +47,8 @@ TV_KEY = '<api_key>'
 MUSIC_PATH = '/path/to/music/directory'
 MUSIC_API = 'api.spotify.com/v1'
 MUSIC_KEY = '<api_key>'
+
+CLIENT_BASE = 'http://localhost:3000'
 ```
 If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction  
 
@@ -71,7 +81,7 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 ``` -->
 ## Generating metadata
  
-Run `npm run start-dev` from the base directory   
+Run `npm run start-dev` from the `server/` directory   
  
 On the server, call `/api?generate` **once**. Wait for the async call to finish and save  
 There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api?generate`  
@@ -80,15 +90,15 @@ Run `ncu` in the base directory and in the `client/` directory to check for upda
 
 ## Run
 
-Run `npm run start-dev` from the base directory to start the application  
+Run `npm run start-dev` from the `server/` directory to start the application  
 By default the server port is `5000`, client port is `3000`  
  
 ## Routes
 
 ### Server-side
 
-**GET** /api/hello
-**GET** /api/generate
+**GET** /api
+**GET** /api/about
 **GET** /api/movies
 **GET** /api/tv
 **GET** /api/music
@@ -99,7 +109,13 @@ By default the server port is `5000`, client port is `3000`
 **GET** /api/movies/genres/:name
 **GET** /api/movies/random
 **GET** /api/movies/:id
-**GET** /api/tv/seasons/:id
+**GET** /api/tv/most_popular
+**GET** /api/tv/highest_rated
+**GET** /api/tv/recently_added
+**GET** /api/tv/genres
+**GET** /api/tv/genres/:name
+**GET** /api/tv/random
+**GET** /api/tv/:id
 **GET** /api/music/albums/:id
 **GET** /movies/:id
 **GET** /tv/:tv_id/:season_number/:episode_number

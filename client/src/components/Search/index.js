@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useCallback } from "react"
 import searchContext from "../Search/context"
-import { searchMoviesBy, IMAGE_BASE } from "../../api"
+import { searchMoviesBy } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
@@ -58,7 +58,7 @@ const Search = () => {
 
         return data.map((item, index) => {
 
-            if (item.poster_path) return <div key={index}><img src={`${IMAGE_BASE}w500/${item.poster_path}`} alt={"poster"} /></div>
+            if (item.poster_path) return <div key={index}><img src={`${process.env.REACT_APP_IMAGE_BASE}w500/${item.poster_path}`} alt={"poster"} /></div>
             return null
 
 

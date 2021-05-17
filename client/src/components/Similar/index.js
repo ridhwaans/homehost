@@ -1,7 +1,5 @@
 import React from "react"
 
-import { IMAGE_BASE } from "../../api"
-
 const Similar = ({ additionalMovieInfo }) => {
     return (
         <div className="menu-similar">
@@ -13,7 +11,7 @@ const Similar = ({ additionalMovieInfo }) => {
                     if (index < 4) {
                         return (
                             <div className="similar-item" key={index}>
-                                <div className="similar-item-image"><img src={`${IMAGE_BASE}original/${similarMovie.backdrop_path}`} alt={"item"} /></div>
+                                <div className="similar-item-image"><img src={`${process.env.REACT_APP_IMAGE_BASE}original/${similarMovie.backdrop_path}`} alt={"item"} /></div>
                                 <div className="similar-item-metada">
                                     <span className="similar-item-title">{additionalMovieInfo.type == "Movie" ? similarMovie.title : similarMovie.name}</span><br />
                                     <span className="release-date">{similarMovie.release_date}</span>

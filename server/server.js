@@ -12,9 +12,9 @@ var figlet = require('figlet');
 
 const {Album, Movie, TVEpisode, TVShow} = require('./models');
 var metadataService = require('./services/metadata');
-var moviesData = require('./movies.json'); // or fs.readFileSync + JSON.parse()
-var musicData =  require('./music.json'); 
-var tvData =  require('./tv.json'); 
+var moviesData = require('./data/movies.json'); // or fs.readFileSync + JSON.parse()
+var musicData =  require('./data/music.json'); 
+var tvData =  require('./data/tv.json'); 
 
 var files = [];
 var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH], {
@@ -43,11 +43,11 @@ watcher
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV == 'prod'){
-  app.use(express.static(path.join(__dirname, 'client/public')));
+  app.use(express.static(path.join(__dirname, 'client/public'))); //fix this
 }
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT_BASE); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });

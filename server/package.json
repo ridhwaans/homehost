@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=dev node server",
-    "client-dev": "cd client && npm start",
+    "client-dev": "cd ../client && npm start",
     "start-dev": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client-dev\""
   },
   "dependencies": {

@@ -1,6 +1,4 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { IMAGE_BASE } from "../../api"
-import genresList from "../../genres"
 import SliderContext from "../Slider/context"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown, faPlayCircle, faThumbsUp, faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -64,11 +62,11 @@ function SliderItem(props) {
                 <div className="boxart">
                     {props.poster === true ? (
                         <React.Fragment>
-                            {props.data.backdrop_path ? <img src={`${IMAGE_BASE}w500/${props.data.poster_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
+                            {props.data.backdrop_path ? <img src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.poster_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
                         </React.Fragment>
                     ) : (
                             <React.Fragment>
-                                {props.data.backdrop_path ? <img src={`${IMAGE_BASE}w500/${props.data.backdrop_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
+                                {props.data.backdrop_path ? <img src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.backdrop_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
                             </React.Fragment>
                         )}
 
@@ -86,7 +84,7 @@ function SliderItem(props) {
                             <div className="item-overview-play">
                                 <span><FontAwesomeIcon icon={faPlayCircle} /></span>
                             </div>
-                            <div className="item-overview-title">{props.data.title}</div>
+                            <div className="item-overview-title">{props.data.type == "Movie" ? props.data.title : props.data.name}</div>
                             <div className="item-overview-metadata">
                                 <span className="metadata-rating">New</span>
                                 <span className="metadata-maturity">{props.data.adult === true ? "+18" : "+13"}</span>

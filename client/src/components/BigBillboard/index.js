@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { getTVShowInformation, getRandomTVShow, getMovieInformation, getRandomMovie, IMAGE_BASE } from "../../api"
+import { getTVShowInformation, getRandomTVShow, getMovieInformation, getRandomMovie } from "../../api"
 import PlayerContext from "../Player/context"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
@@ -41,7 +41,7 @@ function BigBillboard() {
         <div className="billboard-content-limits">
             <div className="billboard-base">
                 <div className="billboard-image-wrapper">
-                    <img src={movie && `${IMAGE_BASE}original/${movie.backdrop_path}`} alt={"hero"} />
+                    <img src={movie && `${process.env.REACT_APP_IMAGE_BASE}original/${movie.backdrop_path}`} alt={"hero"} />
 
                     <div className="billboard-vignette"></div>
                     <div className="billboard-vignette-bottom"></div>

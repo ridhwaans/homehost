@@ -154,8 +154,8 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
 
     const selectSlide = async (type, id) => {
 
-        console.log(`type is ${type}`)
-        console.log(`id is ${id}`)
+        //console.log(`type is ${type}`)
+        //console.log(`id is ${id}`)
         const selected = await content.filter(item => item.id === id)[0]
         setCurrentSlide(selected)
         let details

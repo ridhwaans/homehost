@@ -20,7 +20,6 @@ const Player = () => {
   }
 
   useEffect(() => {
-
     {context.playerItem && openFullscreen()}
 
   }, [])
@@ -28,18 +27,25 @@ const Player = () => {
     //console.log(`context is ${JSON.stringify(context.playerItem)}`)
     var episode = null;
     if (context.playerItem && context.playerItem.data && context.playerItem.data.type == "TVShow") { 
-      console.log(`season_number is ${context.playerItem.season_number}`)
+      //console.log(`season_number is ${context.playerItem.season_number}`)
       episode = context.playerItem.data.seasons
       .find(season => season.season_number == context.playerItem.season_number).episodes
       .find(episode => episode.episode_number == context.playerItem.episode_number);
     }
-    
     var episodeList = [];
     if (episode != null) {
       context.playerItem.data.seasons
       .find(season => season.season_number == context.playerItem.season_number).episodes
       .map(episode => episodeList.push({id: episode.episode_number, nome: episode.name, playing: false}))
       episodeList.find(episode => episode.id == context.playerItem.episode_number).playing = true;
+    }
+    var nextEpisode = null;
+    if (episode != null) {
+      if (context.playerItem.episode_number == episodeList.length) {
+        nextEpisode = {}
+      } else {
+        nextEpisode = episodeList[context.playerItem.episode_number]
+      }
     }
 
     return (
@@ -53,7 +59,7 @@ const Player = () => {
             title={context.playerItem.type == "Movie" ? context.playerItem.title : context.playerItem.data.name}
             // episode name
             subTitle={context.playerItem.type == "Movie" ? "" : `S${context.playerItem.season_number}E${context.playerItem.episode_number} ${episode.name}`}
-            // player bar
+            // Player bar
             // movie or show name
             titleMedia={context.playerItem.type == "Movie" ? context.playerItem.title : context.playerItem.data.name}
             // episode name
@@ -65,7 +71,7 @@ const Player = () => {
             autoPlay
             startPosition={0}
             // The info of the next video action
-            dataNext={context.playerItem.type == "Movie" ? {} : {title: episodeList[context.playerItem.episode_number].nome }}
+            dataNext={context.playerItem.type == "Movie" ? {} : {title: nextEpisode.nome} }
             // The action call when the next video is clicked
             onNextClick={() => {}}
             // The list reproduction data, will be render in this order

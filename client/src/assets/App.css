@@ -1519,6 +1519,77 @@ background-position: 50% -50%;
   font-size:13px;
 }
 
+/* EPISODES  */
+
+.menu-episodes {
+  position: relative;
+  padding: 3%;
+  height: 85%;
+
+}
+
+.menu-episode-content {
+  display:flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  height:85%;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.menu-episode-content .episode-item {
+  margin-right: 2vw;
+  align-self: baseline;
+  flex:1 0 25%;
+  overflow: hidden;
+  height: 100%;
+}
+
+.menu-episode-content .episode-item:last-child {
+  margin-right: 0;
+
+
+}
+
+.episode-item-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 75%;
+}
+
+.episode-item .episode-item-metada {
+  margin-bottom: 8px;
+  font-size: 1.1vw;
+  font-weight: bold;
+  
+}
+
+.episode-item-metada {
+  display: flex;
+  justify-content: space-between;
+}
+
+.episode-item-metada .release-date {
+  font-size: 0.9vw;
+  color: #999;
+}
+
+.episode-item .episode-item-synopsis {
+  color: #999;
+  font-size: 0.9vw;
+
+}
+
+.episode-item .episode-item-image {
+  margin-bottom: 8px;
+}
+
+.episode-item .episode-item-image img {
+  width: 100%;
+}
 
 /* SIMILAR  */
 
@@ -1923,4 +1994,50 @@ background-position: 50% -50%;
 
 .submenu ul li:hover  {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* MUSIC */
+
+.grid-cell-div {
+  display: inline-block;
+  margin: 0 0 0 0;
+}
+
+.grid-cell {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  display: inline-block;
+  position: relative;
+}
+
+.grid-cell-title, .grid-cell-subtitle {
+  font-family: 'Roboto Mono';
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1em;
+  height: 1em;
+  text-align: center;
+  margin: 0 0 0 0;
+}
+
+.grid-cell-subtitle {
+  color: gray;
+}
+
+.grid-detail-expansion {
+  width: 100%;
+  position: relative;
+}
+
+.grid-list {
+  list-style: none;
+  padding: 0;
+  display: inline-block;
+  width: 100%;
+}
+
+.grid-holder {
+  width: 100%;
+  background-color: #ffffff;
+  margin: 0;
+  text-align: center;
 }

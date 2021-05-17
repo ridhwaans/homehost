@@ -3,6 +3,7 @@ import { Route, Switch, BrowserRouter, useLocation } from "react-router-dom";
 import Player from "./Player"
 import Movies from "./Movies"
 import TVShows from "./TVShows"
+import Music from "./Music"
 import Header from "./Header"
 import Footer from "./Footer"
 
@@ -29,7 +30,7 @@ const Routes = () => {
         
     }
 
-    console.log(location.pathname);
+    //console.log(location.pathname);
     return (
         <div className="background-app">
             <SearchContext.Provider value={searchText}>
@@ -40,6 +41,7 @@ const Routes = () => {
                     <Switch>
                         <Route component={Movies} exact path="/movies" />
                         <Route component={TVShows} exact path="/tv" />
+                        <Route component={Music} exact path="/music" />
                     </Switch>
                 </BrowserRouter>
             </PlayerContext.Provider>
