@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #121212;
+}
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+:root {
+    --color-secondary: #b3b3b3;
+    --bg-color: #535353;
+    --fg-color: #b3b3b3;
+    --green-color: #1db954;
+}
+
+.App {
+    display: flex;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: "side-bar main-view" "playing-bar playing-bar";
+}
+.Error {
+    color: white;
+    text-align: center;
+    margin-top: 100px;
+}

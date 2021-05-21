@@ -6,7 +6,7 @@ import GridCell from "../GridCell"
 import Slider from "../Slider"
 import Search from '../Search';
 import SearchContext from "../Search/context"
-
+import MusicBody from '../MusicBody/MusicBody';
 
 function Music() {
     const [albums, setAlbums] = useState(null)
@@ -38,7 +38,7 @@ function Music() {
     const grid = () => {
         var grid = []
 
-        console.log(`album count is ${albums.length}`)
+        //console.log(`album count is ${albums.length}`)
         for (var i in albums) {
         var gridCell_id = 'grid_cell_' + i.toString()
         grid.push(<GridCell 
@@ -51,19 +51,17 @@ function Music() {
     }
 
     return (
+        <MusicBody />
+    );
 
+    return (
         <div className="grid-holder">
-
             {searchContext.searchInput.length > 0 ? (<Search />) : (
                 <div>
                     {albums && grid()}
                 </div>
-
         )}
-
         </div>
-
-
         );
 }
 

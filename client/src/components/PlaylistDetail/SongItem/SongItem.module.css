@@ -1,0 +1,111 @@
+.Item {
+    height: 54px;
+    display: grid;
+    grid-template-columns: [index] 16px [first] 6fr [var1] 4fr [var2] 3fr [last] minmax(120px, 1fr);
+    grid-gap: 16px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    color: #b3b3b3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.Item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.Item:hover .Index span {
+    display: none;
+}
+.Item:hover .Index button {
+    display: inline-block;
+}
+.Item div {
+    display: flex;
+    align-items: center;
+}
+.Index {
+    position: relative;
+    display: inline-block;
+}
+.Index span {
+    display: inline-block;
+    position: absolute;
+}
+.Index button {
+    position: absolute;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: #fff;
+    display: none;
+}
+.Title {
+    display: flex;
+    align-items: center;
+}
+.Title img {
+    height: 40px;
+    object-fit: cover;
+    margin-right: 16px;
+}
+.Title .NameContainer {
+    display: grid;
+    grid-template: "title title" "badges subtitle" / auto 1fr;
+    column-gap: 8px;
+    align-items: center;
+    height: 40px;
+}
+.Title .NameContainer span {
+    font-size: 14px;
+    font-weight: 400;
+}
+.Title .NameContainer .Name {
+    grid-area: title;
+    color: white;
+}
+.Title .NameContainer .Name span {
+    font-size: 16px;
+    font-weight: 400;
+}
+.Title .NameContainer .Explicit {
+    grid-area: badges;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #121212;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-size: 9px !important;
+    line-height: 10px;
+    min-width: 14px;
+    height: 16px;
+    padding: 0 2px;
+}
+.Title .NameContainer .Artist {
+    grid-area: subtitle;
+}
+.Title .NameContainer .Artist_sub {
+    grid-column-start: subtitle;
+}
+.Title .NameContainer .Artist_badge {
+    grid-column-start: badge;
+}
+.Length {
+    display: flex;
+    justify-self: end;
+}
+.Length .More {
+    background: transparent;
+    border: 0;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    opacity: 0;
+}
+.Disabled {
+    cursor: not-allowed !important;
+}

@@ -138,7 +138,7 @@ app.get('/api/tv/highest_rated', function(req, res) {
 });
 app.get('/api/tv/recently_added', function(req, res) {
   // new
-  const recently_added = tvData.tv.sort((a,b) => b.ctime - a.ctime).slice(0,25);
+  const recently_added = tvData.tv.sort((a,b) => b.mtime - a.mtime).slice(0,25);
   res.json(recently_added);
 });
 app.get('/api/tv/genres', function(req, res) {
@@ -163,6 +163,12 @@ app.get('/api/tv/random', function(req, res) {
 app.get('/api/tv/:id', function(req, res) {
   var tv = tvData.tv.find(tv => tv.id == parseInt(req.params.id));
   res.json(tv);
+});
+
+app.get('/api/music/recently_added', function(req, res) {
+  // new
+  const recently_added = musicData.music.sort((a,b) => b.mtime - a.mtime).slice(0,25);
+  res.json(recently_added);
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
@@ -228,14 +234,14 @@ app.get('/tv/:tv_id/:season_number/:episode_number', function(req, res) {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
       'Accept-Ranges': 'bytes',
       'Content-Length': chunksize,
-      'Content-Type': 'video/mkv',
+      'Content-Type': 'video/mp4',
     }
     res.writeHead(206, head);
     file.pipe(res);
   } else {
     const head = {
       'Content-Length': fileSize,
-      'Content-Type': 'video/mkv',
+      'Content-Type': 'video/mp4',
     }
     res.writeHead(200, head)
     fs.createReadStream(path).pipe(res)

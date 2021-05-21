@@ -31,7 +31,7 @@ const Episodes = ({ additionalMovieInfo }) => {
 
                     return (
                         <div className="episode-item" key={index}>
-                            <div className="episode-item-image"><img onClick={() => setPlayerItem({data: additionalMovieInfo, season_number: seasonNumber, episode_number: index+1})} src={`${process.env.REACT_APP_IMAGE_BASE}original/${episode.still_path}`} alt={"item"} /></div>
+                            <div className="episode-item-image"><img onClick={() => setPlayerItem({data: additionalMovieInfo, season_number: seasonNumber, episode_number: index+1})} src={`${process.env.REACT_APP_IMAGE_BASE}w500_and_h282_face/${episode.still_path}`} alt={"item"} /></div>
                             <div className="episode-item-metada">
                                 <span className="episode-item-title">{episode.name}</span><br />
                                 <span className="release-date">{episode.air_date}</span>

@@ -11,6 +11,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "fast-average-color": "^6.4.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-netflix-player": "^1.1.2",

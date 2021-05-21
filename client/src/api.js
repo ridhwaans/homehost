@@ -144,3 +144,31 @@ export async function getAllAlbums() {
 
         })
 }
+
+export async function getAlbumInformation(id) {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/albums/${id}`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getMusicBy(type) {
+
+    let discover = null
+
+    switch (type) {
+        case "recently_added":
+            discover = `${process.env.REACT_APP_HOMEHOST_API}/music/recently_added`
+            break;
+        default:
+
+    }
+
+    return await axios.get(discover)
+        .then(function (response) {
+            return response.data
+
+        })
+}

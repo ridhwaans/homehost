@@ -1,0 +1,38 @@
+.SideBar {
+    grid-area: side-bar;
+    background-color: #000;
+    color: white;
+   /* width: 17vw; */
+    position: relative;
+}
+.SideBar .Logo {
+    padding: 24px 24px 0 24px;
+    max-width: 130px;
+    flex: 1;
+}
+.SideBar .Title {
+    margin: 24px 0 24px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #b3b3b3;
+}
+.SideBar .Separator {
+    margin: 8px 24px 8px 24px;
+    background-color: #282828;
+    border: none;
+    height: 1px;
+    min-height: 1px;
+}
+.SideBar .ListContainer {
+    height: auto;
+}
+.SideBar .ListContainer .List {
+    list-style: none;
+    padding: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+    max-height: 600px;
+}
