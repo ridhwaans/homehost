@@ -1,4 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
+
+import { Provider } from "react-redux";
+import { createStore, compose, combineReducers } from "redux";
+import playlistReducer from "../../store/reducers/playlists";
+import playingReducer from "../../store/reducers/playing";
+
 import { getAllAlbums } from "../../api"
 import BigBillboard from "../BigBillboard"
 import MediumBillboard from "../MediumBillboard"
@@ -37,7 +43,6 @@ function Music() {
 
     const grid = () => {
         var grid = []
-
         //console.log(`album count is ${albums.length}`)
         for (var i in albums) {
         var gridCell_id = 'grid_cell_' + i.toString()
@@ -50,8 +55,17 @@ function Music() {
         return grid;
     }
 
+    const reducers = combineReducers({
+        playlists: playlistReducer,
+        playing: playingReducer,
+      });
+      
+    const store = createStore(reducers);
+
     return (
-        <MusicBody />
+        <Provider store={store}>
+            <MusicBody />
+        </Provider>
     );
 
     return (

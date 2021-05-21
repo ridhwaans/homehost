@@ -4,6 +4,7 @@
     color: white;
    /* width: 17vw; */
     position: relative;
+    width: calc(var(--nav-bar-width) + 9px);
 }
 .SideBar .Logo {
     padding: 24px 24px 0 24px;

@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import React from "react"
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import ListItem from "./ListItem/ListItem"
 import SidebarOption from "./SidebarOption/SidebarOption"
 import style from "./SideBar.module.css"
@@ -38,9 +39,9 @@ const SideBar = ({ playlists }) => {
       </div>
     );
 };
-var mapStateToProps = function (state) {
-    return {
-        playlists: state.playlists.playlists
-    };
+
+const mapStateToProps = (state) => {
+    return { playlists: state.playlists.playlists, };
 };
-export default SideBar;
+
+export default connect(mapStateToProps)(SideBar);

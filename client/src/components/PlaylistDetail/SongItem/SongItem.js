@@ -31,7 +31,7 @@ export const SongItem = ({
           </div>
 
           <div className={styles.Title}>
-            <img src={"http://i.imgur.com/bVnx0IY.png"} alt="cover img" />
+            
             <div className={styles.NameContainer}>
               <div
                 className={styles.Name}

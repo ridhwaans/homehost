@@ -15,8 +15,11 @@
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-netflix-player": "^1.1.2",
+    "react-redux": "^7.2.4",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.0"
+    "react-scripts": "3.4.0",
+    "react-sound": "^1.2.0",
+    "redux": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

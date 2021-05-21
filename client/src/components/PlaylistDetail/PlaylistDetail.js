@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import FastAverageColor from "fast-average-color";
+import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
+
 import { getAlbumInformation } from "../../api"
-import style from "./PlaylistDetail.module.css";
 import { SongItem } from "./SongItem/SongItem";
+import FastAverageColor from "fast-average-color";
+import style from "./PlaylistDetail.module.css";
 import Time from "../../assets/Time";
 
 const PlaylistDetail = ({ loadSong, currentSong }) => {
@@ -39,7 +41,7 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
     };
   
     const songClicked = (song) => {
-      if (song.track.preview_url) {
+      if (song.url_path) {
         loadSong(song);
       }
     };
@@ -96,7 +98,7 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
                   song={item}
                   artists={playlist.artists}
                   index={index}
-                  current={true}
+                  current={item.id === currentSong.id ? true : false}
                   songClicked={() => songClicked(item)}
                 />
               ))}
@@ -107,4 +109,17 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
     );
   };
   
-  export default PlaylistDetail;
+  const mapStateToProps = (state) => {
+    console.log(`state is ${JSON.stringify(state.playing)}`);
+    return {
+      currentSong: state.playing.song,
+    };
+  };
+  
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      loadSong: (song) => dispatch({ type: "load", song }),
+    };
+  };
+
+  export default connect(mapStateToProps, mapDispatchToProps)(PlaylistDetail);
