@@ -42,6 +42,8 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
   
     const songClicked = (song) => {
       if (song.url_path) {
+        song.album_image_url = playlist.images[0].url
+        song.artists = playlist.artists
         loadSong(song);
       }
     };
@@ -98,7 +100,7 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
                   song={item}
                   artists={playlist.artists}
                   index={index}
-                  current={item.id === currentSong.id ? true : false}
+                  current={item.id === currentSong && currentSong.id ? true : false}
                   songClicked={() => songClicked(item)}
                 />
               ))}
@@ -110,7 +112,7 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
   };
   
   const mapStateToProps = (state) => {
-    console.log(`state is ${JSON.stringify(state.playing)}`);
+    //console.log(`state is ${JSON.stringify(state.playing)}`);
     return {
       currentSong: state.playing.song,
     };

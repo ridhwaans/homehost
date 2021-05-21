@@ -17,7 +17,7 @@ export const SongItem = ({
         <div
           className={[
             styles.Item,
-            song.preview_url ? styles.Enabled : styles.Disabled,
+            (song.fs_path || song.preview_url) ? styles.Enabled : styles.Disabled,
           ].join(" ")}
           onClick={songClicked}
         >

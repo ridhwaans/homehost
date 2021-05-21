@@ -43,16 +43,17 @@ const AudioPlayer = ({ playPause, song, playing }) => {
   if (!song) {
     return null;
   } else {
+    console.log("player render time")
     return (
       <div className={styles.Player}>
         <footer>
           <div className={styles.Song}>
             <div className={styles.Img}>
-              <img src={song.track.album.images[0].url} alt="song" />
+              <img src={song.album_image_url} alt="song" />
             </div>
             <div className={styles.Infos}>
-              <div className={styles.Name}>{song.track.name}</div>
-              <div className={styles.Artist}>{song.track.artists[0].name}</div>
+              <div className={styles.Name}>{song.name}</div>
+              <div className={styles.Artist}>{song.artists[0].name}</div>
             </div>
             <div className={styles.Like}>
               <Like />
@@ -107,9 +108,9 @@ const AudioPlayer = ({ playPause, song, playing }) => {
             </div>
           </div>
         </footer>
-        {song.track.preview_url && (
+        { song.preview_url && (
           <Sound
-            url={song.track.preview_url}
+            url={song.preview_url}
             playStatus={playing ? "PLAYING" : "PAUSED"}
             //@ts-ignore
             onPlaying={({ position }) => {

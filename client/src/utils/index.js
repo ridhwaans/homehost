@@ -16,7 +16,7 @@ const months = [
   ];
   
   export const formatDate = (dateString) => {
-    console.log(dateString);
+    //console.log(dateString);
     const arr = dateString.split("-");
   
     const year = arr[0];
