@@ -319,7 +319,7 @@ var generateMovieMetaData = function() {
     });
   })
   .then(function(movies){
-    fs.writeFile('./movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
+    fs.writeFile('./data/movies.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
       if(err) console.log(err)
       else console.log('[MOVIES] File saved');
       resolve(json);
@@ -377,11 +377,25 @@ const generateTVMetaData = async () => {
     json.tv.push(show);
   });
 
-  fs.writeFile('./tv.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
+  fs.writeFile('./data/tv.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
     if(err) console.log(err)
     else console.log('[TV] File saved');
   })
 };
+
+const findTotalDurationMillis = (items) => {
+  const sum = (acc, item) => {
+    let add = 0;
+    if ('preview_url' in item){
+      add = 30;
+    }
+    if ('url_path' in item){
+      add = item.duration_ms;
+    }
+    return acc + add;
+  }
+  return items.reduce( (acc, item) => sum(acc,item), 0)
+}
 
 var generateMusicMetaData = function() {
   return new Promise(function(resolve, reject) {
@@ -433,6 +447,8 @@ var generateMusicMetaData = function() {
           album.tracks.items.push(item)
         });
 
+        album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
+        album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
         json.music.push(album);
         return true; // go next
       } 
@@ -464,6 +480,9 @@ var generateMusicMetaData = function() {
               }
             });
           });
+
+          album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
+          album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
           json.music.push(album);
         });
       } catch(e) {
@@ -471,7 +490,7 @@ var generateMusicMetaData = function() {
       }
     }) // end of .mapSeries()
     .then(function(music){
-      fs.writeFile('./music.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
+      fs.writeFile('./data/music.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
         if(err) console.log(err)
         else console.log('[MUSIC] File saved');
         resolve(json);

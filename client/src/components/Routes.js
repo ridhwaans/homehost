@@ -18,25 +18,12 @@ const Routes = () => {
     const location = useLocation()
     const [playerItem, setPlayerItem] = useState(null)
 
-    const openFullscreen = () => {
-        var elem = document.getElementById("player");
-        if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-        elem.msRequestFullscreen();
-        }
-        
-    }
-
-    //console.log(location.pathname);
     return (
         <div className="background-app">
             <SearchContext.Provider value={searchText}>
             <PlayerContext.Provider value={{ playerItem, setPlayerItem }}>
                 <Player />
-                <Header />
+                {location.pathname != "/music" && <Header />} 
                 <BrowserRouter basename={process.env.PUBLIC_URL}>
                     <Switch>
                         <Route component={Movies} exact path="/movies" />

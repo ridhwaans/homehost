@@ -52,7 +52,7 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
         loadSong(song);
       }
     };
-
+    //playlist && playlist.tracks && playlist.tracks.items && console.log(playlist.tracks.total_duration_ms)
     return (
       <React.Fragment>
         {playlist && playlist.tracks && playlist.tracks.items && (
@@ -79,8 +79,8 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
                   </span>
                   <span className={style.Text_Light}>
                     {
-                    `${playlist.tracks.items.filter(item => 'url_path' in item).length} local tracks out of ${playlist.tracks.items.length} songs, 
-                    about ${millisToEnglishWords(playlist.tracks.items.reduce( (acc, obj) => { return acc + obj.duration_ms; }, 0))}`
+                    `${playlist.tracks.local_total} local tracks out of ${playlist.total_tracks} songs, 
+                    about ${millisToEnglishWords(playlist.tracks.total_duration_ms)}`
                     }
                   </span>
                 </div>
