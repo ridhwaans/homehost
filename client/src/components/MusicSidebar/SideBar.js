@@ -16,17 +16,44 @@ const SideBar = ({ playlists }) => {
             </div>
         </Link>
 
-        <SidebarOption Icon={faHome} option="Home" />
-        <SidebarOption Icon={faSearch} option="Search" />
-        <SidebarOption Icon={faMusic} option="Music" />
-        <SidebarOption Icon={faFilm} option="Movies" />
-        <SidebarOption Icon={faTv} option="TV Shows" />
-        <SidebarOption Icon={faPodcast} option="Podcasts" />
-        <SidebarOption Icon={faBook} option="Books" />
-        <SidebarOption Icon={faBook} option="Comics" />
-        <SidebarOption Icon={faFolderPlus} option="Recently Added" />
-        <SidebarOption Icon={faList} option="My List" />
+        <a style={{ textDecoration: "none", color: "white" }} href="/">
+            <SidebarOption Icon={faHome} option="Home"/>
+        </a>
 
+        <SidebarOption Icon={faSearch} option="Search" />
+
+        <Link style={{ textDecoration: "none", color: "white" }} to="/music">
+            <SidebarOption Icon={faMusic} option="Music" />
+        </Link>
+
+        <a style={{ textDecoration: "none", color: "white" }} href="/movies">
+            <SidebarOption Icon={faFilm} option="Movies" />
+        </a>
+        
+        <a style={{ textDecoration: "none", color: "white" }} href="/tv">
+            <SidebarOption Icon={faTv} option="TV Shows" />
+        </a>
+        
+        <a style={{ textDecoration: "none", color: "white" }} href="/podcasts">
+            <SidebarOption Icon={faPodcast} option="Podcasts" />
+        </a>
+        
+        <a style={{ textDecoration: "none", color: "white" }} href="/books">
+            <SidebarOption Icon={faBook} option="Books" />
+        </a>
+        
+        <a style={{ textDecoration: "none", color: "white" }} href="/comics">
+            <SidebarOption Icon={faBook} option="Comics" />
+        </a>
+        
+        <a style={{ textDecoration: "none", color: "white" }} href="/recently_added">
+            <SidebarOption Icon={faFolderPlus} option="Recently Added" />
+        </a>
+        
+        <a style={{ textDecoration: "none", color: "white" }} href="/my_list">
+            <SidebarOption Icon={faList} option="My List" />
+        </a>
+        
         <h1 className={style.Title}>Playlists</h1>
 
         <hr className={style.Separator} />

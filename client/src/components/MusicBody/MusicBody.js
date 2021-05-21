@@ -13,6 +13,7 @@ const MusicBody = ({ playlists, initPlaylists }) => {
   const [albums, setAlbums] = useState(null);
   
   const loadPlaylists = useCallback(async () => {
+    //getMusicBy("recently_added"), getAllAlbums()
     await getAllAlbums().then((data) => {
       //setAlbums(data);
       initPlaylists(data);
@@ -24,21 +25,23 @@ const MusicBody = ({ playlists, initPlaylists }) => {
   });
 
   return (
-    <div className={style.App}>
-      <Router>
-        {playlists && <SideBar />}
+    <React.Fragment>
+      <div className={style.App}>
+        <Router>
+          {playlists && <SideBar />}
 
-      <Route path="/music" exact>
-        {playlists && <Playlists />}
-      </Route>
-      
-      <Route path="/music/playlist/:id">
-        <PlaylistDetail />
-      </Route>
+        <Route path="/music" exact>
+          {playlists && <Playlists />}
+        </Route>
+        
+        <Route path="/music/playlist/:id">
+          <PlaylistDetail />
+        </Route>
 
+        </Router>
+      </div>
       <AudioPlayer />
-      </Router>
-    </div>
+    </React.Fragment>
   );
 };
 

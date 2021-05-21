@@ -23,7 +23,8 @@ const AudioPlayer = ({ playPause, song, playing }) => {
 
   useEffect(() => {
     // Adjust time when progress bar is clicked
-    setTime((progress * 30000) / 100);
+    song && setTime((progress * song.duration_ms ) / 100);
+    // change 30000 to song.duration_ms
   }, [progress]);
 
   useEffect(() => {
@@ -43,9 +44,10 @@ const AudioPlayer = ({ playPause, song, playing }) => {
   if (!song) {
     return null;
   } else {
-    console.log("player render time")
-    return (
-      <div className={styles.Player}>
+    //console.log(`song.preview_url: ${song.preview_url}`)
+    //console.log(`song.url_path: ${song.url_path}`)
+    return (    
+        <div className={styles.Player}>
         <footer>
           <div className={styles.Song}>
             <div className={styles.Img}>
@@ -81,7 +83,7 @@ const AudioPlayer = ({ playPause, song, playing }) => {
                 </div>
                 <button style={{ left: `${progress}%` }} />
               </div>
-              <div>0:30</div>
+              <div>{millisToMinutesAndSeconds(song.duration_ms)}</div>
             </div>
           </div>
 
@@ -108,14 +110,13 @@ const AudioPlayer = ({ playPause, song, playing }) => {
             </div>
           </div>
         </footer>
-        { song.preview_url && (
+        { song.url_path && (
           <Sound
-            url={song.preview_url}
+            url={song.url_path}
             playStatus={playing ? "PLAYING" : "PAUSED"}
-            //@ts-ignore
             onPlaying={({ position }) => {
               setTime(position);
-              setProgress((position * 100) / 30000);
+              setProgress((position * 100) / song.duration_ms);
             }}
             onFinishedPlaying={() => playPause()}
             volume={mute ? 0 : volume}

@@ -5,6 +5,9 @@
     height: 90px;
     color: white;
     display: flex;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
 }
 .Player footer {
     border-top: 1px solid #282828;

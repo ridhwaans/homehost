@@ -46,7 +46,7 @@ const Routes = () => {
                 </BrowserRouter>
             </PlayerContext.Provider>
             </SearchContext.Provider>
-            <Footer />
+            {/* <Footer /> */}
         </div>
     )
 }

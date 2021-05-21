@@ -49,3 +49,17 @@ const months = [
       callback(percent);
     }
   };
+
+  export const millisToEnglishWords = (ms) => {
+    var d, h, m, s;
+    s = Math.floor(ms / 1000);
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
+    let res = { days: d, hours: h, min: m, sec: s }
+    res = Object.entries(res).filter(piece => piece[1] != 0).map(piece => `${piece[1]} ${piece[0]}`).toString();
+    return res;
+  };

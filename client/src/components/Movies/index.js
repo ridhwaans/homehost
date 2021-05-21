@@ -6,6 +6,7 @@ import Slider from "../Slider"
 import Search from '../Search';
 import SearchContext from "../Search/context"
 
+import '../../assets/App.css';
 
 function Movies() {
 

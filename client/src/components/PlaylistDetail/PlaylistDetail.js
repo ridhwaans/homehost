@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 
+import { millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
 import { SongItem } from "./SongItem/SongItem";
 import FastAverageColor from "fast-average-color";
@@ -24,22 +25,26 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
         fac
           .getColorAsync(coverRef.current)
           .then((color) => {
-            document.getElementById('Background').style.backgroundColor = color.rgb;
-            document.getElementById('PlaylistBackground').style.backgroundColor = color.rgb;
-
+            if (document.getElementById('Background')){
+              document.getElementById('Background').style.backgroundColor = color.rgb;
+            }
+            if (document.getElementById('PlaylistBackground')){
+              document.getElementById('PlaylistBackground').style.backgroundColor = color.rgb;
+              //remove background: #141414; from html, body {}
+            }
           })
           .catch((err) => {
             console.log(err);
           });
       }
     }, [playlist]);
-  
+
     const loadPlaylistDetails = async (playlistId) => {
       await getAlbumInformation(playlistId).then((data) => {
         setPlaylist(data);
       });
     };
-  
+
     const songClicked = (song) => {
       if (song.url_path) {
         song.album_image_url = playlist.images[0].url
@@ -47,8 +52,7 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
         loadSong(song);
       }
     };
-    
-    //console.log(`playlist tracks are ${JSON.stringify(playlist.tracks)}`)
+
     return (
       <React.Fragment>
         {playlist && playlist.tracks && playlist.tracks.items && (
@@ -74,7 +78,10 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
                     {playlist.artists[0].name}
                   </span>
                   <span className={style.Text_Light}>
-                    {playlist.tracks.items.length} songs, about 4 hr 20 min
+                    {
+                    `${playlist.tracks.items.filter(item => 'url_path' in item).length} local tracks out of ${playlist.tracks.items.length} songs, 
+                    about ${millisToEnglishWords(playlist.tracks.items.reduce( (acc, obj) => { return acc + obj.duration_ms; }, 0))}`
+                    }
                   </span>
                 </div>
               </div>
@@ -93,14 +100,14 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
                   </div>
                 </div>
               </div>
-  
+
               {playlist.tracks.items.map((item, index) => (
                 <SongItem
                   key={item.id}
                   song={item}
                   artists={playlist.artists}
                   index={index}
-                  current={item.id === currentSong && currentSong.id ? true : false}
+                  current={currentSong && item.id === currentSong.id ? true : false}
                   songClicked={() => songClicked(item)}
                 />
               ))}

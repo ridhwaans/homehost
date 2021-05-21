@@ -1,5 +1,6 @@
 import React from "react";
 import Play from "../../../assets/Play";
+import Pause from "../../../assets/Pause";
 import { formatDate, millisToMinutesAndSeconds } from "../../../utils";
 import styles from "./SongItem.module.css";
 
@@ -26,7 +27,7 @@ export const SongItem = ({
               {index + 1}
             </span>
             <button>
-              <Play />
+              {current ? <Pause/> : <Play/>} 
             </button>
           </div>
 
