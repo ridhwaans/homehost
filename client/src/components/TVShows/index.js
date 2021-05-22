@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { getTVShowsBy, getTVShowsByGenre } from "../../api"
+import Player from "../Player"
+import Header from "../Header"
 import BigBillboard from "../BigBillboard"
 import MediumBillboard from "../MediumBillboard"
 import Slider from "../Slider"
@@ -55,26 +57,24 @@ function TVShows() {
 
     return (
 
-        <div>
+        <div className="background-app">
+        <Player />
+        {searchContext.searchInput.length > 0 ? (<Search />) : (
+            <React.Fragment>
+                <Header />
+                <BigBillboard />
 
-            {searchContext.searchInput.length > 0 ? (<Search />) : (
-                <div>
+                {recentlyAddedTVShows && <Slider mainTitle={"Recently Added"} data={recentlyAddedTVShows} poster={false} />}
 
-                    <BigBillboard />
+                {popularTVShows && <Slider mainTitle={"Most Popular"} data={popularTVShows} poster={true} />}
 
-                    {recentlyAddedTVShows && <Slider mainTitle={"Recently Added"} data={recentlyAddedTVShows} poster={false} />}
+                {animationTVShows && <Slider mainTitle={"Animation"} data={animationTVShows} poster={false} />}
 
-                    {popularTVShows && <Slider mainTitle={"Most Popular"} data={popularTVShows} poster={true} />}
+                {highestRatedTVShows && <Slider mainTitle={"Highest Rated"} data={highestRatedTVShows} poster={true} />}
 
-                    {animationTVShows && <Slider mainTitle={"Animation"} data={animationTVShows} poster={false} />}
-
-                    {highestRatedTVShows && <Slider mainTitle={"Highest Rated"} data={highestRatedTVShows} poster={true} />}
-
-                </div>
-            )}
-
+            </React.Fragment>
+        )}
         </div>
-
 
     );
 }

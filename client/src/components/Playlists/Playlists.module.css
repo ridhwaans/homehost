@@ -1,12 +1,9 @@
 .Playlists {
-    grid-area: main-view;
     color: white;
-    display: flex;
-    flex-direction: column;
-    width: auto;
+    width: 100%;
     position: relative;
     padding-left: 32px;
-    overflow-y: scroll;
+    grid-area: Body;
 }
 .Playlists .Title {
     font-size: 24px;
@@ -19,6 +16,6 @@
     display: grid;
     gap: 24px;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     padding-right: 32px;
 }

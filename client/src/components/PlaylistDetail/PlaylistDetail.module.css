@@ -1,8 +1,8 @@
 .PlaylistDetail {
-    flex: 1;
-    overflow-y: scroll;
+    color: white;
+    width: 100%;
     position: relative;
-    scroll-behavior: smooth;
+    grid-area: Body;
 }
 .Cover {
     display: flex;

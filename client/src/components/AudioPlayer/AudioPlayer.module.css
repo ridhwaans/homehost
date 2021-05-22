@@ -1,5 +1,5 @@
 .Player {
-    grid-area: playing-bar;
+    grid-area: Player;
     background-color: #181818;
     z-index: 4;
     height: 90px;

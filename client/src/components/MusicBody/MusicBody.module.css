@@ -17,12 +17,14 @@ code {
 }
 
 .App {
-    display: flex;
-    height: 100vh;
     display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: "side-bar main-view" "playing-bar playing-bar";
+    grid-template-columns: calc(var(--nav-bar-width) + 9px) 1fr;
+    grid-template-rows: 60px 1fr 90px;
+    gap: 0px 0px;
+    grid-template-areas:
+        "Sidebar Header"
+        "Sidebar Body"
+        "Player Player";
 }
 .Error {
     color: white;

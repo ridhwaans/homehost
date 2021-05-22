@@ -1,10 +1,9 @@
 .SideBar {
-    grid-area: side-bar;
     background-color: #000;
     color: white;
-   /* width: 17vw; */
-    position: relative;
+    position: fixed;
     width: calc(var(--nav-bar-width) + 9px);
+    grid-area: Sidebar;
 }
 .SideBar .Logo {
     padding: 24px 24px 0 24px;
@@ -28,12 +27,12 @@
     min-height: 1px;
 }
 .SideBar .ListContainer {
-    height: auto;
+    max-height: 400px;
 }
 .SideBar .ListContainer .List {
     list-style: none;
     padding: 0;
     overflow: scroll;
     overflow-x: hidden;
-    max-height: 600px;
+    max-height: inherit;
 }

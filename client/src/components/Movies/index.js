@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { getMoviesBy, getMoviesByGenre } from "../../api"
+import Player from "../Player"
+import Header from "../Header"
 import BigBillboard from "../BigBillboard"
 import MediumBillboard from "../MediumBillboard"
 import Slider from "../Slider"
@@ -55,26 +57,24 @@ function Movies() {
 
     return (
 
-        <div>
+        <div className="background-app">
+        <Player />
+        {searchContext.searchInput.length > 0 ? (<Search />) : (
+            <React.Fragment>
+                <Header />
+                <BigBillboard />
 
-            {searchContext.searchInput.length > 0 ? (<Search />) : (
-                <div>
+                {recentlyAddedMovies && <Slider mainTitle={"Recently Added"} data={recentlyAddedMovies} poster={false} />}
 
-                    <BigBillboard />
+                {popularMovies && <Slider mainTitle={"Most Popular"} data={popularMovies} poster={true} />}
 
-                    {recentlyAddedMovies && <Slider mainTitle={"Recently Added"} data={recentlyAddedMovies} poster={false} />}
+                {animationMovies && <Slider mainTitle={"Animation"} data={animationMovies} poster={false} />}
 
-                    {popularMovies && <Slider mainTitle={"Most Popular"} data={popularMovies} poster={true} />}
+                {highestRatedMovies && <Slider mainTitle={"Highest Rated"} data={highestRatedMovies} poster={true} />}
 
-                    {animationMovies && <Slider mainTitle={"Animation"} data={animationMovies} poster={false} />}
-
-                    {highestRatedMovies && <Slider mainTitle={"Highest Rated"} data={highestRatedMovies} poster={true} />}
-
-                </div>
-            )}
-
+            </React.Fragment>
+        )}
         </div>
-
 
     );
 }

@@ -5,6 +5,8 @@ import style from "./Playlists.module.css"
 
 const Playlists = ({playlists}) => {
     return (
+      <React.Fragment>
+      
       <div className={style.Playlists}>
         <h1 className={style.Title}>Playlists</h1>
 
@@ -12,6 +14,7 @@ const Playlists = ({playlists}) => {
           {playlists && playlists.map(item => { return <PlaylistItem key={item.id} playlist={item}/> }) }
         </div>
       </div>
+      </React.Fragment>
     );
 };
 

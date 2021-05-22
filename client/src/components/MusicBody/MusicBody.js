@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState }  from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import SideBar from "../MusicSidebar/SideBar";
+import MusicHeader from "../MusicHeader/MusicHeader"
+
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import style from "./MusicBody.module.css"
 
@@ -29,7 +31,7 @@ const MusicBody = ({ playlists, initPlaylists }) => {
       <div className={style.App}>
         <Router>
           {playlists && <SideBar />}
-
+          <MusicHeader account={{display_name: "Test User"}}/>
         <Route path="/music" exact>
           {playlists && <Playlists />}
         </Route>

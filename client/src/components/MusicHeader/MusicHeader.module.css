@@ -1,0 +1,43 @@
+.Header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    height: 60px;
+    padding: 16px;
+    transition: background-color .25s;
+    grid-area: Header;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #181818;
+  }
+  
+  .HeaderRight {
+    display: flex;
+    align-items: center;
+  }
+  
+  .HeaderLeft {
+    flex: 0.5;
+    display: flex;
+    background-color: white;
+    padding: 10px;
+    border-radius: 30px;
+    color: gray;
+    align-items: center;
+  }
+  
+  .HeaderLeft > input {
+    border: none;
+    outline: none;
+    width: 100%;
+  }
+  
+  .HeaderRight > h4 {
+    margin-left: 10px;
+  }
+
+  .Icon {
+    padding: 5px;
+    font-size: 1.3rem;
+  }
