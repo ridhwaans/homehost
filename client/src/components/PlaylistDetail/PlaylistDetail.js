@@ -112,6 +112,10 @@ const PlaylistDetail = ({ loadSong, currentSong }) => {
                 />
               ))}
             </div>
+            <div className={style.List_Footer}>
+              <p>© {parseInt(playlist.release_date)} {playlist.label} </p>
+              <p>℗ {parseInt(playlist.release_date)} {playlist.label} </p>
+            </div>
           </div>
         )}
       </React.Fragment>

@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 function SidebarOption({ Icon, option }) {
   return (
     <div className={style.sideBarOption}>
-      {Icon && <div><span className={style.SideBarOptionIcon}><FontAwesomeIcon icon={Icon} /></span></div>}
-      {Icon ? <h4>{option}</h4> : <p>{option}</p>}
+      {Icon && <span className={style.SideBarOptionIcon}><FontAwesomeIcon icon={Icon} /></span>}
+      {Icon && <p>{option}</p>}
     </div>
   );
 }

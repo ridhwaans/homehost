@@ -32,17 +32,17 @@ const MusicBody = ({ playlists, initPlaylists }) => {
         <Router>
           {playlists && <SideBar />}
           <MusicHeader account={{display_name: "Test User"}}/>
-        <Route path="/music" exact>
-          {playlists && <Playlists />}
-        </Route>
-        
-        <Route path="/music/playlist/:id">
-          <PlaylistDetail />
-        </Route>
-
+          <Route path="/music" exact>
+            {playlists && <Playlists />}
+          </Route>
+          
+          <Route path="/music/playlist/:id">
+            <PlaylistDetail />
+          </Route>
         </Router>
+        <AudioPlayer />
       </div>
-      <AudioPlayer />
+      
     </React.Fragment>
   );
 };
