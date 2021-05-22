@@ -4,11 +4,13 @@
     position: fixed;
     width: calc(var(--nav-bar-width) + 9px);
     grid-area: Sidebar;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 90px);
 }
 .SideBar .Logo {
     padding: 24px 24px 0 24px;
     max-width: 130px;
-    flex: 1;
 }
 .SideBar .Title {
     margin: 24px 0 24px 24px;
@@ -27,12 +29,10 @@
     min-height: 1px;
 }
 .SideBar .ListContainer {
-    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 .SideBar .ListContainer .List {
     list-style: none;
     padding: 0;
-    overflow: scroll;
-    overflow-x: hidden;
-    max-height: inherit;
 }
