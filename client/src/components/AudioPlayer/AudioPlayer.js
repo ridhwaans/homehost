@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import Sound from "react-sound";
 import { millisToMinutesAndSeconds, useBar } from "../../utils";
-import styles from "./AudioPlayer.module.css";
+import style from "./AudioPlayer.module.css";
 import Like from "../../assets/Like";
 import Play from "../../assets/Play";
 import Pause from "../../assets/Pause";
@@ -47,37 +47,37 @@ const AudioPlayer = ({ playPause, song, playing }) => {
     //console.log(`song.preview_url: ${song.preview_url}`)
     //console.log(`song.url_path: ${song.url_path}`)
     return (    
-        <div className={styles.Player}>
+        <div className={style.Player}>
         <footer>
-          <div className={styles.Song}>
-            <div className={styles.Img}>
+          <div className={style.Song}>
+            <div className={style.Img}>
               <img src={song.album_image_url} alt="song" />
             </div>
-            <div className={styles.Infos}>
-              <div className={styles.Name}>{song.name}</div>
-              <div className={styles.Artist}>{song.artists[0].name}</div>
+            <div className={style.Infos}>
+              <div className={style.Name}>{song.name}</div>
+              <div className={style.Artist}>{song.artists[0].name}</div>
             </div>
-            <div className={styles.Like}>
+            <div className={style.Like}>
               <Like />
             </div>
           </div>
 
-          <div className={styles.Controls}>
+          <div className={style.Controls}>
             <div>
               <button onClick={playPause}>
                 {playing ? <Pause /> : <Play />}
               </button>
             </div>
-            <div className={styles.BarContainer}>
+            <div className={style.BarContainer}>
               <div>{millisToMinutesAndSeconds(time)}</div>
               <div
-                className={styles.Wrapper}
+                className={style.Wrapper}
                 onClick={(event) => barCallBack(event, timeRef, setProgress)}
                 ref={timeRef}
               >
-                <div className={styles.Bar}>
+                <div className={style.Bar}>
                   <div
-                    className={styles.Progress}
+                    className={style.Progress}
                     style={{ transform: `translateX(-${100 - progress}%)` }}
                   />
                 </div>
@@ -87,20 +87,20 @@ const AudioPlayer = ({ playPause, song, playing }) => {
             </div>
           </div>
 
-          <div className={styles.Volume}>
+          <div className={style.Volume}>
             <div>
               <button onClick={() => setMute(!mute)}>
                 {mute ? <VolumeMuted /> : <Volume />}
               </button>
             </div>
             <div
-              className={styles.Wrapper}
+              className={style.Wrapper}
               onClick={(event) => barCallBack(event, volumeRef, setVolume)}
               ref={volumeRef}
             >
-              <div className={styles.Bar}>
+              <div className={style.Bar}>
                 <div
-                  className={styles.Progress}
+                  className={style.Progress}
                   style={{
                     transform: `translateX(-${mute ? "100" : 100 - volume}%)`,
                   }}

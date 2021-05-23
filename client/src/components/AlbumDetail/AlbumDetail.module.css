@@ -1,4 +1,4 @@
-.PlaylistDetail {
+.AlbumDetail {
     color: white;
     width: 100%;
     position: relative;
@@ -40,7 +40,7 @@
 .Cover .Infos {
     flex: 1;
 }
-.Cover .Infos .Playlist {
+.Cover .Infos .Album {
     font-weight: 600;
 }
 .Cover .Infos .Title h1 {

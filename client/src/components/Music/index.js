@@ -36,7 +36,7 @@ function Music() {
     }, [])
 
     const reducers = combineReducers({
-        playlists: playlistReducer,
+        albums: playlistReducer,
         playing: playingReducer,
       });
       

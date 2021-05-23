@@ -1,7 +1,7 @@
-.LinkPlaylist {
+.LinkAlbum {
     text-decoration: none;
 }
-.Playlist {
+.Album {
     background-color: #181818;
     padding: 16px;
     border-radius: 4px;
@@ -9,27 +9,27 @@
     transition: all 0.2s ease-in-out;
     text-decoration: none;
 }
-.Playlist:hover {
+.Album:hover {
     background-color: rgba(255, 255, 255, 0.1);
     cursor: pointer;
 }
-.Playlist:hover .PlayContainer {
+.Album:hover .PlayContainer {
     opacity: 1;
     transform: translateY(0);
 }
-.Playlist .imgContainer {
+.Album .imgContainer {
     position: relative;
     width: 100%;
     height: 200px;
     margin-bottom: 16px;
 }
-.Playlist .imgContainer img {
+.Album .imgContainer img {
     width: 100%;
     height: 100%;
     border-radius: 2px;
     object-fit: cover;
 }
-.Playlist .Name {
+.Album .Name {
     font-size: 16px;
     font-weight: 700;
     line-height: 24px;
@@ -37,7 +37,7 @@
     text-transform: none;
     color: #fff;
 }
-.Playlist .Artist {
+.Album .Artist {
     margin-top: 6px;
     color: #b3b3b3;
     font-size: 14px;
@@ -46,7 +46,7 @@
     letter-spacing: normal;
     text-transform: none;
 }
-.Playlist .PlayContainer {
+.Album .PlayContainer {
     position: absolute;
     right: 8px;
     bottom: 8px;
@@ -54,7 +54,7 @@
     transition: all 0.3s ease-in-out;
     transform: translateY(10px);
 }
-.Playlist .PlayContainer button {
+.Album .PlayContainer button {
     color: #fff;
     background-color: var(--green-color);
     border: 0;

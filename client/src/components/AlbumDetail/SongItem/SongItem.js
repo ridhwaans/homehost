@@ -2,7 +2,7 @@ import React from "react";
 import Play from "../../../assets/Play";
 import Pause from "../../../assets/Pause";
 import { formatDate, millisToMinutesAndSeconds } from "../../../utils";
-import styles from "./SongItem.module.css";
+import style from "./SongItem.module.css";
 
 
 export const SongItem = ({
@@ -17,12 +17,12 @@ export const SongItem = ({
       {song && (
         <div
           className={[
-            styles.Item,
-            (song.fs_path || song.preview_url) ? styles.Enabled : styles.Disabled,
+            style.Item,
+            (song.fs_path || song.preview_url) ? style.Enabled : style.Disabled,
           ].join(" ")}
           onClick={songClicked}
         >
-          <div className={styles.Index}>
+          <div className={style.Index}>
             <span style={current ? { color: "#1db954" } : { color: "white" }}>
               {index + 1}
             </span>
@@ -31,22 +31,22 @@ export const SongItem = ({
             </button>
           </div>
 
-          <div className={styles.Title}>
+          <div className={style.Title}>
             
-            <div className={styles.NameContainer}>
+            <div className={style.NameContainer}>
               <div
-                className={styles.Name}
+                className={style.Name}
                 style={current ? { color: "#1db954" } : { color: "white" }}
               >
                 <span>{song.name}</span>
               </div>
               {song.explicit && (
-                <span className={styles.Explicit}>e</span>
+                <span className={style.Explicit}>e</span>
               )}
               <span
                 className={[
-                  styles.Artist,
-                  song.explicit ? styles.Artist_sub : styles.Artist_badg,
+                  style.Artist,
+                  song.explicit ? style.Artist_sub : style.Artist_badg,
                 ].join(", ")}
               >
                 {artists[0].name}
@@ -55,9 +55,9 @@ export const SongItem = ({
           </div>
           <div></div>
           <div></div>
-          <div className={styles.Length}>
+          <div className={style.Length}>
             {millisToMinutesAndSeconds(song.duration_ms)}
-            <button className={styles.More}>...</button>
+            <button className={style.More}>...</button>
           </div>
         </div>
       )}

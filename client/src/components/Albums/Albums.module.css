@@ -1,18 +1,18 @@
-.Playlists {
+.Albums {
     color: white;
     width: 100%;
     position: relative;
     padding-left: 32px;
     grid-area: Body;
 }
-.Playlists .Title {
+.Albums .Title {
     font-size: 24px;
     font-weight: 700;
     line-height: 28px;
     letter-spacing: -0.04em;
     text-transform: none;
 }
-.Playlists .Container {
+.Albums .Container {
     display: grid;
     gap: 24px;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

@@ -2,11 +2,11 @@ import React, { Component }  from 'react';
 import { Link } from "react-router-dom";
 import style from "./ListItem.module.css"
 
-const ListItem = ({playlist}) => {
+const ListItem = ({album}) => {
     return (
-      <Link to={`/music/playlist/${playlist.id}`} className={style.ListItem}>
+      <Link to={`/music/album/${album.id}`} className={style.ListItem}>
         <li className={style.Item}>
-          <span className={style.Title}>{playlist.name}</span>
+          <span className={style.Title}>{album.name}</span>
         </li>
       </Link>
     );

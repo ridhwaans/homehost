@@ -1,12 +1,12 @@
 const playlistReducer = (
   state = {
-    playlists: [],
+    albums: [],
   },
   action
 ) => {
   switch (action.type) {
     case "init":
-      return { playlists: action.playlists };
+      return { albums: action.albums };
     default:
       return state;
   }

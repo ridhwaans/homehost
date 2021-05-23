@@ -19,11 +19,12 @@ code {
 .App {
     display: grid;
     grid-template-columns: var(--nav-bar-width) 1fr;
-    grid-template-rows: 60px 1fr;
+    grid-template-rows: 60px 1fr auto;
     gap: 0px 0px;
     grid-template-areas:
         "Sidebar Header"
-        "Sidebar Body";
+        "Sidebar Body"
+        "Player Player";
 }
 .Error {
     color: white;

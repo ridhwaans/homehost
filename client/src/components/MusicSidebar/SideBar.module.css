@@ -2,16 +2,24 @@
     background-color: #000;
     color: white;
     position: sticky;
+    top: 0;
     width: var(--nav-bar-width);
     grid-area: Sidebar;
     display: flex;
     flex-direction: column;
+    padding-top: 24px;
     height: calc(100vh - 90px);
 }
 .SideBar .Logo {
-    padding: 24px 24px 0 24px;
-    max-width: 130px;
+    margin-bottom: 18px;
+    padding-left: 24px;
+    padding-right: 48px;
 }
+
+.SideBar .Logo img {
+    width: 100%;
+}
+
 .SideBar .Title {
     margin: 24px 0 24px 24px;
     font-size: 12px;

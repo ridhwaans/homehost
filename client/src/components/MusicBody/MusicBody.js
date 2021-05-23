@@ -6,38 +6,36 @@ import MusicHeader from "../MusicHeader/MusicHeader"
 import AudioPlayer from "../AudioPlayer/AudioPlayer";
 import style from "./MusicBody.module.css"
 
-import Playlists from "../Playlists/Playlists";
-import PlaylistDetail from "../PlaylistDetail/PlaylistDetail";
+import Albums from "../Albums/Albums";
+import AlbumDetail from "../AlbumDetail/AlbumDetail";
 import { getMusicBy, getAllAlbums } from "../../api"
 import { connect } from "react-redux";
 
-const MusicBody = ({ playlists, initPlaylists }) => {
-  const [albums, setAlbums] = useState(null);
+const MusicBody = ({ albums, initAlbums }) => {
   
-  const loadPlaylists = useCallback(async () => {
+  const loadAlbums = useCallback(async () => {
     //getMusicBy("recently_added"), getAllAlbums()
     await getAllAlbums().then((data) => {
-      //setAlbums(data);
-      initPlaylists(data);
+      initAlbums(data);
     });
-  }, [initPlaylists]);
+  }, [initAlbums]);
 
   useEffect(() => {
-    loadPlaylists();
+    loadAlbums();
   });
 
   return (
     <React.Fragment>
       <div className={style.App}>
         <Router>
-          {playlists && <SideBar />}
+          {albums && <SideBar />}
           <MusicHeader account={{display_name: "Test User"}}/>
           <Route path="/music" exact>
-            {playlists && <Playlists />}
+            {albums && <Albums />}
           </Route>
           
-          <Route path="/music/playlist/:id">
-            <PlaylistDetail />
+          <Route path="/music/album/:id">
+            <AlbumDetail />
           </Route>
         </Router>
         <AudioPlayer />
@@ -49,13 +47,13 @@ const MusicBody = ({ playlists, initPlaylists }) => {
 
 const mapStateToProps = (state) => {
   return {
-    playlists: state.playlists,
+    albums: state.albums,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    initPlaylists: (data) => dispatch({ type: "init", playlists: data }),
+    initAlbums: (data) => dispatch({ type: "init", albums: data }),
   };
 };
 

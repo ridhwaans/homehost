@@ -4,15 +4,15 @@ import { connect } from "react-redux";
 import ListItem from "./ListItem/ListItem"
 import SidebarOption from "./SidebarOption/SidebarOption"
 import style from "./SideBar.module.css"
-import Logo from "../../assets/Logo"
+import HomehostLogo from "../../assets/homehost_logo_white_on_transparent.svg"
 import { faHome, faSearch, faMusic, faFilm, faTv, faPodcast, faBook, faFolderPlus, faList } from "@fortawesome/free-solid-svg-icons";
 
-const SideBar = ({ playlists }) => {
+const SideBar = ({ albums }) => {
     return (
       <div className={style.SideBar}>
         <Link style={{ textDecoration: "none", color: "white" }} to="/music">
             <div className={style.Logo}>
-                <Logo />
+                <img src={HomehostLogo}></img>
             </div>
         </Link>
 
@@ -54,13 +54,13 @@ const SideBar = ({ playlists }) => {
             <SidebarOption Icon={faList} option="My List" />
         </a>
         
-        <h1 className={style.Title}>Playlists</h1>
+        <h1 className={style.Title}>Albums</h1>
 
         <hr className={style.Separator} />
 
         <div className={style.ListContainer}>
             <ul className={style.List}>
-                {playlists && playlists.map(item => { return <ListItem playlist={item} key={item.id} /> }) }
+                {albums && albums.map(item => { return <ListItem album={item} key={item.id} /> }) }
             </ul>
         </div>
       </div>
@@ -68,7 +68,7 @@ const SideBar = ({ playlists }) => {
 };
 
 const mapStateToProps = (state) => {
-    return { playlists: state.playlists.playlists, };
+    return { albums: state.albums.albums, };
 };
 
 export default connect(mapStateToProps)(SideBar);
