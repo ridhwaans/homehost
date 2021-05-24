@@ -4,6 +4,7 @@ const express = require('express');
 const chokidar = require('chokidar');
 const app = express();
 const port = process.env.PORT || 5000;
+const log = console.log.bind(console);
 require('dotenv').config();
 
 var fs = require('fs');
@@ -21,7 +22,6 @@ var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, proc
   ignored: /(^|[\/\\])\../, // ignore dotfiles
   persistent: true
 });
-const log = console.log.bind(console);
 
 watcher.on('ready', function() {
   log('Initial scan complete. Ready for changes');
@@ -502,13 +502,7 @@ var generateMusicMetaData = function() {
   });
 };
 
-console.log(figlet.textSync('homehost', 
-  {
-    font: 'Larry 3D',
-    horizontalLayout: 'default',
-    verticalLayout: 'default'
-  }
-));
+console.log(figlet.textSync('homehost'));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);

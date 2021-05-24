@@ -1,12 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 
-*, *::after, *::before {
-  box-sizing: border-box;
- }
-
-
-
-html, body {
+.movies-html-and-body {
   font-size: 100%;
   scroll-behavior: smooth;
   position: relative;
@@ -19,15 +13,16 @@ html, body {
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
   font-size: 10px;
   line-height: 1.2;
-
-
 }
 
-main { 
+.movies-main {
   margin : 0;
-  padding: 0;;
+  padding: 0;
 }
 
+.movies *, .movies *::after, .movies *::after {
+  box-sizing: border-box;
+}
 
 /* Header */
 
@@ -1889,20 +1884,17 @@ background-position: 50% -50%;
 
 
 @media screen and (min-width: 0) and (max-width: 480px) and (max-aspect-ratio: 4/3) {
-  html,
-  body {
+  .movies-html-and-body {
     font-size: 1.5vw;
   }
 }
 @media screen and (min-width: 481px) and (max-width: 840px) and (max-aspect-ratio: 4/3) {
-  html,
-  body {
+  .movies-html-and-body {
     font-size: 1vw;
   }
 }
 @media screen and (min-width: 841px) and (max-width: 1280px) and (max-aspect-ratio: 4/3) {
-  html,
-  body {
+  .movies-html-and-body {
     font-size: 0.75vw;
   }
 }

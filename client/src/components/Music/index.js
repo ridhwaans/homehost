@@ -14,26 +14,6 @@ import SearchContext from "../Search/context"
 import MusicBody from '../MusicBody/MusicBody';
 
 function Music() {
-    const [albums, setAlbums] = useState(null)
-
-    const searchContext = useContext(SearchContext)
-
-    const fetchMusic = async () => {
-        let allAlbums = await getAllAlbums()
-
-        return { allAlbums }
-    }
-
-    useEffect(() => {
-        
-        fetchMusic().then(response => {
-            setAlbums(response.allAlbums)
-        })
-        return () => {
-            setAlbums(null)
-        }
-
-    }, [])
 
     const reducers = combineReducers({
         albums: playlistReducer,

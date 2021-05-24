@@ -36,6 +36,9 @@
     letter-spacing: normal;
     text-transform: none;
     color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .Album .Artist {
     margin-top: 6px;

@@ -8,7 +8,7 @@ import Slider from "../Slider"
 import Search from '../Search';
 import SearchContext from "../Search/context"
 
-import '../../assets/App.css';
+import '../../assets/Movies.css';
 
 function TVShows() {
 
@@ -30,6 +30,8 @@ function TVShows() {
     }
 
     useEffect(() => {
+        document.documentElement.className = "movies-html-and-body"; //<html>
+        document.body.className = "movies-html-and-body"; //<body>
 
         fetchTVShows().then(response => {
 
@@ -56,7 +58,7 @@ function TVShows() {
 
 
     return (
-
+        <div className="movies">
         <div className="background-app">
         <Player />
         {searchContext.searchInput.length > 0 ? (<Search />) : (
@@ -74,6 +76,7 @@ function TVShows() {
 
             </React.Fragment>
         )}
+        </div>
         </div>
 
     );

@@ -21,6 +21,8 @@ const MusicBody = ({ albums, initAlbums }) => {
   }, [initAlbums]);
 
   useEffect(() => {
+    document.documentElement.className = ""; //<head>
+    document.body.className = style.MusicBody; //<body>
     loadAlbums();
   });
 
@@ -32,8 +34,7 @@ const MusicBody = ({ albums, initAlbums }) => {
           <MusicHeader account={{display_name: "Test User"}}/>
           <Route path="/music" exact>
             {albums && <Albums />}
-          </Route>
-          
+          </Route>   
           <Route path="/music/album/:id">
             <AlbumDetail />
           </Route>

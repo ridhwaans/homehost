@@ -68,7 +68,7 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                 />
               </div>
               <div className={style.Infos}>
-                <div className={style.Album}>ALBUM</div>
+                <div className={style.Album}>{album.album_type.toUpperCase()}</div>
                 <div className={style.Title}>
                   <h1>{album.name}</h1>
                 </div>
@@ -78,9 +78,12 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                     {album.artists[0].name}
                   </span>
                   <span className={style.Text_Light}>
+                    {parseInt(album.release_date)}
+                  </span>
+                  <span className={style.Text_Light}>
                     {
                     `${album.tracks.local_total} local tracks out of ${album.total_tracks} songs, 
-                    about ${millisToEnglishWords(album.tracks.total_duration_ms)}`
+                    ${millisToEnglishWords(album.tracks.total_duration_ms)}`
                     }
                   </span>
                 </div>

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import ListItem from "./ListItem/ListItem"
 import SidebarOption from "./SidebarOption/SidebarOption"
 import style from "./SideBar.module.css"
-import HomehostLogo from "../../assets/homehost_logo_white_on_transparent.svg"
+import logo from "../../assets/homehost_logo_white_on_transparent.svg"
 import { faHome, faSearch, faMusic, faFilm, faTv, faPodcast, faBook, faFolderPlus, faList } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = ({ albums }) => {
@@ -12,7 +12,7 @@ const SideBar = ({ albums }) => {
       <div className={style.SideBar}>
         <Link style={{ textDecoration: "none", color: "white" }} to="/music">
             <div className={style.Logo}>
-                <img src={HomehostLogo}></img>
+                <img src={logo}></img>
             </div>
         </Link>
 
