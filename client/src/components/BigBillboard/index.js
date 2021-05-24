@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { getTVShowInformation, getRandomTVShow, getMovieInformation, getRandomMovie } from "../../api"
 import PlayerContext from "../Player/context"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

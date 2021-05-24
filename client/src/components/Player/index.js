@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import playerContext from "../Player/context"
 import ReactNetflixPlayer from "react-netflix-player";
 

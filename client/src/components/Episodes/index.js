@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import PlayerContext from "../Player/context"
 
 const Episodes = ({ additionalMovieInfo }) => {

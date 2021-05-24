@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState, useContext } from "react"
+import React, { useState, useContext } from "react"
 import PlayerContext from "../Player/context"
 import SliderContext from "../Slider/context"
 import Episodes from "../Episodes"
 import Similar from "../Similar"
 import Details from "../Details"
-
-import Player from "../Player"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'

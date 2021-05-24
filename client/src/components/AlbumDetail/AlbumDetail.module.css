@@ -1,6 +1,5 @@
 .AlbumDetail {
     color: white;
-    width: 100%;
     position: relative;
     grid-area: Body;
 }
@@ -100,7 +99,6 @@
 }
 
 .List_Footer {
-    width: 100%;
     height: auto;
     padding: 0 32px;
     margin-top: 16px;

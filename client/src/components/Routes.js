@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
-import { Route, Switch, BrowserRouter, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import Movies from "./Movies"
 import TVShows from "./TVShows"
 import Music from "./Music"
-import Header from "./Header"
-import Footer from "./Footer"
 
 import PlayerContext from "./Player/context"
 import SearchContext from "./Search/context"
@@ -14,7 +12,6 @@ import { useSearch } from "../hooks/useSearch"
 const Routes = () => {
 
     const searchText = useSearch()
-    const location = useLocation()
     const [playerItem, setPlayerItem] = useState(null)
 
     return (
