@@ -24,4 +24,10 @@ class Album {
      }
  }
 
-module.exports = { Movie, TVShow, TVEpisode, Album }
+ class Artist {
+    constructor({id = 0}) {
+        this.id = id; 
+     }
+ }
+
+module.exports = { Movie, TVShow, TVEpisode, Album, Artist }

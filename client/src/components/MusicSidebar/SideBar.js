@@ -12,7 +12,7 @@ const SideBar = ({ albums }) => {
       <div className={style.SideBar}>
         <Link style={{ textDecoration: "none", color: "white" }} to="/music">
             <div className={style.Logo}>
-                <img src={logo}></img>
+                <img src={logo} alt="Tokyo"></img>
             </div>
         </Link>
 

@@ -63,7 +63,7 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/api/about', (req, res) => {
-  let hello = {homehost: 'Hello, put env vars here'};
+  let hello = {homehost: 'hello world'};
   res.json(hello);
 });
 
@@ -173,7 +173,7 @@ app.get('/api/music/recently_added', function(req, res) {
 
 app.get('/api/music/artists', function(req, res) {
   const artists = [...new Map(musicData.music.map(music => music.artists).flat(Infinity).map(item => [item.id, item])).values()];
-
+  console.log(`artist count is ${artists.length}`)
   artists.sort(function(a, b){
     if(a.name < b.name) { return -1; }
     if(a.name > b.name) { return 1; }

@@ -1,7 +1,7 @@
 import React from "react";
 import Play from "../../../assets/Play";
 import Pause from "../../../assets/Pause";
-import { formatDate, millisToMinutesAndSeconds } from "../../../utils";
+import { millisToMinutesAndSeconds } from "../../../utils";
 import style from "./SongItem.module.css";
 
 

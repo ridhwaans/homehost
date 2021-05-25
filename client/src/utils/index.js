@@ -1,5 +1,3 @@
-import { MouseEvent } from 'react';
-
 const months = [
     "Jan",
     "Feb",
@@ -32,11 +30,7 @@ const months = [
     return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
 
-  export const useBar = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    elmRef: React.MutableRefObject<HTMLDivElement | null>,
-    callback: React.Dispatch<React.SetStateAction<number>>
-  ) => {
+  export const useBar = (event, elmRef, callback) => {
     if (elmRef.current) {
       const right = elmRef.current.getBoundingClientRect().right;
       const left = elmRef.current.getBoundingClientRect().left;

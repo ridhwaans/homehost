@@ -20,7 +20,7 @@ const Player = () => {
   }
 
   useEffect(() => {
-    {context.playerItem && openFullscreen()}
+    context.playerItem && openFullscreen()
 
   }, [])
 
