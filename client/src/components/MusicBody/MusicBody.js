@@ -12,7 +12,7 @@ import { getMusicBy, getAllAlbums } from "../../api"
 import { connect } from "react-redux";
 
 const MusicBody = ({ albums, initAlbums }) => {
-  
+
   const loadAlbums = useCallback(async () => {
     //getMusicBy("recently_added"), getAllAlbums()
     await getAllAlbums().then((data) => {

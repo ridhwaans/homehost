@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons'
 import logo from "../../assets/homehost_logo_white_on_transparent.svg"
 
-
 function Header() {
 
     const [pinHeader, setHeader] = useState(false)

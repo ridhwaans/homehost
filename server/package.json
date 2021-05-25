@@ -4,7 +4,7 @@
   "author": "ridhwaans",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=dev node server",
+    "dev": "NODE_ENV=dev nodemon server",
     "client-dev": "cd ../client && npm start",
     "start-dev": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client-dev\""
   },
@@ -15,11 +15,13 @@
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
     "figlet": "^1.5.0",
-    "ncu": "^0.2.1"
+    "qs": "^6.7.0",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "concurrently": "^6.1.0",
-    "npm-check-updates": "^11.5.11",
-    "yarn": "^1.22.10"
+    "ncu": "^0.2.1",
+    "nodemon": "^2.0.7",
+    "npm-check-updates": "^11.5.11"
   }
 }

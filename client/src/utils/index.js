@@ -60,6 +60,6 @@ const months = [
     d = Math.floor(h / 24);
     h = h % 24;
     let res = { days: d, hours: h, min: m, sec: s }
-    res = Object.entries(res).filter(piece => piece[1] != 0).map(piece => `${piece[1]} ${piece[0]}`).toString();
+    res = Object.entries(res).filter(piece => piece[1] != 0).map(piece => `${piece[1]} ${piece[0]}`).join(", ");
     return res;
   };

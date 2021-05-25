@@ -1,12 +1,15 @@
 const {Album, Movie, TVEpisode, TVShow} = require('../models');
 const axios = require('axios');
+const Cookies  = require('universal-cookie');
+const qs = require('qs');
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+const cookies = new Cookies();
 
 class Metadata {
     constructor () {}
 
-    get(item){
+    async get(item, delay=0){
         let request_url;
         if (item instanceof Movie){
             request_url = `https://${process.env.MOVIES_API}/movie/${item.id}?api_key=${process.env.MOVIES_KEY}&append_to_response=images,credits,similar`
@@ -15,11 +18,12 @@ class Metadata {
         } else if (item instanceof TVEpisode) {
             request_url = `https://${process.env.TV_API}/tv/${item.tv_id}/season/${item.season_number}/episode/${item.episode_number}?api_key=${process.env.TV_KEY}`
         } else if (item instanceof Album) {
-            request_url = `https://${process.env.MUSIC_API}/albums/${item.id}?access_token=${process.env.MUSIC_KEY}` // authorization header
+            const auth = await getAuth();
+            request_url = `https://${process.env.MUSIC_API}/albums/${item.id}?access_token=${auth}` // authorization header
         }
 
         console.log('url: ' + request_url); 
-        return wait(250).then(() => axios.get(request_url)
+        return wait(delay).then(() => axios.get(request_url)
             .then((response) => {
                 response.data.type = item.constructor.name;
                 return response.data;
@@ -28,5 +32,38 @@ class Metadata {
         
     }
 }
+
+async function getAuthorizationToken() {
+    return axios
+      .post(
+        "https://accounts.spotify.com/api/token",
+        qs.stringify({
+          grant_type: "client_credentials",
+          client_id: process.env.MUSIC_CLIENT_ID,
+          client_secret: process.env.MUSIC_CLIENT_SECRET,
+        }),
+        {
+            headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            },
+        }
+      )
+      .then(function (response) {
+        cookies.set("auth", response.data.access_token, {
+          maxAge: response.data.expires_in,
+        });
+    });
+}
+  
+const getAuth = async () => {
+    let auth = cookies.get("auth");
+
+    if (!auth) {
+        await getAuthorizationToken();
+        auth = cookies.get("auth");
+    }
+
+    return auth;
+};
 
 module.exports = Metadata;

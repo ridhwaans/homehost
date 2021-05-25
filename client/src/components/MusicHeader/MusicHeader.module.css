@@ -1,43 +1,63 @@
 .Header {
-    display: flex;
-    justify-content: space-between;
-    height: 44px;
-    padding: 16px;
-    transition: background-color .25s;
-    grid-area: Header;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    color: #fff;
-    background-color: #181818;
-  }
-  
-  .HeaderRight {
-    display: flex;
-    align-items: center;
-  }
-  
-  .HeaderLeft {
-    flex: 0.5;
-    display: flex;
-    background-color: white;
-    padding: 10px;
-    border-radius: 30px;
-    color: gray;
-    align-items: center;
-  }
-  
-  .HeaderLeft > input {
-    border: none;
-    outline: none;
-    width: 100%;
-  }
-  
-  .HeaderRight > h4 {
-    margin-left: 10px;
-  }
+  display: flex;
+  height: 44px;
+  padding: 16px;
+  transition: background-color .25s;
+  grid-area: Header;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  color: #fff;
+  background-color: #181818;
+  align-items: center;
+}
 
-  .Icon {
-    padding: 5px;
-    font-size: 1.3rem;
-  }
+.BackForward {
+  align-items: center;
+}
+
+.BackForward > button {
+  background-color: rgba(0,0,0,.7); /*grey;*/
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  margin-right: 16px;
+}
+
+
+.SearchBar {
+  flex: 0.5;
+  display: flex;
+  background-color: white;
+  border-radius: 30px;
+  color: gray;
+  align-items: center;
+}
+
+.SearchBar > input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.HeaderRight {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.HeaderRight > h4 {
+  margin-left: 10px;
+}
+
+.HeaderRight > img {
+  border-radius: 50%;
+}
+
+.Icon {
+  padding: 5px;
+  font-size: 1.3rem;
+}

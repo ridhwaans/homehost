@@ -82,7 +82,8 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   </span>
                   <span className={style.Text_Light}>
                     {
-                    `${album.tracks.local_total} local tracks out of ${album.total_tracks} songs, 
+                    album.name == "Unknown Album" ? `${album.tracks.local_total} local tracks`
+                    : `${album.tracks.local_total} local tracks out of ${album.total_tracks} songs, 
                     ${millisToEnglishWords(album.tracks.total_duration_ms)}`
                     }
                   </span>

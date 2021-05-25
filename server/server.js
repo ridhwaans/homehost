@@ -43,7 +43,7 @@ watcher
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV == 'prod'){
-  app.use(express.static(path.join(__dirname, 'client/public'))); //fix this
+  app.use(express.static(path.join(__dirname, '../client/public')));
 }
 
 app.use(function(req, res, next) {
@@ -169,6 +169,18 @@ app.get('/api/music/recently_added', function(req, res) {
   // new
   const recently_added = musicData.music.sort((a,b) => b.mtime - a.mtime).slice(0,25);
   res.json(recently_added);
+});
+
+app.get('/api/music/artists', function(req, res) {
+  const artists = [...new Map(musicData.music.map(music => music.artists).flat(Infinity).map(item => [item.id, item])).values()];
+
+  artists.sort(function(a, b){
+    if(a.name < b.name) { return -1; }
+    if(a.name > b.name) { return 1; }
+    return 0;
+  })
+
+  res.json(artists);
 });
 
 app.get('/api/music/albums/:id', function(req, res) {
@@ -372,7 +384,7 @@ const generateTVMetaData = async () => {
         return true; // skip the episode if there is a problem fetching metadata
       }
     });
-    // remove seasons with no episodes
+    // remove season(s) with no episode(s)
     show.seasons = show.seasons.filter(season => season.episodes.length > 0)
     json.tv.push(show);
   });
@@ -402,7 +414,7 @@ var generateMusicMetaData = function() {
 
   var re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
-      unknown_album = "UNKNOWN ALBUM";
+      unknown_album = "Unknown Album";
       json = { music: [] };
 
   console.log('Generating data for Music...')
@@ -415,18 +427,19 @@ var generateMusicMetaData = function() {
       console.log('GET: ' + album_dir);
       let track_files = [];
 
-      if (album_dir.toUpperCase().endsWith(unknown_album)){
+      if (album_dir.toUpperCase().endsWith(unknown_album.toUpperCase())){
         // build music album not on Spotify
         let album = {
-          id: 'unknown',
-          name: 'Unknown Album',
+          album_type: 'compilation',
           artists: [{name: 'Various Artists'}],
           images: [{url: 'http://i.imgur.com/bVnx0IY.png'}],
+          id: 'unknown',
+          name: unknown_album,
           release_date: 'NaN',
           label: 'Various Labels',
           tracks: {items:[]}
         }
-        track_files = files.filter(x => x.toUpperCase().includes(unknown_album))
+        track_files = files.filter(x => x.toUpperCase().includes(unknown_album.toUpperCase()))
 
         track_files.forEach( function( track_file, index ) {
           track = track_file.replace(/^.*[\\\/]/, ''); // get filename from full filepath
@@ -448,7 +461,8 @@ var generateMusicMetaData = function() {
         });
 
         album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
-        album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
+        album.tracks.total_duration_ms = 'NaN'
+        album.type = Album.name
         json.music.push(album);
         return true; // go next
       } 
@@ -507,6 +521,6 @@ console.log(figlet.textSync('homehost'));
 app.listen(port, () => console.log(`Listening on port ${port}`));
 console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);
 
-console.log(app._router.stack          // registered routes
-  .filter(r => r.route)    // take out all the middleware
+console.log(app._router.stack // registered routes
+  .filter(r => r.route) // take out all the middleware
   .map(r => `**GET** ${r.route.path}`))  // get all the paths

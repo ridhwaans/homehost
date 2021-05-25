@@ -21,7 +21,7 @@
 
 ## Setup
 
-Run `npm install` in the `client/` directory and the `server/` directory
+Run `npm install` from the `client/` directory and from the `server/` directory
 Create a `.env` file in the `client/` directory, if it does not exist
 In `.env`, set the base url of the homehost server 
 ###### **`.env`**
@@ -44,7 +44,8 @@ TV_KEY = '<api_key>'
 
 MUSIC_PATH = '/path/to/music/directory'
 MUSIC_API = 'api.spotify.com/v1'
-MUSIC_KEY = '<api_key>'
+MUSIC_CLIENT_ID = '<client_id>'
+MUSIC_CLIENT_SECRET = '<client_secret>'
 
 CLIENT_BASE = 'http://localhost:3000'
 ```
@@ -84,8 +85,7 @@ Run `npm run start-dev` from the `server/` directory
  
 On the server, call `/api?generate` **once**. Wait for the async call to finish and save  
 There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api?generate`  
-<!-- `nodemon` will restart to file changes and interrupt async. Use `node server` instead for generating metadata.  
-Run `ncu` in the base directory and in the `client/` directory to check for updates for `package.json`  -->
+<!-- Run `ncu` from the `server/` directory and from the `client/` directory to check for package.json` updates -->
 
 ### Run
 

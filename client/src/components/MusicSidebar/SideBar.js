@@ -26,16 +26,16 @@ const SideBar = ({ albums }) => {
             <SidebarOption Icon={faMusic} option="Music" />
         </Link>
 
+        <a style={{ textDecoration: "none", color: "white" }} href="/podcasts">
+            <SidebarOption Icon={faPodcast} option="Podcasts" />
+        </a>
+
         <a style={{ textDecoration: "none", color: "white" }} href="/movies">
             <SidebarOption Icon={faFilm} option="Movies" />
         </a>
         
         <a style={{ textDecoration: "none", color: "white" }} href="/tv">
             <SidebarOption Icon={faTv} option="TV Shows" />
-        </a>
-        
-        <a style={{ textDecoration: "none", color: "white" }} href="/podcasts">
-            <SidebarOption Icon={faPodcast} option="Podcasts" />
         </a>
         
         <a style={{ textDecoration: "none", color: "white" }} href="/books">
