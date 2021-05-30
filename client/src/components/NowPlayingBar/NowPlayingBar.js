@@ -2,29 +2,32 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import Sound from "react-sound";
 import { millisToMinutesAndSeconds, useBar } from "../../utils";
-import style from "./AudioPlayer.module.css";
-import Like from "../../assets/Like";
-import Play from "../../assets/Play";
-import Pause from "../../assets/Pause";
-import Volume from "../../assets/Volume";
-import VolumeMuted from "../../assets/VolumeMuted";
+import style from "./NowPlayingBar.module.css";
+import Like from "../../assets/NowPlayingBar/Like";
+import Play from "../../assets/NowPlayingBar/Play";
+import Pause from "../../assets/NowPlayingBar/Pause";
+import Volume from "../../assets/NowPlayingBar/Volume";
+import VolumeMuted from "../../assets/NowPlayingBar/VolumeMuted";
 
-const AudioPlayer = ({ playPause, song, playing }) => {
+const NowPlayingBar = ({ playPause, song, playing }) => {
   const [time, setTime] = useState(0);
   const timeRef = useRef(null);
-  const [progress, setProgress] = useState(0);
-
+  
   const [volume, setVolume] = useState(70);
   const volumeRef = useRef(null);
-
+  
+  const [progress, setProgress] = useState(0);
   const [mute, setMute] = useState(false);
 
   const barCallBack = useBar;
+  if (song && song.preview_url != null && song.url_path == null){
+    song.url_path = song.preview_url;
+    song.duration_ms = 30000;
+  }
 
   useEffect(() => {
     // Adjust time when progress bar is clicked
     song && setTime((progress * song.duration_ms ) / 100);
-    // change 30000 to song.duration_ms
   }, [progress]);
 
   useEffect(() => {
@@ -141,4 +144,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AudioPlayer);
+export default connect(mapStateToProps, mapDispatchToProps)(NowPlayingBar);

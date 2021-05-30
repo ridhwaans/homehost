@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import SideBar from "../MusicSidebar/SideBar";
 import MusicHeader from "../MusicHeader/MusicHeader"
 
-import AudioPlayer from "../AudioPlayer/AudioPlayer";
+import NowPlayingBar from "../NowPlayingBar/NowPlayingBar";
 import style from "./MusicBody.module.css"
 
 import Albums from "../Albums/Albums";
@@ -39,7 +39,7 @@ const MusicBody = ({ albums, initAlbums }) => {
             <AlbumDetail />
           </Route>
         </Router>
-        <AudioPlayer />
+        <NowPlayingBar />
       </div>
       
     </React.Fragment>

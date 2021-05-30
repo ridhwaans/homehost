@@ -7,7 +7,7 @@ import { getAlbumInformation } from "../../api"
 import { SongItem } from "./SongItem/SongItem";
 import FastAverageColor from "fast-average-color";
 import style from "./AlbumDetail.module.css";
-import Time from "../../assets/Time";
+import Time from "../../assets/AlbumDetail/Time";
 
 const AlbumDetail = ({ loadSong, currentSong }) => {
     const { id } = useParams();
@@ -83,7 +83,7 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   <span className={style.Text_Light}>
                     {
                     album.name == "Unknown Album" ? `${album.tracks.local_total} local tracks`
-                    : `${album.tracks.local_total} local tracks out of ${album.total_tracks} songs, 
+                    : `${album.tracks.local_total} local tracks, ${album.tracks.preview_total} previews, ${album.total_tracks} songs, 
                     ${millisToEnglishWords(album.tracks.total_duration_ms)}`
                     }
                   </span>

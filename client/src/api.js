@@ -2,7 +2,7 @@ import axios from "axios"
 
 export async function searchMoviesBy(text, page = 1) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/search`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/watch/search?q=${text}`)
         .then(function (response) {
             return response.data
 

@@ -1,6 +1,7 @@
 import React from "react";
-import Play from "../../../assets/Play";
-import Pause from "../../../assets/Pause";
+import NowPlaying from "../../../assets/AlbumDetail/NowPlaying.gif";
+import Play from "../../../assets/NowPlayingBar/Play";
+import Pause from "../../../assets/NowPlayingBar/Pause";
 import { millisToMinutesAndSeconds } from "../../../utils";
 import style from "./SongItem.module.css";
 
@@ -24,7 +25,7 @@ export const SongItem = ({
         >
           <div className={style.Index}>
             <span style={current ? { color: "#1db954" } : { color: "white" }}>
-              {index + 1}
+              {current ? <img src={NowPlaying} alt="nowPlaying" /> : index + 1}
             </span>
             <button>
               {current ? <Pause/> : <Play/>} 

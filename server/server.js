@@ -2,6 +2,7 @@
 const path = require('path');
 const express = require('express');
 const chokidar = require('chokidar');
+const qs = require('qs');
 const app = express();
 const port = process.env.PORT || 5000;
 const log = console.log.bind(console);
@@ -117,7 +118,6 @@ app.get('/api/movies/:id', function(req, res) {
   res.json(movie);
 });
 
-
 app.get('/api/tv/most_popular', function(req, res) {
   // trending now
   const most_popular = tvData.tv.sort((a,b) => b.popularity - a.popularity).slice(0,25);
@@ -177,6 +177,39 @@ app.get('/api/music/artists', function(req, res) {
 app.get('/api/music/albums/:id', function(req, res) {
   var album = musicData.music.find(album => album.id == req.params.id);
   res.json(album);
+});
+
+const multiPropsFilterMovies = (movie, keyword) => {
+  return (movie.title.match(new RegExp(keyword, 'i')) != null ||
+    movie.tagline.match(new RegExp(keyword, 'i')) != null ||
+    movie.overview.match(new RegExp(keyword, 'i')) != null
+    ) || (
+    movie.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null)
+    ) || (
+    movie.credits.crew.find(x => x.job === "Director").name.match(new RegExp(keyword, 'i')) != null)
+}
+
+const multiPropsFilterTV = (tv, keyword) => {
+  return (tv.name.match(new RegExp(keyword, 'i')) != null ||
+    tv.tagline.match(new RegExp(keyword, 'i')) != null ||
+    tv.overview.match(new RegExp(keyword, 'i')) != null
+    ) || (
+    tv.seasons.some(x => x.name.match(new RegExp(keyword, 'i')) || x.overview.match(new RegExp(keyword, 'i')) != null)
+    ) || (
+    tv.seasons.some(x => x.episodes.some(ep => ep.name.match(new RegExp(keyword, 'i')) || ep.overview.match(new RegExp(keyword, 'i')) != null))
+    ) || (
+    tv.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null))
+}
+
+app.get('/api/watch/search', function(req, res) {
+  
+  let keyword = qs.parse(req.query).q;
+  let search_results = {};
+  search_results.results = tvData.tv.filter(tv => multiPropsFilterTV(tv, keyword))
+  .concat(moviesData.movies.filter(movie => multiPropsFilterMovies(movie, keyword)));
+
+  search_results.count = search_results.results.length
+  res.json(search_results);
 });
 
 app.get('/movies/:id', function(req, res) {

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import ListItem from "./ListItem/ListItem"
 import SidebarOption from "./SidebarOption/SidebarOption"
 import style from "./SideBar.module.css"
-import logo from "../../assets/homehost_logo_white_on_transparent.svg"
+import logo from "../../assets/logos/Homehost_White.svg"
 import { faHome, faSearch, faMusic, faFilm, faTv, faPodcast, faBook, faFolderPlus, faList } from "@fortawesome/free-solid-svg-icons";
 
 const SideBar = ({ albums }) => {

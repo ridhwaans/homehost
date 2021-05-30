@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import SearchContext from "../Search/context"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons'
-import logo from "../../assets/homehost_logo_white_on_transparent.svg"
+import logo from "../../assets/logos/Homehost_White.svg"
 
 function Header() {
 

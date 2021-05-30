@@ -1,23 +1,23 @@
-import React, { useContext, useEffect, useState, useCallback } from "react"
+import React, { useContext, useRef, useEffect, useState, useCallback } from "react"
 import searchContext from "../Search/context"
 import { searchMoviesBy } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
-const Search = () => {
+import SearchResults from "../SearchResults"
 
+const Search = () => {
     const context = useContext(searchContext)
     const [movies, setMovies] = useState(null)
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(null)
 
-
     const fetchData = useCallback(async () => {
         return await searchMoviesBy(context.searchInput, null).then(response => {
 
-            setMovies(response.data.results)
-            setPage(response.data.page)
-            setTotalPages(response.data.total_pages)
+            setMovies(response.results)
+            //setPage(response.data.page)
+            //setTotalPages(response.data.total_pages)
 
         })
 
@@ -35,10 +35,10 @@ const Search = () => {
 
             if (movies) {
 
-                let loadedMovies = movies.concat(response.data.results)
+                let loadedMovies = movies.concat(response.results)
 
                 setMovies(loadedMovies)
-                setPage(response.data.page)
+                //setPage(response.data.page)
             }
 
         })
@@ -53,19 +53,18 @@ const Search = () => {
         return () => setMovies(null)
     }, [fetchData])
 
-
     const renderPosters = (data) => {
 
         return data.map((item, index) => {
 
             if (item.poster_path) return <div key={index}><img src={`${process.env.REACT_APP_IMAGE_BASE}w500/${item.poster_path}`} alt={"poster"} /></div>
             return null
-
+            
 
         })
     }
 
-
+    console.log(`search input is ${context.searchInput}`)
     return (
         <div className="search-background">
 
@@ -73,7 +72,7 @@ const Search = () => {
                 <React.Fragment>
                     {movies.length ? (
                         <React.Fragment>
-                            <div className="search-container">{renderPosters(movies)}</div>
+                            <SearchResults mainTitle={`Results for "${context.searchInput}"`} data={movies} poster={false} />
 
                             {page < totalPages ? (
                                 <div className="load-more" onClick={() => loadMoreMovies(context.searchInput)}>
