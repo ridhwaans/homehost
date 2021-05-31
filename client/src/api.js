@@ -136,6 +136,15 @@ export async function getTVShowsBy(type) {
         })
 }
 
+export async function searchMusicBy(text, page = 1) {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/listen/search?q=${text}`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
 export async function getAllAlbums() {
 
     return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music`)

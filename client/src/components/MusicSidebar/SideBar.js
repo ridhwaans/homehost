@@ -20,7 +20,9 @@ const SideBar = ({ albums }) => {
             <SidebarOption Icon={faHome} option="Home"/>
         </a>
 
-        <SidebarOption Icon={faSearch} option="Search" />
+        <Link style={{ textDecoration: "none", color: "white" }} to="/music/search">
+            <SidebarOption Icon={faSearch} option="Search" />
+        </Link>
 
         <Link style={{ textDecoration: "none", color: "white" }} to="/music">
             <SidebarOption Icon={faMusic} option="Music" />

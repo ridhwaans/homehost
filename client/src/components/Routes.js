@@ -7,6 +7,7 @@ import NotFound from "./NotFound"
 
 import PlayerContext from "./Player/context"
 import SearchContext from "./Search/context"
+import MusicSearchContext from "./MusicSearch/context"
 import { useSearch } from "../hooks/useSearch"
 
 
@@ -18,6 +19,7 @@ const Routes = () => {
     return (
         <React.Fragment>
         <SearchContext.Provider value={searchText}>
+        <MusicSearchContext.Provider value={searchText}>
         <PlayerContext.Provider value={{ playerItem, setPlayerItem }}>
             <BrowserRouter basename={process.env.PUBLIC_URL}>
                 <Switch>
@@ -28,6 +30,7 @@ const Routes = () => {
                 </Switch>
             </BrowserRouter>
         </PlayerContext.Provider>
+        </MusicSearchContext.Provider>
         </SearchContext.Provider>
         </React.Fragment>
     )

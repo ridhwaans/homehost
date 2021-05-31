@@ -8,6 +8,7 @@ import style from "./MusicBody.module.css"
 
 import Albums from "../Albums/Albums";
 import AlbumDetail from "../AlbumDetail/AlbumDetail";
+import MusicSearch from "../MusicSearch";
 import { getMusicBy, getAllAlbums } from "../../api"
 import { connect } from "react-redux";
 
@@ -37,6 +38,9 @@ const MusicBody = ({ albums, initAlbums }) => {
           </Route>   
           <Route path="/music/album/:id">
             <AlbumDetail />
+          </Route>
+          <Route path="/music/search">
+            <MusicSearch />
           </Route>
         </Router>
         <NowPlayingBar />

@@ -127,11 +127,11 @@ TODO `/books`, `/comics`, `/podcasts`
 
 ## Development
 
-Works best in <img src="media/chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
+Works best in <img src="client/src/assets/logo/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
 
 ## Powered by
 
-<p><img src="media/spotify_green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="media/tmdb_green.svg" width="150" height="150" title="TMDb API"></p>
+<p><img src="client/src/assets/logo/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="client/src/assets/logo/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
 
 ## License
 

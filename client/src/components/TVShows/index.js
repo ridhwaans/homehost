@@ -61,9 +61,9 @@ function TVShows() {
         <div className="movies">
         <div className="background-app">
         <Player />
+        <Header />
         {searchContext.searchInput.length > 0 ? (<Search />) : (
             <React.Fragment>
-                <Header />
                 <BigBillboard />
 
                 {recentlyAddedTVShows && <Slider mainTitle={"Recently Added"} data={recentlyAddedTVShows} poster={false} />}

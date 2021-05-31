@@ -1,0 +1,32 @@
+.ResultsBody {
+    color: white;
+    position: relative;
+    padding-left: 32px;
+    grid-area: Body;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 40px;
+    grid-template-areas:
+        "Songs Songs"
+        "Artists Artists"
+        "Albums Albums";
+}
+
+.ResultsBody .Title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    letter-spacing: -0.04em;
+    text-transform: none;
+}
+
+/* container should be specific to song, artist, album */
+.ResultsBody .Container {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* overflow-y: scroll; */
+    padding-right: 32px;
+}

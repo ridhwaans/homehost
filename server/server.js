@@ -179,39 +179,6 @@ app.get('/api/music/albums/:id', function(req, res) {
   res.json(album);
 });
 
-const multiPropsFilterMovies = (movie, keyword) => {
-  return (movie.title.match(new RegExp(keyword, 'i')) != null ||
-    movie.tagline.match(new RegExp(keyword, 'i')) != null ||
-    movie.overview.match(new RegExp(keyword, 'i')) != null
-    ) || (
-    movie.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null)
-    ) || (
-    movie.credits.crew.find(x => x.job === "Director").name.match(new RegExp(keyword, 'i')) != null)
-}
-
-const multiPropsFilterTV = (tv, keyword) => {
-  return (tv.name.match(new RegExp(keyword, 'i')) != null ||
-    tv.tagline.match(new RegExp(keyword, 'i')) != null ||
-    tv.overview.match(new RegExp(keyword, 'i')) != null
-    ) || (
-    tv.seasons.some(x => x.name.match(new RegExp(keyword, 'i')) || x.overview.match(new RegExp(keyword, 'i')) != null)
-    ) || (
-    tv.seasons.some(x => x.episodes.some(ep => ep.name.match(new RegExp(keyword, 'i')) || ep.overview.match(new RegExp(keyword, 'i')) != null))
-    ) || (
-    tv.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null))
-}
-
-app.get('/api/watch/search', function(req, res) {
-  
-  let keyword = qs.parse(req.query).q;
-  let search_results = {};
-  search_results.results = tvData.tv.filter(tv => multiPropsFilterTV(tv, keyword))
-  .concat(moviesData.movies.filter(movie => multiPropsFilterMovies(movie, keyword)));
-
-  search_results.count = search_results.results.length
-  res.json(search_results);
-});
-
 app.get('/movies/:id', function(req, res) {
   var movie_fs_path = moviesData.movies
     .filter(movie => movie.id == parseInt(req.params.id))
@@ -314,6 +281,76 @@ app.get('/music/:album_id/:disc_number/:track_number', function(req, res) {
         fs.createReadStream(filePath).pipe(res);
      }
 
+});
+
+const multiPropsFilterMovies = (movie, keyword) => {
+  return (movie.title.match(new RegExp(keyword, 'i')) != null ||
+    movie.tagline.match(new RegExp(keyword, 'i')) != null ||
+    movie.overview.match(new RegExp(keyword, 'i')) != null
+    ) || (
+    movie.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null)
+    ) || (
+    movie.credits.crew.find(x => x.job === "Director").name.match(new RegExp(keyword, 'i')) != null)
+}
+
+const multiPropsFilterTV = (tv, keyword) => {
+  return (tv.name.match(new RegExp(keyword, 'i')) != null ||
+    tv.tagline.match(new RegExp(keyword, 'i')) != null ||
+    tv.overview.match(new RegExp(keyword, 'i')) != null
+    ) || (
+    tv.seasons.some(x => x.name.match(new RegExp(keyword, 'i')) || x.overview.match(new RegExp(keyword, 'i')) != null)
+    ) || (
+    tv.seasons.some(x => x.episodes.some(ep => ep.name.match(new RegExp(keyword, 'i')) || ep.overview.match(new RegExp(keyword, 'i')) != null))
+    ) || (
+    tv.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null))
+}
+
+const multiPropsFilterMusic = (album, keyword) => {
+  return (album.name.match(new RegExp(keyword, 'i')) != null
+    ) || (
+    album.artists.some(x => x.name.match(new RegExp(keyword, 'i')) != null)
+    ) || (
+    album.tracks.items.some(x => x.name.match(new RegExp(keyword, 'i')) != null))
+}
+
+const multiPropsFilterMusicSongs = (keyword) => {
+  return musicData.music.map(album => album.tracks.items
+    .map(song => {song.album_name = album.name; song.album_images = album.images; song.artists = album.artists; return song}))
+    .flat(Infinity)
+    .filter(song => song.name.match(new RegExp(keyword, 'i')) != null)
+}
+
+const multiPropsFilterMusicArtists = (keyword) => {
+  let artists = [...new Map(musicData.music.map(music => music.artists).flat(Infinity).map(item => [item.id, item])).values()];
+  return artists.filter(x => x.name.match(new RegExp(keyword, 'i')) != null)
+}
+
+const multiPropsFilterMusicAlbums = (keyword) => {
+  return musicData.music.filter(x => x.name.match(new RegExp(keyword, 'i')) != null)
+}
+
+app.get('/api/watch/search', function(req, res) {
+  
+  let keyword = qs.parse(req.query).q;
+  let search_results = {};
+  search_results.results = tvData.tv.filter(tv => multiPropsFilterTV(tv, keyword))
+  .concat(moviesData.movies.filter(movie => multiPropsFilterMovies(movie, keyword)));
+
+  search_results.count = search_results.results.length
+  res.json(search_results);
+});
+
+app.get('/api/listen/search', function(req, res) {
+  
+  let keyword = qs.parse(req.query).q;
+  let search_results = {};
+  search_results.results = {};
+  search_results.results.songs = multiPropsFilterMusicSongs(keyword);
+  search_results.results.artists = multiPropsFilterMusicArtists(keyword);
+  search_results.results.albums = multiPropsFilterMusicAlbums(keyword);
+
+  search_results.count = search_results.results.songs.length + search_results.results.artists.length + search_results.results.albums.length
+  res.json(search_results);
 });
 
 // Handles any requests that don't match the ones above
