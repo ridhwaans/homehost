@@ -46,8 +46,8 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
     };
 
     const songClicked = (song) => {
-      if (song.url_path) {
-        song.album_image_url = album.images[0].url
+      if (song.url_path || song.preview_url) {
+        song.album_images = album.images
         song.artists = album.artists
         loadSong(song);
       }

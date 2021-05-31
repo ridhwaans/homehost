@@ -9,6 +9,15 @@ export async function searchMoviesBy(text, page = 1) {
         })
 }
 
+export async function searchMusicBy(text, page = 1) {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/listen/search?q=${text}`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
 export async function getMovieInformation(id) {
 
     return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/movies/${id}`)
@@ -130,15 +139,6 @@ export async function getTVShowsBy(type) {
     }
 
     return await axios.get(discover)
-        .then(function (response) {
-            return response.data
-
-        })
-}
-
-export async function searchMusicBy(text, page = 1) {
-
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/listen/search?q=${text}`)
         .then(function (response) {
             return response.data
 

@@ -18,16 +18,20 @@ class TVEpisode {
     }
 }
 
-class Album {
+class Music {}
+
+class Album extends Music {
     constructor({id = 0}) {
+        super();
         this.id = id; 
      }
  }
 
- class Artist {
+ class Artist extends Music {
     constructor({id = 0}) {
+        super();
         this.id = id; 
      }
  }
 
-module.exports = { Movie, TVShow, TVEpisode, Album, Artist }
+module.exports = { Movie, TVShow, TVEpisode, Music, Album, Artist }

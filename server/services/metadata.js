@@ -1,4 +1,4 @@
-const {Album, Artist, Movie, TVEpisode, TVShow} = require('../models');
+const {Movie, TVShow, TVEpisode, Music, Album, Artist} = require('../models');
 const axios = require('axios');
 const Cookies  = require('universal-cookie');
 const qs = require('qs');
@@ -12,17 +12,18 @@ class Metadata {
     async get(item, delay=0){
         let request_url;
         let auth;
+        
+        if (item instanceof Music){
+            auth = await getAuth(); // authorization header
+        }
+
         if (item instanceof Movie){
             request_url = `https://${process.env.MOVIES_API}/movie/${item.id}?api_key=${process.env.MOVIES_KEY}&append_to_response=images,credits,similar`
         } else if (item instanceof TVShow) {
             request_url = `https://${process.env.TV_API}/tv/${item.id}?api_key=${process.env.TV_KEY}&append_to_response=credits,similar,external_ids`
         } else if (item instanceof TVEpisode) {
             request_url = `https://${process.env.TV_API}/tv/${item.tv_id}/season/${item.season_number}/episode/${item.episode_number}?api_key=${process.env.TV_KEY}`
-        }     
-        if (item instanceof Album || item instanceof Artist){
-            auth = await getAuth(); // authorization header
-        }
-        if (item instanceof Album) {
+        } else if (item instanceof Album) {
             request_url = `https://${process.env.MUSIC_API}/albums/${item.id}?access_token=${auth}` 
         } else if (item instanceof Artist) {
             request_url = `https://${process.env.MUSIC_API}/artists/${item.id}?access_token=${auth}`

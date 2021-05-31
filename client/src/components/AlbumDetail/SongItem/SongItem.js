@@ -19,7 +19,7 @@ export const SongItem = ({
         <div
           className={[
             style.Item,
-            (song.fs_path || song.preview_url) ? style.Enabled : style.Disabled,
+            (song.url_path || song.preview_url) ? style.Enabled : style.Disabled,
           ].join(" ")}
           onClick={songClicked}
         >

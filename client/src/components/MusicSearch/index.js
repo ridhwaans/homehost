@@ -2,15 +2,16 @@ import React, { useContext, useRef, useEffect, useState, useCallback } from "rea
 import { useHistory, useLocation } from "react-router-dom";
 import musicSearchContext from "../MusicSearch/context"
 import { searchMusicBy } from "../../api"
-import AlbumItem from "../Albums/AlbumItem/AlbumItem"
-import style from "../Albums/Albums.module.css"
-//import style from "./MusicSearch.module.css"
+import AlbumResults from "./AlbumResults/AlbumResults";
+import ArtistResults from "./ArtistResults/ArtistResults";
+import style from "./MusicSearch.module.css"
 
 const MusicSearch = () => {
     const context = useContext(musicSearchContext)
     const history = useHistory()
     const location = useLocation()
     const [albums, setAlbums] = useState(null)
+    const [artists, setArtists] = useState(null)
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(null)
 
@@ -18,6 +19,7 @@ const MusicSearch = () => {
         return await searchMusicBy(context.searchInput, null).then(response => {
 
             setAlbums(response.results.albums)
+            setArtists(response.results.artists)
             //setPage(response.data.page)
             //setTotalPages(response.data.total_pages)
 
@@ -60,37 +62,38 @@ const MusicSearch = () => {
 
         fetchData()
 
-        return () => setAlbums(null)
+        return () => {
+            setAlbums(null)
+            setArtists(null)
+        }
     }, [fetchData])
 
     return (
-        <div className="search-background">
-        {albums ? (
-            <React.Fragment>
-                {albums.length ? (
-
-                    <React.Fragment>
-                        
-                        <div className={style.Albums}>
-                            <h1 className={style.Title}>{`Results for "${context.searchInput}"`}</h1>
-
-                            <div className={style.Container}>
-                            {albums && albums.map(item => { return <AlbumItem key={item.id} album={item}/> }) }
-                            </div>
-                        </div>
-                    </React.Fragment>
-
-                ) : (<div className="not-found">No results :/ </div>)}
-            </React.Fragment>
+        <React.Fragment>
+        <div className={style.MusicSearch}>
+            {albums ? (
+                albums.length ? (
+                    <AlbumResults albums={albums}/>
+                ) : (<div className="not-found">No results :/ </div>)
             ) : (
-            <div className="loading-content">
-                <div className="loading-circle"></div>
-                <span className="loading-name">LOADING...</span>
-            </div>
-
+                <div className="loading-content">
+                    <div className="loading-circle"></div>
+                    <span className="loading-name">LOADING...</span>
+                </div>
             )}
 
+            {artists ? (
+                artists.length ? (
+                    <ArtistResults artists={artists}/>
+                ) : (<div className="not-found">No results :/ </div>)
+            ) : (
+                <div className="loading-content">
+                    <div className="loading-circle"></div>
+                    <span className="loading-name">LOADING...</span>
+                </div>
+            )}
         </div>
+        </React.Fragment>
     )
 
 }

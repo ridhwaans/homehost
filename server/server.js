@@ -12,7 +12,7 @@ var fs = require('fs');
 var bluebird = require('bluebird');
 var figlet = require('figlet');
 
-const {Album, Movie, TVEpisode, TVShow} = require('./models');
+const {Album, Artist, Movie, TVEpisode, TVShow} = require('./models');
 var metadataService = require('./services/metadata');
 var moviesData = require('./data/movies.json'); // or fs.readFileSync + JSON.parse()
 var musicData =  require('./data/music.json'); 
@@ -343,13 +343,18 @@ app.get('/api/watch/search', function(req, res) {
 app.get('/api/listen/search', function(req, res) {
   
   let keyword = qs.parse(req.query).q;
-  let search_results = {};
-  search_results.results = {};
+  console.log(`keyword is "${keyword}"`)
+  let search_results = {results: {songs:[], artists: [], albums: []}, song_count: 0, artist_count: 0, album_count: 0, total_count: 0};
+  if (keyword.trim() === "" ) {
+    res.json(search_results);
+  }
   search_results.results.songs = multiPropsFilterMusicSongs(keyword);
   search_results.results.artists = multiPropsFilterMusicArtists(keyword);
   search_results.results.albums = multiPropsFilterMusicAlbums(keyword);
-
-  search_results.count = search_results.results.songs.length + search_results.results.artists.length + search_results.results.albums.length
+  search_results.song_count = search_results.results.songs.length
+  search_results.artist_count = search_results.results.artists.length
+  search_results.album_count = search_results.results.albums.length
+  search_results.total_count = Object.values(search_results.results).reduce((acc, group) => acc + group.length, 0)
   res.json(search_results);
 });
 
@@ -471,8 +476,7 @@ const findTotalDurationMillis = (items) => {
   return items.reduce( (acc, item) => sum(acc,item), 0)
 }
 
-var generateMusicMetaData = function() {
-  return new Promise(function(resolve, reject) {
+const generateMusicMetaData = async () => {
 
   var re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
@@ -484,14 +488,14 @@ var generateMusicMetaData = function() {
   let album_dirs = Object.entries(collection).filter(entry => entry[0].startsWith(process.env.MUSIC_PATH));
     album_dirs.shift(); // remove the Music root directory entry
 
-    bluebird.mapSeries(album_dirs, function(album_dir){
+    await bluebird.mapSeries(album_dirs, async (album_dir) => {
       console.log('GET: ' + album_dir[0]);
 
       if (album_dir[0].toUpperCase().endsWith(unknown_album.toUpperCase())){
         // build music album not on Spotify
         let album = {
           album_type: 'compilation',
-          artists: [{name: 'Unknown Artist'}],
+          artists: [{ name: 'Unknown Artist', images: [{url: 'http://i.imgur.com/bVnx0IY.png'}] }],
           images: [{url: 'http://i.imgur.com/bVnx0IY.png'}],
           id: 'unknown',
           name: unknown_album,
@@ -526,51 +530,49 @@ var generateMusicMetaData = function() {
       } 
       try {
         // find the Spotify music album
-        return new metadataService().get(new Album({ id: album_dir[0].match(re)[1] }))
-        .then((album) => {
-          // remove unnecessary Spotify json
-          delete album.available_markets;
-          for(var i=0;i<album.tracks.items.length;i++){
-            delete album.tracks.items[i].artists;
-            delete album.tracks.items[i].available_markets;
-          }
-          album.tracks.items.map(item => {delete item.artists; delete item.available_markets});
+        let album = await new metadataService().get(new Album({ id: album_dir[0].match(re)[1] }))
+        // remove unnecessary Spotify json
+        delete album.available_markets;
+        album.tracks.items.map(item => {delete item.artists; delete item.available_markets});
 
-          album_dir[1].forEach( function( track_file, index ) {
-            console.log('GET: ' + track_file);
-            // for each track in the Spotify music album
-            album.tracks.items.forEach(function(item) {
-              // if local track found
-              if ( (item.disc_number == parseInt(track_file.match(re2)[1] || 1) ) && 
-                (item.track_number == parseInt(track_file.match(re2)[3]) ) ) {
-                item.fs_path = `${album_dir[0]}/${track_file}` 
-                item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`
-                item.ctime = fs.statSync(item.fs_path).ctime
-                item.mtime = fs.statSync(item.fs_path).mtime
-              }
-            });
+        album_dir[1].forEach( function( track_file, index ) {
+          console.log('GET: ' + track_file);
+          // for each song in the Spotify music album
+          album.tracks.items.forEach(function(item) {
+            // if local track found
+            if ( (item.disc_number == parseInt(track_file.match(re2)[1] || 1) ) && 
+              (item.track_number == parseInt(track_file.match(re2)[3]) ) ) {
+              item.fs_path = `${album_dir[0]}/${track_file}` 
+              item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`
+              item.ctime = fs.statSync(item.fs_path).ctime
+              item.mtime = fs.statSync(item.fs_path).mtime
+            }
           });
-
-          album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
-          album.tracks.preview_total = album.tracks.items.filter(item => item.preview_url != null).length
-          album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
-          json.music.push(album);
         });
+
+        album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
+        album.tracks.preview_total = album.tracks.items.filter(item => item.preview_url != null).length
+        album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
+
+        // find the artist(s) images for the Spotify music album
+        let artist = await new metadataService().get(new Artist({ id: album.artists[0].id }))
+        album.artists[0].images = artist.images
+        json.music.push(album);
+
       } catch(e) {
-        return true; // skip the album if there is a problem fetching metadata
+        console.log("There was a problem fetching metadata. Skipping this album")
+        return true; // go next
       }
     }) // end of .mapSeries()
     .then(function(music){
       fs.writeFile('./data/music.json', JSON.stringify(json, 0, 4), 'utf8', (err)=>{
         if(err) console.log(err)
         else console.log('[MUSIC] File saved');
-        resolve(json);
       })
     })
     .catch(function(err){
       console.log('Music metadata could not be generated due to some error', err);
     });
-  });
 };
 
 console.log(figlet.textSync('homehost'));

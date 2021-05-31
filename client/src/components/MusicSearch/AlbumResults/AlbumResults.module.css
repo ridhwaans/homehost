@@ -1,0 +1,8 @@
+/* unused. using original Albums css */
+.AlbumResults .Container {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* overflow-y: scroll; */
+    padding-right: 32px;
+}
