@@ -1,0 +1,32 @@
+.MusicRow {
+    color: white;
+    position: relative;
+    padding-left: 32px;
+    grid-area: Body;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 35px 0;
+}
+.MusicRow .RowHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.MusicRow .RowHeader .Title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28px;
+    letter-spacing: -0.04em;
+    text-transform: none;
+}
+
+.MusicRow .Container {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    padding-right: 32px;
+    max-height: 300px;
+    overflow: hidden;
+}

@@ -147,7 +147,16 @@ export async function getTVShowsBy(type) {
 
 export async function getAllAlbums() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/albums`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getAllArtists() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/artists`)
         .then(function (response) {
             return response.data
 

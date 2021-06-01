@@ -25,7 +25,7 @@ const Routes = () => {
                 <Switch>
                     <Route component={Movies} exact path="/movies" />
                     <Route component={TVShows} exact path="/tv" />
-                    <Route component={Music} exact path="/music" />
+                    <Route component={Music} path="/music" />
                     <Route component={NotFound} />
                 </Switch>
             </BrowserRouter>

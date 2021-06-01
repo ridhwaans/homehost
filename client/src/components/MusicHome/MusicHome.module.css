@@ -1,0 +1,7 @@
+.MusicHome {
+    color: white;
+    position: relative;
+    grid-area: Body;
+    display: flex;
+    flex-direction: column;
+}

@@ -5,12 +5,12 @@ import Play from "../../../assets/NowPlayingBar/Play"
 
 const ArtistItem = (props) => {
     var artist = props.artist;
-    console.log(`artist name is ${artist.name}`)
+    // some spotify artist image urls are broken, try onError
     return (
       <Link to={"/music/artist/" + artist.id} className={style.LinkAlbum}>
         <div className={style.Album}>
           <div className={style.imgContainer}>
-            <img src={artist.images && artist.images[0].url} alt="Tokyo"/>
+            <img src={artist.images && artist.images[0].url} alt={"Tokyo"}/>
             <div className={style.PlayContainer}>
               <button className={style.PlayButton} title="Play">
                 <Play />

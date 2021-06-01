@@ -63,14 +63,6 @@ app.get('/api/movies', (req, res) => {
   res.json(moviesData.movies);
 });
 
-app.get('/api/tv', (req, res) => {
-  res.json(tvData.tv)
-});
-
-app.get('/api/music', (req, res) => {
-  res.json(musicData.music)
-});
-
 app.get('/api/movies/most_popular', function(req, res) {
   // trending now
   const most_popular = moviesData.movies.sort((a,b) => b.popularity - a.popularity).slice(0,25);
@@ -118,6 +110,10 @@ app.get('/api/movies/:id', function(req, res) {
   res.json(movie);
 });
 
+app.get('/api/tv', (req, res) => {
+  res.json(tvData.tv)
+});
+
 app.get('/api/tv/most_popular', function(req, res) {
   // trending now
   const most_popular = tvData.tv.sort((a,b) => b.popularity - a.popularity).slice(0,25);
@@ -160,6 +156,10 @@ app.get('/api/music/recently_added', function(req, res) {
   // new
   const recently_added = musicData.music.sort((a,b) => b.mtime - a.mtime).slice(0,25);
   res.json(recently_added);
+});
+
+app.get('/api/music/albums', (req, res) => {
+  res.json(musicData.music)
 });
 
 app.get('/api/music/artists', function(req, res) {
