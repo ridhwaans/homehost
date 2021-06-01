@@ -163,6 +163,15 @@ export async function getAllArtists() {
         })
 }
 
+export async function getAllSongs() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/songs`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
 export async function getAlbumInformation(id) {
 
     return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/albums/${id}`)

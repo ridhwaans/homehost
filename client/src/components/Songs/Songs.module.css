@@ -1,0 +1,114 @@
+.AlbumDetail {
+    color: white;
+    position: relative;
+    grid-area: Body;
+}
+.Cover {
+    display: flex;
+    padding: 32px 32px 32px 32px;
+    position: relative;
+}
+.Cover * {
+    color: white;
+}
+.Cover .Background {
+    background-color: #5038a0;
+}
+.Cover .Gradient {
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+}
+.Cover .Gradient, .Cover .Background {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.Cover .Img {
+    width: 192px;
+    max-width: 192px;
+    height: 192px;
+    margin-right: 24px;
+}
+.Cover .Img img {
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+}
+.Cover .Infos {
+    flex: 1;
+}
+.Cover .Infos .Album {
+    font-weight: 600;
+}
+.Cover .Infos .Title h1 {
+    padding: 0.08em 0px;
+    font-size: 96px;
+    font-weight: 700;
+    margin: 0;
+}
+.Cover .Infos .Text_Light::before {
+    content: "•";
+    margin: 0px 4px;
+}
+.Cover .Infos .Text_Light, .Cover .Infos .Categ {
+    color: rgba(255, 255, 255, 0.7);
+}
+.Cover .Infos .Details span {
+    font-size: 14px;
+}
+.Cover .Infos .Text_Bold {
+    font-weight: 700;
+}
+.Cover .Img, .Cover .Infos {
+    z-index: 2;
+}
+.List_Background {
+    background-color: #5038a0;
+    height: 232px;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), #121212);
+}
+.List {
+    padding: 0 32px;
+}
+.List .Heading {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: [index] 16px [first] 6fr [var1] 4fr [var2] 3fr [last] minmax(120px,1fr);
+    padding: 0 16px;
+    height: 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+}
+.List .Heading div {
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+    font-weight: 400;
+    color: #b3b3b3;
+    text-transform: uppercase;
+}
+.List .Heading .Length {
+    display: flex;
+    justify-self: end;
+    margin-right: 10px;
+}
+
+.List_Footer {
+    height: auto;
+    padding: 0 32px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.List_Footer p {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 16px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}

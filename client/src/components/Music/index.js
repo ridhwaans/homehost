@@ -1,11 +1,12 @@
-
-import { Provider } from "react-redux";
+import React, { useCallback, useEffect, useState }  from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Provider, connect } from "react-redux";
 import { createStore, combineReducers } from "redux";
+
+import { getAllArtists, getAllAlbums, getAllSongs } from "../../api"
 import playlistReducer from "../../store/reducers/playlists";
 import playingReducer from "../../store/reducers/playing";
 
-import React, { useCallback, useEffect, useState }  from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
 import SideBar from "../MusicSidebar/SideBar";
 import MusicHeader from "../MusicHeader/MusicHeader"
 
@@ -14,18 +15,40 @@ import MusicSearch from "../MusicSearch";
 import Albums from "../Albums/Albums";
 import AlbumDetail from "../AlbumDetail/AlbumDetail";
 import Artists from "../Artists/Artists";
+import Songs from "../Songs/Songs";
 
 import NowPlayingBar from "../NowPlayingBar/NowPlayingBar";
 import style from "./Music.module.css"
 
-import { getAllArtists, getAllAlbums } from "../../api"
-import { connect } from "react-redux";
-
 const Music = () => {
+
+  const [albums, setAlbums] = useState(null)
+  const [artists, setArtists] = useState(null)
+  const [songs, setSongs] = useState(null)
+
+  const fetchMusic = async () => {
+    let albums = await getAllAlbums()
+    let artists = await getAllArtists()
+    let songs = await getAllSongs()
+
+    return { albums, artists, songs }
+  }
 
   useEffect(() => {
       document.documentElement.className = ""; //<head>
       document.body.className = style.MusicBody; //<body>
+
+      fetchMusic().then(response => {
+
+        setAlbums(response.albums)
+        setArtists(response.artists)
+        setSongs(response.songs)
+      })
+      return () => {
+        setAlbums(null)
+        setArtists(null)
+        setSongs(null)
+      }
   }, [])
 
   const reducers = combineReducers({
@@ -43,19 +66,22 @@ const Music = () => {
           <SideBar />
           <MusicHeader account={{display_name: "Test User"}}/>
           <Route path="/music" exact>
-            <MusicHome />
+            <MusicHome albums={albums} artists={artists} songs={songs}/>
           </Route>   
           <Route path="/music/search">
             <MusicSearch />
           </Route>
           <Route path="/music/albums">
-            <Albums />
+            <Albums/>
           </Route>   
           <Route path="/music/album/:id">
             <AlbumDetail />
           </Route>
           <Route path="/music/artists">
             <Artists />
+          </Route> 
+          <Route path="/music/songs">
+            <Songs />
           </Route> 
         </Router>
         <NowPlayingBar />

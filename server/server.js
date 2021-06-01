@@ -158,10 +158,6 @@ app.get('/api/music/recently_added', function(req, res) {
   res.json(recently_added);
 });
 
-app.get('/api/music/albums', (req, res) => {
-  res.json(musicData.music)
-});
-
 app.get('/api/music/artists', function(req, res) {
   const artists = [...new Map(musicData.music.map(music => music.artists).flat(Infinity).map(item => [item.id, item])).values()];
   console.log(`artist count is ${artists.length}`)
@@ -174,10 +170,25 @@ app.get('/api/music/artists', function(req, res) {
   res.json(artists);
 });
 
+app.get('/api/music/albums', (req, res) => {
+  res.json(musicData.music)
+});
+
 app.get('/api/music/albums/:id', function(req, res) {
-  var album = musicData.music.find(album => album.id == req.params.id);
+  const album = musicData.music.find(album => album.id == req.params.id);
   res.json(album);
 });
+
+app.get('/api/music/songs', (req, res) => {
+  const songs = musicData.music.map(album => album.tracks.items
+    .map(song => {song.album_name = album.name; song.album_images = album.images; song.artists = album.artists; return song}))
+    .flat(Infinity)
+    .filter(song => song.url_path != null)
+    // 5338 songs before url_path != null filter
+    // 746 songs after url_path != null filter
+  res.json(songs)
+});
+
 
 app.get('/movies/:id', function(req, res) {
   var movie_fs_path = moviesData.movies

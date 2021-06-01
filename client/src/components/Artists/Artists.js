@@ -1,9 +1,13 @@
 import React from "react"
 import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
 import ArtistItem from "./ArtistItem/ArtistItem"
 import style from "./Artists.module.css"
 
-const Artists = ({artists}) => {
+const Artists = () => {
+  const location = useLocation()
+  const { data } = location.state
+
     return (
       <React.Fragment>
       
@@ -11,15 +15,15 @@ const Artists = ({artists}) => {
         <h1 className={style.Title}>Artists</h1>
 
         <div className={style.Container}>
-          {artists && artists.map(item => { return <ArtistItem key={item.id} artist={item}/> }) }
+          {data && data.map(item => { return <ArtistItem key={item.id} artist={item}/> }) }
         </div>
       </div>
       </React.Fragment>
     );
 };
 
-const mapStateToProps = (state) => {
-    return { artists: state.artists.artists, };
-};
+// const mapStateToProps = (state) => {
+//     return { artists: state.artists.artists, };
+// };
 
-export default connect(mapStateToProps)(Artists);
+export default Artists;
