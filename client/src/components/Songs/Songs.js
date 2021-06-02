@@ -124,7 +124,6 @@ const Songs = ({ loadSong, currentSong }) => {
   };
   
   const mapStateToProps = (state) => {
-    //console.log(`state is ${JSON.stringify(state.playing)}`);
     return {
       currentSong: state.playing.song,
     };

@@ -29,7 +29,6 @@ function SearchResultsItem(props) {
             props.hover(e)
             setShowOverlay(true)
         }
-        console.log(`HOVERING ${props.transform}`)
     }
 
     const onHoverLeave = (e) => {

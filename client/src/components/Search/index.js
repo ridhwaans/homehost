@@ -64,7 +64,6 @@ const Search = () => {
         })
     }
 
-    console.log(`search input is ${context.searchInput}`)
     return (
         <div className="search-background">
 

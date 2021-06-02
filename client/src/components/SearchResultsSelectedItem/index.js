@@ -14,10 +14,6 @@ const SearchResultsSelectedItem = ({ currentSlide, additionalMovieInfo, closeInf
     const [menuOption, setMenuOption] = useState("general-info")
     const { playerItem, setPlayerItem } = useContext(PlayerContext)
     const sliderContext = useContext(SliderContext);
-
-    useEffect(() => {
-        console.log(`SearchResultsSelectedItem has rendered`)
-      }, []);
     
     const preCloseInformationWindow = () => {
         let searchResultDetail = document.getElementById("search-results-selected-item");

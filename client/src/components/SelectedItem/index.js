@@ -16,8 +16,6 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
     const { playerItem, setPlayerItem } = useContext(PlayerContext)
     const sliderContext = useContext(SliderContext);
 
-    //console.log(`sliderContext is ${JSON.stringify(sliderContext)}`)
-    //console.log(`additionalMovieInfo is ${JSON.stringify(additionalMovieInfo)}`)
     return (
         <div className="additional-information">
 

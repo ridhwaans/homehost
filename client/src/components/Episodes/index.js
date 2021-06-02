@@ -17,7 +17,6 @@ const Episodes = ({ additionalMovieInfo }) => {
         <div className="menu-episodes">
             <select id="seasons" onChange={changeSeason}>
             {additionalMovieInfo && additionalMovieInfo.seasons.map((season, index) => {
-                //console.log(`default season is ${seasonNumber}`)
                 return (
                     <option value={index}>{season.name}</option>
                 )

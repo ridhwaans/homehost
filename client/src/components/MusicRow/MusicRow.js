@@ -6,7 +6,7 @@ import ArtistItem from "../Artists/ArtistItem/ArtistItem"
 import { SongItemMini } from "../Songs/SongItemMini/SongItemMini"
 import style from "./MusicRow.module.css"
 
-const MusicRow = ({ mainTitle, data, music_type, loadSong, currentSong }) => {
+const MusicRow = ({ mainTitle, data, music_type, loadSong, currentSong, playPause }) => {
 
   const songClicked = (song) => {
     if (song.url_path || song.preview_url) {

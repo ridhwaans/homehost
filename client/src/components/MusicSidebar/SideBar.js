@@ -56,7 +56,7 @@ const SideBar = ({ albums }) => {
             <SidebarOption Icon={faList} option="My List" />
         </a>
         
-        <h1 className={style.Title}>Albums</h1>
+        <h1 className={style.Title}>Playlists</h1>
 
         <hr className={style.Separator} />
 

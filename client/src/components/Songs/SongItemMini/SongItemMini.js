@@ -27,7 +27,6 @@ export const SongItemMini = ({
           <div className={style.Title}>
             <div className={style.ImageContainer}>
                 <img src={song.album_images[0].url} alt="cover img"/>
-                {current && <img src={NowPlaying} alt="nowPlaying" /> }
                 <button>
                     {current ? <Pause/> : <Play/>} 
                 </button>

@@ -35,9 +35,7 @@ function Header() {
 
     useEffect(() => {
         var li = document.getElementsByClassName("header-list-item");
-        //console.log(`li is ${li.length}`)
         for (var el of li) {
-            //console.log(`el of li is ${el.firstElementChild.innerHTML}`)
             el.firstElementChild.addEventListener("click", (e) => e.target.classList.toggle("active"));
         }
 

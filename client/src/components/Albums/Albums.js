@@ -8,7 +8,6 @@ const Albums = () => {
   const location = useLocation()
   const { data } = location.state
 
-  console.log(`query is ${JSON.stringify(data)}`)
     return (
       <React.Fragment>
       

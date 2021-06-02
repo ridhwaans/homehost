@@ -30,7 +30,6 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
             }
             if (document.getElementById('AlbumBackground')){
               document.getElementById('AlbumBackground').style.backgroundColor = color.rgb;
-              //remove background: #141414; from html, body {}
             }
           })
           .catch((err) => {
@@ -127,7 +126,6 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
   };
   
   const mapStateToProps = (state) => {
-    //console.log(`state is ${JSON.stringify(state.playing)}`);
     return {
       currentSong: state.playing.song,
     };

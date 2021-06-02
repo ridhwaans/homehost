@@ -24,10 +24,8 @@ const Player = () => {
 
   }, [])
 
-    //console.log(`context is ${JSON.stringify(context.playerItem)}`)
     var episode = null;
     if (context.playerItem && context.playerItem.data && context.playerItem.data.type == "TVShow") { 
-      //console.log(`season_number is ${context.playerItem.season_number}`)
       episode = context.playerItem.data.seasons
       .find(season => season.season_number == context.playerItem.season_number).episodes
       .find(episode => episode.episode_number == context.playerItem.episode_number);

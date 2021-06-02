@@ -64,7 +64,7 @@ const Music = () => {
       <div className={style.App}>
         <Router>
           <SideBar />
-          <MusicHeader account={{display_name: "Test User"}}/>
+          <MusicHeader account={{display_name: "User"}}/>
           <Route path="/music" exact>
             <MusicHome albums={albums} artists={artists} songs={songs}/>
           </Route>   

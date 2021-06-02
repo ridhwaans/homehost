@@ -12,6 +12,8 @@
 .MusicRow .RowHeader {
     display: flex;
     justify-content: space-between;
+    padding-right: 32px;
+    margin-bottom: 0.67em;
 }
 
 .MusicRow .RowHeader .Title {

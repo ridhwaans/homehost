@@ -14,7 +14,6 @@ const months = [
   ];
   
   export const formatDate = (dateString) => {
-    //console.log(dateString);
     const arr = dateString.split("-");
   
     const year = arr[0];
@@ -34,7 +33,11 @@ const months = [
     if (elmRef.current) {
       const right = elmRef.current.getBoundingClientRect().right;
       const left = elmRef.current.getBoundingClientRect().left;
-      const pos = event.screenX;
+
+      const { screen } = window;
+      const { availLeft, availTop } = screen;
+      const hostScreenX=event.screenX-availLeft+ (availLeft ? (screen.width - screen.availWidth) : 0);
+      const pos = hostScreenX; //event.screenX;
   
       const scale = right - left;
       const input = pos - left;

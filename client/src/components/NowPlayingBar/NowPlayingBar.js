@@ -47,8 +47,6 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
   if (!song) {
     return null;
   } else {
-    //console.log(`song.preview_url: ${song.preview_url}`)
-    //console.log(`song.url_path: ${song.url_path}`)
     return (    
         <div className={style.Player}>
         <footer>

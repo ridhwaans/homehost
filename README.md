@@ -7,7 +7,7 @@
   <a href="https://github.com/ridhwaans/homehost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ridhwaans/homehost.svg" alt="license"></a>
 </p>
 
-<h3 align="center"> homehost is made for streaming your media collection over the home network </h3>
+<h3 align="center"> homehost streams your media collection over the home network </h3>
 <h4 align="center"> Features: 🎥 Movies, 🎵 Music, 📺 TV Shows, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
 ## 🎥 Movies
@@ -83,7 +83,7 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
  
 Run `npm run start-dev` from the `server/` directory   
  
-On the server, call `/api?generate` **once**. Wait for the async call to finish and save  
+On the server, call `/api?generate` **once**. Wait for the async job to finish and save  
 There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api?generate`  
 <!-- Run `ncu` from the `server/` directory and from the `client/` directory to check for package.json` updates -->
 
@@ -96,29 +96,36 @@ By default the server port is `5000`, client port is `3000`
 
 #### Server-side
 
-**GET** /api
-**GET** /api/about
-**GET** /api/movies
-**GET** /api/tv
-**GET** /api/music
-**GET** /api/movies/most_popular
-**GET** /api/movies/highest_rated
-**GET** /api/movies/recently_added
-**GET** /api/movies/genres
-**GET** /api/movies/genres/:name
-**GET** /api/movies/random
-**GET** /api/movies/:id
-**GET** /api/tv/most_popular
-**GET** /api/tv/highest_rated
-**GET** /api/tv/recently_added
-**GET** /api/tv/genres
-**GET** /api/tv/genres/:name
-**GET** /api/tv/random
-**GET** /api/tv/:id
-**GET** /api/music/albums/:id
-**GET** /movies/:id
-**GET** /tv/:tv_id/:season_number/:episode_number
-**GET** /music/:album_id/:disc_number/:track_number
+ **POST**  
+ `/api?generate=movies,tv,music`  
+ **GET**  
+ `/api/about`  
+ `/api/movies`  
+ `/api/movies/most_popular`  
+ `/api/movies/highest_rated`  
+ `/api/movies/recently_added`  
+ `/api/movies/genres`  
+ `/api/movies/genres/:name`  
+ `/api/movies/random`  
+ `/api/movies/:id`  
+ `/api/tv`  
+ `/api/tv/most_popular`  
+ `/api/tv/highest_rated`  
+ `/api/tv/recently_added`  
+ `/api/tv/genres`  
+ `/api/tv/genres/:name`  
+ `/api/tv/random`  
+ `/api/tv/:id`  
+ `/api/music/recently_added`  
+ `/api/music/artists`  
+ `/api/music/albums`  
+ `/api/music/albums/:id`  
+ `/api/music/songs`  
+ `/movies/:id`  
+ `/tv/:tv_id/:season_number/:episode_number`  
+ `/music/:album_id/:disc_number/:track_number`  
+ `/api/watch/search`  
+ `/api/listen/search`  
 
 #### Client-side
 
@@ -127,11 +134,11 @@ TODO `/books`, `/comics`, `/podcasts`
 
 ## Development
 
-Works best in <img src="client/src/assets/logo/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
+Works best in <img src="client/src/assets/logos/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
 
 ## Powered by
 
-<p><img src="client/src/assets/logo/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="client/src/assets/logo/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
+<p><img src="client/src/assets/logos/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="client/src/assets/logos/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
 
 ## License
 
