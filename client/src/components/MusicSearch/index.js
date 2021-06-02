@@ -2,14 +2,14 @@ import React, { useContext, useRef, useEffect, useState, useCallback } from "rea
 import { useHistory, useLocation } from "react-router-dom";
 import musicSearchContext from "../MusicSearch/context"
 import { searchMusicBy } from "../../api"
-import AlbumResults from "./AlbumResults/AlbumResults";
-import ArtistResults from "./ArtistResults/ArtistResults";
-import style from "./MusicSearch.module.css"
+import MusicRow from "../MusicRow/MusicRow";
+import style from "../MusicHome/MusicHome.module.css"
 
 const MusicSearch = () => {
     const context = useContext(musicSearchContext)
     const history = useHistory()
     const location = useLocation()
+    const [songs, setSongs] = useState(null)
     const [albums, setAlbums] = useState(null)
     const [artists, setArtists] = useState(null)
     const [page, setPage] = useState(1)
@@ -18,6 +18,7 @@ const MusicSearch = () => {
     const fetchData = useCallback(async () => {
         return await searchMusicBy(context.searchInput, null).then(response => {
 
+            setSongs(response.results.songs)
             setAlbums(response.results.albums)
             setArtists(response.results.artists)
             //setPage(response.data.page)
@@ -63,6 +64,7 @@ const MusicSearch = () => {
         fetchData()
 
         return () => {
+            setSongs(null)
             setAlbums(null)
             setArtists(null)
         }
@@ -70,28 +72,10 @@ const MusicSearch = () => {
 
     return (
         <React.Fragment>
-        <div className={style.MusicSearch}>
-            {albums ? (
-                albums.length ? (
-                    <AlbumResults albums={albums}/>
-                ) : (<div className="not-found">No results :/ </div>)
-            ) : (
-                <div className="loading-content">
-                    <div className="loading-circle"></div>
-                    <span className="loading-name">LOADING...</span>
-                </div>
-            )}
-
-            {artists ? (
-                artists.length ? (
-                    <ArtistResults artists={artists}/>
-                ) : (<div className="not-found">No results :/ </div>)
-            ) : (
-                <div className="loading-content">
-                    <div className="loading-circle"></div>
-                    <span className="loading-name">LOADING...</span>
-                </div>
-            )}
+        <div className={style.MusicHome}>
+            <MusicRow mainTitle={"Songs"} data={songs} music_type={"songs"}/>
+            <MusicRow mainTitle={"Albums"} data={albums} music_type={"albums"}/>
+            <MusicRow mainTitle={"Artists"} data={artists} music_type={"artists"}/>
         </div>
         </React.Fragment>
     )

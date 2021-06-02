@@ -76,7 +76,7 @@ app.get('/api/movies/highest_rated', function(req, res) {
 
 app.get('/api/movies/recently_added', function(req, res) {
   // new
-  const recently_added = moviesData.movies.sort((a,b) => b.mtime - a.mtime).slice(0,25);
+  const recently_added = moviesData.movies.sort((a,b) => new Date(b.mtime) - new Date(a.mtime)).slice(0,25);
   res.json(recently_added);
 });
 
@@ -328,6 +328,7 @@ const multiPropsFilterMusicSongs = (keyword) => {
   return musicData.music.map(album => album.tracks.items
     .map(song => {song.album_name = album.name; song.album_images = album.images; song.artists = album.artists; return song}))
     .flat(Infinity)
+    .filter(song => song.url_path != null)
     .filter(song => song.name.match(new RegExp(keyword, 'i')) != null)
 }
 
@@ -355,6 +356,7 @@ app.get('/api/listen/search', function(req, res) {
   
   let keyword = qs.parse(req.query).q;
   console.log(`keyword is "${keyword}"`)
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl)
   let search_results = {results: {songs:[], artists: [], albums: []}, song_count: 0, artist_count: 0, album_count: 0, total_count: 0};
   if (keyword.trim() === "" ) {
     res.json(search_results);
