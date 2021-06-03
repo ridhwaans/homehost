@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react"
 import PlayerContext from "../Player/context"
 
-const Episodes = ({ additionalMovieInfo }) => {
+const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     const { playerItem, setPlayerItem } = useContext(PlayerContext)
     const [seasonNumber, setSeasonNumber] = useState(1)
 
@@ -13,10 +13,16 @@ const Episodes = ({ additionalMovieInfo }) => {
     
     }, [])
 
+    if (additionalMovieInfo && additionalMovieInfo.type == "Movie"){
+        console.log(additionalMovieInfo.type)
+        noEpisodesTab()
+    }
+
     return (
+        additionalMovieInfo && additionalMovieInfo.type == "TVShow" && (
         <div className="menu-episodes">
             <select id="seasons" onChange={changeSeason}>
-            {additionalMovieInfo && additionalMovieInfo.seasons.map((season, index) => {
+            {additionalMovieInfo.seasons.map((season, index) => {
                 return (
                     <option value={index}>{season.name}</option>
                 )
@@ -25,7 +31,7 @@ const Episodes = ({ additionalMovieInfo }) => {
 
             <div className="menu-episode-content">
 
-                {additionalMovieInfo && additionalMovieInfo.seasons && additionalMovieInfo.seasons
+                {additionalMovieInfo.seasons
                 .find(season => season.season_number == seasonNumber).episodes.map((episode, index) => {
 
                     return (
@@ -42,6 +48,7 @@ const Episodes = ({ additionalMovieInfo }) => {
                 })}
             </div>
         </div>
+        )
     )
 }
 

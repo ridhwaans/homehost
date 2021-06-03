@@ -347,6 +347,17 @@ app.get('/api/listen/search', (req, res) => {
   res.json(search_results);
 });
 
+app.get('/api/watch/billboard', (req, res) => {
+  // random
+  const billboardItem = Math.random() < 0.5 ? 
+  tvData.tv[Math.floor(Math.random() * tvData.tv.length)] 
+  : moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
+  // specific
+  // const billboardItem = tvData.tv.find(tv => tv.id == parseInt(req.params.id))
+  // const billboardItem = moviesData.movies.find(movie => movie.id == parseInt(req.params.id))
+  res.json(billboardItem);
+});
+
 // Handles any requests that don't match the ones above
 if (process.env.NODE_ENV == 'prod'){
   app.get('*', (req, res) => {

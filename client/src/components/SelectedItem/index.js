@@ -53,7 +53,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
 
                                     <div className="actions">
                                         <div className="play-link">
-                                            <button className="hasLabel" onClick={() => {additionalMovieInfo.type == "Movie" ? setPlayerItem(additionalMovieInfo) : setPlayerItem({data: additionalMovieInfo, season_number: 1, episode_number: 1})}}>
+                                            <button className="hasLabel" onClick={() => {additionalMovieInfo.type == "Movie" ? setPlayerItem(additionalMovieInfo) : setPlayerItem({data: additionalMovieInfo, season_number: additionalMovieInfo.seasons[0].season_number, episode_number: additionalMovieInfo.seasons[0].episodes[0].episode_number})}}>
                                                 <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
                                                 <span>Play</span>
                                             </button>
