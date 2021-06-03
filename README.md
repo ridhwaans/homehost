@@ -11,13 +11,13 @@
 <h4 align="center"> Features: 🎥 Movies, 🎵 Music, 📺 TV Shows, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
 ## 🎥 Movies
-![movies](media/v1-movies-1.PNG)
-### [Demo](https://homehost-demo.herokuapp.com/movies)
-[![movies-gif](media/v1-movies-demo-1.gif)](https://homehost-demo.herokuapp.com/movies)
+![movies_1](media/movies_1.png)
+![movies_2](media/movies_2.png)
+## 📺 TV Shows
+![tv](media/tv.png)
 ## 🎵 Music
-![music](media/v1-music-1.PNG)
-### [Demo](https://homehost-demo.herokuapp.com/music)
-[![music-gif](media/v1-music-demo-1.gif)](https://homehost-demo.herokuapp.com/music)
+![music](media/music_1.png)
+![music](media/music_2.png)
 
 ## Setup
 

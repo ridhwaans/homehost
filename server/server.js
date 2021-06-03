@@ -353,8 +353,8 @@ app.get('/api/watch/billboard', (req, res) => {
   tvData.tv[Math.floor(Math.random() * tvData.tv.length)] 
   : moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
   // specific
-  // const billboardItem = tvData.tv.find(tv => tv.id == parseInt(req.params.id))
-  // const billboardItem = moviesData.movies.find(movie => movie.id == parseInt(req.params.id))
+  // const billboardItem = moviesData.movies.find(movie => movie.id == parseInt())
+  // const billboardItem = tvData.tv.find(tv => tv.id == parseInt())
   res.json(billboardItem);
 });
 

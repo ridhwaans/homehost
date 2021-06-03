@@ -14,7 +14,6 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     }, [])
 
     if (additionalMovieInfo && additionalMovieInfo.type == "Movie"){
-        console.log(additionalMovieInfo.type)
         noEpisodesTab()
     }
 
