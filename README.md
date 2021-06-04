@@ -1,30 +1,45 @@
 # homehost
 
-<p align="center">
-  <a href="https://github.com/ridhwaans/homehost/releases/"><img src="https://img.shields.io/github/release/ridhwaans/homehost.svg" alt="release"></a>
-  <a href="https://github.com/ridhwaans/homehost/tags/"><img src="https://img.shields.io/github/tag/ridhwaans/homehost.svg" alt="tag"></a>
-  <a href="https://github.com/ridhwaans/homehost/commit/"><img src="https://img.shields.io/github/commits-since/ridhwaans/homehost/client-v1.1.0.svg" alt="commits-since"></a>
-  <a href="https://github.com/ridhwaans/homehost/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ridhwaans/homehost.svg" alt="license"></a>
-</p>
+<h3 align="left"> homehost streams your media collection over the home network </h3>
+<h4 align="left"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
-<h3 align="center"> homehost streams your media collection over the home network </h3>
-<h4 align="center"> Features: 🎥 Movies, 🎵 Music, 📺 TV Shows, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
-
+[homehost](#homehost)
+  * [🎥 Movies](#---movies)
+  * [📺 TV Shows](#---tv-shows)
+  * [🎵 Music](#---music)
+  * [⚙️ Setup](#setup)
+    + [Naming conventions](#naming-conventions)
+    + [Generating metadata](#generating-metadata)
+    + [Run](#run)
+    + [Routes](#routes)
+      - [Server-side](#server-side)
+      - [Client-side](#client-side)
+  * [Development](#development)
+  * [Powered by](#powered-by)
+  * [License](#license)
+  * [Disclaimer](#disclaimer)
+    + [General Copyright Statement](#general-copyright-statement)
+    
 ## 🎥 Movies
+### Home
 ![movies_1](media/movies_1.png)
+### Search
 ![movies_2](media/movies_2.png)
 ## 📺 TV Shows
+### Home
 ![tv](media/tv.png)
 ## 🎵 Music
+### Home
 ![music](media/music_1.png)
+### Album
 ![music](media/music_2.png)
 
-## Setup
+## ⚙️ Setup
 
-Run `npm install` from the `client/` directory and from the `server/` directory
-Create a `.env` file in the `client/` directory, if it does not exist
-In `.env`, set the base url of the homehost server 
-###### **`.env`**
+Run `npm install` from the `client/` directory and from the `server/` directory  
+Create a `.env` file in the `client/` directory, if it does not exist  
+In `.env`, set the base url of the homehost server  
+###### **`client/.env`**
 ```env
 REACT_APP_HOMEHOST_API = "http://localhost:5000/api"
 REACT_APP_IMAGE_BASE = "https://image.tmdb.org/t/p/"
@@ -32,7 +47,7 @@ REACT_APP_TMDB_BASE = "https://www.imdb.com/title/"
 ```  
 Create a `.env` file in the `server/` directory, if it does not exist  
 In `.env`, set the media paths, and set a working API key for TMDb API and Spotify Web API  
-###### **`.env`**
+###### **`server/.env`**
 ```env
 MOVIES_PATH = '/path/to/movies/directory'
 MOVIES_API = 'api.themoviedb.org/3'
@@ -72,7 +87,7 @@ Your media must appear in the path set by `.env`
  - (album_directory_name <Spotify-album-ID>)  
    - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)  
 ```
-Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number
+Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number  
 ```
 <music_path>  
  - Unknown Album  
@@ -81,7 +96,7 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 
 ### Generating metadata
  
-Run `npm run start-dev` from the `server/` directory   
+Run `npm run start-dev` from the `server/` directory  
  
 On the server, call `/api?generate` **once**. Wait for the async job to finish and save  
 There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api?generate`  
@@ -126,6 +141,7 @@ By default the server port is `5000`, client port is `3000`
  `/music/:album_id/:disc_number/:track_number`  
  `/api/watch/search`  
  `/api/listen/search`  
+ `/api/watch/billboard`  
 
 #### Client-side
 
@@ -154,7 +170,8 @@ Our project follows the safe harbor provisions of 17 U.S.C. §512, otherwise kno
 
 If any images posted here are in violation of copyright law, please contact us and we will gladly remove the offending images immediately upon receipt of valid proof of copyright infringement.
 
-### General Copyright Statement  
+### General Copyright Statement
+
 Most of the sourced material is posted according to the “fair use” doctrine of copyright law for non-commercial news reporting, education and discussion purposes. We comply with all takedown requests.
 
 You may not use the Service for any illegal or unauthorized purpose. You must not, in the use of the Service, violate any laws in your jurisdiction (including but not limited to copyright or trademark laws).
