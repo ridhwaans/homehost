@@ -1,13 +1,12 @@
 # homehost
 
-<h3 align="left"> homehost streams your media collection over the home network </h3>
-<h4 align="left"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
+<h3 align="center"> homehost streams your media collection over the home network </h3>
+<h4 align="center"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
-[homehost](#homehost)
-  * [🎥 Movies](#---movies)
-  * [📺 TV Shows](#---tv-shows)
-  * [🎵 Music](#---music)
-  * [⚙️ Setup](#setup)
+  * [🎥 Movies](#-movies)
+  * [📺 TV Shows](#-tv-shows)
+  * [🎵 Music](#-music)
+  * [⚙️ Setup](#%EF%B8%8F-setup)
     + [Naming conventions](#naming-conventions)
     + [Generating metadata](#generating-metadata)
     + [Run](#run)
@@ -19,7 +18,7 @@
   * [License](#license)
   * [Disclaimer](#disclaimer)
     + [General Copyright Statement](#general-copyright-statement)
-    
+
 ## 🎥 Movies
 ### Home
 ![movies_1](media/movies_1.png)
@@ -158,7 +157,7 @@ Works best in <img src="client/src/assets/logos/Chrome.svg" width="16" height="1
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
 ## Disclaimer
 
