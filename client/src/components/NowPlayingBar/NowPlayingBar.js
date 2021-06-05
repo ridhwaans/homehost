@@ -113,7 +113,7 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
         </footer>
         { song.url_path && (
           <Sound
-            url={song.url_path}
+            url={`${process.env.REACT_APP_HOMEHOST_BASE}${song.url_path}`}
             playStatus={playing ? "PLAYING" : "PAUSED"}
             onPlaying={({ position }) => {
               setTime(position);

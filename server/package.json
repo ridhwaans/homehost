@@ -1,26 +1,28 @@
 {
   "name": "homehost-server",
   "version": "1.5.0",
+  "private": true,
   "author": "ridhwaans",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=dev nodemon server",
     "client-dev": "cd ../client && npm start",
-    "start-dev": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client-dev\""
+    "start-dev": "concurrently --kill-others-on-fail \"npm run dev\" \"npm run client-dev\"",
+    "prestart": "cd ../client && npm install && npm run build",
+    "start": "NODE_ENV=prod node server"
   },
   "dependencies": {
     "axios": "^0.21.1",
     "chokidar": "^3.5.1",
-    "dotenv": "^9.0.2",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "figlet": "^1.5.0",
-    "qs": "^6.7.0",
+    "qs": "^6.10.1",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "concurrently": "^6.1.0",
-    "ncu": "^0.2.1",
+    "concurrently": "^6.2.0",
     "nodemon": "^2.0.7",
-    "npm-check-updates": "^11.5.11"
+    "npm-check-updates": "^11.6.0"
   }
 }

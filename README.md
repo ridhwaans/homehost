@@ -40,7 +40,7 @@ Create a `.env` file in the `client/` directory, if it does not exist
 In `.env`, set the base url of the homehost server  
 ###### **`client/.env`**
 ```env
-REACT_APP_HOMEHOST_API = "http://localhost:5000/api"
+REACT_APP_HOMEHOST_BASE = "http://localhost:5000"
 REACT_APP_IMAGE_BASE = "https://image.tmdb.org/t/p/"
 REACT_APP_TMDB_BASE = "https://www.imdb.com/title/"
 ```  
@@ -61,7 +61,7 @@ MUSIC_API = 'api.spotify.com/v1'
 MUSIC_CLIENT_ID = '<client_id>'
 MUSIC_CLIENT_SECRET = '<client_secret>'
 
-CLIENT_BASE = 'http://localhost:3000'
+CLIENT_BASE_URL = 'http://localhost:3000'
 ```
 If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction  
 
@@ -157,7 +157,7 @@ Works best in <img src="client/src/assets/logos/Chrome.svg" width="16" height="1
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Disclaimer
 

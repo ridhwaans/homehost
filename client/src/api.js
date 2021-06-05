@@ -2,7 +2,7 @@ import axios from "axios"
 
 export async function searchMoviesBy(text, page = 1) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/watch/search?q=${text}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/watch/search?q=${text}`)
         .then(function (response) {
             return response.data
 
@@ -11,7 +11,7 @@ export async function searchMoviesBy(text, page = 1) {
 
 export async function searchMusicBy(text, page = 1) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/listen/search?q=${text}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/listen/search?q=${text}`)
         .then(function (response) {
             return response.data
 
@@ -20,7 +20,7 @@ export async function searchMusicBy(text, page = 1) {
 
 export async function getBillboardItem() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/watch/billboard`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/watch/billboard`)
         .then(function (response) {
             return response.data
 
@@ -29,7 +29,7 @@ export async function getBillboardItem() {
 
 export async function getMovieInformation(id) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/movies/${id}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/${id}`)
         .then(function (response) {
             return response.data
 
@@ -38,7 +38,7 @@ export async function getMovieInformation(id) {
 
 export async function getRandomMovie() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/movies/random`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/random`)
         .then(function (response) {
             return response.data
 
@@ -48,7 +48,7 @@ export async function getRandomMovie() {
 
 export async function getMovieGenres() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/movies/genres`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/genres`)
         .then(function (response) {
             return response.data
 
@@ -57,7 +57,7 @@ export async function getMovieGenres() {
 
 export async function getMoviesByGenre(genre) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/movies/genres/${genre}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/genres/${genre}`)
         .then(function (response) {
             return response.data
 
@@ -71,13 +71,13 @@ export async function getMoviesBy(type) {
 
     switch (type) {
         case "most_popular":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/movies/most_popular`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/most_popular`
             break;
         case "highest_rated":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/movies/highest_rated`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/highest_rated`
             break;
         case "recently_added":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/movies/recently_added`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/recently_added`
             break;
         default:
 
@@ -93,7 +93,7 @@ export async function getMoviesBy(type) {
 
 export async function getTVShowInformation(id) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/tv/${id}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/${id}`)
         .then(function (response) {
             return response.data
 
@@ -102,7 +102,7 @@ export async function getTVShowInformation(id) {
 
 export async function getRandomTVShow() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/tv/random`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/random`)
         .then(function (response) {
             return response.data
 
@@ -112,7 +112,7 @@ export async function getRandomTVShow() {
 
 export async function getTVShowGenres() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/tv/genres`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/genres`)
         .then(function (response) {
             return response.data
 
@@ -121,7 +121,7 @@ export async function getTVShowGenres() {
 
 export async function getTVShowsByGenre(genre) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/tv/genres/${genre}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/genres/${genre}`)
         .then(function (response) {
             return response.data
 
@@ -135,13 +135,13 @@ export async function getTVShowsBy(type) {
 
     switch (type) {
         case "most_popular":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/tv/most_popular`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/most_popular`
             break;
         case "highest_rated":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/tv/highest_rated`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/highest_rated`
             break;
         case "recently_added":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/tv/recently_added`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/recently_added`
             break;
         default:
 
@@ -156,7 +156,7 @@ export async function getTVShowsBy(type) {
 
 export async function getAllAlbums() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/albums`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/music/albums`)
         .then(function (response) {
             return response.data
 
@@ -165,7 +165,7 @@ export async function getAllAlbums() {
 
 export async function getAllArtists() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/artists`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/music/artists`)
         .then(function (response) {
             return response.data
 
@@ -174,7 +174,7 @@ export async function getAllArtists() {
 
 export async function getAllSongs() {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/songs`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/music/songs`)
         .then(function (response) {
             return response.data
 
@@ -183,7 +183,7 @@ export async function getAllSongs() {
 
 export async function getAlbumInformation(id) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_API}/music/albums/${id}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/music/albums/${id}`)
         .then(function (response) {
             return response.data
 
@@ -196,7 +196,7 @@ export async function getMusicBy(type) {
 
     switch (type) {
         case "recently_added":
-            discover = `${process.env.REACT_APP_HOMEHOST_API}/music/recently_added`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/music/recently_added`
             break;
         default:
 

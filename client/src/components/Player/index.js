@@ -51,7 +51,7 @@ const Player = () => {
       {context.playerItem && (
         <div id={"player"} >
           <ReactNetflixPlayer
-            src={context.playerItem.type == "Movie" ? context.playerItem.url_path : episode.url_path}
+            src={`${process.env.REACT_APP_HOMEHOST_BASE}${context.playerItem.type == "Movie" ? context.playerItem.url_path : episode.url_path}`}
             // Pause screen 
             // movie or show name
             title={context.playerItem.type == "Movie" ? context.playerItem.title : context.playerItem.data.name}

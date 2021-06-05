@@ -32,11 +32,11 @@ watcher
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV == 'prod'){
-  app.use(express.static(path.join(__dirname, '../client/public')));
+  app.use(express.static(path.join(__dirname, '../client/build')));
 }
 // CORS
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.CLIENT_BASE); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT_BASE_URL); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
@@ -52,7 +52,7 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/api/about', (req, res) => {
-  let hello = {homehost: 'hello world'};
+  let hello = {homehost: 'hello world', environment: process.env.NODE_ENV};
   res.json(hello);
 });
 
@@ -174,12 +174,11 @@ app.get('/api/music/songs', (req, res) => {
 
 
 app.get('/movies/:id', (req, res) => {
-  var movie_fs_path = moviesData.movies
+  const file_path = moviesData.movies
     .filter(movie => movie.id == parseInt(req.params.id))
     .map(movie => movie.fs_path).toString();
     
-  const path = movie_fs_path
-  const stat = fs.statSync(path)
+  const stat = fs.statSync(file_path)
   const fileSize = stat.size
   const range = req.headers.range
   if (range) {
@@ -189,7 +188,7 @@ app.get('/movies/:id', (req, res) => {
       ? parseInt(parts[1], 10)
       : fileSize-1
     const chunksize = (end-start)+1
-    const file = fs.createReadStream(path, {start, end})
+    const file = fs.createReadStream(file_path, {start, end})
     const head = {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
       'Accept-Ranges': 'bytes',
@@ -204,19 +203,18 @@ app.get('/movies/:id', (req, res) => {
       'Content-Type': 'video/mp4',
     }
     res.writeHead(200, head)
-    fs.createReadStream(path).pipe(res)
+    fs.createReadStream(file_path).pipe(res)
   }
 });
 
 app.get('/tv/:tv_id/:season_number/:episode_number', (req, res) => {
-  var episode_fs_path = tvData.tv
+  const file_path = tvData.tv
     .find(tv => tv.id == parseInt(req.params.tv_id)) 
     .seasons.find(season => season.season_number == parseInt(req.params.season_number))
     .episodes.find(episode => episode.episode_number == parseInt(req.params.episode_number))
     .fs_path.toString();
 
-  const path = episode_fs_path
-  const stat = fs.statSync(path)
+  const stat = fs.statSync(file_path)
   const fileSize = stat.size
   const range = req.headers.range
   if (range) {
@@ -226,7 +224,7 @@ app.get('/tv/:tv_id/:season_number/:episode_number', (req, res) => {
       ? parseInt(parts[1], 10)
       : fileSize-1
     const chunksize = (end-start)+1
-    const file = fs.createReadStream(path, {start, end})
+    const file = fs.createReadStream(file_path, {start, end})
     const head = {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
       'Accept-Ranges': 'bytes',
@@ -241,40 +239,38 @@ app.get('/tv/:tv_id/:season_number/:episode_number', (req, res) => {
       'Content-Type': 'video/mp4',
     }
     res.writeHead(200, head)
-    fs.createReadStream(path).pipe(res)
+    fs.createReadStream(file_path).pipe(res)
   }
 });
 
 app.get('/music/:album_id/:disc_number/:track_number', (req, res) => {
-  var track_fs_path = musicData.music
+  const file_path = musicData.music
     .find(album => album.id == req.params.album_id)
     .tracks.items.filter(item => item.disc_number == parseInt(req.params.disc_number) && item.track_number == parseInt(req.params.track_number))
     .map(track => track.fs_path).toString();
 
-    const filePath = track_fs_path
-    var stat = fs.statSync(filePath);
-    var total = stat.size;
-    if (req.headers.range) {
-        var range = req.headers.range;
-        var parts = range.replace(/bytes=/, "").split("-");
-        var partialstart = parts[0];
-        var partialend = parts[1];
+  var stat = fs.statSync(file_path);
+  var total = stat.size;
+  if (req.headers.range) {
+      var range = req.headers.range;
+      var parts = range.replace(/bytes=/, "").split("-");
+      var partialstart = parts[0];
+      var partialend = parts[1];
 
-        var start = parseInt(partialstart, 10);
-        var end = partialend ? parseInt(partialend, 10) : total-1;
-        var chunksize = (end-start)+1;
-        var readStream = fs.createReadStream(filePath, {start: start, end: end});
-        res.writeHead(206, {
-            'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
-            'Accept-Ranges': 'bytes', 'Content-Length': chunksize,
-            'Content-Type': 'video/mp4'
-        });
-        readStream.pipe(res);
-     } else {
-        res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/mpeg' });
-        fs.createReadStream(filePath).pipe(res);
-     }
-
+      var start = parseInt(partialstart, 10);
+      var end = partialend ? parseInt(partialend, 10) : total-1;
+      var chunksize = (end-start)+1;
+      var readStream = fs.createReadStream(file_path, {start: start, end: end});
+      res.writeHead(206, {
+          'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
+          'Accept-Ranges': 'bytes', 'Content-Length': chunksize,
+          'Content-Type': 'video/mp4'
+      });
+      readStream.pipe(res);
+    } else {
+      res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/mpeg' });
+      fs.createReadStream(file_path).pipe(res);
+    }
 });
 
 const multiPropsFilterMovies = (movie, keyword) => {
@@ -349,7 +345,7 @@ app.get('/api/listen/search', (req, res) => {
 
 app.get('/api/watch/billboard', (req, res) => {
   // random
-  const billboardItem = Math.random() < 0.5 ? 
+  const billboardItem = Math.random() < 0.03 ? 
   tvData.tv[Math.floor(Math.random() * tvData.tv.length)] 
   : moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
   // specific
@@ -361,7 +357,7 @@ app.get('/api/watch/billboard', (req, res) => {
 // Handles any requests that don't match the ones above
 if (process.env.NODE_ENV == 'prod'){
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client/public/index.html'));
+    res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
   });
 }
 
@@ -393,12 +389,13 @@ const generateMovieMetaData = async () => {
         console.log('GET: ' + file);
         const movie = await new metadataService().get(new Movie({ id: file.match(re)[1] }))
         movie.fs_path = file;
-        movie.url_path = `http://localhost:${port}/movies/${movie.id}`;
-        movie.ctime = fs.statSync(file).ctime;
-        movie.mtime = fs.statSync(file).mtime;
+        movie.url_path = `/movies/${movie.id}`;
+        movie.ctime = fs.statSync(movie.fs_path).ctime;
+        movie.mtime = fs.statSync(movie.fs_path).mtime;
+
         json.movies.push(movie);
       } catch(e) {
-        console.log("There was a problem fetching metadata. Skipping this movie")
+        console.log("There was a problem fetching metadata. Skipping this movie", e)
         continue; // go next
       }
     }
@@ -433,15 +430,15 @@ const generateTVMetaData = async () => {
       let episode_number = parseInt(episode_file.match(re2)[2])
       try {
         let episode = await new metadataService().get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
-        episode.fs_path = `${tv_show[0]}/${episode_file}`;
-        episode.url_path = `http://localhost:${port}/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
+        episode.fs_path = `${tv_show[0]}/${episode_file}`; 
+        episode.url_path = `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
         episode.ctime = fs.statSync(episode.fs_path).ctime;
         episode.mtime = fs.statSync(episode.fs_path).mtime;
 
         let seasonIndex = show.seasons.findIndex(season => season.season_number == season_number.toString()); 
         show.seasons[seasonIndex].episodes.push(episode);
       } catch(e) {
-        console.log("There was a problem fetching metadata. Skipping this episode")
+        console.log("There was a problem fetching metadata. Skipping this episode", e)
         continue; // go next
       }
     }
@@ -508,7 +505,7 @@ const generateMusicMetaData = async () => {
           item.track_number = index + 1
           item.duration_ms = 'NaN'
           item.fs_path = `${album_dir[0]}/${track_file}`
-          item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`
+          item.url_path = `/music/${album.id}/${item.disc_number}/${item.track_number}`
           item.external_urls = {spotify: null}
           item.ctime = fs.statSync(item.fs_path).ctime
           item.mtime = fs.statSync(item.fs_path).mtime
@@ -540,8 +537,8 @@ const generateMusicMetaData = async () => {
             // if local track found
             if ( (item.disc_number == parseInt(track_file.match(re2)[1] || 1) ) && 
               (item.track_number == parseInt(track_file.match(re2)[3]) ) ) {
-              item.fs_path = `${album_dir[0]}/${track_file}` 
-              item.url_path = `http://localhost:${port}/music/${album.id}/${item.disc_number}/${item.track_number}`
+              item.fs_path = `${album_dir[0]}/${track_file}`
+              item.url_path = `/music/${album.id}/${item.disc_number}/${item.track_number}`
               item.ctime = fs.statSync(item.fs_path).ctime
               item.mtime = fs.statSync(item.fs_path).mtime
             }
@@ -554,7 +551,7 @@ const generateMusicMetaData = async () => {
         json.music.push(album);
 
       } catch(e) {
-        console.log("There was a problem fetching metadata. Skipping this album")
+        console.log("There was a problem fetching metadata. Skipping this album", e)
         continue; // go next
       }
     }
