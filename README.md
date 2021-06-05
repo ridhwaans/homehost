@@ -1,4 +1,4 @@
-# homehost
+<h2 align="center"> homehost </h2>
 
 <h3 align="center"> homehost streams your media collection over the home network </h3>
 <h4 align="center"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>

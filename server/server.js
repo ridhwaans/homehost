@@ -430,7 +430,7 @@ const generateTVMetaData = async () => {
       let episode_number = parseInt(episode_file.match(re2)[2])
       try {
         let episode = await new metadataService().get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
-        episode.fs_path = `${tv_show[0]}/${episode_file}`; 
+        episode.fs_path = `${tv_show[0]}/${episode_file}`;
         episode.url_path = `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
         episode.ctime = fs.statSync(episode.fs_path).ctime;
         episode.mtime = fs.statSync(episode.fs_path).mtime;
