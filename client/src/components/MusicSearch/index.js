@@ -2,6 +2,7 @@ import React, { useContext, useRef, useEffect, useState, useCallback } from "rea
 import { useHistory, useLocation } from "react-router-dom";
 import musicSearchContext from "../MusicSearch/context"
 import { searchMusicBy } from "../../api"
+import { useDebounce } from "../../hooks/useDebounce"
 import MusicRow from "../MusicRow/MusicRow";
 import style from "../MusicHome/MusicHome.module.css"
 
@@ -12,21 +13,19 @@ const MusicSearch = () => {
     const [songs, setSongs] = useState(null)
     const [albums, setAlbums] = useState(null)
     const [artists, setArtists] = useState(null)
-    const [page, setPage] = useState(1)
-    const [totalPages, setTotalPages] = useState(null)
+
+    const dInput = useDebounce(context.searchInput, 1000);
 
     const fetchData = useCallback(async () => {
-        return await searchMusicBy(context.searchInput, null).then(response => {
+        return await searchMusicBy(dInput, null).then(response => {
 
             setSongs(response.results.songs)
             setAlbums(response.results.albums)
             setArtists(response.results.artists)
-            //setPage(response.data.page)
-            //setTotalPages(response.data.total_pages)
 
         })
 
-    }, [context]);
+    }, [dInput]);
 
     // The below use effect will trigger when ever one of the following changes:
     //      - context.searchInput: When ever the current search value updates.
@@ -57,7 +56,7 @@ const MusicSearch = () => {
             history.push(newPath);
         }
         console.log(`basePath is ${basePath}, newPath is ${newPath}`)
-    }, [context.searchInput, location.pathname, history])
+    }, [dInput, location.pathname, history])
 
     useEffect(() => {
 
@@ -68,7 +67,7 @@ const MusicSearch = () => {
             setAlbums(null)
             setArtists(null)
         }
-    }, [fetchData])
+    }, [dInput])
 
     return (
         <React.Fragment>

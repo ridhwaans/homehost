@@ -345,7 +345,7 @@ app.get('/api/listen/search', (req, res) => {
 
 app.get('/api/watch/billboard', (req, res) => {
   // random
-  const billboardItem = Math.random() < 0.03 ? 
+  const billboardItem = Math.random() < (tvData.tv.length / moviesData.movies.length).toFixed(2) ? 
   tvData.tv[Math.floor(Math.random() * tvData.tv.length)] 
   : moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
   // specific

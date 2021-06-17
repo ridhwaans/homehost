@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import MusicSearchContext from "../MusicSearch/context"
+import { debounce } from "../../utils"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import style from "./MusicHeader.module.css"
@@ -23,7 +24,7 @@ const MusicHeader = ({ account }) => {
         {location.pathname.startsWith("/music/search") && <div className={style.SearchBar}>
           <span className={style.Icon}><FontAwesomeIcon icon={faSearch} /></span>
           <input
-            placeholder="Search for Artists, Songs, or Podcasts "
+            placeholder="Search for Artists, Songs, or Podcasts"
             type="text"
             ref={inputRef}
             value={searchInput}
@@ -39,3 +40,7 @@ const MusicHeader = ({ account }) => {
 }
 
 export default MusicHeader;
+
+//debounce(updateSearchInput, 500)(e.currentTarget.value)
+//updateSearchInput(e.currentTarget.value)
+// value={searchInput}

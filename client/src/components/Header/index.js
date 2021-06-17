@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import SearchContext from "../Search/context"
+import { debounce } from "../../utils"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons'
 import logo from "../../assets/logos/Homehost_White.svg"
@@ -45,8 +46,6 @@ function Header() {
         };
     }, []);
 
-    
-   
 
     return (
         <div className="header-height-pinned">
@@ -89,7 +88,6 @@ function Header() {
                     </ul>
                 </div>
 
-
                 <div className="header-options">
                     <div className={`${searchBox ? "searchBox" : "searchIcon"}`}>
                         <span className="icon" onClick={() => toggleSearchBox()}><FontAwesomeIcon icon={faSearch} /></span>
@@ -119,3 +117,7 @@ function Header() {
 }
 
 export default Header;
+
+//debounce(updateSearchInput, 500)(e.currentTarget.value)
+//updateSearchInput(e.currentTarget.value)
+// value={searchInput}

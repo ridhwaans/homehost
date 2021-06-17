@@ -1,6 +1,6 @@
 <h2 align="center"> homehost </h2>
 
-<h3 align="center"> homehost streams your media collection over the home network </h3>
+<h3 align="center"> homehost is made for streaming your media collection within the home network </h3>
 <h4 align="center"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
 
   * [🎥 Movies](#-movies)
@@ -95,17 +95,18 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 
 ### Generating metadata
  
-Run `npm run start-dev` from the `server/` directory  
+Run `npm run start-dev` from the `server/` directory to start the application in dev mode  
  
 On the server, call `/api?generate` **once**. Wait for the async job to finish and save  
-There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and recalling `/api?generate`  
-<!-- Run `ncu` from the `server/` directory and from the `client/` directory to check for package.json` updates -->
+There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and rerunning `/api?generate`  
 
 ### Run
 
-Run `npm run start-dev` from the `server/` directory to start the application  
+Run `npm run start-dev` from the `server/` directory to start the application in dev mode  
 By default the server port is `5000`, client port is `3000`  
- 
+Run `npm start` from the `server/` directory to start the application as prod  
+The default port is `5000`  
+
 ### Routes
 
 #### Server-side

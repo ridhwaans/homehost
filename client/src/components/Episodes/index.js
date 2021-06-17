@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from "react"
 import PlayerContext from "../Player/context"
+import SeasonSelect from "./SeasonSelect"
 
 const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     const { playerItem, setPlayerItem } = useContext(PlayerContext)
     const [seasonNumber, setSeasonNumber] = useState(1)
 
-    const changeSeason = e => {
-        setSeasonNumber(e.target.selectedIndex + 1)
+    const changeSeason = (num) => {
+        setSeasonNumber(num)
     }
 
     useEffect(() => {
@@ -20,14 +21,7 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     return (
         additionalMovieInfo && additionalMovieInfo.type == "TVShow" && (
         <div className="menu-episodes">
-            <select id="seasons" onChange={changeSeason}>
-            {additionalMovieInfo.seasons.map((season, index) => {
-                return (
-                    <option value={index}>{season.name}</option>
-                )
-            })}
-            </select>
-
+            <SeasonSelect items={additionalMovieInfo.seasons} onChange={changeSeason}/>
             <div className="menu-episode-content">
 
                 {additionalMovieInfo.seasons

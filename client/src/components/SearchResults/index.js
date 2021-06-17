@@ -2,8 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import SearchResultsSelectedItem from "../SearchResultsSelectedItem"
 import SearchResultsItem from "../SearchResultsItem"
 import SliderContext from "./context"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronRight, faChevronLeft, faUndo } from '@fortawesome/free-solid-svg-icons'
 
 import useWindowWidth from "../../hooks/useWindowWidth"
 import useSlider from "../../hooks/useSlide"
@@ -28,7 +26,7 @@ function SearchResults({ mainTitle, data, poster }) {
         currentSlide,
         additionalMovieInfo,
         paginationIndicator
-    } = useSlider(width, ref, 20, data, poster);
+    } = useSlider(width, ref, 25, data, poster);
 
     const contextValue = {
         currentSlide
