@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMusic, faFilm } from '@fortawesome/free-solid-svg-icons'
+import { faMusic, faFilm, faTv } from '@fortawesome/free-solid-svg-icons'
 
 import '../../assets/Movies.css';
 
@@ -24,6 +24,12 @@ function NotFound() {
                         <button className="hasLabel">
                             <span className="play-icon"><FontAwesomeIcon icon={faFilm} /></span>
                             <span>Movies Home</span>
+                        </button>
+                    </a>
+                    <a className="play-link" href={"/tv"}>
+                        <button className="hasLabel">
+                            <span className="play-icon"><FontAwesomeIcon icon={faTv} /></span>
+                            <span>TV Home</span>
                         </button>
                     </a>
                     <a className="play-link" href={"/music"}>

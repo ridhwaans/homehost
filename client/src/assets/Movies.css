@@ -1580,10 +1580,24 @@ background-position: 50% -50%;
 
 .episode-item .episode-item-image {
   margin-bottom: 8px;
+  display: inline-flex;
+  position: relative;
 }
 
 .episode-item .episode-item-image img {
   width: 100%;
+}
+
+.episode-item .episode-item-image img:hover {
+  cursor: pointer;
+}
+
+.episode-item .episode-item-image-overlay {
+  font-size: 1.6vw;
+  padding-left: 2px;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
 }
 
 /* SIMILAR  */
@@ -2152,6 +2166,7 @@ background-position: 50% -50%;
   font-family: Arial;
   font-size: 18px;
   font-weight: 600;
+  margin-bottom: 1vw;
 }
 
 .select-selected {
