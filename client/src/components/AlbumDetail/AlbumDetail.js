@@ -46,8 +46,6 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
 
     const songClicked = (song) => {
       if (song.url_path || song.preview_url) {
-        song.album_images = album.images
-        song.artists = album.artists
         loadSong(song);
       }
     };
@@ -81,7 +79,8 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   </span>
                   <span className={style.Text_Light}>
                     {
-                    album.name == "Unknown Album" ? `${album.tracks.local_total} local tracks`
+                    album.name == "Unknown Album" ? `${album.tracks.local_total} local tracks, 
+                    ${millisToEnglishWords(album.tracks.total_duration_ms)}`
                     : `${album.tracks.local_total} local tracks, ${album.tracks.preview_total} previews, ${album.total_tracks} songs, 
                     ${millisToEnglishWords(album.tracks.total_duration_ms)}`
                     }

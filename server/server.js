@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const chokidar = require('chokidar');
+const { getAudioDurationInSeconds } = require('get-audio-duration');
 const figlet = require('figlet');
 const qs = require('qs');
 const app = express();
@@ -172,12 +173,7 @@ app.get('/api/music/songs', (req, res) => {
   res.json(songs)
 });
 
-
-app.get('/movies/:id', (req, res) => {
-  const file_path = moviesData.movies
-    .filter(movie => movie.id == parseInt(req.params.id))
-    .map(movie => movie.fs_path).toString();
-    
+const readStreamMp4 = (req, res, file_path) => {
   const stat = fs.statSync(file_path)
   const fileSize = stat.size
   const range = req.headers.range
@@ -205,6 +201,14 @@ app.get('/movies/:id', (req, res) => {
     res.writeHead(200, head)
     fs.createReadStream(file_path).pipe(res)
   }
+}
+
+app.get('/movies/:id', (req, res) => {
+  const file_path = moviesData.movies
+    .filter(movie => movie.id == parseInt(req.params.id))
+    .map(movie => movie.fs_path).toString();
+    
+  readStreamMp4(req, res, file_path)
 });
 
 app.get('/tv/:tv_id/:season_number/:episode_number', (req, res) => {
@@ -214,33 +218,7 @@ app.get('/tv/:tv_id/:season_number/:episode_number', (req, res) => {
     .episodes.find(episode => episode.episode_number == parseInt(req.params.episode_number))
     .fs_path.toString();
 
-  const stat = fs.statSync(file_path)
-  const fileSize = stat.size
-  const range = req.headers.range
-  if (range) {
-    const parts = range.replace(/bytes=/, "").split("-")
-    const start = parseInt(parts[0], 10)
-    const end = parts[1] 
-      ? parseInt(parts[1], 10)
-      : fileSize-1
-    const chunksize = (end-start)+1
-    const file = fs.createReadStream(file_path, {start, end})
-    const head = {
-      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': chunksize,
-      'Content-Type': 'video/mp4',
-    }
-    res.writeHead(206, head);
-    file.pipe(res);
-  } else {
-    const head = {
-      'Content-Length': fileSize,
-      'Content-Type': 'video/mp4',
-    }
-    res.writeHead(200, head)
-    fs.createReadStream(file_path).pipe(res)
-  }
+  readStreamMp4(req, res, file_path)
 });
 
 app.get('/music/:album_id/:disc_number/:track_number', (req, res) => {
@@ -459,7 +437,7 @@ const findTotalDurationMillis = (items) => {
     if (item.preview_url != null){
       add = 30;
     }
-    if ('url_path' in item){
+    if (item.url_path != null){
       add = item.duration_ms;
     }
     return acc + add;
@@ -485,7 +463,7 @@ const generateMusicMetaData = async () => {
         // build music album not on Spotify
         let album = {
           album_type: 'compilation',
-          artists: [{ name: 'Unknown Artist', type: Artist.name, images: [{url: 'http://i.imgur.com/bVnx0IY.png'}] }],
+          artists: [{ type: Artist.name, name: 'Unknown Artist', images: [{url: 'http://i.imgur.com/bVnx0IY.png'}] }],
           images: [{url: 'http://i.imgur.com/bVnx0IY.png'}],
           id: 'unknown',
           name: unknown_album,
@@ -495,7 +473,7 @@ const generateMusicMetaData = async () => {
           type: Album.name
         }
 
-        album_dir[1].forEach( ( track_file, index ) => {
+        for (let [index, track_file] of album_dir[1].entries()) {
           console.log('GET: ' + track_file);
 
           let item = {}
@@ -503,18 +481,17 @@ const generateMusicMetaData = async () => {
           item.name = track_file.replace(/.mp3|.flac/gi,'')
           item.disc_number = 1
           item.track_number = index + 1
-          item.duration_ms = 'NaN'
           item.fs_path = `${album_dir[0]}/${track_file}`
           item.url_path = `/music/${album.id}/${item.disc_number}/${item.track_number}`
-          item.external_urls = {spotify: null}
+          item.duration_ms = await getAudioDurationInSeconds(item.fs_path) * 1000
           item.ctime = fs.statSync(item.fs_path).ctime
           item.mtime = fs.statSync(item.fs_path).mtime
 
           album.tracks.items.push(item)
-        });
+        }
 
-        album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
-        album.tracks.total_duration_ms = 'NaN'
+        album.tracks.local_total = album.tracks.items.filter(item => item.url_path != null).length
+        album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
         json.music.push(album);
         continue; // go next
       }
@@ -530,7 +507,7 @@ const generateMusicMetaData = async () => {
         album.artists[0].images = artist.images
         album.artists[0].popularity = artist.popularity
 
-        album_dir[1].forEach( ( track_file, index ) => {
+        album_dir[1].forEach( (track_file) => {
           console.log('GET: ' + track_file);
           // for each song in the Spotify music album
           album.tracks.items.forEach( (item) => {
@@ -545,7 +522,7 @@ const generateMusicMetaData = async () => {
           });
         });
 
-        album.tracks.local_total = album.tracks.items.filter(item => 'url_path' in item).length
+        album.tracks.local_total = album.tracks.items.filter(item => item.url_path != null).length
         album.tracks.preview_total = album.tracks.items.filter(item => item.preview_url != null).length
         album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
         json.music.push(album);
