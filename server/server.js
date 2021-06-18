@@ -57,6 +57,15 @@ app.get('/api/about', (req, res) => {
   res.json(hello);
 });
 
+const shuffleArr = (arr) => {
+  const newArr = arr.slice()
+  for (let i = newArr.length - 1; i > 0; i--) {
+      const rand = Math.floor(Math.random() * (i + 1));
+      [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]];
+  }
+  return newArr
+}
+
 app.get('/api/movies', (req, res) => {
   res.json(moviesData.movies);
 });
@@ -89,7 +98,7 @@ app.get('/api/movies/genres', (req, res) => {
 });
 
 app.get('/api/movies/genres/:name', (req, res) => {
-  res.json(moviesData.movies.filter(movie => movie.genres.some( genre => genre.name == req.params.name )));
+  res.json(shuffleArr(moviesData.movies.filter(movie => movie.genres.some( genre => genre.name == req.params.name ))));
 });
 
 app.get('/api/movies/random', (req, res) => {
@@ -133,7 +142,7 @@ app.get('/api/tv/genres', (req, res) => {
 });
 
 app.get('/api/tv/genres/:name', (req, res) => {
-  res.json(tvData.tv.filter(tv => tv.genres.some( genre => genre.name == req.params.name )));
+  res.json(shuffleArr(tvData.tv.filter(tv => tv.genres.some( genre => genre.name == req.params.name ))));
 });
 
 app.get('/api/tv/random', (req, res) => {

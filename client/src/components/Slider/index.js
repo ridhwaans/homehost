@@ -28,7 +28,7 @@ function Slider({ mainTitle, data, poster }) {
         currentSlide,
         additionalMovieInfo,
         paginationIndicator
-    } = useSlider(width, ref, 25, data, poster);
+    } = useSlider(width, ref, data.length, data, poster);
 
     const contextValue = {
         currentSlide

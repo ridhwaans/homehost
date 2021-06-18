@@ -1991,7 +1991,7 @@ background-position: 50% -50%;
 /* SEARCH RESULTS */
 
 .slider .sliderMask .search-results-content {
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 /* SLIDER ITEM */
@@ -2182,7 +2182,7 @@ background-position: 50% -50%;
 .select-items div,
 .select-selected {
   color: #ffffff;
-  padding: 8px 16px;
+  padding: 0.5em 1em;
   border: 1px solid transparent;
   border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
   cursor: pointer;
@@ -2213,7 +2213,6 @@ background-position: 50% -50%;
 .select-item {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .subitem-right {

@@ -47,9 +47,7 @@ function SeasonSelect({ items, onChange, isOpen = false, multiSelect = false }) 
         onKeyPress={() => toggle(!open)}
         onClick={() => toggle(!open)}
       >
-        <div>
-          <p>{selection[0] ? selection[0].name : items[0].name}</p>
-        </div>
+        {selection[0] ? selection[0].name : items[0].name}
       </div>
       {open && (
         <div className="select-items">
