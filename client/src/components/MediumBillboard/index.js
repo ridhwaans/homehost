@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getMovieInformation, getRandomMovie } from "../../api"
+import { getBillboardItem } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
@@ -13,15 +13,15 @@ function MediumBillboard() {
 
     useEffect(async () => {
 
-        const movie = await getRandomMovie() // getMovieInformation()
+        const item = await getBillboardItem()
 
-        setPoster(`${process.env.REACT_APP_IMAGE_BASE}original/${movie.poster_path}`)
-        setBackground(`${process.env.REACT_APP_IMAGE_BASE}original/${movie.backdrop_path}`)
-        setSecondaryBackground(`${process.env.REACT_APP_IMAGE_BASE}original/${movie.backdrop_path}`)
-        setSynopsis(movie.overview)
-        setTitle(movie.title)
+        setPoster(`${process.env.REACT_APP_IMAGE_BASE}original/${item.poster_path}`)
+        setBackground(`${process.env.REACT_APP_IMAGE_BASE}original/${item.backdrop_path}`)
+        setSecondaryBackground(`${process.env.REACT_APP_IMAGE_BASE}original/${item.backdrop_path}`)
+        setSynopsis(item.overview)
+        setTitle(item.type == "Movie" ? item.title : item.name)
 
-        if (movie.images.backdrops.length > 1) setSecondaryBackground(`${process.env.REACT_APP_IMAGE_BASE}original/${movie.images.backdrops[1].file_path}`)
+        if (item.images.backdrops.length > 1) setSecondaryBackground(`${process.env.REACT_APP_IMAGE_BASE}original/${item.images.backdrops[1].file_path}`)
 
     }, [])
 

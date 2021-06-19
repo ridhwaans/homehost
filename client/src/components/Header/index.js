@@ -117,7 +117,3 @@ function Header() {
 }
 
 export default Header;
-
-//debounce(updateSearchInput, 500)(e.currentTarget.value)
-//updateSearchInput(e.currentTarget.value)
-// value={searchInput}

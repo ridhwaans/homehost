@@ -40,7 +40,3 @@ const MusicHeader = ({ account }) => {
 }
 
 export default MusicHeader;
-
-//debounce(updateSearchInput, 500)(e.currentTarget.value)
-//updateSearchInput(e.currentTarget.value)
-// value={searchInput}

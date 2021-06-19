@@ -1,5 +1,4 @@
 import React from "react"
-import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import ArtistItem from "./ArtistItem/ArtistItem"
 import style from "./Artists.module.css"
@@ -21,9 +20,5 @@ const Artists = () => {
       </React.Fragment>
     );
 };
-
-// const mapStateToProps = (state) => {
-//     return { artists: state.artists.artists, };
-// };
 
 export default Artists;

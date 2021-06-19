@@ -2,7 +2,7 @@
 
 # general
 .env
-/server/data
+/server/data/*.json
 
 # lock files
 package-lock.json

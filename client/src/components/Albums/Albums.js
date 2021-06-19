@@ -1,5 +1,4 @@
 import React from "react"
-import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import AlbumItem from "./AlbumItem/AlbumItem"
 import style from "./Albums.module.css"
@@ -21,9 +20,5 @@ const Albums = () => {
       </React.Fragment>
     );
 };
-
-// const mapStateToProps = (state) => {
-//     return { albums: state.albums.albums, };
-// };
 
 export default Albums;
