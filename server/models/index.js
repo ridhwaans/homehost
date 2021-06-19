@@ -2,13 +2,13 @@ class Movie {
     constructor({id = 0}) {
         this.id = id; 
     }
- }
+}
 
 class TVShow {
     constructor({id = 0}) {
        this.id = id; 
     }
- }
+}
  
 class TVEpisode {
     constructor({tv_id = 0, season_number = 0, episode_number = 0}) {
@@ -24,14 +24,14 @@ class Album extends Music {
     constructor({id = 0}) {
         super();
         this.id = id; 
-     }
- }
+    }
+}
 
- class Artist extends Music {
+class Artist extends Music {
     constructor({id = 0}) {
         super();
         this.id = id; 
-     }
- }
+    }
+}
 
 module.exports = { Movie, TVShow, TVEpisode, Music, Album, Artist }

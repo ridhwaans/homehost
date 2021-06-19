@@ -1,4 +1,4 @@
-const {Movie, TVShow, TVEpisode, Music, Album, Artist} = require('../models');
+const { Movie, TVShow, TVEpisode, Music, Album, Artist } = require('../models');
 const axios = require('axios');
 const Cookies  = require('universal-cookie');
 const qs = require('qs');
@@ -71,6 +71,6 @@ const getAuth = async () => {
     }
 
     return auth;
-};
+}
 
 module.exports = Metadata;

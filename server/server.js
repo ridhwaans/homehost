@@ -17,7 +17,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Include API routes
+// Include routes
 app.use('/', require('./routes'));
 
 console.log(figlet.textSync('homehost'));

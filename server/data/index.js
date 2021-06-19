@@ -42,30 +42,28 @@ const multiPropsFilterMusicAlbums = (keyword) => {
   return musicData.music.filter(x => x.name.match(new RegExp(keyword, 'i')) != null)
 }
   
-module.exports = {
-  
-getAbout: () => {
+const getAbout = () => {
   const hello = {homehost: 'hello world', environment: process.env.NODE_ENV};
   return hello
-},
+}
 
-getAllMovies: () => {
+const getAllMovies = () => {
   return moviesData.movies;
-},
+}
 
-getMostPopularMovies: () => {
+const getMostPopularMovies = () => {
   return moviesData.movies.sort((a,b) => b.popularity - a.popularity).slice(0,25);
-},
+}
 
-getHighestRatedMovies: () => {
+const getHighestRatedMovies = () => {
   return moviesData.movies.sort((a,b) => b.vote_average - a.vote_average).slice(0,25);
-},
+}
 
-getRecentlyAddedMovies: () => {
+const getRecentlyAddedMovies = () => {
   return moviesData.movies.sort((a,b) => new Date(b.mtime) - new Date(a.mtime)).slice(0,25);
-},
+}
 
-getMovieGenres: () => {
+const getMovieGenres = () => {
   const genres = [...new Map(moviesData.movies.map(movie => movie.genres).flat(Infinity).map(item => [item.id, item])).values()];
   genres.sort((a, b) => {
     if(a.name < b.name) { return -1; }
@@ -73,37 +71,37 @@ getMovieGenres: () => {
     return 0;
   })
   return genres;
-},
+}
 
-getMoviesByGenre: (name) => {
+const getMoviesByGenre = (name) => {
   return shuffleArr(moviesData.movies.filter(movie => movie.genres.some( genre => genre.name == name )))
-},
+}
 
-getRandomMovie: () => {
+const getRandomMovie = () => {
   return moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
-},
+}
 
-getMovie: (id) => {
+const getMovie = (id) => {
   return moviesData.movies.find(movie => movie.id == parseInt(id))
-},
+}
 
-getAllTVShows: () => {
+const getAllTVShows = () => {
   return tvData.tv
-},
+}
 
-getMostPopularTVShows: () => {
+const getMostPopularTVShows = () => {
   return tvData.tv.sort((a,b) => b.popularity - a.popularity).slice(0,25)
-},
+}
 
-getHighestRatedTVShows: () => {
+const getHighestRatedTVShows = () => {
   return tvData.tv.sort((a,b) => b.vote_average - a.vote_average).slice(0,25)
-},
+}
 
-getRecentlyAddedTVShows: () => {
+const getRecentlyAddedTVShows = () => {
   return tvData.tv.sort((a,b) => b.mtime - a.mtime).slice(0,25)
-},
+}
 
-getTVShowGenres: () => {
+const getTVShowGenres = () => {
   const genres = [...new Map(tvData.tv.map(tv => tv.genres).flat(Infinity).map(item => [item.id, item])).values()];
   genres.sort((a, b) => {
     if(a.name < b.name) { return -1; }
@@ -111,78 +109,78 @@ getTVShowGenres: () => {
     return 0;
   })
   return genres;
-},
+}
 
-getTVShowsByGenre: (name) => {
+const getTVShowsByGenre = (name) => {
   return shuffleArr(tvData.tv.filter(tv => tv.genres.some( genre => genre.name == name )))
-},
+}
 
-getRandomTVShow: () => {
+const getRandomTVShow = () => {
   return tvData.tv[Math.floor(Math.random() * tvData.tv.length)]
-},
+}
 
-getTVShow: (id) => {
+const getTVShow = (id) => {
   return tvData.tv.find(tv => tv.id == parseInt(id))
-},
+}
 
-getRecentlyAddedMusic: () => {
+const getRecentlyAddedMusic = () => {
   return musicData.music.sort((a,b) => b.mtime - a.mtime).slice(0,25)
-},
+}
 
-getAllArtists: () => {
+const getAllArtists = () => {
   return [...new Map(musicData.music.map(music => music.artists).flat(Infinity).map(item => [item.id, item])).values()]
-},
+}
 
-getAllAlbums: () => {
+const getAllAlbums = () => {
   return musicData.music
-},
+}
 
-getMusicAlbum: (id) => {
+const getMusicAlbum = (id) => {
   return musicData.music.find(album => album.id == id)
-},
+}
 
-getAllSongs: () => {
+const getAllSongs = () => {
   const songs = musicData.music.map(album => album.tracks.items
     .map(song => {song.album_name = album.name; song.album_images = album.images; song.artists = album.artists; return song}))
     .flat(Infinity)
     .filter(song => song.url_path != null)
   return songs
-},
+}
 
-getMovieFilePath: (id) => {
+const getMovieFilePath = (id) => {
   const file_path = moviesData.movies
     .filter(movie => movie.id == parseInt(id))
     .map(movie => movie.fs_path).toString();
   return file_path
-},
+}
 
-getSongFilePath: (album_id, disc_number, track_number) => {
+const getSongFilePath = (album_id, disc_number, track_number) => {
   const file_path = musicData.music
     .find(album => album.id == album_id)
     .tracks.items.filter(item => item.disc_number == parseInt(disc_number) && item.track_number == parseInt(track_number))
     .map(track => track.fs_path).toString();
   return file_path
-  },
+  }
 
-getEpisodeFilePath: (tv_id, season_number, episode_number) => {
+const getEpisodeFilePath = (tv_id, season_number, episode_number) => {
   const file_path = tvData.tv
     .find(tv => tv.id == parseInt(tv_id)) 
     .seasons.find(season => season.season_number == parseInt(season_number))
     .episodes.find(episode => episode.episode_number == parseInt(episode_number))
     .fs_path.toString();
   return file_path
-  },
+  }
 
-searchMoviesAndTV: (keyword) => {
+const searchMoviesAndTV = (keyword) => {
   let search_results = {};
   search_results.results = tvData.tv.filter(tv => multiPropsFilterTV(tv, keyword))
     .concat(moviesData.movies.filter(movie => multiPropsFilterMovies(movie, keyword)));
     search_results.count = search_results.results.length
 
   return search_results
-},
+}
 
-searchMusic: (keyword) => {
+const searchMusic = (keyword) => {
   let search_results = {results: {songs:[], artists: [], albums: []}, song_count: 0, artist_count: 0, album_count: 0, total_count: 0};
   if (keyword.trim() === "" ) {
     return search_results;
@@ -196,13 +194,40 @@ searchMusic: (keyword) => {
   search_results.total_count = Object.values(search_results.results).reduce((acc, group) => acc + group.length, 0)
 
   return search_results
-},
+}
 
-getRandomMovieOrTVShow: () => {
+const getRandomMovieOrTVShow = () => {
   const item = Math.random() < (tvData.tv.length / moviesData.movies.length).toFixed(2) ? 
     tvData.tv[Math.floor(Math.random() * tvData.tv.length)] 
     : moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
   return item
 }
 
-}
+module.exports = { getAbout,
+  getAllMovies,
+  getMostPopularMovies,
+  getHighestRatedMovies,
+  getRecentlyAddedMovies,
+  getMovieGenres,
+  getMoviesByGenre,
+  getRandomMovie,
+  getMovie,
+  getAllTVShows,
+  getMostPopularTVShows,
+  getHighestRatedTVShows,
+  getRecentlyAddedTVShows,
+  getTVShowGenres,
+  getTVShowsByGenre,
+  getRandomTVShow,
+  getTVShow,
+  getRecentlyAddedMusic,
+  getAllArtists,
+  getAllAlbums,
+  getMusicAlbum,
+  getAllSongs,
+  getMovieFilePath,
+  getSongFilePath,
+  getEpisodeFilePath,
+  searchMoviesAndTV,
+  searchMusic,
+  getRandomMovieOrTVShow }

@@ -4,8 +4,9 @@ const chokidar = require('chokidar');
 const { getAudioDurationInSeconds } = require('get-audio-duration');
 const { Album, Artist, Movie, TVEpisode, TVShow } = require('../models');
 const { findTotalDurationMillis } = require('../utils');
-const metadataService = require('../services/metadata');
-const DATA_PATH = path.resolve(__dirname,'../data');
+const metadataServiceConstructor = require('../services/metadata');
+const metadataService = new metadataServiceConstructor()
+const DATA_PATH = path.resolve(__dirname,'../data')
 
 var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH], {
   ignored: /(^|[\/\\])\../, // ignore dotfiles
@@ -22,16 +23,15 @@ watcher
 .on('change', path => console.log(`File ${path} has been changed`))
 .on('unlink', path => console.log(`File ${path} has been removed`))
 
-module.exports = {
-  generateMetaData: (filter = ["movies", "tv", "music"]) => {
-    let jobs = []
-    filter.map(media => {
-      if (media == "movies") jobs.push(generateMovieMetaData)
-      if (media == "tv") jobs.push(generateTVMetaData)
-      if (media == "music") jobs.push(generateMusicMetaData)
-    })
-    jobs.reduce((p, fn) => p.then(fn), Promise.resolve())
-  }
+
+const generateMetaData = (filter = ["movies", "tv", "music"]) => {
+  let jobs = []
+  filter.map(media => {
+    if (media == "movies") jobs.push(generateMovieMetaData)
+    if (media == "tv") jobs.push(generateTVMetaData)
+    if (media == "music") jobs.push(generateMusicMetaData)
+  })
+  jobs.reduce((p, fn) => p.then(fn), Promise.resolve())
 }
 
 const generateMovieMetaData = async () => {
@@ -49,7 +49,7 @@ const generateMovieMetaData = async () => {
     for (let file of movies){
       try {
         console.log('GET: ' + file);
-        const movie = await new metadataService().get(new Movie({ id: file.match(re)[1] }))
+        const movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
         movie.fs_path = file;
         movie.url_path = `/movies/${movie.id}`;
         movie.ctime = fs.statSync(movie.fs_path).ctime;
@@ -82,7 +82,7 @@ const generateTVMetaData = async () => {
     console.log('GET: ' + tv_show[0]);
     // find tv show on TMDb
     let tv_id = parseInt(tv_show[0].match(re)[1])
-    let show = await new metadataService().get(new TVShow({ id: tv_id }))
+    let show = await metadataService.get(new TVShow({ id: tv_id }))
     show.seasons.map(season => season.episodes = [])
 
     for (let episode_file of tv_show[1]) {
@@ -91,7 +91,7 @@ const generateTVMetaData = async () => {
       let season_number = parseInt(episode_file.match(re2)[1])
       let episode_number = parseInt(episode_file.match(re2)[2])
       try {
-        let episode = await new metadataService().get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
+        let episode = await metadataService.get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
         episode.fs_path = `${tv_show[0]}/${episode_file}`;
         episode.url_path = `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`;
         episode.ctime = fs.statSync(episode.fs_path).ctime;
@@ -168,12 +168,12 @@ const generateMusicMetaData = async () => {
       
       try {
         // find the Spotify music album
-        let album = await new metadataService().get(new Album({ id: album_dir[0].match(re)[1] }))
+        let album = await metadataService.get(new Album({ id: album_dir[0].match(re)[1] }))
         // remove unnecessary Spotify json
         delete album.available_markets;
         album.tracks.items.map(item => {delete item.artists; delete item.available_markets});
         // find missing artist(s) information for the Spotify music album
-        let artist = await new metadataService().get(new Artist({ id: album.artists[0].id }))
+        let artist = await metadataService.get(new Artist({ id: album.artists[0].id }))
         album.artists[0].images = artist.images
         album.artists[0].popularity = artist.popularity
 
@@ -208,3 +208,5 @@ const generateMusicMetaData = async () => {
       else console.log('[MUSIC] File saved');
     })
 }
+
+module.exports = { generateMetaData }
