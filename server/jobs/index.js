@@ -52,14 +52,6 @@ const dbGetAll = (table) => {
 }
 
 const dbInsertMany = (table, objArr) => {
-  db.serialize(() => {
-    var stmt;
-    stmt = db.prepare(`INSERT INTO ${table} VALUES (?)`);
-    for (var i = 0; i < objArr.length-1; i++) {
-        stmt.run(JSON.stringify(objArr[i]));
-    }
-    stmt.finalize();
-  });
   console.log("done")
 }
 
@@ -104,7 +96,7 @@ const sync = async () => {
   // console.log(`exclusiveToDatabase is ${rowsToDelete.length}:`)
   // console.table(rowsToDelete)
   // // delete from db
-
+  await getAllMovieMetaData()
 }
 
 watcher.on('ready', () => {
@@ -145,7 +137,7 @@ const generateMetaData = (filter = ["movies", "tv", "music"]) => {
 const getMovieMetaData = async (file) => {
   let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
   console.log('GET: ' + file);
-  const movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
+  let movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
   movie.fs_path = file;
   movie.url_path = `/movies/${movie.id}`;
   movie.ctime = fs.statSync(movie.fs_path).ctime;
@@ -154,7 +146,6 @@ const getMovieMetaData = async (file) => {
 }
 
 const getAllMovieMetaData = async (movies) => {
-  var json = { movies: [] };
   console.log('Generating data for Movies...')
 
   movies = movies || Object.entries(collection).filter(entry => entry[0].startsWith(process.env.MOVIES_PATH));
@@ -166,13 +157,107 @@ const getAllMovieMetaData = async (movies) => {
 
     for (let file of movies){
       try {
-        json.movies.push(await getMovieMetaData(file));
+        let result = await getMovieMetaData(file);
+
+        let genres = result.genres.map(genre => {
+          return {
+            id: genre.id, 
+            name: genre.name, 
+            movieId: result.id
+          }
+        })
+        let production_companies = result.production_companies.map(production_company => {
+          return {
+            id: production_company.id, 
+            logo_path: production_company.logo_path, 
+            name: production_company.name,
+            origin_country: production_company.origin_country,
+            movieId: result.id
+          }
+        })
+        let credits = result.credits.cast.concat(result.credits.crew).map(credit => {
+          return {
+            id: credit.id, 
+            adult: credit.adult, 
+            gender: credit.gender,
+            known_for_department: credit.known_for_department,
+            name: credit.name,
+            popularity: credit.popularity,
+            profile_path: credit.profile_path,
+            cast_id: credit.cast_id,
+            character: credit.character,
+            credit_id: credit.credit_id,
+            order: credit.order,
+            department: credit.department,
+            job: credit.job,
+            movieId: result.id
+          }
+        })
+        let similar = result.similar.results.map(similar_item => {
+          return {
+            id: similar_item.id, 
+            backdrop_path: similar_item.backdrop_path, 
+            title: similar_item.title,
+            name: similar_item.name,
+            release_date: similar_item.release_date,
+            overview: similar_item.overview,
+            movieId: result.id
+          }
+        })
+
+        const movie = {
+          id: result.id,
+          type: result.type,
+          fs_path: result.fs_path,
+          url_path: result.url_path,
+          ctime: result.ctime,
+          mtime: result.mtime,
+          adult: result.adult,
+          backdrop_path: result.backdrop_path,
+          budget: result.budget,
+          genres: {
+            where: { movieId: result.id },
+            update: genres,
+            create: genres
+          },
+          imdb_id: result.imdb_id,
+          overview: result.overview,
+          popularity: result.popularity,
+          poster_path: result.poster_path,
+          production_companies: {
+            where: { movieId: result.id },
+            update: production_companies,
+            create: production_companies
+          },
+          release_date: result.release_date,
+          revenue: result.revenue,
+          runtime: result.runtime,
+          tagline: result.tagline,
+          title: result.title,
+          vote_average: result.vote_average,
+          vote_count: result.vote_count,
+          credits: {
+            where: { movieId: result.id },
+            update: credits,
+            create: credits
+          },
+          similar_results: {
+            where: { movieId: result.id },
+            update: similar,
+            create: similar
+          }
+        }
+        const upsertMovie = await prisma.movie.upsert({
+          where: { id: movie.id },
+          update: movie,
+          create: movie,
+        })
+
       } catch(e) {
         console.log("There was a problem fetching metadata. Skipping this movie", e)
-        continue; // go next
+        break; // go next
       }
     }
-    dbInsertMany("movies", json.movies)
 }
 
 

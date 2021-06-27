@@ -26,7 +26,7 @@ model Movie {
   popularity			Float
   poster_path			String
   production_companies	ProductionCompany[]
-  release_date			DateTime
+  release_date			String
   revenue				Int
   runtime				Int
   tagline				String
@@ -34,7 +34,7 @@ model Movie {
   vote_average			Float
   vote_count			Int
   credits				Credit[]
-  similar				Similar[]
+  similar_results		Similar[]
 }
 
 model Genre {
@@ -51,14 +51,14 @@ model ProductionCompany {
 	logo_path		String
 	name			String
 	origin_country	String	
-	movie	Movie 	@relation(fields: [movieId], references: [id])
-	show	TVShow 	@relation(fields: [showId], references: [id])
-	movieId	Int
-	showId	Int
+	movie			Movie 	@relation(fields: [movieId], references: [id])
+	show			TVShow 	@relation(fields: [showId], references: [id])
+	movieId			Int
+	showId			Int
 }
 
 model Credit {
-	id						Int		@id
+	id						Int			@id
 	adult					Boolean
 	gender					Int
 	known_for_department	String
@@ -85,7 +85,7 @@ model Similar {
 	backdrop_path	String
 	title			String
 	name			String
-	release_date	DateTime
+	release_date	String
 	overview		String
 	movie			Movie 		@relation(fields: [movieId], references: [id])
 	show			TVShow 		@relation(fields: [showId], references: [id])
@@ -94,14 +94,14 @@ model Similar {
 }
 
 model TVShow {
-  id      				Int      	@id
+  id      				Int      				@id
   type					String
-  fs_path				String   	@unique
+  fs_path				String   				@unique
   url_path				String
   ctime					DateTime
   mtime					DateTime
   backdrop_path			String
-  created_by			Credit[] @relation("created_by")
+  created_by			Credit[] 				@relation("created_by")
   genres				Genre[]
   name					String
   overview				String
@@ -112,15 +112,15 @@ model TVShow {
   tagline				String
   vote_average			Float
   vote_count			Int
-  credits				Credit[] @relation("credits")
-  similar				Similar[]
+  credits				Credit[]				@relation("credits")
+  similar_results		Similar[]
   imdb_id				String
 }
 
 model Season {
 	id      		Int      	@id
 	type			String
-	air_date		DateTime
+	air_date		String
 	name			String
 	overview		String
 	poster_path		String
@@ -137,7 +137,7 @@ model Episode {
   	url_path				String
   	ctime					DateTime
   	mtime					DateTime
-	air_date				DateTime
+	air_date				String
 	crew					Credit[] 	@relation("crew")
 	episode_number			Int
 	guest_stars				Credit[] 	@relation("guest_stars")
@@ -152,7 +152,7 @@ model Episode {
 }
 
 model Album {
-	id      				String      	@id
+	id      				String		@id
 	type					String
 	album_type				String
 	artists					Artist[]
@@ -160,7 +160,7 @@ model Album {
 	label					String
 	name					String
 	popularity				Int
-	release_date			DateTime
+	release_date			String
 	tracks					Song[]
 }
 

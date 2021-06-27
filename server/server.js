@@ -24,3 +24,5 @@ console.log(figlet.textSync('homehost'));
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);
+
+console.log(`Current DATABASE_URL is ${process.env.DATABASE_URL}`)
