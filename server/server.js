@@ -24,6 +24,3 @@ console.log(figlet.textSync('homehost'));
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);
-console.log(app._router.stack // registered routes
-  .filter(r => r.route) // take out all the middleware
-  .map(r => `${r.route.path}`))  // get all the paths

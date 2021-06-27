@@ -1,0 +1,192 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Movie {
+  id      				Int      	@id
+  type					String
+  fs_path				String   	@unique
+  url_path				String
+  ctime					DateTime
+  mtime					DateTime
+  adult    				Boolean
+  backdrop_path			String
+  budget				Int
+  genres				Genre[]
+  imdb_id				String
+  overview				String
+  popularity			Float
+  poster_path			String
+  production_companies	ProductionCompany[]
+  release_date			DateTime
+  revenue				Int
+  runtime				Int
+  tagline				String
+  title					String
+  vote_average			Float
+  vote_count			Int
+  credits				Credit[]
+  similar				Similar[]
+}
+
+model Genre {
+	id		Int		@id
+	name	String	@unique	
+	movie	Movie 	@relation(fields: [movieId], references: [id])
+	show	TVShow 	@relation(fields: [showId], references: [id])
+	movieId	Int
+	showId	Int
+}
+
+model ProductionCompany {
+	id				Int		@id
+	logo_path		String
+	name			String
+	origin_country	String	
+	movie	Movie 	@relation(fields: [movieId], references: [id])
+	show	TVShow 	@relation(fields: [showId], references: [id])
+	movieId	Int
+	showId	Int
+}
+
+model Credit {
+	id						Int		@id
+	adult					Boolean
+	gender					Int
+	known_for_department	String
+	name					String
+	popularity				Float
+	profile_path			String
+	cast_id					Int
+	character				String
+	credit_id				String
+	order					Int
+	department				String
+	job						String
+	movie					Movie 		@relation(fields: [movieId], references: [id])
+	created_by				TVShow 		@relation("created_by", fields: [showId], references: [id])
+	credits					TVShow 		@relation("credits", fields: [showId], references: [id])
+	crew					Episode 	@relation("crew", fields: [showId], references: [id])
+	guest_stars				Episode 	@relation("guest_stars", fields: [showId], references: [id])
+	movieId					Int
+	showId					Int
+}
+
+model Similar {
+	id				Int			@id
+	backdrop_path	String
+	title			String
+	name			String
+	release_date	DateTime
+	overview		String
+	movie			Movie 		@relation(fields: [movieId], references: [id])
+	show			TVShow 		@relation(fields: [showId], references: [id])
+	movieId			Int
+	showId			Int
+}
+
+model TVShow {
+  id      				Int      	@id
+  type					String
+  fs_path				String   	@unique
+  url_path				String
+  ctime					DateTime
+  mtime					DateTime
+  backdrop_path			String
+  created_by			Credit[] @relation("created_by")
+  genres				Genre[]
+  name					String
+  overview				String
+  popularity			Float
+  poster_path			String
+  production_companies	ProductionCompany[]
+  seasons				Season[]
+  tagline				String
+  vote_average			Float
+  vote_count			Int
+  credits				Credit[] @relation("credits")
+  similar				Similar[]
+  imdb_id				String
+}
+
+model Season {
+	id      		Int      	@id
+	type			String
+	air_date		DateTime
+	name			String
+	overview		String
+	poster_path		String
+	season_number	Int
+	episodes 		Episode[]
+	show			TVShow 		@relation(fields: [showId], references: [id])
+	showId			Int
+}
+
+model Episode {
+	id      				Int      	@id
+	type					String
+	fs_path					String   	@unique
+  	url_path				String
+  	ctime					DateTime
+  	mtime					DateTime
+	air_date				DateTime
+	crew					Credit[] 	@relation("crew")
+	episode_number			Int
+	guest_stars				Credit[] 	@relation("guest_stars")
+	name					String
+	overview				String
+	season_number			Int
+	still_path				String
+	vote_average			Float
+	vote_count				Int
+	season    				Season    	@relation(fields: [seasonId], references: [id])
+  	seasonId  				Int
+}
+
+model Album {
+	id      				String      	@id
+	type					String
+	album_type				String
+	artists					Artist[]
+	images					String
+	label					String
+	name					String
+	popularity				Int
+	release_date			DateTime
+	tracks					Song[]
+}
+
+model Artist {
+	id      				String		@id
+	type					String
+	name					String
+	images					String
+	popularity				Int
+	album    				Album		@relation(fields: [albumId], references: [id])
+  	albumId  				String
+}
+
+model Song {
+	id      				String      @id
+	type					String
+	fs_path					String   	@unique
+	url_path				String
+	ctime					DateTime
+	mtime					DateTime
+	disc_number				Int
+	duration_ms				Int
+	explicit				Boolean
+	name					String
+	preview_url				String
+	track_number			Int
+	album    				Album    	@relation(fields: [albumId], references: [id])
+  	albumId  				String
+}

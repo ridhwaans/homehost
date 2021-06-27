@@ -198,8 +198,7 @@ const searchMusic = (keyword) => {
 
 const getRandomMovieOrTVShow = () => {
   const item = Math.random() < (tvData.tv.length / moviesData.movies.length).toFixed(2) ? 
-    tvData.tv[Math.floor(Math.random() * tvData.tv.length)] 
-    : moviesData.movies[Math.floor(Math.random() * moviesData.movies.length)]
+    getRandomTVShow() : getRandomMovie()
   return item
 }
 
