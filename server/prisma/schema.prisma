@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// DATABASE_URL is 'file:./data/media.db'
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -11,7 +12,8 @@ generator client {
 }
 
 model Movie {
-  id      				Int      	@id
+  id      				Int      	@id @default(autoincrement())
+  tmdb_id				Int			@unique
   type					String
   fs_path				String   	@unique
   url_path				String
@@ -34,67 +36,72 @@ model Movie {
   vote_average			Float
   vote_count			Int
   credits				Credit[]
-  similar_results		Similar[]
+  similar				Similar[]
 }
 
 model Genre {
-	id		Int		@id
+	id		Int		@id @default(autoincrement())
+	tmdb_id	Int		@unique
 	name	String	@unique	
-	movie	Movie 	@relation(fields: [movieId], references: [id])
-	show	TVShow 	@relation(fields: [showId], references: [id])
-	movieId	Int
-	showId	Int
+	movie	Movie? 	@relation(fields: [movie_tmdb_id], references: [tmdb_id])
+	show	TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
+	movie_tmdb_id	Int?
+	show_tmdb_id	Int?
 }
 
 model ProductionCompany {
-	id				Int		@id
-	logo_path		String
+	id				Int		@id @default(autoincrement())
+	tmdb_id			Int		@unique
+	logo_path		String?
 	name			String
 	origin_country	String	
-	movie			Movie 	@relation(fields: [movieId], references: [id])
-	show			TVShow 	@relation(fields: [showId], references: [id])
-	movieId			Int
-	showId			Int
+	movie			Movie? 	@relation(fields: [movie_tmdb_id], references: [tmdb_id])
+	show			TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
+	movie_tmdb_id	Int?
+	show_tmdb_id	Int?
 }
 
 model Credit {
-	id						Int			@id
+	id						Int			@id @default(autoincrement())
+	tmdb_id					Int			@unique
 	adult					Boolean
 	gender					Int
 	known_for_department	String
 	name					String
 	popularity				Float
-	profile_path			String
-	cast_id					Int
-	character				String
+	profile_path			String?
+	cast_id					Int?
+	character				String?
 	credit_id				String
-	order					Int
-	department				String
-	job						String
-	movie					Movie 		@relation(fields: [movieId], references: [id])
-	created_by				TVShow 		@relation("created_by", fields: [showId], references: [id])
-	credits					TVShow 		@relation("credits", fields: [showId], references: [id])
-	crew					Episode 	@relation("crew", fields: [showId], references: [id])
-	guest_stars				Episode 	@relation("guest_stars", fields: [showId], references: [id])
-	movieId					Int
-	showId					Int
+	order					Int?
+	department				String?
+	job						String?
+	movie					Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
+	created_by				TVShow? 		@relation("created_by", fields: [show_tmdb_id], references: [tmdb_id])
+	credits					TVShow? 		@relation("credits", fields: [show_tmdb_id], references: [tmdb_id])
+	crew					Episode? 	@relation("crew", fields: [show_tmdb_id], references: [tmdb_id])
+	guest_stars				Episode? 	@relation("guest_stars", fields: [show_tmdb_id], references: [tmdb_id])
+	movie_tmdb_id			Int?
+	show_tmdb_id			Int?
 }
 
 model Similar {
-	id				Int			@id
+	id				Int			@id @default(autoincrement())
+	tmdb_id			Int			@unique
 	backdrop_path	String
-	title			String
-	name			String
+	title			String?
+	name			String?
 	release_date	String
 	overview		String
-	movie			Movie 		@relation(fields: [movieId], references: [id])
-	show			TVShow 		@relation(fields: [showId], references: [id])
-	movieId			Int
-	showId			Int
+	movie			Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
+	show			TVShow? 		@relation(fields: [show_tmdb_id], references: [tmdb_id])
+	movie_tmdb_id	Int?
+	show_tmdb_id	Int?
 }
 
 model TVShow {
-  id      				Int      				@id
+  id      				Int      				@id @default(autoincrement())
+  tmdb_id				Int						@unique
   type					String
   fs_path				String   				@unique
   url_path				String
@@ -113,12 +120,13 @@ model TVShow {
   vote_average			Float
   vote_count			Int
   credits				Credit[]				@relation("credits")
-  similar_results		Similar[]
+  similar				Similar[]
   imdb_id				String
 }
 
 model Season {
-	id      		Int      	@id
+	id      		Int      	@id @default(autoincrement())
+	tmdb_id			Int			@unique
 	type			String
 	air_date		String
 	name			String
@@ -126,12 +134,13 @@ model Season {
 	poster_path		String
 	season_number	Int
 	episodes 		Episode[]
-	show			TVShow 		@relation(fields: [showId], references: [id])
-	showId			Int
+	show			TVShow 		@relation(fields: [show_tmdb_id], references: [tmdb_id])
+	show_tmdb_id	Int
 }
 
 model Episode {
-	id      				Int      	@id
+	id      				Int      	@id @default(autoincrement())
+	tmdb_id					Int			@unique
 	type					String
 	fs_path					String   	@unique
   	url_path				String
@@ -147,8 +156,8 @@ model Episode {
 	still_path				String
 	vote_average			Float
 	vote_count				Int
-	season    				Season    	@relation(fields: [seasonId], references: [id])
-  	seasonId  				Int
+	season    				Season    	@relation(fields: [season_tmdb_id], references: [tmdb_id])
+  	season_tmdb_id  		Int
 }
 
 model Album {

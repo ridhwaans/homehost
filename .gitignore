@@ -4,6 +4,7 @@
 .env
 /server/data/*.json
 /server/data/*.db
+/server/data/*.txt
 
 # lock files
 package-lock.json

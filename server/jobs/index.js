@@ -12,7 +12,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const DATA_PATH = path.resolve(__dirname,'../data')
-const notAvailableInAPI = fs.readFileSync(`${DATA_PATH}/not_available.txt`, "utf-8").split("\n").map(i => i.replace(/(\r\n|\n|\r)/gm, ""))
+//const notAvailableInAPI = fs.readFileSync(`${DATA_PATH}/not_available.txt`, "utf-8").split("\n").map(i => i.replace(/(\r\n|\n|\r)/gm, ""))
 
 const db = new sqlite3.Database(`${DATA_PATH}/media.db`, (err) => {
   if (err) console.error(err.message);
@@ -159,54 +159,66 @@ const getAllMovieMetaData = async (movies) => {
       try {
         let result = await getMovieMetaData(file);
 
-        let genres = result.genres.map(genre => {
+        const genres = result.genres.map(genre => {
           return {
-            id: genre.id, 
-            name: genre.name, 
-            movieId: result.id
+            tmdb_id: genre.id, 
+            name: genre.name
           }
         })
-        let production_companies = result.production_companies.map(production_company => {
+        
+        const production_companies = result.production_companies.map(production_company => {
           return {
-            id: production_company.id, 
-            logo_path: production_company.logo_path, 
+            tmdb_id: production_company.id, 
+            logo_path: production_company.logo_path || null, 
             name: production_company.name,
-            origin_country: production_company.origin_country,
-            movieId: result.id
+            origin_country: production_company.origin_country
           }
         })
-        let credits = result.credits.cast.concat(result.credits.crew).map(credit => {
+        
+        const credits = result.credits.cast.concat(result.credits.crew).map(credit => {
           return {
-            id: credit.id, 
+            tmdb_id: credit.id, 
             adult: credit.adult, 
             gender: credit.gender,
             known_for_department: credit.known_for_department,
             name: credit.name,
             popularity: credit.popularity,
-            profile_path: credit.profile_path,
+            profile_path: credit.profile_path || null,
             cast_id: credit.cast_id,
             character: credit.character,
             credit_id: credit.credit_id,
             order: credit.order,
             department: credit.department,
-            job: credit.job,
-            movieId: result.id
+            job: credit.job
           }
         })
-        let similar = result.similar.results.map(similar_item => {
+        
+        const similar = result.similar.results.slice(0, 4).map(similar_item => {
           return {
-            id: similar_item.id, 
+            tmdb_id: similar_item.id, 
             backdrop_path: similar_item.backdrop_path, 
             title: similar_item.title,
             name: similar_item.name,
             release_date: similar_item.release_date,
-            overview: similar_item.overview,
-            movieId: result.id
+            overview: similar_item.overview
           }
         })
-
+        
+        console.log(`genres TYPEOF IS ${typeof genres}`)
+        console.log(genres.length)
+        //console.log(genres)
+        console.log(`production_companies TYPEOF IS ${typeof production_companies}`)
+        console.log(production_companies.length)
+        //console.log(production_companies)
+        console.log(`credits TYPEOF IS ${typeof credits}`)
+        console.log(credits.length)
+        //console.log(credits)
+        console.log(`similar TYPEOF IS ${typeof similar}`)
+        console.log(similar.length)
+        //console.log(similar)
+        console.log(`result.id is ${typeof result.id}`)
         const movie = {
-          id: result.id,
+          tmdb_id: result.id,
           type: result.type,
           fs_path: result.fs_path,
           url_path: result.url_path,
@@ -215,19 +227,24 @@ const getAllMovieMetaData = async (movies) => {
           adult: result.adult,
           backdrop_path: result.backdrop_path,
           budget: result.budget,
-          genres: {
-            where: { movieId: result.id },
-            update: genres,
-            create: genres
+          genres: { 
+            connectOrCreate: {
+              where: { tmdb_id: result.id },
+              createMany: { data: genres }
+            }
           },
           imdb_id: result.imdb_id,
           overview: result.overview,
           popularity: result.popularity,
           poster_path: result.poster_path,
-          production_companies: {
-            where: { movieId: result.id },
-            update: production_companies,
-            create: production_companies
+          production_companies: { 
+            connectOrCreate: {
+              where: { tmdb_id: result.id },
+              createMany: 
+              {
+                production_companies
+              }
+            }
           },
           release_date: result.release_date,
           revenue: result.revenue,
@@ -236,26 +253,28 @@ const getAllMovieMetaData = async (movies) => {
           title: result.title,
           vote_average: result.vote_average,
           vote_count: result.vote_count,
-          credits: {
-            where: { movieId: result.id },
-            update: credits,
-            create: credits
+          credits: { 
+            connectOrCreate: {
+              where: { tmdb_id: result.id },
+              createMany: credits
+            }
           },
-          similar_results: {
-            where: { movieId: result.id },
-            update: similar,
-            create: similar
+          similar: { 
+            connectOrCreate: {
+              where: { tmdb_id: result.id },
+              create: similar
+            }
           }
         }
         const upsertMovie = await prisma.movie.upsert({
-          where: { id: movie.id },
+          where: { tmdb_id: result.id },
           update: movie,
-          create: movie,
+          create: movie
         })
 
       } catch(e) {
         console.log("There was a problem fetching metadata. Skipping this movie", e)
-        break; // go next
+        break; // break or continue
       }
     }
 }
