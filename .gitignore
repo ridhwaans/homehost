@@ -2,10 +2,9 @@
 
 # general
 .env
-/server/data/*.json
-/server/data/*.db
-/server/data/*.txt
-/server/prisma/data/*.db
+data/*.json
+data/*.txt
+data/*.db
 
 # lock files
 package-lock.json

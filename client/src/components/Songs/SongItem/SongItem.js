@@ -33,7 +33,7 @@ export const SongItem = ({
           </div>
 
           <div className={style.Title}>
-            <img src={song.album_images} alt="cover img" />
+            <img src={song.album_image_url} alt="cover img" />
             <div className={style.NameContainer}>
               <div
                 className={style.Name}

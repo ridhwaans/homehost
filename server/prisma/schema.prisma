@@ -152,12 +152,13 @@ model Album {
 	spotify_id				String	@unique
 	album_type				String
 	artists					Artist[]
-	images					String
+	image_url				String
 	label					String
 	name					String
 	popularity				Int?
 	release_date			String
 	songs					Song[]
+	total_tracks			Int
 }
 
 model Artist {
@@ -165,7 +166,7 @@ model Artist {
 	type					String
 	spotify_id				String	@unique
 	name					String
-	images					String
+	image_url				String
 	popularity				Int?
 	albums    				Album[]
 }

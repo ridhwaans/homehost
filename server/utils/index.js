@@ -7,18 +7,4 @@ const shuffleArr = (arr) => {
   return newArr
 }
 
-const findTotalDurationMillis = (items) => {
-  const sum = (acc, item) => {
-    let add = 0;
-    if (item.preview_url != null){
-      add = 30;
-    }
-    if (item.url_path != null){
-      add = item.duration_ms;
-    }
-    return acc + add;
-  }
-  return items.reduce((acc, item) => sum(acc,item), 0)
-}
-
-module.exports = { shuffleArr, findTotalDurationMillis }
+module.exports = { shuffleArr }

@@ -1,17 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
-const sqlite3 = require('sqlite3').verbose();
 const { getAudioDurationInSeconds } = require('get-audio-duration');
 const { Album, Artist, Movie, TVEpisode, TVShow } = require('../models');
-const { findTotalDurationMillis } = require('../utils');
 const metadataServiceConstructor = require('../services/metadata');
 const metadataService = new metadataServiceConstructor()
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-const DATA_PATH = path.resolve(__dirname,'../data')
+const DATA_PATH = path.resolve(__dirname,'../prisma/data')
 const notAvailableInAPI = fs.readFileSync(`${DATA_PATH}/not_available.txt`, "utf-8").split("\n").map(i => i.replace(/(\r\n|\n|\r)/gm, ""))
 
 var fileSystem = [];
@@ -21,7 +19,7 @@ var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, proc
 });
 var ready;
 
-function containsAny(str, substrings) {
+const containsAny = (str, substrings) => {
   for (var i = 0; i != substrings.length; i++) {
      var substring = substrings[i];
      if (str.indexOf(substring) != - 1) {
@@ -89,10 +87,128 @@ const generateMetaData = (filter = ["movies", "tv", "music"]) => {
   jobs.reduce((p, fn) => p.then(fn), Promise.resolve())
 }
 
+const getAll = async () => {
+  var movies = await prisma.movie.findMany({
+    include: { genres: true, production_companies: true, credits: true, similar: true }
+  })
+  movies.map(movie => {
+    movie.id = movie.tmdb_id
+    delete movie.tmdb_id
+
+    movie.genres.map(g => {
+      g.id = g.tmdb_id;
+      delete g.tmdb_id;
+    })
+
+    movie.production_companies.map(p => {
+      p.id = p.tmdb_id
+      delete p.tmdb_id
+    })
+
+    movie.credits.map(c => {
+      c.id = c.tmdb_id
+      delete c.tmdb_id
+    })
+
+    movie.credits = movie.credits.reduce((acc, credit) => {
+      if (credit.cast_id != null) acc.cast.push(credit);
+      else acc.crew.push(credit);
+      return acc;
+    }, { cast: [], crew: [] })
+    movie.credits.cast.sort((a,b) => a.order - b.order)
+
+    movie.similar.map(s => {
+      s.id = s.tmdb_id
+      delete s.tmdb_id
+    })
+  })
+
+  var tv_shows = await prisma.tVShow.findMany({
+    include: { created_by: true, genres: true, production_companies: true, seasons: true, credits: true, similar: true }
+  })
+
+  tv_shows.map(tv_show => {
+    tv_show.id = tv_show.tmdb_id
+    delete tv_show.tmdb_id
+
+    tv_show.genres.map(g => {
+      g.id = g.tmdb_id
+      delete g.tmdb_id
+    })
+
+    tv_show.production_companies.map(p => {
+      p.id = p.tmdb_id
+      delete p.tmdb_id
+    })
+
+    tv_show.seasons.map(s => {
+      s.id = s.tmdb_id
+      delete s.tmdb_id
+      // s.episodes.map(e => {
+      //   e.id = e.tmdb_id
+      //   delete e.tmdb_id
+      // })  
+    })
+
+    tv_show.credits.map(c => {
+      c.id = c.tmdb_id
+      delete c.tmdb_id
+    })
+
+    tv_show.credits = tv_show.credits.reduce((acc, credit) => {
+      if (credit.cast_id != null) acc.cast.push(credit);
+      else acc.crew.push(credit);
+      return acc;
+    }, { cast: [], crew: [] })
+    tv_show.credits.cast.sort((a,b) => a.order - b.order)
+
+    tv_show.similar.map(s => {
+      s.id = s.tmdb_id
+      delete s.tmdb_id
+    })
+  })
+
+  var albums = await prisma.album.findMany({
+    include: { artists: true, songs: true }
+  })
+
+  albums.map(album => {
+    album.id = album.spotify_id
+    delete album.spotify_id
+
+    album.artists.map(a => {
+      a.id = a.spotify_id
+      delete a.spotify_id
+    })
+
+    album.songs.map(s => {
+      s.id = s.spotify_id
+      delete s.spotify_id
+    })
+  })
+
+  return { movies: movies, tv: tv_shows, music: albums }
+}
+
+const getAllFiles = async () => {
+  var movies = await prisma.movie.findMany({
+    select: { fs_path: true }
+  })
+  var episodes = await prisma.episode.findMany({
+    select: { fs_path: true }
+  })
+  var songs = await prisma.song.findMany({
+    select: { fs_path: true }
+  })
+
+  return movies.concat(episodes).concat(songs).map(Object.values).flat(Infinity)
+}
+
 const getMovieMetaData = async (file) => {
   let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
   console.log('GET: ' + file);
   let movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
+  movie.type = Movie.name
   movie.fs_path = file;
   movie.url_path = `/movies/${movie.id}`;
   movie.ctime = fs.statSync(movie.fs_path).ctime;
@@ -167,7 +283,7 @@ const upsertManyMovies = async (movies) => {
           connectOrCreate: genres.map((g) => ({
             create: g,
             where: { tmdb_id: g.tmdb_id },
-          })),
+          }))
         },
         imdb_id: result.imdb_id,
         overview: result.overview,
@@ -177,7 +293,7 @@ const upsertManyMovies = async (movies) => {
           connectOrCreate: production_companies.map((p) => ({
             create: p,
             where: { tmdb_id: p.tmdb_id },
-          })),
+          }))
         },
         release_date: result.release_date,
         revenue: result.revenue,
@@ -190,16 +306,16 @@ const upsertManyMovies = async (movies) => {
           connectOrCreate: credits.map((c) => ({
             create: c,
             where: { tmdb_id: c.tmdb_id },
-          })),
+          }))
         },
         similar: {
           connectOrCreate: similar.map((s) => ({
             create: s,
             where: { tmdb_id: s.tmdb_id },
-          })),
+          }))
         }
       }
-      const upsertMovie = await prisma.movie.upsert({
+      await prisma.movie.upsert({
         where: { tmdb_id: result.id },
         update: movie,
         create: movie
@@ -213,51 +329,6 @@ const upsertManyMovies = async (movies) => {
   console.log('[MOVIES] Done')
 }
 
-const getAll = async () => {
-  var movies = await prisma.movie.findMany({
-    include: { genres: true, production_companies: true, credits: true, similar: true }
-  })
-  movies.map(movie => {
-    movie.credits = movie.credits.reduce((acc, credit) => {
-      if (credit.cast_id != null) acc.cast.push(credit);
-      else acc.crew.push(credit);
-      return acc;
-    }, { cast: [], crew: [] })
-  })
-
-  var tv_shows = await prisma.tVShow.findMany({
-    include: { created_by: true, genres: true, production_companies: true, seasons: true, credits: true, similar: true }
-  })
-
-  tv_shows.map(tv_show => {
-    tv_show.credits = tv_show.credits.reduce((acc, credit) => {
-      if (credit.cast_id != null) acc.cast.push(credit);
-      else acc.crew.push(credit);
-      return acc;
-    }, { cast: [], crew: [] })
-  })
-
-  var albums = await prisma.album.findMany({
-    include: { artists: true, songs: true }
-  })
-
-  return { movies: movies, tv: tv_shows, music: albums }
-}
-
-const getAllFiles = async () => {
-  var movies = await prisma.movie.findMany({
-    select: { fs_path: true }
-  })
-  var episodes = await prisma.episode.findMany({
-    select: { fs_path: true }
-  })
-  var songs = await prisma.song.findMany({
-    select: { fs_path: true }
-  })
-
-  return movies.concat(episodes).concat(songs).map(Object.values).flat(Infinity)
-}
-
 const getTVEpisodeMetaData = async (file) => {
   let re = new RegExp(/(\d+)$/); // tv_id
       re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
@@ -268,6 +339,7 @@ const getTVEpisodeMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let episode = await metadataService.get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
+  episode.type = TVEpisode.name
   episode.fs_path = file
   episode.url_path = `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`
   episode.ctime = fs.statSync(episode.fs_path).ctime
@@ -286,7 +358,7 @@ const getTVShowMetaData = async (file) => {
   let episode_number = parseInt(file.match(re2)[2])
   let tv_show = await metadataService.get(new TVShow({ id: tv_id }))
   let episode = await getTVEpisodeMetaData(file)
-
+  tv_show.type = TVShow.name
   tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
   tv_show.seasons.map((season) => {
     season.episodes = [];
@@ -367,13 +439,13 @@ const upsertManyTVEpisodes = async (episodes) => {
           connectOrCreate: created_by.map((c) => ({
             create: c,
             where: { tmdb_id: c.tmdb_id },
-          })),
+          }))
         },
         genres: {
             connectOrCreate: genres.map((g) => ({
               create: g,
               where: { tmdb_id: g.tmdb_id },
-            })),
+            }))
           },
         name: result.name,
         overview: result.overview,
@@ -383,7 +455,7 @@ const upsertManyTVEpisodes = async (episodes) => {
             connectOrCreate: production_companies.map((p) => ({
               create: p,
               where: { tmdb_id: p.tmdb_id },
-            })),
+            }))
           },
         tagline: result.tagline,
         vote_average: result.vote_average,
@@ -392,17 +464,17 @@ const upsertManyTVEpisodes = async (episodes) => {
             connectOrCreate: credits.map((c) => ({
               create: c,
               where: { tmdb_id: c.tmdb_id },
-            })),
+            }))
           },
         similar: {
             connectOrCreate: similar.map((s) => ({
               create: s,
               where: { tmdb_id: s.tmdb_id },
-            })),
+            }))
           },
         imdb_id: result.external_ids.imdb_id
       }
-      const upsertTVShow = await prisma.tVShow.upsert({
+      await prisma.tVShow.upsert({
         where: { tmdb_id: result.id },
         update: tv_show,
         create: tv_show
@@ -443,7 +515,7 @@ const upsertManyTVEpisodes = async (episodes) => {
       })
 
       for (var s of seasons) {
-        const upsertSeason = await prisma.season.upsert({
+        await prisma.season.upsert({
           where: { tmdb_id: s.tmdb_id },
           update: s,
           create: s
@@ -470,8 +542,8 @@ const getUnknownAlbumMetaData = async (file) => {
     type: Album.name,
     id: unknown_id,
     album_type: 'compilation',
-    artists: [{ type: Artist.name, id: unknown_id, name: 'Unknown Artist', images: 'http://i.imgur.com/bVnx0IY.png' }],
-    images: 'http://i.imgur.com/bVnx0IY.png',
+    artists: [{ type: Artist.name, id: unknown_id, name: 'Unknown Artist', image_url: 'http://i.imgur.com/bVnx0IY.png' }],
+    image_url: 'http://i.imgur.com/bVnx0IY.png',
     label: 'Unknown Label',
     name: unknown_album,
     popularity: null,
@@ -489,7 +561,7 @@ const getUnknownAlbumMetaData = async (file) => {
   })
 
   let item = {}
-  item.id = last._max.track_number ? `no_spotify_id_${last._max.track_number + 1}` : `no_spotify_id_${0}`
+  item.id = last._max.track_number ? `${unknown_id}_${last._max.track_number + 1}` : `${unknown_id}_${0}`
   item.name = path.basename(file).replace(/.mp3|.flac/gi,'')
   item.disc_number = 1
   item.track_number = last._max.track_number ? last._max.track_number + 1 : 1
@@ -500,11 +572,9 @@ const getUnknownAlbumMetaData = async (file) => {
   item.duration_ms = parseInt(await getAudioDurationInSeconds(item.fs_path) * 1000)
   item.explicit = false
   item.preview_url = null
-
   album.tracks.items.push(item)
+  album.total_tracks = item.track_number
 
-  album.tracks.local_total = album.tracks.items.filter(item => item.url_path != null).length
-  album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
   return album
 }
 
@@ -522,17 +592,18 @@ const getAlbumMetaData = async (file) => {
 
   // find the Spotify music album
   let album = await metadataService.get(new Album({ id: album_path.match(re)[1] }))
+  album.type = Album.name
   // remove unnecessary Spotify json
   delete album.available_markets;
   album.tracks.items.map(item => {delete item.artists; delete item.available_markets});
   // find missing artist(s) information for the Spotify music album
   for (var current_artist of album.artists) {
     let artist = await metadataService.get(new Artist({ id: current_artist.id }))
-    current_artist.type = artist.type
-    current_artist.images = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
+    current_artist.type = Artist.name
+    current_artist.image_url = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
     current_artist.popularity = artist.popularity
   }
-  album.images = album.images[0].url
+  album.image_url = album.images[0].url
 
   // if local track found
   let disc_number = parseInt(path.basename(file).match(re2)[1] || 1)
@@ -548,10 +619,6 @@ const getAlbumMetaData = async (file) => {
     item.ctime = fs.statSync(item.fs_path).ctime
     item.mtime = fs.statSync(item.fs_path).mtime
   })
-
-  album.tracks.local_total = album.tracks.items.filter(item => item.url_path != null).length
-  album.tracks.preview_total = album.tracks.items.filter(item => item.preview_url != null).length
-  album.tracks.total_duration_ms = findTotalDurationMillis(album.tracks.items)
 
   return album
 }
@@ -569,7 +636,7 @@ const upsertManySongs = async (songs) => {
           type: artist.type,
           spotify_id: artist.id,
           name: artist.name,
-          images: artist.images,
+          image_url: artist.image_url,
           popularity: artist.popularity
         }
       })
@@ -598,9 +665,9 @@ const upsertManySongs = async (songs) => {
           connectOrCreate: album_artists.map((a) => ({
             create: a,
             where: { spotify_id: a.spotify_id },
-          })),
+          }))
         },
-        images: result.images,
+        image_url: result.image_url,
         label: result.label,
         name: result.name,
         popularity: result.popularity,
@@ -609,11 +676,12 @@ const upsertManySongs = async (songs) => {
           connectOrCreate: track_items.map((track_item) => ({
             create: track_item,
             where: { spotify_id: track_item.spotify_id },
-          })),
-        }
+          }))
+        },
+        total_tracks: result.total_tracks
       }
       
-      const upsertAlbum = await prisma.album.upsert({
+      await prisma.album.upsert({
         where: { spotify_id: result.id },
         update: album,
         create: album

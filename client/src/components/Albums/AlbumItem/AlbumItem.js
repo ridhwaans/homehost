@@ -9,7 +9,7 @@ const AlbumItem = (props) => {
       <Link to={"/music/album/" + album.id} className={style.LinkAlbum}>
         <div className={style.Album}>
           <div className={style.imgContainer}>
-            <img src={album.images} alt="Tokyo"/>
+            <img src={album.image_url} alt="Tokyo"/>
             <div className={style.PlayContainer}>
               <button className={style.PlayButton} title="Play">
                 <Play />

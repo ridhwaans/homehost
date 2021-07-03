@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { millisToEnglishWords } from "../../utils";
+import { findTotalDurationMillis, millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
 import { SongItem } from "./SongItem/SongItem";
 import FastAverageColor from "fast-average-color";
@@ -52,14 +52,14 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
 
     return (
       <React.Fragment>
-        {album && album.tracks && album.tracks.items && (
+        {album && album.songs && (
           <div className={style.AlbumDetail}>
             <div className={style.Cover}>
               <div className={style.Background} id="Background"></div>
               <div className={style.Gradient}></div>
               <div className={style.Img}>
                 <img
-                  src={album.images}
+                  src={album.image_url}
                   alt="album img"
                   ref={coverRef}
                 />
@@ -79,10 +79,8 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   </span>
                   <span className={style.Text_Light}>
                     {
-                    album.name == "Unknown Album" ? `${album.tracks.local_total} local tracks, 
-                    ${millisToEnglishWords(album.tracks.total_duration_ms)}`
-                    : `${album.tracks.local_total} local tracks, ${album.tracks.preview_total} previews, ${album.total_tracks} songs, 
-                    ${millisToEnglishWords(album.tracks.total_duration_ms)}`
+                    `${album.songs.filter(item => item.url_path != null).length} songs out of ${album.total_tracks} total, 
+                    ${millisToEnglishWords(findTotalDurationMillis(album.songs))}`
                     }
                   </span>
                 </div>

@@ -10,7 +10,7 @@ const ArtistItem = (props) => {
       <Link to={"/music/artist/" + artist.id} className={style.LinkAlbum}>
         <div className={style.Album}>
           <div className={style.imgContainer}>
-            <img src={artist.images && artist.images} alt={"Tokyo"}/>
+            <img src={artist.image_url} alt={"Tokyo"}/>
             <div className={style.PlayContainer}>
               <button className={style.PlayButton} title="Play">
                 <Play />

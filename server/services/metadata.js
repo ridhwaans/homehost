@@ -1,4 +1,4 @@
-const { Movie, TVShow, TVEpisode, Music, Album, Artist } = require('../models');
+const { Album, Artist, Movie, Music, TVEpisode, TVShow } = require('../models');
 const axios = require('axios');
 const Cookies  = require('universal-cookie');
 const qs = require('qs');
@@ -32,7 +32,6 @@ class Metadata {
         console.log('url: ' + request_url); 
         return wait(delay).then(() => axios.get(request_url)
             .then((response) => {
-                response.data.type = item.constructor.name;
                 return response.data;
             })
         )

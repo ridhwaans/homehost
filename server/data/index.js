@@ -28,7 +28,7 @@ const multiPropsFilterTV = (tv, keyword) => {
 const multiPropsFilterMusicSongs = async (keyword) => {
   database = database || await getAll()
   return database.music.map(album => album.songs
-    .map(song => {song.album_name = album.name; song.album_images = album.images; song.artists = album.artists; return song}))
+    .map(song => {song.album_name = album.name; song.album_image_url = album.image_url; song.artists = album.artists; return song}))
     .flat(Infinity)
     .filter(song => song.url_path != null)
     .filter(song => song.name.match(new RegExp(keyword, 'i')) != null)
@@ -165,7 +165,7 @@ const getMusicAlbum = async (id) => {
 const getAllSongs = async () => {
   database = database || await getAll()
   const songs = database.music.map(album => album.songs
-    .map(song => {song.album_name = album.name; song.album_images = album.images; song.artists = album.artists; return song}))
+    .map(song => {song.album_name = album.name; song.album_image_url = album.image_url; song.artists = album.artists; return song}))
     .flat(Infinity)
     .filter(song => song.url_path != null)
   return songs
