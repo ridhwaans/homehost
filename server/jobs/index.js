@@ -237,7 +237,11 @@ const getAll = async () => {
     }, { cast: [], crew: [] })
   })
 
-  return { movies: movies, tv: tv_shows }
+  var albums = await prisma.album.findMany({
+    include: { artists: true, songs: true }
+  })
+
+  return { movies: movies, tv: tv_shows, music: albums }
 }
 
 const getAllFiles = async () => {
@@ -486,7 +490,7 @@ const getUnknownAlbumMetaData = async (file) => {
 
   let item = {}
   item.id = last._max.track_number ? `no_spotify_id_${last._max.track_number + 1}` : `no_spotify_id_${0}`
-  item.name = file.replace(/.mp3|.flac/gi,'')
+  item.name = path.basename(file).replace(/.mp3|.flac/gi,'')
   item.disc_number = 1
   item.track_number = last._max.track_number ? last._max.track_number + 1 : 1
   item.fs_path = file
@@ -625,4 +629,4 @@ const upsertManySongs = async (songs) => {
   console.log('[MUSIC] Done')
 }
 
-module.exports = { generateMetaData }
+module.exports = { getAll, generateMetaData }

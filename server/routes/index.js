@@ -102,116 +102,116 @@ router.get('/api/about', (req, res) => {
   res.json(getAbout());
 });
 
-router.get('/api/movies', (req, res) => {
-  res.json(getAllMovies());
+router.get('/api/movies', async (req, res) => {
+  res.json(await getAllMovies());
 });
 
-router.get('/api/movies/most_popular', (req, res) => {
-  res.json(getMostPopularMovies());
+router.get('/api/movies/most_popular', async (req, res) => {
+  res.json(await getMostPopularMovies());
 });
 
-router.get('/api/movies/highest_rated', (req, res) => {
-  res.json(getHighestRatedMovies());
+router.get('/api/movies/highest_rated', async (req, res) => {
+  res.json(await getHighestRatedMovies());
 });
 
-router.get('/api/movies/recently_added', (req, res) => {
-  res.json(getRecentlyAddedMovies());
+router.get('/api/movies/recently_added', async (req, res) => {
+  res.json(await getRecentlyAddedMovies());
 });
 
-router.get('/api/movies/genres', (req, res) => {  
-  res.json(getMovieGenres());
+router.get('/api/movies/genres', async (req, res) => {  
+  res.json(await getMovieGenres());
 });
 
-router.get('/api/movies/genres/:name', (req, res) => {
-  res.json(getMoviesByGenre(req.params.name));
+router.get('/api/movies/genres/:name', async (req, res) => {
+  res.json(await getMoviesByGenre(req.params.name));
 });
 
-router.get('/api/movies/random', (req, res) => {
-  res.json(getRandomMovie());
+router.get('/api/movies/random', async (req, res) => {
+  res.json(await getRandomMovie());
 });
 
-router.get('/api/movies/:id', (req, res) => {
-  res.json(getMovie(req.params.id));
+router.get('/api/movies/:id', async (req, res) => {
+  res.json(await getMovie(req.params.id));
 });
 
-router.get('/api/tv', (req, res) => {
-  res.json(getAllTVShows())
+router.get('/api/tv', async (req, res) => {
+  res.json(await getAllTVShows())
 });
 
-router.get('/api/tv/most_popular', (req, res) => {
-  res.json(getMostPopularTVShows());
+router.get('/api/tv/most_popular', async (req, res) => {
+  res.json(await getMostPopularTVShows());
 });
 
-router.get('/api/tv/highest_rated', (req, res) => {
-  res.json(getHighestRatedTVShows());
+router.get('/api/tv/highest_rated', async (req, res) => {
+  res.json(await getHighestRatedTVShows());
 });
 
-router.get('/api/tv/recently_added', (req, res) => {
-  res.json(getRecentlyAddedTVShows());
+router.get('/api/tv/recently_added', async (req, res) => {
+  res.json(await getRecentlyAddedTVShows());
 });
 
-router.get('/api/tv/genres', (req, res) => {
-  res.json(getTVShowGenres());
+router.get('/api/tv/genres', async (req, res) => {
+  res.json(await getTVShowGenres());
 });
 
-router.get('/api/tv/genres/:name', (req, res) => {
-  res.json(getTVShowsByGenre(req.params.name));
+router.get('/api/tv/genres/:name', async (req, res) => {
+  res.json(await getTVShowsByGenre(req.params.name));
 });
 
-router.get('/api/tv/random', (req, res) => {
-  res.json(getRandomTVShow());
+router.get('/api/tv/random', async (req, res) => {
+  res.json(await getRandomTVShow());
 });
 
-router.get('/api/tv/:id', (req, res) => {
-  res.json(getTVShow(req.params.id));
+router.get('/api/tv/:id', async (req, res) => {
+  res.json(await getTVShow(req.params.id));
 });
 
-router.get('/api/music/recently_added', (req, res) => {
-  res.json(getRecentlyAddedMusic());
+router.get('/api/music/recently_added', async (req, res) => {
+  res.json(await getRecentlyAddedMusic());
 });
 
-router.get('/api/music/artists', (req, res) => {
-  res.json(getAllArtists());
+router.get('/api/music/artists', async (req, res) => {
+  res.json(await getAllArtists());
 });
 
-router.get('/api/music/albums', (req, res) => {
-  res.json(getAllAlbums())
+router.get('/api/music/albums', async (req, res) => {
+  res.json(await getAllAlbums())
 });
 
-router.get('/api/music/albums/:id', (req, res) => {
-  res.json(getMusicAlbum(req.params.id));
+router.get('/api/music/albums/:id', async (req, res) => {
+  res.json(await getMusicAlbum(req.params.id));
 });
 
-router.get('/api/music/songs', (req, res) => {
-  res.json(getAllSongs())
+router.get('/api/music/songs', async (req, res) => {
+  res.json(await getAllSongs())
 });
 
-router.get('/movies/:id', (req, res) => {
-  readStreamMp4(req, res, getMovieFilePath(req.params.id))
+router.get('/movies/:id', async (req, res) => {
+  readStreamMp4(req, res, await getMovieFilePath(req.params.id))
 });
 
-router.get('/tv/:tv_id/:season_number/:episode_number', (req, res) => {
-  readStreamMp4(req, res, getEpisodeFilePath(req.params.tv_id,req.params.season_number,req.params.episode_number))
+router.get('/tv/:tv_id/:season_number/:episode_number', async (req, res) => {
+  readStreamMp4(req, res, await getEpisodeFilePath(req.params.tv_id,req.params.season_number,req.params.episode_number))
 });
 
-router.get('/music/:album_id/:disc_number/:track_number', (req, res) => {
-  readStreamMpeg(req, res, getSongFilePath(req.params.album_id, req.params.disc_number, req.params.track_number))
+router.get('/music/:album_id/:disc_number/:track_number', async (req, res) => {
+  readStreamMpeg(req, res, await getSongFilePath(req.params.album_id, req.params.disc_number, req.params.track_number))
 });
 
-router.get('/api/watch/search', (req, res) => {
+router.get('/api/watch/search', async (req, res) => {
   const keyword = qs.parse(req.query).q;
-  res.json(searchMoviesAndTV(keyword));
+  res.json(await searchMoviesAndTV(keyword));
 });
 
-router.get('/api/listen/search', (req, res) => {
+router.get('/api/listen/search', async (req, res) => {
   const keyword = qs.parse(req.query).q;
   console.log(`keyword is "${keyword}"`)
   console.log(req.protocol + '://' + req.get('host') + req.originalUrl)
-  res.json(searchMusic(keyword));
+  res.json(await searchMusic(keyword));
 });
 
-router.get('/api/watch/billboard', (req, res) => {
-  const billboardItem = getRandomMovieOrTVShow()
+router.get('/api/watch/billboard', async (req, res) => {
+  const billboardItem = await getRandomMovieOrTVShow()
   // get by id: getMovie(), getTVShow()
   res.json(billboardItem);
 });
