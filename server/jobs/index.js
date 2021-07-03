@@ -37,7 +37,6 @@ const sync = async () => {
 
   const rowsToInsert = fileSystem.filter(x => !database.includes(x))
     .filter(x => !containsAny(x, notAvailableInAPI))
-    .filter(file => !file.startsWith(process.env.TV_PATH))
   const intersection = database.filter(x => fileSystem.includes(x))
   const rowsToDelete = database.filter(x => !fileSystem.includes(x))
 
@@ -290,6 +289,7 @@ const getTVShowMetaData = async (file) => {
     season.episodes.push(episode);
   })
 
+  //console.log(JSON.stringify(tv_show))
   return tv_show
 }
 
@@ -323,39 +323,6 @@ const upsertManyTVEpisodes = async (episodes) => {
           logo_path: production_company.logo_path, 
           name: production_company.name,
           origin_country: production_company.origin_country
-        }
-      })
-
-      const seasons = result.seasons.map(season => {
-        return {
-          tmdb_id: season.id,
-          air_date: season.air_date,
-          name: season.name,
-          overview: season.overview,
-          poster_path: season.poster_path,
-          season_number: season.season_number,
-          episodes: {
-            connectOrCreate: season.episodes.map((e) => ({
-              create: 
-              {
-                tmdb_id: e.id,
-                type: e.type,
-                fs_path: e.fs_path,
-                url_path: e.url_path,
-                ctime: e.ctime,
-                mtime: e.mtime,
-                air_date: e.air_date,
-                episode_number: e.episode_number,
-                name: e.name,
-                overview: e.overview,
-                season_number: e.season_number,
-                still_path: e.still_path || result.backdrop_path,
-                vote_average: e.vote_average,
-                vote_count: e.vote_count
-              },
-              where: { tmdb_id: e.id },
-            })),
-          }
         }
       })
 
@@ -415,12 +382,6 @@ const upsertManyTVEpisodes = async (episodes) => {
               where: { tmdb_id: p.tmdb_id },
             })),
           },
-        seasons: {
-          connectOrCreate: seasons.map((s) => ({
-            create: s,
-            where: { tmdb_id: s.tmdb_id }
-          })),
-        },
         tagline: result.tagline,
         vote_average: result.vote_average,
         vote_count: result.vote_count,
@@ -443,6 +404,49 @@ const upsertManyTVEpisodes = async (episodes) => {
         update: tv_show,
         create: tv_show
       })
+
+      const seasons = result.seasons.map(season => {
+        return {
+          tmdb_id: season.id,
+          air_date: season.air_date,
+          name: season.name,
+          overview: season.overview,
+          poster_path: season.poster_path,
+          season_number: season.season_number,
+          episodes: {
+            connectOrCreate: season.episodes.map((e) => ({
+              create: 
+              {
+                tmdb_id: e.id,
+                type: e.type,
+                fs_path: e.fs_path,
+                url_path: e.url_path,
+                ctime: e.ctime,
+                mtime: e.mtime,
+                air_date: e.air_date,
+                episode_number: e.episode_number,
+                name: e.name,
+                overview: e.overview,
+                season_number: e.season_number,
+                still_path: e.still_path || result.backdrop_path,
+                vote_average: e.vote_average,
+                vote_count: e.vote_count
+              },
+              where: { tmdb_id: e.id },
+            })),
+          },
+          show: { connect: { tmdb_id : result.id }}
+        }
+      })
+
+      for (var s of seasons) {
+        const upsertSeason = await prisma.season.upsert({
+          where: { tmdb_id: s.tmdb_id },
+          update: s,
+          create: s
+        })
+      }
+     
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this show", e)
@@ -587,20 +591,27 @@ const upsertManySongs = async (songs) => {
         label: result.label,
         name: result.name,
         popularity: result.popularity,
-        release_date: result.release_date,
-        songs: {
-          connectOrCreate: track_items.map((s) => ({
-            create: s,
-            where: { spotify_id: s.spotify_id },
-          })),
-        }
+        release_date: result.release_date
       }
 
-      const upsertAlbum = await prisma.album.upsert({
+      await prisma.album.upsert({
         where: { spotify_id: result.id },
-        update: album,
+        update: {
+          data: {
+            songs: track_item
+          }
+        },
         create: album
       })
+
+      for (var track_item of result.tracks.items) {
+        await prisma.album.update({
+          where: { spotify_id: result.id },
+          data: {
+            songs: track_item
+          }
+        })
+      }      
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this album", e)
