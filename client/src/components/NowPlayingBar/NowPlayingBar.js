@@ -52,7 +52,7 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
         <footer>
           <div className={style.Song}>
             <div className={style.Img}>
-              <img src={song.album_images[0].url} alt="song" />
+              <img src={song.album_images} alt="song" />
             </div>
             <div className={style.Infos}>
               <div className={style.Name}>{song.name}</div>

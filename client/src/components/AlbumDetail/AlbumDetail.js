@@ -59,7 +59,7 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
               <div className={style.Gradient}></div>
               <div className={style.Img}>
                 <img
-                  src={album.images[0].url}
+                  src={album.images}
                   alt="album img"
                   ref={coverRef}
                 />
@@ -103,7 +103,7 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                 </div>
               </div>
 
-              {album.tracks.items.map((item, index) => (
+              {album.songs.map((item, index) => (
                 <SongItem
                   key={item.id}
                   song={item}

@@ -6,7 +6,7 @@ const Similar = ({ additionalMovieInfo }) => {
             <div className="menu-similar-content">
 
 
-                {additionalMovieInfo.similar.results.map((similarMovie, index) => {
+                {additionalMovieInfo.similar.map((similarMovie, index) => {
 
                     if (index < 4) {
                         return (

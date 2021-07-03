@@ -40,7 +40,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                             {menuOption === "general-info" ? (
                                 <div className="jaw-bone-common">
                                     <div className="metadata">
-                                        <span className="imdb"><a href={`${process.env.REACT_APP_TMDB_BASE}${ additionalMovieInfo.type == "Movie" ? additionalMovieInfo.imdb_id : additionalMovieInfo.external_ids.imdb_id }`} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faImdb} /></a></span>
+                                        <span className="imdb"><a href={`${process.env.REACT_APP_TMDB_BASE}${ additionalMovieInfo.type == "Movie" ? additionalMovieInfo.imdb_id : additionalMovieInfo.imdb_id }`} target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faImdb} /></a></span>
                                         <span className="score">{additionalMovieInfo.vote_average}</span>
                                         <span className="year">{currentSlide.release_date}</span>
                                         <span className="duration">{additionalMovieInfo.type == "Movie" ? `${additionalMovieInfo.runtime}m` : `${additionalMovieInfo.seasons.length} Seasons`}</span>
