@@ -289,7 +289,6 @@ const getTVShowMetaData = async (file) => {
     season.episodes.push(episode);
   })
 
-  //console.log(JSON.stringify(tv_show))
   return tv_show
 }
 
@@ -460,13 +459,14 @@ const getUnknownAlbumMetaData = async (file) => {
   let re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
       unknown_album = "Unknown Album";
+      unknown_id = "no_spotify_id";
 
   // build music album not on Spotify
   let album = {
     type: Album.name,
-    id: 'unknown',
+    id: unknown_id,
     album_type: 'compilation',
-    artists: [{ type: Artist.name, id: 'unknown', name: 'Unknown Artist', images: 'http://i.imgur.com/bVnx0IY.png' }],
+    artists: [{ type: Artist.name, id: unknown_id, name: 'Unknown Artist', images: 'http://i.imgur.com/bVnx0IY.png' }],
     images: 'http://i.imgur.com/bVnx0IY.png',
     label: 'Unknown Label',
     name: unknown_album,
@@ -477,11 +477,18 @@ const getUnknownAlbumMetaData = async (file) => {
 
   console.log('GET: ' + file);
 
+  const last = await prisma.song.aggregate({
+    where: { album_spotify_id: unknown_id },
+    _max: {
+      track_number: true
+    }
+  })
+
   let item = {}
-  item.id = 'unknown'
+  item.id = last._max.track_number ? `no_spotify_id_${last._max.track_number + 1}` : `no_spotify_id_${0}`
   item.name = file.replace(/.mp3|.flac/gi,'')
   item.disc_number = 1
-  item.track_number = 1 //index + 1 fetch number from db
+  item.track_number = last._max.track_number ? last._max.track_number + 1 : 1
   item.fs_path = file
   item.url_path = `/music/${album.id}/${item.disc_number}/${item.track_number}`
   item.ctime = fs.statSync(item.fs_path).ctime
@@ -524,9 +531,11 @@ const getAlbumMetaData = async (file) => {
   album.images = album.images[0].url
 
   // if local track found
-  album.tracks.items = album.tracks.items.filter((item) => {
-    (item.disc_number == parseInt(file.match(re2)[1] || 1)) && 
-    (item.track_number == parseInt(file.match(re2)[3])) 
+  let disc_number = parseInt(path.basename(file).match(re2)[1] || 1)
+  let track_number = parseInt(path.basename(file).match(re2)[3])
+
+  album.tracks.items = album.tracks.items.filter((item) => { 
+    if ((item.disc_number == disc_number) && (item.track_number == track_number)) { return true } 
   })
 
   album.tracks.items.map((item) => {
@@ -591,27 +600,21 @@ const upsertManySongs = async (songs) => {
         label: result.label,
         name: result.name,
         popularity: result.popularity,
-        release_date: result.release_date
+        release_date: result.release_date,
+        songs: {
+          connectOrCreate: track_items.map((track_item) => ({
+            create: track_item,
+            where: { spotify_id: track_item.spotify_id },
+          })),
+        }
       }
-
-      await prisma.album.upsert({
+      
+      const upsertAlbum = await prisma.album.upsert({
         where: { spotify_id: result.id },
-        update: {
-          data: {
-            songs: track_item
-          }
-        },
+        update: album,
         create: album
       })
 
-      for (var track_item of result.tracks.items) {
-        await prisma.album.update({
-          where: { spotify_id: result.id },
-          data: {
-            songs: track_item
-          }
-        })
-      }      
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this album", e)
