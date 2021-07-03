@@ -1,7 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// DATABASE_URL is 'file:./data/media.db'
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -13,10 +12,10 @@ generator client {
 
 model Movie {
   id      				Int      	@id @default(autoincrement())
-  tmdb_id				Int			@unique
   type					String
+  tmdb_id				Int			@unique
   fs_path				String   	@unique
-  url_path				String
+  url_path				String		@unique
   ctime					DateTime
   mtime					DateTime
   adult    				Boolean
@@ -40,13 +39,11 @@ model Movie {
 }
 
 model Genre {
-	id		Int		@id @default(autoincrement())
-	tmdb_id	Int		@unique
-	name	String	@unique	
-	movie	Movie? 	@relation(fields: [movie_tmdb_id], references: [tmdb_id])
-	show	TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
-	movie_tmdb_id	Int?
-	show_tmdb_id	Int?
+	id				Int			@id @default(autoincrement())
+	tmdb_id			Int			@unique
+	name			String	
+	movies			Movie[]
+	tv_shows		TVShow[]
 }
 
 model ProductionCompany {
@@ -55,20 +52,18 @@ model ProductionCompany {
 	logo_path		String?
 	name			String
 	origin_country	String	
-	movie			Movie? 	@relation(fields: [movie_tmdb_id], references: [tmdb_id])
-	show			TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
-	movie_tmdb_id	Int?
-	show_tmdb_id	Int?
+	movies			Movie[]
+	tv_shows		TVShow[]
 }
 
 model Credit {
 	id						Int			@id @default(autoincrement())
 	tmdb_id					Int			@unique
-	adult					Boolean
+	adult					Boolean?
 	gender					Int
-	known_for_department	String
+	known_for_department	String?
 	name					String
-	popularity				Float
+	popularity				Float?
 	profile_path			String?
 	cast_id					Int?
 	character				String?
@@ -76,37 +71,31 @@ model Credit {
 	order					Int?
 	department				String?
 	job						String?
-	movie					Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
-	created_by				TVShow? 		@relation("created_by", fields: [show_tmdb_id], references: [tmdb_id])
-	credits					TVShow? 		@relation("credits", fields: [show_tmdb_id], references: [tmdb_id])
-	crew					Episode? 	@relation("crew", fields: [show_tmdb_id], references: [tmdb_id])
-	guest_stars				Episode? 	@relation("guest_stars", fields: [show_tmdb_id], references: [tmdb_id])
-	movie_tmdb_id			Int?
-	show_tmdb_id			Int?
+	movies					Movie[]
+	created_by				TVShow[] 	@relation(name: "created_by")
+	credits					TVShow[] 	@relation(name: "credits")
 }
 
 model Similar {
 	id				Int			@id @default(autoincrement())
 	tmdb_id			Int			@unique
-	backdrop_path	String
 	title			String?
 	name			String?
-	release_date	String
+	release_date	String?
+	first_air_date	String?
 	overview		String
+	backdrop_path	String?
+	poster_path		String?
 	movie			Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
-	show			TVShow? 		@relation(fields: [show_tmdb_id], references: [tmdb_id])
+	show			TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
 	movie_tmdb_id	Int?
 	show_tmdb_id	Int?
 }
 
 model TVShow {
   id      				Int      				@id @default(autoincrement())
-  tmdb_id				Int						@unique
   type					String
-  fs_path				String   				@unique
-  url_path				String
-  ctime					DateTime
-  mtime					DateTime
+  tmdb_id				Int						@unique
   backdrop_path			String
   created_by			Credit[] 				@relation("created_by")
   genres				Genre[]
@@ -127,7 +116,6 @@ model TVShow {
 model Season {
 	id      		Int      	@id @default(autoincrement())
 	tmdb_id			Int			@unique
-	type			String
 	air_date		String
 	name			String
 	overview		String
@@ -140,16 +128,14 @@ model Season {
 
 model Episode {
 	id      				Int      	@id @default(autoincrement())
-	tmdb_id					Int			@unique
 	type					String
+	tmdb_id					Int			@unique
 	fs_path					String   	@unique
-  	url_path				String
+  	url_path				String		@unique
   	ctime					DateTime
   	mtime					DateTime
 	air_date				String
-	crew					Credit[] 	@relation("crew")
 	episode_number			Int
-	guest_stars				Credit[] 	@relation("guest_stars")
 	name					String
 	overview				String
 	season_number			Int
@@ -161,41 +147,42 @@ model Episode {
 }
 
 model Album {
-	id      				String		@id
+	id      				Int		@id @default(autoincrement())
 	type					String
+	spotify_id				String	@unique
 	album_type				String
 	artists					Artist[]
 	images					String
 	label					String
 	name					String
-	popularity				Int
+	popularity				Int?
 	release_date			String
-	tracks					Song[]
+	songs					Song[]
 }
 
 model Artist {
-	id      				String		@id
+	id      				Int		@id @default(autoincrement())
 	type					String
+	spotify_id				String	@unique
 	name					String
 	images					String
-	popularity				Int
-	album    				Album		@relation(fields: [albumId], references: [id])
-  	albumId  				String
+	popularity				Int?
+	albums    				Album[]
 }
 
 model Song {
-	id      				String      @id
-	type					String
+	id      				Int      	@id @default(autoincrement())
+	spotify_id				String		@unique
 	fs_path					String   	@unique
-	url_path				String
+	url_path				String		@unique
 	ctime					DateTime
 	mtime					DateTime
 	disc_number				Int
 	duration_ms				Int
 	explicit				Boolean
 	name					String
-	preview_url				String
+	preview_url				String?
 	track_number			Int
-	album    				Album    	@relation(fields: [albumId], references: [id])
-  	albumId  				String
+	album    				Album    	@relation(fields: [album_spotify_id], references: [spotify_id])
+	album_spotify_id  		String
 }

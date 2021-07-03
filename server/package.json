@@ -12,7 +12,7 @@
     "start": "NODE_ENV=prod node server"
   },
   "dependencies": {
-    "@prisma/client": "^2.25.0",
+    "@prisma/client": "^2.26.0",
     "axios": "^0.21.1",
     "chokidar": "^3.5.1",
     "dotenv": "^10.0.0",

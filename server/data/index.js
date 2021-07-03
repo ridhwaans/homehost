@@ -1,6 +1,6 @@
 var moviesData = require('./movies.json'); // or fs.readFileSync + JSON.parse()
-var musicData =  require('./music.json'); 
-var tvData =  require('./tv.json'); 
+var musicData = require('./music.json');
+var tvData = require('./tv.json');
 const { shuffleArr } = require('../utils');
 
 const multiPropsFilterMovies = (movie, keyword) => {
