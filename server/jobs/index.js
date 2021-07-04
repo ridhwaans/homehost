@@ -208,12 +208,62 @@ const getMovieMetaData = async (file) => {
   let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
   console.log('GET: ' + file);
   let movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
-  movie.type = Movie.name
-  movie.fs_path = file;
-  movie.url_path = `/movies/${movie.id}`;
-  movie.ctime = fs.statSync(movie.fs_path).ctime;
-  movie.mtime = fs.statSync(movie.fs_path).mtime;
-  return movie
+  return {
+    type: Movie.name,
+    tmdb_id: movie.id,
+    fs_path: file,
+    url_path: `/movies/${movie.id}`,
+    ctime: fs.statSync(file).ctime,
+    mtime: fs.statSync(file).mtime,
+    adult: movie.adult,
+    backdrop_path: movie.backdrop_path,
+    budget: movie.budget,
+    genres: movie.genres.map(genre => ({ 
+      tmdb_id: genre.id, 
+      name: genre.name
+    })),
+    imdb_id: movie.imdb_id,
+    overview: movie.overview,
+    popularity: movie.popularity,
+    poster_path: movie.poster_path,
+    production_companies: movie.production_companies.map(production_company => ({ 
+      tmdb_id: production_company.id, 
+      logo_path: production_company.logo_path, 
+      name: production_company.name,
+      origin_country: production_company.origin_country
+    })),
+    release_date: movie.release_date,
+    revenue: movie.revenue,
+    runtime: movie.runtime,
+    tagline: movie.tagline,
+    title: movie.title,
+    vote_average: movie.vote_average,
+    vote_count: movie.vote_count,
+    credits: movie.credits.cast.concat(movie.credits.crew).map(credit => ({ 
+      tmdb_id: credit.id, 
+      adult: credit.adult, 
+      gender: credit.gender,
+      known_for_department: credit.known_for_department,
+      name: credit.name,
+      popularity: credit.popularity,
+      profile_path: credit.profile_path,
+      cast_id: credit.cast_id,
+      character: credit.character,
+      credit_id: credit.credit_id,
+      order: credit.order,
+      department: credit.department,
+      job: credit.job
+    })),
+    similar: movie.similar.results.slice(0, 4).map(similar_result => ({ 
+      tmdb_id: similar_result.id, 
+      backdrop_path: similar_result.backdrop_path, 
+      title: similar_result.title,
+      name: similar_result.name,
+      release_date: similar_result.release_date,
+      overview: similar_result.overview,
+      poster_path: similar_result.poster_path
+    }))
+  }
 }
 
 const upsertManyMovies = async (movies) => {
@@ -223,107 +273,43 @@ const upsertManyMovies = async (movies) => {
     try {
       let result = await getMovieMetaData(file);
 
-      const genres = result.genres.map(genre => {
-        return {
-          tmdb_id: genre.id, 
-          name: genre.name
-        }
-      });
-      
-      const production_companies = result.production_companies.map(production_company => {
-        return {
-          tmdb_id: production_company.id, 
-          logo_path: production_company.logo_path, 
-          name: production_company.name,
-          origin_country: production_company.origin_country
-        }
-      })
-      
-      const credits = result.credits.cast.concat(result.credits.crew).map(credit => {
-        return {
-          tmdb_id: credit.id, 
-          adult: credit.adult, 
-          gender: credit.gender,
-          known_for_department: credit.known_for_department,
-          name: credit.name,
-          popularity: credit.popularity,
-          profile_path: credit.profile_path,
-          cast_id: credit.cast_id,
-          character: credit.character,
-          credit_id: credit.credit_id,
-          order: credit.order,
-          department: credit.department,
-          job: credit.job
-        }
-      })
-      
-      const similar = result.similar.results.slice(0, 4).map(similar_result => {
-        return {
-          tmdb_id: similar_result.id, 
-          backdrop_path: similar_result.backdrop_path, 
-          title: similar_result.title,
-          name: similar_result.name,
-          release_date: similar_result.release_date,
-          overview: similar_result.overview,
-          poster_path: similar_result.poster_path
-        }
-      })
-      
       const movie = {
-        tmdb_id: result.id,
-        type: result.type,
-        fs_path: result.fs_path,
-        url_path: result.url_path,
-        ctime: result.ctime,
-        mtime: result.mtime,
-        adult: result.adult,
-        backdrop_path: result.backdrop_path,
-        budget: result.budget,
+        ...result,
         genres: {
-          connectOrCreate: genres.map((g) => ({
+          connectOrCreate: result.genres.map(g => ({
             create: g,
             where: { tmdb_id: g.tmdb_id },
           }))
         },
-        imdb_id: result.imdb_id,
-        overview: result.overview,
-        popularity: result.popularity,
-        poster_path: result.poster_path,
         production_companies: {
-          connectOrCreate: production_companies.map((p) => ({
+          connectOrCreate: result.production_companies.map(p => ({
             create: p,
             where: { tmdb_id: p.tmdb_id },
           }))
         },
-        release_date: result.release_date,
-        revenue: result.revenue,
-        runtime: result.runtime,
-        tagline: result.tagline,
-        title: result.title,
-        vote_average: result.vote_average,
-        vote_count: result.vote_count,
         credits: {
-          connectOrCreate: credits.map((c) => ({
+          connectOrCreate: result.credits.map(c => ({
             create: c,
             where: { tmdb_id: c.tmdb_id },
           }))
         },
         similar: {
-          connectOrCreate: similar.map((s) => ({
+          connectOrCreate: result.similar.map(s => ({
             create: s,
             where: { tmdb_id: s.tmdb_id },
           }))
         }
       }
+
       await prisma.movie.upsert({
-        where: { tmdb_id: result.id },
+        where: { tmdb_id: result.tmdb_id },
         update: movie,
         create: movie
       })
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this movie", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[MOVIES] Done')
@@ -339,12 +325,23 @@ const getTVEpisodeMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let episode = await metadataService.get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
-  episode.type = TVEpisode.name
-  episode.fs_path = file
-  episode.url_path = `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`
-  episode.ctime = fs.statSync(episode.fs_path).ctime
-  episode.mtime = fs.statSync(episode.fs_path).mtime
-  return episode;
+
+  return {
+    type: TVEpisode.name,
+    tmdb_id: episode.id,
+    fs_path: file,
+    url_path: `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`,
+    ctime: fs.statSync(file).ctime,
+    mtime: fs.statSync(file).mtime,
+    air_date: episode.air_date,
+    episode_number: episode.episode_number,
+    name: episode.name,
+    overview: episode.overview,
+    season_number: episode.season_number,
+    still_path: episode.still_path || "",
+    vote_average: episode.vote_average,
+    vote_count: episode.vote_count
+  }
 }
 
 const getTVShowMetaData = async (file) => {
@@ -358,14 +355,71 @@ const getTVShowMetaData = async (file) => {
   let episode_number = parseInt(file.match(re2)[2])
   let tv_show = await metadataService.get(new TVShow({ id: tv_id }))
   let episode = await getTVEpisodeMetaData(file)
-  tv_show.type = TVShow.name
   tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
-  tv_show.seasons.map((season) => {
-    season.episodes = [];
-    season.episodes.push(episode);
-  })
 
-  return tv_show
+  return {
+    type: TVShow.name,
+    tmdb_id: tv_show.id,
+    backdrop_path: tv_show.backdrop_path,
+    created_by: tv_show.created_by.map(creator => ({
+      tmdb_id: creator.id, 
+      credit_id: creator.credit_id,
+      name: creator.name,
+      gender: creator.gender,
+      profile_path: creator.profile_path,
+    })),
+    genres: tv_show.genres.map(genre => ({ 
+      tmdb_id: genre.id, 
+      name: genre.name
+    })),
+    name: tv_show.name,
+    overview: tv_show.overview,
+    popularity: tv_show.popularity,
+    poster_path: tv_show.poster_path,
+    production_companies: tv_show.production_companies.map(production_company => ({
+      tmdb_id: production_company.id, 
+      logo_path: production_company.logo_path, 
+      name: production_company.name,
+      origin_country: production_company.origin_country
+    })),
+    seasons: tv_show.seasons.map(season => ({
+      tmdb_id: season.id,
+      air_date: season.air_date,
+      name: season.name,
+      overview: season.overview,
+      poster_path: season.poster_path,
+      season_number: season.season_number,
+      episodes: [episode]
+    })),
+    tagline: tv_show.tagline,
+    vote_average: tv_show.vote_average,
+    vote_count: tv_show.vote_count,
+    credits: tv_show.credits.cast.concat(tv_show.credits.crew).map(credit => ({
+      tmdb_id: credit.id, 
+      adult: credit.adult, 
+      gender: credit.gender,
+      known_for_department: credit.known_for_department,
+      name: credit.name,
+      popularity: credit.popularity,
+      profile_path: credit.profile_path,
+      cast_id: credit.cast_id,
+      character: credit.character,
+      credit_id: credit.credit_id,
+      order: credit.order,
+      department: credit.department,
+      job: credit.job
+    })),
+    similar: tv_show.similar.results.slice(0, 4).map(similar_result => ({ 
+      tmdb_id: similar_result.id, 
+      backdrop_path: similar_result.backdrop_path, 
+      title: similar_result.title,
+      name: similar_result.name,
+      first_air_date: similar_result.first_air_date,
+      overview: similar_result.overview,
+      poster_path: similar_result.poster_path
+    })),
+    imdb_id: tv_show.external_ids.imdb_id
+  }
 }
 
 const upsertManyTVEpisodes = async (episodes) => {
@@ -375,143 +429,58 @@ const upsertManyTVEpisodes = async (episodes) => {
     try {
       let result = await getTVShowMetaData(file)
       
-      const created_by = result.created_by.map(creator => {
+      const seasons = result.seasons.map(s => {
         return {
-          tmdb_id: creator.id, 
-          credit_id: creator.credit_id,
-          name: creator.name,
-          gender: creator.gender,
-          profile_path: creator.profile_path,
+          ...s,
+          episodes: {
+            connectOrCreate: s.episodes.map(e => ({
+              create: e,
+              where: { tmdb_id: e.tmdb_id }
+            }))
+          },
+          show: { connect: { tmdb_id : result.tmdb_id }}
         }
       })
-
-      const genres = result.genres.map(genre => {
-        return {
-          tmdb_id: genre.id, 
-          name: genre.name
-        }
-      })
-
-      const production_companies = result.production_companies.map(production_company => {
-        return {
-          tmdb_id: production_company.id, 
-          logo_path: production_company.logo_path, 
-          name: production_company.name,
-          origin_country: production_company.origin_country
-        }
-      })
-
-      const credits = result.credits.cast.concat(result.credits.crew).map(credit => {
-        return {
-          tmdb_id: credit.id, 
-          adult: credit.adult, 
-          gender: credit.gender,
-          known_for_department: credit.known_for_department,
-          name: credit.name,
-          popularity: credit.popularity,
-          profile_path: credit.profile_path,
-          cast_id: credit.cast_id,
-          character: credit.character,
-          credit_id: credit.credit_id,
-          order: credit.order,
-          department: credit.department,
-          job: credit.job
-        }
-      })
-
-      const similar = result.similar.results.slice(0, 4).map(similar_result => {
-        return {
-          tmdb_id: similar_result.id, 
-          backdrop_path: similar_result.backdrop_path, 
-          title: similar_result.title,
-          name: similar_result.name,
-          first_air_date: similar_result.first_air_date,
-          overview: similar_result.overview,
-          poster_path: similar_result.poster_path
-        }
-      })
+      delete result.seasons
 
       const tv_show = {
-        tmdb_id: result.id,
-        type: result.type,
-        backdrop_path: result.backdrop_path,
+        ...result,
         created_by: {
-          connectOrCreate: created_by.map((c) => ({
+          connectOrCreate: result.created_by.map(c => ({
             create: c,
             where: { tmdb_id: c.tmdb_id },
           }))
         },
         genres: {
-            connectOrCreate: genres.map((g) => ({
-              create: g,
-              where: { tmdb_id: g.tmdb_id },
-            }))
-          },
-        name: result.name,
-        overview: result.overview,
-        popularity: result.popularity,
-        poster_path: result.poster_path,
+          connectOrCreate: result.genres.map(g => ({
+            create: g,
+            where: { tmdb_id: g.tmdb_id },
+          }))
+        },
         production_companies: {
-            connectOrCreate: production_companies.map((p) => ({
-              create: p,
-              where: { tmdb_id: p.tmdb_id },
-            }))
-          },
-        tagline: result.tagline,
-        vote_average: result.vote_average,
-        vote_count: result.vote_count,
+          connectOrCreate: result.production_companies.map(p => ({
+            create: p,
+            where: { tmdb_id: p.tmdb_id },
+          }))
+        },
         credits: {
-            connectOrCreate: credits.map((c) => ({
-              create: c,
-              where: { tmdb_id: c.tmdb_id },
-            }))
-          },
+          connectOrCreate: result.credits.map(c => ({
+            create: c,
+            where: { tmdb_id: c.tmdb_id },
+          }))
+        },
         similar: {
-            connectOrCreate: similar.map((s) => ({
-              create: s,
-              where: { tmdb_id: s.tmdb_id },
-            }))
-          },
-        imdb_id: result.external_ids.imdb_id
+          connectOrCreate: result.similar.map(s => ({
+            create: s,
+            where: { tmdb_id: s.tmdb_id },
+          }))
+        }
       }
+
       await prisma.tVShow.upsert({
-        where: { tmdb_id: result.id },
+        where: { tmdb_id: result.tmdb_id },
         update: tv_show,
         create: tv_show
-      })
-
-      const seasons = result.seasons.map(season => {
-        return {
-          tmdb_id: season.id,
-          air_date: season.air_date,
-          name: season.name,
-          overview: season.overview,
-          poster_path: season.poster_path,
-          season_number: season.season_number,
-          episodes: {
-            connectOrCreate: season.episodes.map((e) => ({
-              create: 
-              {
-                tmdb_id: e.id,
-                type: e.type,
-                fs_path: e.fs_path,
-                url_path: e.url_path,
-                ctime: e.ctime,
-                mtime: e.mtime,
-                air_date: e.air_date,
-                episode_number: e.episode_number,
-                name: e.name,
-                overview: e.overview,
-                season_number: e.season_number,
-                still_path: e.still_path || result.backdrop_path,
-                vote_average: e.vote_average,
-                vote_count: e.vote_count
-              },
-              where: { tmdb_id: e.id },
-            })),
-          },
-          show: { connect: { tmdb_id : result.id }}
-        }
       })
 
       for (var s of seasons) {
@@ -521,11 +490,10 @@ const upsertManyTVEpisodes = async (episodes) => {
           create: s
         })
       }
-     
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this show", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[TV] Done')
@@ -537,45 +505,44 @@ const getUnknownAlbumMetaData = async (file) => {
       unknown_album = "Unknown Album";
       unknown_id = "no_spotify_id";
 
-  // build music album not on Spotify
-  let album = {
-    type: Album.name,
-    id: unknown_id,
-    album_type: 'compilation',
-    artists: [{ type: Artist.name, id: unknown_id, name: 'Unknown Artist', image_url: 'http://i.imgur.com/bVnx0IY.png' }],
-    image_url: 'http://i.imgur.com/bVnx0IY.png',
-    label: 'Unknown Label',
-    name: unknown_album,
-    popularity: null,
-    release_date: 'NaN',
-    tracks: {items:[]}
-  }
-
   console.log('GET: ' + file);
-
+  // build music album not on Spotify
   const last = await prisma.song.aggregate({
     where: { album_spotify_id: unknown_id },
     _max: {
       track_number: true
     }
   })
+  let disc_number = 1
+  let track_number = last._max.track_number ? last._max.track_number + 1 : 1
 
-  let item = {}
-  item.id = last._max.track_number ? `${unknown_id}_${last._max.track_number + 1}` : `${unknown_id}_${0}`
-  item.name = path.basename(file).replace(/.mp3|.flac/gi,'')
-  item.disc_number = 1
-  item.track_number = last._max.track_number ? last._max.track_number + 1 : 1
-  item.fs_path = file
-  item.url_path = `/music/${album.id}/${item.disc_number}/${item.track_number}`
-  item.ctime = fs.statSync(item.fs_path).ctime
-  item.mtime = fs.statSync(item.fs_path).mtime
-  item.duration_ms = parseInt(await getAudioDurationInSeconds(item.fs_path) * 1000)
-  item.explicit = false
-  item.preview_url = null
-  album.tracks.items.push(item)
-  album.total_tracks = item.track_number
-
-  return album
+  return {
+    type: Album.name,
+    spotify_id: unknown_id,
+    album_type: 'compilation',
+    artists: [{ type: Artist.name, spotify_id: unknown_id, name: 'Unknown Artist', image_url: 'http://i.imgur.com/bVnx0IY.png' }],
+    image_url: 'http://i.imgur.com/bVnx0IY.png',
+    label: 'Unknown Label',
+    name: unknown_album,
+    popularity: null,
+    release_date: 'NaN',
+    songs: [
+      {
+        spotify_id: last._max.track_number ? `${unknown_id}_${last._max.track_number + 1}` : `${unknown_id}_${0}`,
+        name: path.basename(file).replace(/.mp3|.flac/gi,''),
+        disc_number: disc_number,
+        track_number: track_number,
+        fs_path: file,
+        url_path: `/music/${unknown_id}/${disc_number}/${track_number}`,
+        ctime: fs.statSync(file).ctime,
+        mtime: fs.statSync(file).mtime,
+        duration_ms: parseInt(await getAudioDurationInSeconds(file) * 1000),
+        explicit: false,
+        preview_url: null
+      }
+    ],
+    total_tracks: track_number
+  }
 }
 
 const getAlbumMetaData = async (file) => {
@@ -592,101 +559,82 @@ const getAlbumMetaData = async (file) => {
 
   // find the Spotify music album
   let album = await metadataService.get(new Album({ id: album_path.match(re)[1] }))
-  album.type = Album.name
-  // remove unnecessary Spotify json
-  delete album.available_markets;
-  album.tracks.items.map(item => {delete item.artists; delete item.available_markets});
   // find missing artist(s) information for the Spotify music album
   for (var current_artist of album.artists) {
     let artist = await metadataService.get(new Artist({ id: current_artist.id }))
-    current_artist.type = Artist.name
     current_artist.image_url = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
     current_artist.popularity = artist.popularity
   }
-  album.image_url = album.images[0].url
 
   // if local track found
   let disc_number = parseInt(path.basename(file).match(re2)[1] || 1)
   let track_number = parseInt(path.basename(file).match(re2)[3])
-
+  
   album.tracks.items = album.tracks.items.filter((item) => { 
     if ((item.disc_number == disc_number) && (item.track_number == track_number)) { return true } 
   })
 
-  album.tracks.items.map((item) => {
-    item.fs_path = file
-    item.url_path = `/music/${album.id}/${item.disc_number}/${item.track_number}`
-    item.ctime = fs.statSync(item.fs_path).ctime
-    item.mtime = fs.statSync(item.fs_path).mtime
-  })
-
-  return album
+  return {
+    type: Album.name,
+    spotify_id: album.id,
+    album_type: album.album_type,
+    artists: album.artists.map(artist => ({
+      type: Artist.name,
+      spotify_id: artist.id,
+      name: artist.name,
+      image_url: artist.image_url,
+      popularity: artist.popularity
+    })),
+    image_url: album.images[0].url,
+    label: album.label,
+    name: album.name,
+    popularity: album.popularity,
+    release_date: album.release_date,
+    songs: album.tracks.items.map(track_item => ({
+      spotify_id: track_item.id,
+      fs_path: file,
+      url_path: `/music/${album.id}/${track_item.disc_number}/${track_item.track_number}`,
+      ctime: fs.statSync(file).ctime,
+      mtime: fs.statSync(file).mtime,
+      disc_number: track_item.disc_number,
+      duration_ms: track_item.duration_ms,
+      explicit: track_item.explicit,
+      name: track_item.name,
+      preview_url: track_item.preview_url,
+      track_number: track_item.track_number
+    })),
+    total_tracks: album.total_tracks
+  }
 }
 
 const upsertManySongs = async (songs) => {
-
   console.log('Generating data for Music...')
 
   for (let file of songs) {
     try {
       let result = await getAlbumMetaData(file)
 
-      const album_artists = result.artists.map(artist => {
-        return {
-          type: artist.type,
-          spotify_id: artist.id,
-          name: artist.name,
-          image_url: artist.image_url,
-          popularity: artist.popularity
-        }
-      })
-
-      const track_items = result.tracks.items.map(track_item => {
-        return {
-          spotify_id: track_item.id,
-          fs_path: track_item.fs_path,
-          url_path: track_item.url_path,
-          ctime: track_item.ctime,
-          mtime: track_item.mtime,
-          disc_number: track_item.disc_number,
-          duration_ms: track_item.duration_ms,
-          explicit: track_item.explicit,
-          name: track_item.name,
-          preview_url: track_item.preview_url,
-          track_number: track_item.track_number
-        }
-      })
-
       const album = {
-        type: result.type,
-        spotify_id: result.id,
-        album_type: result.album_type,
+        ...result,
         artists: {
-          connectOrCreate: album_artists.map((a) => ({
+          connectOrCreate: result.artists.map(a => ({
             create: a,
-            where: { spotify_id: a.spotify_id },
+            where: { spotify_id: a.spotify_id }
           }))
         },
-        image_url: result.image_url,
-        label: result.label,
-        name: result.name,
-        popularity: result.popularity,
-        release_date: result.release_date,
         songs: {
-          connectOrCreate: track_items.map((track_item) => ({
-            create: track_item,
-            where: { spotify_id: track_item.spotify_id },
+          connectOrCreate: result.songs.map(s => ({
+            create: s,
+            where: { spotify_id: s.spotify_id }
           }))
-        },
-        total_tracks: result.total_tracks
+        }
       }
       
       await prisma.album.upsert({
-        where: { spotify_id: result.id },
+        where: { spotify_id: result.spotify_id },
         update: album,
         create: album
       })
-
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this album", e)

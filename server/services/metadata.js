@@ -35,7 +35,6 @@ class Metadata {
                 return response.data;
             })
         )
-        
     }
 }
 

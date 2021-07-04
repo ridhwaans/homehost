@@ -45,7 +45,7 @@ REACT_APP_IMAGE_BASE = "https://image.tmdb.org/t/p/"
 REACT_APP_TMDB_BASE = "https://www.imdb.com/title/"
 ```  
 Create a `.env` file in the `server/` directory, if it does not exist  
-In `.env`, set the media paths, and set a working API key for TMDb API and Spotify Web API  
+In `.env`, set a working API key for TMDb API and Spotify Web API, set the media paths, and set tha base url of the homehost client  
 ###### **`server/.env`**
 ```env
 MOVIES_PATH = '/path/to/movies/directory'
@@ -61,6 +61,7 @@ MUSIC_API = 'api.spotify.com/v1'
 MUSIC_CLIENT_ID = '<client_id>'
 MUSIC_CLIENT_SECRET = '<client_secret>'
 
+DATABASE_URL = 'file:./data/media.db'
 CLIENT_BASE_URL = 'http://localhost:3000'
 ```
 If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction  
@@ -93,19 +94,21 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
    - (track_file_name) (.mp3|.flac)
 ```
 
-### Generating metadata
- 
-Run `npm run start-dev` from the `server/` directory to start the application in dev mode  
- 
-On the server, call `/api?generate` **once**. Wait for the async job to finish and save  
-There is no 'watch' or 'hot reload' for server media. Adding or removing media files requires a server reset and rerunning `/api?generate`  
+### Database
+
+From `server/`, run `npx prisma migrate dev` to create the database and necessary migrations
+Run `npm run start-dev` to start the application in dev mode   
+Wait for the async job to finish generating metadata and save
+To explore all media data, run `prisma studio` to go to `http://localhost:5555`
+To reset the database or regenerate all data, run `npx prisma migrate reset`
 
 ### Run
 
 Run `npm run start-dev` from the `server/` directory to start the application in dev mode  
-By default the server port is `5000`, client port is `3000`  
+By default, the server port is `5000`, client port is `3000`  
 Run `npm start` from the `server/` directory to start the application as prod  
-The default port is `5000`  
+By default, client and server will run on `5000`  
+While running, homehost continiously saves and retrieves metadata for any media files that were added, moved or removed
 
 ### Routes
 
