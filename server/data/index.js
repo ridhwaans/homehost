@@ -9,8 +9,9 @@ const multiPropsFilterMovies = (movie, keyword) => {
     movie.overview.match(new RegExp(keyword, 'i')) != null
     ) || (
     movie.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null)
-    ) || (
-    movie.credits.crew.find(x => x.job === "Director").name.match(new RegExp(keyword, 'i')) != null)
+    )
+    // ) || (
+    // movie.credits.crew.find(x => x.job === "Director").name.match(new RegExp(keyword, 'i')) != null)
 }
   
 const multiPropsFilterTV = (tv, keyword) => {

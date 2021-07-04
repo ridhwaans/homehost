@@ -62,12 +62,13 @@ function SearchResultsItem(props) {
                 <div className="boxart">
                     {props.poster === true ? (
                         <React.Fragment>
-                            {props.data.backdrop_path ? <img src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.poster_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
+                            {props.data.backdrop_path ? <img className="background" src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.poster_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
                         </React.Fragment>
                     ) : (
-                            <React.Fragment>
-                                {props.data.backdrop_path ? <img src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.backdrop_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
-                            </React.Fragment>
+                        <React.Fragment>
+                            {props.data.backdrop_path ? <img className="background" src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.backdrop_path}`} alt="boxart" /> : <img style={{ "background": "black" }} alt="boxart" />}
+                            {props.data.logo_path && <img className="logo" src={`${process.env.REACT_APP_IMAGE_BASE}w500/${props.data.logo_path}`} alt="boxart" />}
+                        </React.Fragment>
                         )}
 
                 </div>

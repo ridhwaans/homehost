@@ -521,7 +521,7 @@ rgba(0, 0, 0, 0) 85%);
   padding: 28.125% 0;
 }
 
-.boxart img {
+.boxart .background {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -531,6 +531,13 @@ rgba(0, 0, 0, 0) 85%);
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.boxart .logo {
+  position: absolute;
+  width: 35%;
+  left: 10px;
+  bottom: 10px;
 }
 
 .handle {

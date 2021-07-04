@@ -144,6 +144,7 @@ const getAll = async () => {
     tv_show.seasons.map(s => {
       s.id = s.tmdb_id
       delete s.tmdb_id
+      s.episodes =[]
       // s.episodes.map(e => {
       //   e.id = e.tmdb_id
       //   delete e.tmdb_id
@@ -208,6 +209,7 @@ const getMovieMetaData = async (file) => {
   let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
   console.log('GET: ' + file);
   let movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
+  let logo = movie.images.logos.find(logo => logo.iso_639_1 == "en")
   return {
     type: Movie.name,
     tmdb_id: movie.id,
@@ -239,6 +241,7 @@ const getMovieMetaData = async (file) => {
     title: movie.title,
     vote_average: movie.vote_average,
     vote_count: movie.vote_count,
+    logo_path: logo ? logo.file_path : "",
     credits: movie.credits.cast.concat(movie.credits.crew).map(credit => ({ 
       tmdb_id: credit.id, 
       adult: credit.adult, 
@@ -356,7 +359,7 @@ const getTVShowMetaData = async (file) => {
   let tv_show = await metadataService.get(new TVShow({ id: tv_id }))
   let episode = await getTVEpisodeMetaData(file)
   tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
-
+  let logo = tv_show.images.logos.find(logo => logo.iso_639_1 == "en")
   return {
     type: TVShow.name,
     tmdb_id: tv_show.id,
@@ -394,6 +397,7 @@ const getTVShowMetaData = async (file) => {
     tagline: tv_show.tagline,
     vote_average: tv_show.vote_average,
     vote_count: tv_show.vote_count,
+    logo_path: logo ? logo.file_path : "",
     credits: tv_show.credits.cast.concat(tv_show.credits.crew).map(credit => ({
       tmdb_id: credit.id, 
       adult: credit.adult, 

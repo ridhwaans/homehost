@@ -20,7 +20,7 @@ class Metadata {
         if (item instanceof Movie){
             request_url = `https://${process.env.MOVIES_API}/movie/${item.id}?api_key=${process.env.MOVIES_KEY}&append_to_response=images,credits,similar`
         } else if (item instanceof TVShow) {
-            request_url = `https://${process.env.TV_API}/tv/${item.id}?api_key=${process.env.TV_KEY}&append_to_response=credits,similar,external_ids`
+            request_url = `https://${process.env.TV_API}/tv/${item.id}?api_key=${process.env.TV_KEY}&append_to_response=images,credits,similar,external_ids`
         } else if (item instanceof TVEpisode) {
             request_url = `https://${process.env.TV_API}/tv/${item.tv_id}/season/${item.season_number}/episode/${item.episode_number}?api_key=${process.env.TV_KEY}`
         } else if (item instanceof Album) {
