@@ -8,6 +8,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 model Movie {
@@ -59,7 +60,11 @@ model ProductionCompany {
 
 model Credit {
 	id						Int			@id @default(autoincrement())
-	tmdb_id					Int			@unique
+	movie_id				Int?		
+	show_id					Int?		
+	movie					Movie? 		@relation(fields: [movie_id], references: [id])
+	tv_show					TVShow? 	@relation(fields: [show_id], references: [id])
+	tmdb_id					Int			
 	adult					Boolean?
 	gender					Int
 	known_for_department	String?
@@ -72,13 +77,12 @@ model Credit {
 	order					Int?
 	department				String?
 	job						String?
-	movies					Movie[]
-	created_by				TVShow[] 	@relation(name: "created_by")
-	credits					TVShow[] 	@relation(name: "credits")
 }
 
 model Similar {
-	id				Int			@id @default(autoincrement())
+	id				Int			@id @default(autoincrement())		
+	movies			Movie[]
+	tv_shows		TVShow[]
 	tmdb_id			Int			@unique
 	title			String?
 	name			String?
@@ -87,10 +91,6 @@ model Similar {
 	overview		String
 	backdrop_path	String?
 	poster_path		String?
-	movie			Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
-	show			TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
-	movie_tmdb_id	Int?
-	show_tmdb_id	Int?
 }
 
 model TVShow {
@@ -98,7 +98,6 @@ model TVShow {
   type					String
   tmdb_id				Int						@unique
   backdrop_path			String
-  created_by			Credit[] 				@relation("created_by")
   genres				Genre[]
   name					String
   overview				String
@@ -110,7 +109,7 @@ model TVShow {
   vote_average			Float
   vote_count			Int
   logo_path				String?
-  credits				Credit[]				@relation("credits")
+  credits				Credit[]				
   similar				Similar[]
   imdb_id				String
 }

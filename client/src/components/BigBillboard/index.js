@@ -41,11 +41,13 @@ function BigBillboard() {
                 <div className="billboard-information">
                     <div className="logo-and-text">
 
+                        { item.logo_path ? (<img className="logo" src={`${process.env.REACT_APP_IMAGE_BASE}w500/${item.logo_path}`} alt="boxart" />
+                        ) : ( 
                         <div className="billboard-title">
                             <h3>
                                 <div>{item.type == "Movie" ? item.title : item.name} </div>
                             </h3>
-                        </div>    
+                        </div>) }
 
                         <div className="billboard-description">
                             <div className="episode-title-container"></div>

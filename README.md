@@ -96,11 +96,11 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 
 ### Database
 
-From `server/`, run `npx prisma migrate dev` to create the database and necessary migrations
-Run `npm run start-dev` to start the application in dev mode   
-Wait for the async job to finish generating metadata and save
-To explore all media data, run `prisma studio` to go to `http://localhost:5555`
-To reset the database or regenerate all data, run `npx prisma migrate reset`
+From `server/`, run `npx prisma migrate dev` to create the database and necessary migrations  
+Run `npm run start-dev` to start the application in dev mode  
+Wait for the async job to finish generating metadata and save  
+To explore all media data, run `prisma studio` to go to `http://localhost:5555`  
+To reset the database or regenerate all data, run `npx prisma migrate reset`  
 
 ### Run
 

@@ -47,9 +47,12 @@ const sync = async () => {
   // insert to db
   rowsToInsert.length && await upsertManyMovies(rowsToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
   rowsToInsert.length && await upsertManyTVEpisodes(rowsToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
-  rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+  //rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 
   // delete from db
+  rowsToDelete.length && await deleteManyMovies(rowsToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
+  rowsToDelete.length && await deleteManyTVEpisodes(rowsToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
+  rowsToDelete.length && await deleteManySongs(rowsToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 }
 
 watcher.on('ready', () => {
@@ -85,6 +88,15 @@ const generateMetaData = (filter = ["movies", "tv", "music"]) => {
     if (media == "music") jobs.push(upsertManySongs)
   })
   jobs.reduce((p, fn) => p.then(fn), Promise.resolve())
+}
+
+const deleteManyMovies = async (movies) => {
+}
+
+const deleteManyTVEpisodes = async (episodes) => {
+}
+
+const deleteManySongs = async (songs) => {
 }
 
 const getAll = async () => {
@@ -124,7 +136,7 @@ const getAll = async () => {
   })
 
   var tv_shows = await prisma.tVShow.findMany({
-    include: { created_by: true, genres: true, production_companies: true, seasons: true, credits: true, similar: true }
+    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true }
   })
 
   tv_shows.map(tv_show => {
@@ -144,11 +156,10 @@ const getAll = async () => {
     tv_show.seasons.map(s => {
       s.id = s.tmdb_id
       delete s.tmdb_id
-      s.episodes =[]
-      // s.episodes.map(e => {
-      //   e.id = e.tmdb_id
-      //   delete e.tmdb_id
-      // })  
+      s.episodes.map(e => {
+        e.id = e.tmdb_id
+        delete e.tmdb_id
+      })
     })
 
     tv_show.credits.map(c => {
@@ -256,8 +267,8 @@ const getMovieMetaData = async (file) => {
       order: credit.order,
       department: credit.department,
       job: credit.job
-    })),
-    similar: movie.similar.results.slice(0, 4).map(similar_result => ({ 
+    })),  
+    similar: movie.similar.results.sort((a,b) => b.popularity - a.popularity).slice(0,4).map(similar_result => ({  
       tmdb_id: similar_result.id, 
       backdrop_path: similar_result.backdrop_path, 
       title: similar_result.title,
@@ -276,6 +287,9 @@ const upsertManyMovies = async (movies) => {
     try {
       let result = await getMovieMetaData(file);
 
+      const credits = result.credits
+      delete result.credits
+
       const movie = {
         ...result,
         genres: {
@@ -290,12 +304,6 @@ const upsertManyMovies = async (movies) => {
             where: { tmdb_id: p.tmdb_id },
           }))
         },
-        credits: {
-          connectOrCreate: result.credits.map(c => ({
-            create: c,
-            where: { tmdb_id: c.tmdb_id },
-          }))
-        },
         similar: {
           connectOrCreate: result.similar.map(s => ({
             create: s,
@@ -303,16 +311,25 @@ const upsertManyMovies = async (movies) => {
           }))
         }
       }
-
-      await prisma.movie.upsert({
+    
+      const movie_with_id = await prisma.movie.upsert({
         where: { tmdb_id: result.tmdb_id },
         update: movie,
         create: movie
       })
+      
+      for (var c of credits) {
+        await prisma.credit.create({
+          data: {
+            ...c,
+            movie: { connect: { id : movie_with_id.id }}
+          }
+        })
+      }
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this movie", e)
-      continue; // break or continue
+      break; // break or continue
     }
   }
   console.log('[MOVIES] Done')
@@ -413,7 +430,7 @@ const getTVShowMetaData = async (file) => {
       department: credit.department,
       job: credit.job
     })),
-    similar: tv_show.similar.results.slice(0, 4).map(similar_result => ({ 
+    similar: tv_show.similar.results.sort((a,b) => b.popularity - a.popularity).slice(0,4).map(similar_result => ({ 
       tmdb_id: similar_result.id, 
       backdrop_path: similar_result.backdrop_path, 
       title: similar_result.title,
@@ -445,16 +462,14 @@ const upsertManyTVEpisodes = async (episodes) => {
           show: { connect: { tmdb_id : result.tmdb_id }}
         }
       })
+      const credits = result.credits
+
+      delete result.created_by
       delete result.seasons
+      delete result.credits
 
       const tv_show = {
         ...result,
-        created_by: {
-          connectOrCreate: result.created_by.map(c => ({
-            create: c,
-            where: { tmdb_id: c.tmdb_id },
-          }))
-        },
         genres: {
           connectOrCreate: result.genres.map(g => ({
             create: g,
@@ -467,12 +482,6 @@ const upsertManyTVEpisodes = async (episodes) => {
             where: { tmdb_id: p.tmdb_id },
           }))
         },
-        credits: {
-          connectOrCreate: result.credits.map(c => ({
-            create: c,
-            where: { tmdb_id: c.tmdb_id },
-          }))
-        },
         similar: {
           connectOrCreate: result.similar.map(s => ({
             create: s,
@@ -481,7 +490,7 @@ const upsertManyTVEpisodes = async (episodes) => {
         }
       }
 
-      await prisma.tVShow.upsert({
+      const tv_show_with_id = await prisma.tVShow.upsert({
         where: { tmdb_id: result.tmdb_id },
         update: tv_show,
         create: tv_show
@@ -495,9 +504,18 @@ const upsertManyTVEpisodes = async (episodes) => {
         })
       }
 
+      for (var c of credits) {
+        await prisma.credit.create({
+          data: {
+            ...c,
+            tv_show: { connect: { id : tv_show_with_id.id }}
+          }
+        })
+      }
+
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this show", e)
-      continue; // break or continue
+      break; // break or continue
     }
   }
   console.log('[TV] Done')

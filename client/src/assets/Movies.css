@@ -1599,6 +1599,10 @@ background-position: 50% -50%;
   cursor: pointer;
 }
 
+.episode-item .episode-item-image span:hover {
+  cursor: pointer;
+}
+
 .episode-item .episode-item-image-overlay {
   font-size: 1.6vw;
   padding-left: 2px;
