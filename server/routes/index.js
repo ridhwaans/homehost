@@ -30,7 +30,7 @@ const { getAbout,
   searchMoviesAndTV,
   searchMusic,
   getRandomMovieOrTVShow } = require('../data')
-const { generateMetaData } = require('../jobs')
+const { upsertAll } = require('../jobs')
 const router = express.Router();
 
 const readStreamMp4 = (req, res, file_path) => {
@@ -91,7 +91,7 @@ const readStreamMpeg = (req, res, file_path) => {
 router.get('/api', (req, res) => {
   if (process.env.NODE_ENV == 'dev' && req.query.generate){
     const filter = req.query.generate.split(',');
-    generateMetaData(filter);
+    upsertAll(filter);
     res.json('Generating metadata. Please wait...');
   } else {
     res.json('Dev mode only')
@@ -190,8 +190,8 @@ router.get('/movies/:id', async (req, res) => {
   readStreamMp4(req, res, await getMovieFilePath(req.params.id))
 });
 
-router.get('/tv/:tv_id/:season_number/:episode_number', async (req, res) => {
-  readStreamMp4(req, res, await getEpisodeFilePath(req.params.tv_id,req.params.season_number,req.params.episode_number))
+router.get('/tv/:tv_show_id/:season_number/:episode_number', async (req, res) => {
+  readStreamMp4(req, res, await getEpisodeFilePath(req.params.tv_show_id,req.params.season_number,req.params.episode_number))
 });
 
 router.get('/music/:album_id/:disc_number/:track_number', async (req, res) => {

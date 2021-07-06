@@ -1,13 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const chokidar = require('chokidar');
-const { getAudioDurationInSeconds } = require('get-audio-duration');
-const { Album, Artist, Movie, TVEpisode, TVShow } = require('../models');
-const metadataServiceConstructor = require('../services/metadata');
-const metadataService = new metadataServiceConstructor()
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
+
+const { getMovieMetaData, getTVShowMetaData, getAlbumMetaData } = require('../models');
 
 const DATA_PATH = path.resolve(__dirname,'../prisma/data')
 const notAvailableInAPI = fs.readFileSync(`${DATA_PATH}/not_available.txt`, "utf-8").split("\n").map(i => i.replace(/(\r\n|\n|\r)/gm, ""))
@@ -80,23 +78,219 @@ watcher
     ready && sync()
   })
 
-const generateMetaData = (filter = ["movies", "tv", "music"]) => {
+const upsertAll = (filter = ["movies", "tv", "music"]) => {
   let jobs = []
   filter.map(media => {
-    if (media == "movies") jobs.push(upsertManyMovies)
-    if (media == "tv") jobs.push(upsertManyTVEpisodes)
-    if (media == "music") jobs.push(upsertManySongs)
+    if (media == "movies") jobs.push(upsertManyMovies(fileSystem.filter(file => file.startsWith(process.env.MOVIES_PATH))))
+    if (media == "tv") jobs.push(upsertManyTVEpisodes(fileSystem.filter(file => file.startsWith(process.env.TV_PATH))))
+    if (media == "music") jobs.push(upsertManySongs(fileSystem.filter(file => file.startsWith(process.env.MUSIC_PATH))))
   })
   jobs.reduce((p, fn) => p.then(fn), Promise.resolve())
 }
 
-const deleteManyMovies = async (movies) => {
+const upsertManyMovies = async (movies) => {
+  console.log('Generating data for Movies...')
+
+  for (let file of movies){
+    try {
+      let result = await getMovieMetaData(file);
+
+      const credits = result.credits
+      delete result.credits
+
+      const movie = {
+        ...result,
+        genres: {
+          connectOrCreate: result.genres.map(g => ({
+            create: g,
+            where: { tmdb_id: g.tmdb_id },
+          }))
+        },
+        production_companies: {
+          connectOrCreate: result.production_companies.map(p => ({
+            create: p,
+            where: { tmdb_id: p.tmdb_id },
+          }))
+        },
+        similar: {
+          connectOrCreate: result.similar.map(s => ({
+            create: s,
+            where: { tmdb_id: s.tmdb_id },
+          }))
+        }
+      }
+    
+      await prisma.movie.upsert({
+        where: { tmdb_id: result.tmdb_id },
+        update: movie,
+        create: movie
+      })
+      
+      for (var c of credits) {
+        let obj = {}
+        if (c.character) {
+          obj.unique_movie_cast_id = {}
+          obj.unique_movie_cast_id.movie_tmdb_id = movie.tmdb_id
+          obj.unique_movie_cast_id.tmdb_id = c.tmdb_id
+          obj.unique_movie_cast_id.character = c.character 
+        }
+        if (c.job) {
+          obj.unique_movie_crew_id = {}
+          obj.unique_movie_crew_id.movie_tmdb_id = movie.tmdb_id
+          obj.unique_movie_crew_id.tmdb_id = c.tmdb_id
+          obj.unique_movie_crew_id.job = c.job
+        }
+
+        if (Object.keys(obj).length == 0) continue
+        await prisma.credit.upsert({
+          where: obj,
+          update: {},
+          create: {
+            ...c,
+            movie: { connect: { tmdb_id : movie.tmdb_id }}
+          }
+        })
+      }
+
+    } catch(e) {
+      console.log("There was a problem adding this movie", e)
+      break; // break or continue
+    }
+  }
+  console.log('[MOVIES] Done')
 }
 
-const deleteManyTVEpisodes = async (episodes) => {
+const upsertManyTVEpisodes = async (episodes) => {
+  console.log('Generating data for TV...')
+
+  for (let file of episodes){
+    try {
+      let result = await getTVShowMetaData(file)
+      
+      const seasons = result.seasons.map(s => {
+        return {
+          ...s,
+          episodes: {
+            connectOrCreate: s.episodes.map(e => ({
+              create: e,
+              where: { tmdb_id: e.tmdb_id }
+            }))
+          },
+          tv_show: { connect: { tmdb_id : result.tmdb_id }}
+        }
+      })
+      const credits = result.credits
+
+      delete result.created_by
+      delete result.seasons
+      delete result.credits
+
+      const tv_show = {
+        ...result,
+        genres: {
+          connectOrCreate: result.genres.map(g => ({
+            create: g,
+            where: { tmdb_id: g.tmdb_id },
+          }))
+        },
+        production_companies: {
+          connectOrCreate: result.production_companies.map(p => ({
+            create: p,
+            where: { tmdb_id: p.tmdb_id },
+          }))
+        },
+        similar: {
+          connectOrCreate: result.similar.map(s => ({
+            create: s,
+            where: { tmdb_id: s.tmdb_id },
+          }))
+        }
+      }
+
+      await prisma.tVShow.upsert({
+        where: { tmdb_id: result.tmdb_id },
+        update: tv_show,
+        create: tv_show
+      })
+
+      for (var s of seasons) {
+        await prisma.season.upsert({
+          where: { tmdb_id: s.tmdb_id },
+          update: s,
+          create: s
+        })
+      }
+
+      for (var c of credits) {
+        let obj = {}
+        if (c.character) {
+          obj.unique_tv_show_cast_id = {}
+          obj.unique_tv_show_cast_id.tv_show_tmdb_id = tv_show.tmdb_id
+          obj.unique_tv_show_cast_id.tmdb_id = c.tmdb_id
+          obj.unique_tv_show_cast_id.character = c.character 
+        }
+        if (c.job) {
+          obj.unique_tv_show_crew_id = {}
+          obj.unique_tv_show_crew_id.tv_show_tmdb_id = tv_show.tmdb_id
+          obj.unique_tv_show_crew_id.tmdb_id = c.tmdb_id
+          obj.unique_tv_show_crew_id.job = c.job
+        }
+
+        if (Object.keys(obj).length == 0) continue
+        await prisma.credit.upsert({
+          where: obj,
+          update: {},
+          create: {
+            ...c,
+            tv_show: { connect: { tmdb_id : tv_show.tmdb_id }}
+          }
+        })
+      }
+
+    } catch(e) {
+      console.log("There was a problem adding this episode", e)
+      break; // break or continue
+    }
+  }
+  console.log('[TV] Done')
 }
 
-const deleteManySongs = async (songs) => {
+const upsertManySongs = async (songs) => {
+  console.log('Generating data for Music...')
+
+  for (let file of songs) {
+    try {
+      let result = await getAlbumMetaData(file)
+
+      const album = {
+        ...result,
+        artists: {
+          connectOrCreate: result.artists.map(a => ({
+            create: a,
+            where: { spotify_id: a.spotify_id }
+          }))
+        },
+        songs: {
+          connectOrCreate: result.songs.map(s => ({
+            create: s,
+            where: { spotify_id: s.spotify_id }
+          }))
+        }
+      }
+      
+      await prisma.album.upsert({
+        where: { spotify_id: result.spotify_id },
+        update: album,
+        create: album
+      })
+
+    } catch(e) {
+      console.log("There was a problem adding this song", e)
+      break; // break or continue
+    }
+  }
+
+  console.log('[MUSIC] Done')
 }
 
 const getAll = async () => {
@@ -220,492 +414,65 @@ const getAllFiles = async () => {
     select: { fs_path: true }
   })
 
-  return movies.concat(episodes).concat(songs).map(Object.values).flat(Infinity)
+  return [].concat(movies).concat(episodes).concat(songs).map(Object.values).flat(Infinity)
 }
 
-const getMovieMetaData = async (file) => {
-  let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
-  console.log('GET: ' + file);
-  let movie = await metadataService.get(new Movie({ id: file.match(re)[1] }))
-  let logo = movie.images.logos.find(logo => logo.iso_639_1 == "en")
-  return {
-    type: Movie.name,
-    tmdb_id: movie.id,
-    fs_path: file,
-    url_path: `/movies/${movie.id}`,
-    ctime: fs.statSync(file).ctime,
-    mtime: fs.statSync(file).mtime,
-    adult: movie.adult,
-    backdrop_path: movie.backdrop_path,
-    budget: movie.budget,
-    genres: movie.genres.map(genre => ({ 
-      tmdb_id: genre.id, 
-      name: genre.name
-    })),
-    imdb_id: movie.imdb_id,
-    overview: movie.overview,
-    popularity: movie.popularity,
-    poster_path: movie.poster_path,
-    production_companies: movie.production_companies.map(production_company => ({ 
-      tmdb_id: production_company.id, 
-      logo_path: production_company.logo_path, 
-      name: production_company.name,
-      origin_country: production_company.origin_country
-    })),
-    release_date: movie.release_date,
-    revenue: movie.revenue,
-    runtime: movie.runtime,
-    tagline: movie.tagline,
-    title: movie.title,
-    vote_average: movie.vote_average,
-    vote_count: movie.vote_count,
-    logo_path: logo ? logo.file_path : "",
-    credits: movie.credits.cast.concat(movie.credits.crew).map(credit => ({ 
-      tmdb_id: credit.id, 
-      adult: credit.adult, 
-      gender: credit.gender,
-      known_for_department: credit.known_for_department,
-      name: credit.name,
-      popularity: credit.popularity,
-      profile_path: credit.profile_path,
-      cast_id: credit.cast_id,
-      character: credit.character,
-      credit_id: credit.credit_id,
-      order: credit.order,
-      department: credit.department,
-      job: credit.job
-    })),
-    similar: movie.similar.results.sort((a,b) => b.popularity - a.popularity).slice(0,4).map(similar_result => ({  
-      tmdb_id: similar_result.id, 
-      backdrop_path: similar_result.backdrop_path, 
-      title: similar_result.title,
-      name: similar_result.name,
-      release_date: similar_result.release_date,
-      overview: similar_result.overview,
-      poster_path: similar_result.poster_path
-    }))
-  }
-}
-
-const upsertManyMovies = async (movies) => {
-  console.log('Generating data for Movies...')
-
-  for (let file of movies){
-    try {
-      let result = await getMovieMetaData(file);
-
-      const credits = result.credits
-      delete result.credits
-
-      const movie = {
-        ...result,
-        genres: {
-          connectOrCreate: result.genres.map(g => ({
-            create: g,
-            where: { tmdb_id: g.tmdb_id },
-          }))
-        },
-        production_companies: {
-          connectOrCreate: result.production_companies.map(p => ({
-            create: p,
-            where: { tmdb_id: p.tmdb_id },
-          }))
-        },
-        similar: {
-          connectOrCreate: result.similar.map(s => ({
-            create: s,
-            where: { tmdb_id: s.tmdb_id },
-          }))
-        }
-      }
-    
-      await prisma.movie.upsert({
-        where: { tmdb_id: result.tmdb_id },
-        update: movie,
-        create: movie
-      })
-      
-      for (var c of credits) {
-        let obj = {}
-        if (c.character) {
-          obj.unique_movie_cast_id = {}
-          obj.unique_movie_cast_id.movie_tmdb_id = movie.tmdb_id
-          obj.unique_movie_cast_id.tmdb_id = c.tmdb_id
-          obj.unique_movie_cast_id.character = c.character 
-        }
-        if (c.job) {
-          obj.unique_movie_crew_id = {}
-          obj.unique_movie_crew_id.movie_tmdb_id = movie.tmdb_id
-          obj.unique_movie_crew_id.tmdb_id = c.tmdb_id
-          obj.unique_movie_crew_id.job = c.job
-        }
-
-        if (Object.keys(obj).length == 0) continue
-        await prisma.credit.upsert({
-          where: obj,
-          update: {},
-          create: {
-            ...c,
-            movie: { connect: { tmdb_id : movie.tmdb_id }}
-          }
-        })
-      }
-
-    } catch(e) {
-      console.log("There was a problem fetching metadata. Skipping this movie", e)
-      break; // break or continue
-    }
-  }
-  console.log('[MOVIES] Done')
-}
-
-const getTVEpisodeMetaData = async (file) => {
-  let re = new RegExp(/(\d+)$/); // tv_id
-      re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
-
-  console.log('GET: ' + file);
-  // find tv episode on TMDb
-  let tv_id = parseInt(path.dirname(file).match(re)[1])
-  let season_number = parseInt(file.match(re2)[1])
-  let episode_number = parseInt(file.match(re2)[2])
-  let episode = await metadataService.get(new TVEpisode({ tv_id: tv_id, season_number: season_number, episode_number: episode_number }))
-
-  return {
-    type: TVEpisode.name,
-    tmdb_id: episode.id,
-    fs_path: file,
-    url_path: `/tv/${tv_id}/${episode.season_number}/${episode.episode_number}`,
-    ctime: fs.statSync(file).ctime,
-    mtime: fs.statSync(file).mtime,
-    air_date: episode.air_date,
-    episode_number: episode.episode_number,
-    name: episode.name,
-    overview: episode.overview,
-    season_number: episode.season_number,
-    still_path: episode.still_path || "",
-    vote_average: episode.vote_average,
-    vote_count: episode.vote_count
-  }
-}
-
-const getTVShowMetaData = async (file) => {
-  let re = new RegExp(/(\d+)$/); // tv_id
-      re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
-      
-  console.log('GET: ' + file);
-  // find tv show on TMDb
-  let tv_id = parseInt(path.dirname(file).match(re)[1])
-  let season_number = parseInt(file.match(re2)[1])
-  let episode_number = parseInt(file.match(re2)[2])
-  let tv_show = await metadataService.get(new TVShow({ id: tv_id }))
-  let episode = await getTVEpisodeMetaData(file)
-  tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
-  let logo = tv_show.images.logos.find(logo => logo.iso_639_1 == "en")
-  return {
-    type: TVShow.name,
-    tmdb_id: tv_show.id,
-    backdrop_path: tv_show.backdrop_path,
-    created_by: tv_show.created_by.map(creator => ({
-      tmdb_id: creator.id, 
-      credit_id: creator.credit_id,
-      name: creator.name,
-      gender: creator.gender,
-      profile_path: creator.profile_path,
-    })),
-    genres: tv_show.genres.map(genre => ({ 
-      tmdb_id: genre.id, 
-      name: genre.name
-    })),
-    name: tv_show.name,
-    overview: tv_show.overview,
-    popularity: tv_show.popularity,
-    poster_path: tv_show.poster_path,
-    production_companies: tv_show.production_companies.map(production_company => ({
-      tmdb_id: production_company.id, 
-      logo_path: production_company.logo_path, 
-      name: production_company.name,
-      origin_country: production_company.origin_country
-    })),
-    seasons: tv_show.seasons.map(season => ({
-      tmdb_id: season.id,
-      air_date: season.air_date,
-      name: season.name,
-      overview: season.overview,
-      poster_path: season.poster_path,
-      season_number: season.season_number,
-      episodes: [episode]
-    })),
-    tagline: tv_show.tagline,
-    vote_average: tv_show.vote_average,
-    vote_count: tv_show.vote_count,
-    logo_path: logo ? logo.file_path : "",
-    credits: tv_show.credits.cast.concat(tv_show.credits.crew).map(credit => ({
-      tmdb_id: credit.id, 
-      adult: credit.adult, 
-      gender: credit.gender,
-      known_for_department: credit.known_for_department,
-      name: credit.name,
-      popularity: credit.popularity,
-      profile_path: credit.profile_path,
-      cast_id: credit.cast_id,
-      character: credit.character,
-      credit_id: credit.credit_id,
-      order: credit.order,
-      department: credit.department,
-      job: credit.job
-    })),
-    similar: tv_show.similar.results.sort((a,b) => b.popularity - a.popularity).slice(0,4).map(similar_result => ({ 
-      tmdb_id: similar_result.id, 
-      backdrop_path: similar_result.backdrop_path, 
-      title: similar_result.title,
-      name: similar_result.name,
-      first_air_date: similar_result.first_air_date,
-      overview: similar_result.overview,
-      poster_path: similar_result.poster_path
-    })),
-    imdb_id: tv_show.external_ids.imdb_id
-  }
-}
-
-const upsertManyTVEpisodes = async (episodes) => {
-  console.log('Generating data for TV...')
-
-  for (let file of episodes){
-    try {
-      let result = await getTVShowMetaData(file)
-      
-      const seasons = result.seasons.map(s => {
-        return {
-          ...s,
-          episodes: {
-            connectOrCreate: s.episodes.map(e => ({
-              create: e,
-              where: { tmdb_id: e.tmdb_id }
-            }))
-          },
-          tv_show: { connect: { tmdb_id : result.tmdb_id }}
-        }
-      })
-      const credits = result.credits
-
-      delete result.created_by
-      delete result.seasons
-      delete result.credits
-
-      const tv_show = {
-        ...result,
-        genres: {
-          connectOrCreate: result.genres.map(g => ({
-            create: g,
-            where: { tmdb_id: g.tmdb_id },
-          }))
-        },
-        production_companies: {
-          connectOrCreate: result.production_companies.map(p => ({
-            create: p,
-            where: { tmdb_id: p.tmdb_id },
-          }))
-        },
-        similar: {
-          connectOrCreate: result.similar.map(s => ({
-            create: s,
-            where: { tmdb_id: s.tmdb_id },
-          }))
-        }
-      }
-
-      await prisma.tVShow.upsert({
-        where: { tmdb_id: result.tmdb_id },
-        update: tv_show,
-        create: tv_show
-      })
-
-      for (var s of seasons) {
-        await prisma.season.upsert({
-          where: { tmdb_id: s.tmdb_id },
-          update: s,
-          create: s
-        })
-      }
-
-      for (var c of credits) {
-        let obj = {}
-        if (c.character) {
-          obj.unique_tv_show_cast_id = {}
-          obj.unique_tv_show_cast_id.tv_show_tmdb_id = tv_show.tmdb_id
-          obj.unique_tv_show_cast_id.tmdb_id = c.tmdb_id
-          obj.unique_tv_show_cast_id.character = c.character 
-        }
-        if (c.job) {
-          obj.unique_tv_show_crew_id = {}
-          obj.unique_tv_show_crew_id.tv_show_tmdb_id = tv_show.tmdb_id
-          obj.unique_tv_show_crew_id.tmdb_id = c.tmdb_id
-          obj.unique_tv_show_crew_id.job = c.job
-        }
-
-        if (Object.keys(obj).length == 0) continue
-        await prisma.credit.upsert({
-          where: obj,
-          update: {},
-          create: {
-            ...c,
-            tv_show: { connect: { tmdb_id : tv_show.tmdb_id }}
-          }
-        })
-      }
-
-    } catch(e) {
-      console.log("There was a problem fetching metadata. Skipping this show", e)
-      break; // break or continue
-    }
-  }
-  console.log('[TV] Done')
-}
-
-const getUnknownAlbumMetaData = async (file) => {
-  let re = new RegExp(/(\w+)$/); // album_id
-      re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
-      unknown_album = "Unknown Album";
-      unknown_id = "no_spotify_id";
-
-  console.log('GET: ' + file);
-  // build music album not on Spotify
+const getLastUnknownAlbumTrackNumber = async () => {
   const last = await prisma.song.aggregate({
     where: { album_spotify_id: unknown_id },
     _max: {
       track_number: true
     }
   })
-  let disc_number = 1
-  let track_number = last._max.track_number ? last._max.track_number + 1 : 1
-
-  return {
-    type: Album.name,
-    spotify_id: unknown_id,
-    album_type: 'compilation',
-    artists: [{ type: Artist.name, spotify_id: unknown_id, name: 'Unknown Artist', image_url: 'http://i.imgur.com/bVnx0IY.png' }],
-    image_url: 'http://i.imgur.com/bVnx0IY.png',
-    label: 'Unknown Label',
-    name: unknown_album,
-    popularity: null,
-    release_date: 'NaN',
-    songs: [
-      {
-        spotify_id: last._max.track_number ? `${unknown_id}_${last._max.track_number + 1}` : `${unknown_id}_${0}`,
-        name: path.basename(file).replace(/.mp3|.flac/gi,''),
-        disc_number: disc_number,
-        track_number: track_number,
-        fs_path: file,
-        url_path: `/music/${unknown_id}/${disc_number}/${track_number}`,
-        ctime: fs.statSync(file).ctime,
-        mtime: fs.statSync(file).mtime,
-        duration_ms: parseInt(await getAudioDurationInSeconds(file) * 1000),
-        explicit: false,
-        preview_url: null
-      }
-    ],
-    total_tracks: track_number
-  }
+  return last._max.track_number
 }
 
-const getAlbumMetaData = async (file) => {
-  let re = new RegExp(/(\w+)$/); // album_id
-      re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
-      unknown_album = "Unknown Album";
-
-  console.log('GET: ' + file);
-
-  let album_path = path.dirname(file)
-  if (album_path.toUpperCase().endsWith(unknown_album.toUpperCase())){
-    return getUnknownAlbumMetaData(file)
-  }
-
-  // find the Spotify music album
-  let album = await metadataService.get(new Album({ id: album_path.match(re)[1] }))
-  // find missing artist(s) information for the Spotify music album
-  for (var current_artist of album.artists) {
-    let artist = await metadataService.get(new Artist({ id: current_artist.id }))
-    current_artist.image_url = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
-    current_artist.popularity = artist.popularity
-  }
-
-  // if local track found
-  let disc_number = parseInt(path.basename(file).match(re2)[1] || 1)
-  let track_number = parseInt(path.basename(file).match(re2)[3])
-  
-  album.tracks.items = album.tracks.items.filter((item) => { 
-    if ((item.disc_number == disc_number) && (item.track_number == track_number)) { return true } 
-  })
-
-  return {
-    type: Album.name,
-    spotify_id: album.id,
-    album_type: album.album_type,
-    artists: album.artists.map(artist => ({
-      type: Artist.name,
-      spotify_id: artist.id,
-      name: artist.name,
-      image_url: artist.image_url,
-      popularity: artist.popularity
-    })),
-    image_url: album.images[0].url,
-    label: album.label,
-    name: album.name,
-    popularity: album.popularity,
-    release_date: album.release_date,
-    songs: album.tracks.items.map(track_item => ({
-      spotify_id: track_item.id,
-      fs_path: file,
-      url_path: `/music/${album.id}/${track_item.disc_number}/${track_item.track_number}`,
-      ctime: fs.statSync(file).ctime,
-      mtime: fs.statSync(file).mtime,
-      disc_number: track_item.disc_number,
-      duration_ms: track_item.duration_ms,
-      explicit: track_item.explicit,
-      name: track_item.name,
-      preview_url: track_item.preview_url,
-      track_number: track_item.track_number
-    })),
-    total_tracks: album.total_tracks
-  }
-}
-
-const upsertManySongs = async (songs) => {
-  console.log('Generating data for Music...')
-
-  for (let file of songs) {
+const deleteManyMovies = async (movies) => {
+  for (let file of movies){
     try {
-      let result = await getAlbumMetaData(file)
-
-      const album = {
-        ...result,
-        artists: {
-          connectOrCreate: result.artists.map(a => ({
-            create: a,
-            where: { spotify_id: a.spotify_id }
-          }))
-        },
-        songs: {
-          connectOrCreate: result.songs.map(s => ({
-            create: s,
-            where: { spotify_id: s.spotify_id }
-          }))
+      await prisma.movie.delete({
+        where: {
+          tmdb_id: file.id 
         }
-      }
-      
-      await prisma.album.upsert({
-        where: { spotify_id: result.spotify_id },
-        update: album,
-        create: album
       })
-
     } catch(e) {
-      console.log("There was a problem fetching metadata. Skipping this album", e)
+      console.log("There was a problem removing this movie", e)
       break; // break or continue
     }
+  console.log('[MOVIES] Done')
   }
-
-  console.log('[MUSIC] Done')
 }
 
-module.exports = { getAll, generateMetaData }
+const deleteManyTVEpisodes = async (episodes) => {
+  for (let file of episodes){
+    try {
+      await prisma.episode.delete({
+        where: {
+          tmdb_id: file.id 
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this episode", e)
+      break; // break or continue
+    }
+  console.log('[TV] Done')
+  }
+}
+
+const deleteManySongs = async (songs) => {
+  for (let file of songs){
+    try {
+      await prisma.song.delete({
+        where: {
+          spotify_id: file.id 
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this song", e)
+      break; // break or continue
+    }
+  console.log('[MUSIC] Done')
+  }
+}
+
+module.exports = { getAll, upsertAll, getLastUnknownAlbumTrackNumber }

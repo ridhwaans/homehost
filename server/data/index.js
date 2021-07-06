@@ -188,10 +188,10 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
   return file_path
   }
 
-const getEpisodeFilePath = async (tv_id, season_number, episode_number) => {
+const getEpisodeFilePath = async (tv_show_id, season_number, episode_number) => {
   database = database || await getAll()
   const file_path = database.tv
-    .find(tv => tv.id == parseInt(tv_id)) 
+    .find(tv => tv.id == parseInt(tv_show_id)) 
     .seasons.find(season => season.season_number == parseInt(season_number))
     .episodes.find(episode => episode.episode_number == parseInt(episode_number))
     .fs_path.toString();

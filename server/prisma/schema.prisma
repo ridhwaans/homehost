@@ -121,7 +121,7 @@ model TVShow {
 model Season {
 	id      		Int      	@id @default(autoincrement())
 	tv_show_tmdb_id	Int
-	tv_show			TVShow 		@relation(fields: [tv_show_tmdb_id], references: [tmdb_id])
+	tv_show			TVShow 		@relation(fields: [tv_show_tmdb_id], references: [tmdb_id], onDelete: Cascade)
 	tmdb_id			Int			@unique
 	air_date		String
 	name			String
@@ -135,7 +135,7 @@ model Episode {
 	id      				Int      	@id @default(autoincrement())
 	type					String
 	season_tmdb_id  		Int
-	season    				Season    	@relation(fields: [season_tmdb_id], references: [tmdb_id])
+	season    				Season    	@relation(fields: [season_tmdb_id], references: [tmdb_id], onDelete: Cascade)
 	tmdb_id					Int			@unique
 	fs_path					String   	@unique
   	url_path				String		@unique
@@ -179,7 +179,7 @@ model Artist {
 model Song {
 	id      				Int      	@id @default(autoincrement())
 	album_spotify_id  		String
-	album    				Album    	@relation(fields: [album_spotify_id], references: [spotify_id])
+	album    				Album    	@relation(fields: [album_spotify_id], references: [spotify_id], onDelete: Cascade)
 	spotify_id				String		@unique
 	fs_path					String   	@unique
 	url_path				String		@unique

@@ -98,9 +98,10 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 
 From `server/`, run `npx prisma migrate dev` to create the database and necessary migrations  
 Run `npm run start-dev` to start the application in dev mode  
+*homehost* scans the media paths and adds the files to the database  
 Wait for the async job to finish generating metadata and save  
 To explore all media data, run `prisma studio` to go to `http://localhost:5555`  
-To reset the database or regenerate all data, run `npx prisma migrate reset`  
+To reset the database and clear all data, run `npx prisma migrate reset`  
 
 ### Run
 
@@ -108,7 +109,7 @@ Run `npm run start-dev` from the `server/` directory to start the application in
 By default, the server port is `5000`, client port is `3000`  
 Run `npm start` from the `server/` directory to start the application as prod  
 By default, client and server will run on `5000`  
-While running, homehost continiously saves and retrieves metadata for any media files that were added, moved or removed
+While running, *homehost* continuously saves and retrieves metadata for any media files that were added, moved or removed  
 
 ### Routes
 
@@ -140,7 +141,7 @@ While running, homehost continiously saves and retrieves metadata for any media 
  `/api/music/albums/:id`  
  `/api/music/songs`  
  `/movies/:id`  
- `/tv/:tv_id/:season_number/:episode_number`  
+ `/tv/:tv_show_id/:season_number/:episode_number`  
  `/music/:album_id/:disc_number/:track_number`  
  `/api/watch/search`  
  `/api/listen/search`  
