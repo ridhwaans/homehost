@@ -21,7 +21,7 @@ const Details = ({ additionalMovieInfo }) => {
         <div className="menu-details">
             <div className="menu-details-content">
                 <div className="menu-details-item">
-                    <span className="details-item-title">Crew</span>
+                    <span className="details-item-title">Cast</span>
                     {additionalMovieInfo.credits.cast.map((item, index) => {
                         if (index < 10) {
                             return <span key={index}>{item.name}</span>

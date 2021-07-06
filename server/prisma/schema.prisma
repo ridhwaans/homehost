@@ -60,10 +60,10 @@ model ProductionCompany {
 
 model Credit {
 	id						Int			@id @default(autoincrement())
-	movie_id				Int?		
-	show_id					Int?		
-	movie					Movie? 		@relation(fields: [movie_id], references: [id])
-	tv_show					TVShow? 	@relation(fields: [show_id], references: [id])
+	movie_tmdb_id			Int?		
+	show_tmdb_id			Int?		
+	movie					Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
+	tv_show					TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
 	tmdb_id					Int			
 	adult					Boolean?
 	gender					Int
@@ -77,6 +77,8 @@ model Credit {
 	order					Int?
 	department				String?
 	job						String?
+	@@unique(fields: [tmdb_id, movie_tmdb_id, known_for_department], name: "unique_movie_credit_id")
+	@@unique(fields: [tmdb_id, show_tmdb_id, known_for_department], name: "unique_show_credit_id")
 }
 
 model Similar {

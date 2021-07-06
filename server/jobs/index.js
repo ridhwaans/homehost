@@ -168,7 +168,7 @@ const getAll = async () => {
     })
 
     tv_show.credits = tv_show.credits.reduce((acc, credit) => {
-      if (credit.cast_id != null) acc.cast.push(credit);
+      if (credit.character != null) acc.cast.push(credit);
       else acc.crew.push(credit);
       return acc;
     }, { cast: [], crew: [] })
@@ -267,7 +267,7 @@ const getMovieMetaData = async (file) => {
       order: credit.order,
       department: credit.department,
       job: credit.job
-    })),  
+    })),
     similar: movie.similar.results.sort((a,b) => b.popularity - a.popularity).slice(0,4).map(similar_result => ({  
       tmdb_id: similar_result.id, 
       backdrop_path: similar_result.backdrop_path, 
@@ -312,17 +312,25 @@ const upsertManyMovies = async (movies) => {
         }
       }
     
-      const movie_with_id = await prisma.movie.upsert({
+      await prisma.movie.upsert({
         where: { tmdb_id: result.tmdb_id },
         update: movie,
         create: movie
       })
       
       for (var c of credits) {
-        await prisma.credit.create({
-          data: {
+        await prisma.credit.upsert({
+          where: {
+            unique_movie_credit_id: {
+              tmdb_id: c.tmdb_id,
+              movie_tmdb_id: movie.tmdb_id,
+              known_for_department: c.known_for_department
+            },
+          },
+          update: {},
+          create: {
             ...c,
-            movie: { connect: { id : movie_with_id.id }}
+            movie: { connect: { tmdb_id : movie.tmdb_id }}
           }
         })
       }
@@ -490,7 +498,7 @@ const upsertManyTVEpisodes = async (episodes) => {
         }
       }
 
-      const tv_show_with_id = await prisma.tVShow.upsert({
+      await prisma.tVShow.upsert({
         where: { tmdb_id: result.tmdb_id },
         update: tv_show,
         create: tv_show
@@ -505,10 +513,18 @@ const upsertManyTVEpisodes = async (episodes) => {
       }
 
       for (var c of credits) {
-        await prisma.credit.create({
-          data: {
+        await prisma.credit.upsert({
+          where: {
+            unique_show_credit_id: {
+              tmdb_id: c.tmdb_id,
+              show_tmdb_id: tv_show.tmdb_id,
+              known_for_department: c.known_for_department
+            },
+          },
+          update: {},
+          create: {
             ...c,
-            tv_show: { connect: { id : tv_show_with_id.id }}
+            tv_show: { connect: { tmdb_id : tv_show.tmdb_id }}
           }
         })
       }
