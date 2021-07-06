@@ -61,9 +61,9 @@ model ProductionCompany {
 model Credit {
 	id						Int			@id @default(autoincrement())
 	movie_tmdb_id			Int?		
-	show_tmdb_id			Int?		
+	tv_show_tmdb_id			Int?		
 	movie					Movie? 		@relation(fields: [movie_tmdb_id], references: [tmdb_id])
-	tv_show					TVShow? 	@relation(fields: [show_tmdb_id], references: [tmdb_id])
+	tv_show					TVShow? 	@relation(fields: [tv_show_tmdb_id], references: [tmdb_id])
 	tmdb_id					Int			
 	adult					Boolean?
 	gender					Int
@@ -77,8 +77,10 @@ model Credit {
 	order					Int?
 	department				String?
 	job						String?
-	@@unique(fields: [tmdb_id, movie_tmdb_id, known_for_department], name: "unique_movie_credit_id")
-	@@unique(fields: [tmdb_id, show_tmdb_id, known_for_department], name: "unique_show_credit_id")
+	@@unique(fields: [movie_tmdb_id, tmdb_id, character], name: "unique_movie_cast_id")
+	@@unique(fields: [movie_tmdb_id, tmdb_id, job], name: "unique_movie_crew_id")
+	@@unique(fields: [tv_show_tmdb_id, tmdb_id, character], name: "unique_tv_show_cast_id")
+	@@unique(fields: [tv_show_tmdb_id, tmdb_id, job], name: "unique_tv_show_crew_id")
 }
 
 model Similar {
@@ -118,6 +120,8 @@ model TVShow {
 
 model Season {
 	id      		Int      	@id @default(autoincrement())
+	tv_show_tmdb_id	Int
+	tv_show			TVShow 		@relation(fields: [tv_show_tmdb_id], references: [tmdb_id])
 	tmdb_id			Int			@unique
 	air_date		String
 	name			String
@@ -125,13 +129,13 @@ model Season {
 	poster_path		String
 	season_number	Int
 	episodes 		Episode[]
-	show			TVShow 		@relation(fields: [show_tmdb_id], references: [tmdb_id])
-	show_tmdb_id	Int
 }
 
 model Episode {
 	id      				Int      	@id @default(autoincrement())
 	type					String
+	season_tmdb_id  		Int
+	season    				Season    	@relation(fields: [season_tmdb_id], references: [tmdb_id])
 	tmdb_id					Int			@unique
 	fs_path					String   	@unique
   	url_path				String		@unique
@@ -145,8 +149,6 @@ model Episode {
 	still_path				String
 	vote_average			Float
 	vote_count				Int
-	season    				Season    	@relation(fields: [season_tmdb_id], references: [tmdb_id])
-  	season_tmdb_id  		Int
 }
 
 model Album {
@@ -176,6 +178,8 @@ model Artist {
 
 model Song {
 	id      				Int      	@id @default(autoincrement())
+	album_spotify_id  		String
+	album    				Album    	@relation(fields: [album_spotify_id], references: [spotify_id])
 	spotify_id				String		@unique
 	fs_path					String   	@unique
 	url_path				String		@unique
@@ -186,7 +190,5 @@ model Song {
 	explicit				Boolean
 	name					String
 	preview_url				String?
-	track_number			Int
-	album    				Album    	@relation(fields: [album_spotify_id], references: [spotify_id])
-	album_spotify_id  		String
+	track_number			Int	
 }

@@ -120,11 +120,13 @@ const getAll = async () => {
     movie.credits.map(c => {
       c.id = c.tmdb_id
       delete c.tmdb_id
+      delete c.movie_tmdb_id
+      delete c.tv_show_tmdb_id
     })
 
     movie.credits = movie.credits.reduce((acc, credit) => {
-      if (credit.cast_id != null) acc.cast.push(credit);
-      else acc.crew.push(credit);
+      if (credit.character) acc.cast.push(credit);
+      if (credit.job) acc.crew.push(credit);
       return acc;
     }, { cast: [], crew: [] })
     movie.credits.cast.sort((a,b) => a.order - b.order)
@@ -156,20 +158,24 @@ const getAll = async () => {
     tv_show.seasons.map(s => {
       s.id = s.tmdb_id
       delete s.tmdb_id
+      delete s.tv_show_tmdb_id
       s.episodes.map(e => {
         e.id = e.tmdb_id
         delete e.tmdb_id
+        delete e.season_tmdb_id
       })
     })
 
     tv_show.credits.map(c => {
       c.id = c.tmdb_id
       delete c.tmdb_id
+      delete c.movie_tmdb_id
+      delete c.tv_show_tmdb_id
     })
 
     tv_show.credits = tv_show.credits.reduce((acc, credit) => {
-      if (credit.character != null) acc.cast.push(credit);
-      else acc.crew.push(credit);
+      if (credit.character) acc.cast.push(credit);
+      if (credit.job) acc.crew.push(credit);
       return acc;
     }, { cast: [], crew: [] })
     tv_show.credits.cast.sort((a,b) => a.order - b.order)
@@ -196,6 +202,7 @@ const getAll = async () => {
     album.songs.map(s => {
       s.id = s.spotify_id
       delete s.spotify_id
+      delete s.album_spotify_id
     })
   })
 
@@ -319,14 +326,23 @@ const upsertManyMovies = async (movies) => {
       })
       
       for (var c of credits) {
+        let obj = {}
+        if (c.character) {
+          obj.unique_movie_cast_id = {}
+          obj.unique_movie_cast_id.movie_tmdb_id = movie.tmdb_id
+          obj.unique_movie_cast_id.tmdb_id = c.tmdb_id
+          obj.unique_movie_cast_id.character = c.character 
+        }
+        if (c.job) {
+          obj.unique_movie_crew_id = {}
+          obj.unique_movie_crew_id.movie_tmdb_id = movie.tmdb_id
+          obj.unique_movie_crew_id.tmdb_id = c.tmdb_id
+          obj.unique_movie_crew_id.job = c.job
+        }
+
+        if (Object.keys(obj).length == 0) continue
         await prisma.credit.upsert({
-          where: {
-            unique_movie_credit_id: {
-              tmdb_id: c.tmdb_id,
-              movie_tmdb_id: movie.tmdb_id,
-              known_for_department: c.known_for_department
-            },
-          },
+          where: obj,
           update: {},
           create: {
             ...c,
@@ -467,7 +483,7 @@ const upsertManyTVEpisodes = async (episodes) => {
               where: { tmdb_id: e.tmdb_id }
             }))
           },
-          show: { connect: { tmdb_id : result.tmdb_id }}
+          tv_show: { connect: { tmdb_id : result.tmdb_id }}
         }
       })
       const credits = result.credits
@@ -513,14 +529,23 @@ const upsertManyTVEpisodes = async (episodes) => {
       }
 
       for (var c of credits) {
+        let obj = {}
+        if (c.character) {
+          obj.unique_tv_show_cast_id = {}
+          obj.unique_tv_show_cast_id.tv_show_tmdb_id = tv_show.tmdb_id
+          obj.unique_tv_show_cast_id.tmdb_id = c.tmdb_id
+          obj.unique_tv_show_cast_id.character = c.character 
+        }
+        if (c.job) {
+          obj.unique_tv_show_crew_id = {}
+          obj.unique_tv_show_crew_id.tv_show_tmdb_id = tv_show.tmdb_id
+          obj.unique_tv_show_crew_id.tmdb_id = c.tmdb_id
+          obj.unique_tv_show_crew_id.job = c.job
+        }
+
+        if (Object.keys(obj).length == 0) continue
         await prisma.credit.upsert({
-          where: {
-            unique_show_credit_id: {
-              tmdb_id: c.tmdb_id,
-              show_tmdb_id: tv_show.tmdb_id,
-              known_for_department: c.known_for_department
-            },
-          },
+          where: obj,
           update: {},
           create: {
             ...c,
