@@ -47,7 +47,7 @@ const sync = async () => {
   // insert to db
   rowsToInsert.length && await upsertManyMovies(rowsToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
   rowsToInsert.length && await upsertManyTVEpisodes(rowsToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
-  //rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+  rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 
   // delete from db
   rowsToDelete.length && await deleteManyMovies(rowsToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
@@ -701,7 +701,7 @@ const upsertManySongs = async (songs) => {
 
     } catch(e) {
       console.log("There was a problem fetching metadata. Skipping this album", e)
-      continue; // break or continue
+      break; // break or continue
     }
   }
 
