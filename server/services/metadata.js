@@ -1,7 +1,7 @@
-const { Type } = require('../models');
 const axios = require('axios');
 const Cookies  = require('universal-cookie');
 const qs = require('qs');
+const { Type } = require('../constants');
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const cookies = new Cookies();
@@ -13,8 +13,6 @@ class Metadata {
         let request_url
         let auth
         
-        console.log(item)
-        console.log(Type)
         if (item.type in Type.Music){
             auth = await getAuth() // authorization header
         }

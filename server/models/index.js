@@ -1,23 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const { getAudioDurationInSeconds } = require('get-audio-duration');
-const { getLastUnknownAlbumTrackNumber } = require('../jobs');
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 const metadataServiceConstructor = require('../services/metadata');
 const metadataService = new metadataServiceConstructor()
+const { Type } = require('../constants');
 
-const Type = Object.freeze({
-  Movie: 'Movie',
-  TV: {
-    Show: 'Show',
-    Season: 'Season',
-    Episode: 'Episode'
-  },
-  Music: {
-    Album: 'Album',
-    Artist: 'Artist',
-    Song: 'Song'
-  }
-})
 
 const getMovieMetaData = async (file) => {
   let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
@@ -192,6 +181,16 @@ const getTVShowMetaData = async (file) => {
   }
 }
 
+const getLastUnknownAlbumTrackNumber = async () => {
+  const last = await prisma.song.aggregate({
+    where: { album_spotify_id: unknown_id },
+    _max: {
+      track_number: true
+    }
+  })
+  return last._max.track_number
+}
+
 const getUnknownAlbumMetaData = async (file) => {
   let re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
@@ -216,7 +215,7 @@ const getUnknownAlbumMetaData = async (file) => {
     release_date: 'NaN',
     songs: [
       {
-        spotify_id: last._max.track_number ? `${unknown_id}_${last._max.track_number + 1}` : `${unknown_id}_${0}`,
+        spotify_id: `${unknown_id}_${track_number}`,
         name: path.basename(file).replace(/.mp3|.flac/gi,''),
         disc_number: disc_number,
         track_number: track_number,
@@ -295,4 +294,4 @@ const getAlbumMetaData = async (file) => {
   }
 }
   
-module.exports = { Type, getMovieMetaData, getTVShowMetaData, getAlbumMetaData }
+module.exports = { getMovieMetaData, getTVShowMetaData, getAlbumMetaData }

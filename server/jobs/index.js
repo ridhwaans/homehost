@@ -149,7 +149,7 @@ const upsertManyMovies = async (movies) => {
 
     } catch(e) {
       console.log("There was a problem adding this movie", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[MOVIES] Done')
@@ -244,7 +244,7 @@ const upsertManyTVEpisodes = async (episodes) => {
 
     } catch(e) {
       console.log("There was a problem adding this episode", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[TV] Done')
@@ -281,7 +281,7 @@ const upsertManySongs = async (songs) => {
 
     } catch(e) {
       console.log("There was a problem adding this song", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
 
@@ -420,16 +420,6 @@ const getNotAvailable = async () => {
   return notAvailable.map(Object.values).flat(Infinity)
 }
 
-const getLastUnknownAlbumTrackNumber = async () => {
-  const last = await prisma.song.aggregate({
-    where: { album_spotify_id: unknown_id },
-    _max: {
-      track_number: true
-    }
-  })
-  return last._max.track_number
-}
-
 const deleteManyMovies = async (movies) => {
   for (let file of movies){
     try {
@@ -478,4 +468,4 @@ const deleteManySongs = async (songs) => {
   }
 }
 
-module.exports = { getAll, upsertAll, getLastUnknownAlbumTrackNumber }
+module.exports = { getAll, upsertAll }
