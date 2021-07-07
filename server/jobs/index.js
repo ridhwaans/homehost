@@ -2,7 +2,7 @@ const chokidar = require('chokidar');
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const { getMovieMetaData, getTVShowMetaData, getAlbumMetaData } = require('../models');
-var notAvailableInAPI;
+var notAvailable = [];
 var fileSystem = [];
 var ready;
 
@@ -14,10 +14,7 @@ var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, proc
 watcher.on('ready', () => {
   console.log('Initial scan complete. Ready for changes')
   ready = true;
-
   collection = watcher.getWatched()
-  console.log("Not available in API:")
-  console.table(notAvailableInAPI)
   ready && sync()
 })
 
@@ -38,17 +35,20 @@ watcher
 
 const sync = async () => {
 
-  notAvailableInAPI = await getNotAvailable()
+  notAvailable = await getNotAvailable()
+  console.log(`notAvailable is ${notAvailable.length}`)
+  console.table(notAvailable)
+
   const database = await getAllFiles()
 
   const rowsToInsert = fileSystem.filter(x => !database.includes(x))
-    .filter(x => !containsAny(x, notAvailableInAPI))
+                      .filter(x => !notAvailable.includes(x))
   const intersection = database.filter(x => fileSystem.includes(x))
   const rowsToDelete = database.filter(x => !fileSystem.includes(x))
 
   console.log(`intersection is ${intersection.length}`)
-  console.log(`exclusiveToFileSystem is ${rowsToInsert.length}:`)
-  console.log(`exclusiveToDatabase is ${rowsToDelete.length}:`)
+  console.log(`exclusiveToFileSystem is ${rowsToInsert.length}`)
+  console.log(`exclusiveToDatabase is ${rowsToDelete.length}`)
   console.table(rowsToInsert)
   console.table(rowsToDelete)
 
@@ -61,16 +61,6 @@ const sync = async () => {
   rowsToDelete.length && await deleteManyMovies(rowsToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
   rowsToDelete.length && await deleteManyTVEpisodes(rowsToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
   rowsToDelete.length && await deleteManySongs(rowsToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
-}
-
-const containsAny = (str, substrings) => {
-  for (var i = 0; i != substrings.length; i++) {
-      var substring = substrings[i];
-      if (str.indexOf(substring) != - 1) {
-        return substring;
-      }
-  }
-  return null; 
 }
 
 const upsertAll = (filter = ["movies", "tv", "music"]) => {
@@ -89,6 +79,10 @@ const upsertManyMovies = async (movies) => {
   for (let file of movies){
     try {
       let result = await getMovieMetaData(file);
+      if (result.status == 404) {
+        upsertNotAvailable(result.fs_path)
+        continue;
+      }
 
       const credits = result.credits
       delete result.credits
@@ -149,7 +143,7 @@ const upsertManyMovies = async (movies) => {
 
     } catch(e) {
       console.log("There was a problem adding this movie", e)
-      continue; // break or continue
+      break; // break or continue
     }
   }
   console.log('[MOVIES] Done')
@@ -161,7 +155,11 @@ const upsertManyTVEpisodes = async (episodes) => {
   for (let file of episodes){
     try {
       let result = await getTVShowMetaData(file)
-      
+      if (result.status == 404) {
+        upsertNotAvailable(result.fs_path)
+        continue;
+      }
+
       const seasons = result.seasons.map(s => {
         return {
           ...s,
@@ -244,7 +242,7 @@ const upsertManyTVEpisodes = async (episodes) => {
 
     } catch(e) {
       console.log("There was a problem adding this episode", e)
-      continue; // break or continue
+      break; // break or continue
     }
   }
   console.log('[TV] Done')
@@ -256,6 +254,10 @@ const upsertManySongs = async (songs) => {
   for (let file of songs) {
     try {
       let result = await getAlbumMetaData(file)
+      if (result.status == 404) {
+        upsertNotAvailable(result.fs_path)
+        continue;
+      }
 
       const album = {
         ...result,
@@ -281,11 +283,19 @@ const upsertManySongs = async (songs) => {
 
     } catch(e) {
       console.log("There was a problem adding this song", e)
-      continue; // break or continue
+      break; // break or continue
     }
   }
 
   console.log('[MUSIC] Done')
+}
+
+const upsertNotAvailable = async (file) => {
+  await prisma.notAvailable.upsert({
+    where: { fs_path: file },
+    update: { fs_path: file },
+    create: { fs_path: file }
+  })
 }
 
 const getAll = async () => {

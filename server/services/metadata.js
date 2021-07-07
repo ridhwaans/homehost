@@ -34,6 +34,9 @@ class Metadata {
             .then((response) => {
                 return response.data
             })
+            .catch((error) => {
+                return error.response
+            })
         )
     }
 }

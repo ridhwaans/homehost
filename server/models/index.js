@@ -13,6 +13,8 @@ const getMovieMetaData = async (file) => {
   
   console.log('GET: ' + file);
   let movie = await metadataService.get({ type: Type.Movie, id: file.match(re)[1] })
+  if (movie.status == 404) return { status: movie.status, fs_path: file }
+  
   let logo = movie.images.logos.find(logo => logo.iso_639_1 == "en")
   return {
     type: Type.Movie,
@@ -83,6 +85,7 @@ const getTVEpisodeMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let episode = await metadataService.get({ type: Type.TV.Episode, tv_show_id: tv_show_id, season_number: season_number, episode_number: episode_number })
+  if (episode.status == 404) return { status: episode.status, fs_path: file }
 
   return {
     type: Type.TV.Episode,
@@ -112,9 +115,14 @@ const getTVShowMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let tv_show = await metadataService.get({ type: Type.TV.Show, id: tv_show_id })
+  if (tv_show.status == 404) return { status: tv_show.status, fs_path: file }
+
   let episode = await getTVEpisodeMetaData(file)
+  if (episode.status == 404) return { status: episode.status, fs_path: file }
+
   tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
   let logo = tv_show.images.logos.find(logo => logo.iso_639_1 == "en")
+
   return {
     type: Type.TV.Show,
     tmdb_id: tv_show.id,
@@ -246,6 +254,7 @@ const getAlbumMetaData = async (file) => {
 
   // find the Spotify music album
   let album = await metadataService.get({ type: Type.Music.Album, id: album_path.match(re)[1] })
+  if (album.status == 404) return { status: album.status, fs_path: file }
   // find missing artist(s) information for the Spotify music album
   for (var current_artist of album.artists) {
     let artist = await metadataService.get({ type: Type.Music.Artist, id: current_artist.id })
@@ -260,6 +269,7 @@ const getAlbumMetaData = async (file) => {
   album.tracks.items = album.tracks.items.filter((item) => { 
     if ((item.disc_number == disc_number) && (item.track_number == track_number)) { return true } 
   })
+  if (album.tracks.items.length == 0) return { status: 404, fs_path: file }
 
   return {
     type: Type.Music.Album,

@@ -1,4 +1,10 @@
 -- CreateTable
+CREATE TABLE "NotAvailable" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "fs_path" TEXT NOT NULL
+);
+
+-- CreateTable
 CREATE TABLE "Movie" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "type" TEXT NOT NULL,
@@ -102,7 +108,7 @@ CREATE TABLE "Season" (
     "overview" TEXT NOT NULL,
     "poster_path" TEXT NOT NULL,
     "season_number" INTEGER NOT NULL,
-    FOREIGN KEY ("tv_show_tmdb_id") REFERENCES "TVShow" ("tmdb_id") ON DELETE RESTRICT ON UPDATE CASCADE
+    FOREIGN KEY ("tv_show_tmdb_id") REFERENCES "TVShow" ("tmdb_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -123,7 +129,7 @@ CREATE TABLE "Episode" (
     "still_path" TEXT NOT NULL,
     "vote_average" REAL NOT NULL,
     "vote_count" INTEGER NOT NULL,
-    FOREIGN KEY ("season_tmdb_id") REFERENCES "Season" ("tmdb_id") ON DELETE RESTRICT ON UPDATE CASCADE
+    FOREIGN KEY ("season_tmdb_id") REFERENCES "Season" ("tmdb_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -165,7 +171,7 @@ CREATE TABLE "Song" (
     "name" TEXT NOT NULL,
     "preview_url" TEXT,
     "track_number" INTEGER NOT NULL,
-    FOREIGN KEY ("album_spotify_id") REFERENCES "Album" ("spotify_id") ON DELETE RESTRICT ON UPDATE CASCADE
+    FOREIGN KEY ("album_spotify_id") REFERENCES "Album" ("spotify_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -223,6 +229,9 @@ CREATE TABLE "_AlbumToArtist" (
     FOREIGN KEY ("A") REFERENCES "Album" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY ("B") REFERENCES "Artist" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "NotAvailable.fs_path_unique" ON "NotAvailable"("fs_path");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Movie.tmdb_id_unique" ON "Movie"("tmdb_id");
