@@ -11,6 +11,11 @@ generator client {
   previewFeatures = ["referentialActions"]
 }
 
+model NotAvailable {
+	id      				Int      	@id @default(autoincrement())
+	fs_path					String
+}
+
 model Movie {
   id      				Int      	@id @default(autoincrement())
   type					String

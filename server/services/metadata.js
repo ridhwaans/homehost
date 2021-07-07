@@ -10,11 +10,13 @@ class Metadata {
     constructor () {}
 
     async get(item, delay=0){
-        let request_url;
-        let auth;
+        let request_url
+        let auth
+        
+        console.log(item)
         console.log(Type)
         if (item.type in Type.Music){
-            auth = await getAuth(); // authorization header
+            auth = await getAuth() // authorization header
         }
 
         if (item.type == Type.Movie){
@@ -29,10 +31,10 @@ class Metadata {
             request_url = `https://${process.env.MUSIC_API}/artists/${item.id}?access_token=${auth}`
         }
 
-        console.log('url: ' + request_url); 
+        console.log('url: ' + request_url)
         return wait(delay).then(() => axios.get(request_url)
             .then((response) => {
-                return response.data;
+                return response.data
             })
         )
     }
@@ -61,14 +63,14 @@ async function getAuthorizationToken() {
 }
   
 const getAuth = async () => {
-    let auth = cookies.get("auth");
+    let auth = cookies.get("auth")
 
     if (!auth) {
-        await getAuthorizationToken();
-        auth = cookies.get("auth");
+        await getAuthorizationToken()
+        auth = cookies.get("auth")
     }
 
     return auth;
 }
 
-module.exports = Metadata;
+module.exports = Metadata

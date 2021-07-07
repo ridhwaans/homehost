@@ -5,6 +5,7 @@
 server/prisma/data/*.txt
 server/prisma/data/*.json
 server/prisma/data/*.db
+server/prisma/data/*.db-journal
 
 # lock files
 package-lock.json

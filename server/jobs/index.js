@@ -1,57 +1,15 @@
-const fs = require('fs');
-const path = require('path');
 const chokidar = require('chokidar');
-
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-
 const { getMovieMetaData, getTVShowMetaData, getAlbumMetaData } = require('../models');
-
-const DATA_PATH = path.resolve(__dirname,'../prisma/data')
-const notAvailableInAPI = fs.readFileSync(`${DATA_PATH}/not_available.txt`, "utf-8").split("\n").map(i => i.replace(/(\r\n|\n|\r)/gm, ""))
-
+var notAvailableInAPI;
 var fileSystem = [];
+var ready;
+
 var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH], {
   ignored: /(^|[\/\\])\../, // ignore dotfiles
   persistent: true
 });
-var ready;
-
-const containsAny = (str, substrings) => {
-  for (var i = 0; i != substrings.length; i++) {
-     var substring = substrings[i];
-     if (str.indexOf(substring) != - 1) {
-       return substring;
-     }
-  }
-  return null; 
-}
-
-const sync = async () => {
-
-  const database = await getAllFiles()
-
-  const rowsToInsert = fileSystem.filter(x => !database.includes(x))
-    .filter(x => !containsAny(x, notAvailableInAPI))
-  const intersection = database.filter(x => fileSystem.includes(x))
-  const rowsToDelete = database.filter(x => !fileSystem.includes(x))
-
-  console.log(`intersection is ${intersection.length}`)
-  console.log(`exclusiveToFileSystem is ${rowsToInsert.length}:`)
-  console.log(`exclusiveToDatabase is ${rowsToDelete.length}:`)
-  console.table(rowsToInsert)
-  console.table(rowsToDelete)
-
-  // insert to db
-  rowsToInsert.length && await upsertManyMovies(rowsToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
-  rowsToInsert.length && await upsertManyTVEpisodes(rowsToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
-  rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
-
-  // delete from db
-  rowsToDelete.length && await deleteManyMovies(rowsToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
-  rowsToDelete.length && await deleteManyTVEpisodes(rowsToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
-  rowsToDelete.length && await deleteManySongs(rowsToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
-}
 
 watcher.on('ready', () => {
   console.log('Initial scan complete. Ready for changes')
@@ -77,6 +35,43 @@ watcher
     fileSystem = fileSystem.filter(e => e !== path)
     ready && sync()
   })
+
+const sync = async () => {
+
+  notAvailableInAPI = await getNotAvailable()
+  const database = await getAllFiles()
+
+  const rowsToInsert = fileSystem.filter(x => !database.includes(x))
+    .filter(x => !containsAny(x, notAvailableInAPI))
+  const intersection = database.filter(x => fileSystem.includes(x))
+  const rowsToDelete = database.filter(x => !fileSystem.includes(x))
+
+  console.log(`intersection is ${intersection.length}`)
+  console.log(`exclusiveToFileSystem is ${rowsToInsert.length}:`)
+  console.log(`exclusiveToDatabase is ${rowsToDelete.length}:`)
+  console.table(rowsToInsert)
+  console.table(rowsToDelete)
+
+  // insert to db
+  rowsToInsert.length && await upsertManyMovies(rowsToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
+  rowsToInsert.length && await upsertManyTVEpisodes(rowsToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
+  rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+
+  // delete from db
+  rowsToDelete.length && await deleteManyMovies(rowsToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
+  rowsToDelete.length && await deleteManyTVEpisodes(rowsToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
+  rowsToDelete.length && await deleteManySongs(rowsToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+}
+
+const containsAny = (str, substrings) => {
+  for (var i = 0; i != substrings.length; i++) {
+      var substring = substrings[i];
+      if (str.indexOf(substring) != - 1) {
+        return substring;
+      }
+  }
+  return null; 
+}
 
 const upsertAll = (filter = ["movies", "tv", "music"]) => {
   let jobs = []
@@ -415,6 +410,14 @@ const getAllFiles = async () => {
   })
 
   return [].concat(movies).concat(episodes).concat(songs).map(Object.values).flat(Infinity)
+}
+
+const getNotAvailable = async () => {
+  var notAvailable = await prisma.notAvailable.findMany({
+    select: { fs_path: true }
+  })
+
+  return notAvailable.map(Object.values).flat(Infinity)
 }
 
 const getLastUnknownAlbumTrackNumber = async () => {
