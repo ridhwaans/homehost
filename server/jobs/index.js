@@ -2,7 +2,6 @@ const chokidar = require('chokidar');
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const { getMovieMetaData, getTVShowMetaData, getAlbumMetaData } = require('../models');
-var notAvailable = [];
 var fileSystem = [];
 var ready;
 
@@ -35,32 +34,32 @@ watcher
 
 const sync = async () => {
 
-  notAvailable = await getNotAvailable()
+  const notAvailable = await getNotAvailable()
+  const database = await getAllFiles()
+
   console.log(`notAvailable is ${notAvailable.length}`)
   console.table(notAvailable)
 
-  const database = await getAllFiles()
-
-  const rowsToInsert = fileSystem.filter(x => !database.includes(x))
+  const filesToInsert = fileSystem.filter(x => !database.includes(x))
                       .filter(x => !notAvailable.includes(x))
   const intersection = database.filter(x => fileSystem.includes(x))
-  const rowsToDelete = database.filter(x => !fileSystem.includes(x))
+  const filesToDelete = database.filter(x => !fileSystem.includes(x))
 
   console.log(`intersection is ${intersection.length}`)
-  console.log(`exclusiveToFileSystem is ${rowsToInsert.length}`)
-  console.log(`exclusiveToDatabase is ${rowsToDelete.length}`)
-  console.table(rowsToInsert)
-  console.table(rowsToDelete)
+  console.log(`exclusiveToFileSystem is ${filesToInsert.length}`)
+  console.log(`exclusiveToDatabase is ${filesToDelete.length}`)
+  console.table(filesToInsert)
+  console.table(filesToDelete)
 
   // insert to db
-  rowsToInsert.length && await upsertManyMovies(rowsToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
-  rowsToInsert.length && await upsertManyTVEpisodes(rowsToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
-  rowsToInsert.length && await upsertManySongs(rowsToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+  filesToInsert.length && await upsertManyMovies(filesToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
+  filesToInsert.length && await upsertManyTVEpisodes(filesToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
+  filesToInsert.length && await upsertManySongs(filesToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 
   // delete from db
-  rowsToDelete.length && await deleteManyMovies(rowsToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
-  rowsToDelete.length && await deleteManyTVEpisodes(rowsToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
-  rowsToDelete.length && await deleteManySongs(rowsToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+  filesToDelete.length && await deleteManyMovies(filesToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
+  filesToDelete.length && await deleteManyTVEpisodes(filesToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
+  filesToDelete.length && await deleteManySongs(filesToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 }
 
 const upsertAll = (filter = ["movies", "tv", "music"]) => {
@@ -84,9 +83,6 @@ const upsertManyMovies = async (movies) => {
         continue;
       }
 
-      const credits = result.credits
-      delete result.credits
-
       const movie = {
         ...result,
         genres: {
@@ -99,6 +95,12 @@ const upsertManyMovies = async (movies) => {
           connectOrCreate: result.production_companies.map(p => ({
             create: p,
             where: { tmdb_id: p.tmdb_id },
+          }))
+        },
+        credits: {
+          connectOrCreate: result.credits.map(c => ({
+            create: c,
+            where: { credit_id: c.credit_id },
           }))
         },
         similar: {
@@ -114,32 +116,6 @@ const upsertManyMovies = async (movies) => {
         update: movie,
         create: movie
       })
-      
-      for (var c of credits) {
-        let obj = {}
-        if (c.character) {
-          obj.unique_movie_cast_id = {}
-          obj.unique_movie_cast_id.movie_tmdb_id = movie.tmdb_id
-          obj.unique_movie_cast_id.tmdb_id = c.tmdb_id
-          obj.unique_movie_cast_id.character = c.character 
-        }
-        if (c.job) {
-          obj.unique_movie_crew_id = {}
-          obj.unique_movie_crew_id.movie_tmdb_id = movie.tmdb_id
-          obj.unique_movie_crew_id.tmdb_id = c.tmdb_id
-          obj.unique_movie_crew_id.job = c.job
-        }
-
-        if (Object.keys(obj).length == 0) continue
-        await prisma.credit.upsert({
-          where: obj,
-          update: {},
-          create: {
-            ...c,
-            movie: { connect: { tmdb_id : movie.tmdb_id }}
-          }
-        })
-      }
 
     } catch(e) {
       console.log("There was a problem adding this movie", e)
@@ -172,11 +148,9 @@ const upsertManyTVEpisodes = async (episodes) => {
           tv_show: { connect: { tmdb_id : result.tmdb_id }}
         }
       })
-      const credits = result.credits
 
       delete result.created_by
       delete result.seasons
-      delete result.credits
 
       const tv_show = {
         ...result,
@@ -190,6 +164,12 @@ const upsertManyTVEpisodes = async (episodes) => {
           connectOrCreate: result.production_companies.map(p => ({
             create: p,
             where: { tmdb_id: p.tmdb_id },
+          }))
+        },
+        credits: {
+          connectOrCreate: result.credits.map(c => ({
+            create: c,
+            where: { credit_id: c.credit_id },
           }))
         },
         similar: {
@@ -211,32 +191,6 @@ const upsertManyTVEpisodes = async (episodes) => {
           where: { tmdb_id: s.tmdb_id },
           update: s,
           create: s
-        })
-      }
-
-      for (var c of credits) {
-        let obj = {}
-        if (c.character) {
-          obj.unique_tv_show_cast_id = {}
-          obj.unique_tv_show_cast_id.tv_show_tmdb_id = tv_show.tmdb_id
-          obj.unique_tv_show_cast_id.tmdb_id = c.tmdb_id
-          obj.unique_tv_show_cast_id.character = c.character 
-        }
-        if (c.job) {
-          obj.unique_tv_show_crew_id = {}
-          obj.unique_tv_show_crew_id.tv_show_tmdb_id = tv_show.tmdb_id
-          obj.unique_tv_show_crew_id.tmdb_id = c.tmdb_id
-          obj.unique_tv_show_crew_id.job = c.job
-        }
-
-        if (Object.keys(obj).length == 0) continue
-        await prisma.credit.upsert({
-          where: obj,
-          update: {},
-          create: {
-            ...c,
-            tv_show: { connect: { tmdb_id : tv_show.tmdb_id }}
-          }
         })
       }
 

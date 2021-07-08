@@ -110,7 +110,7 @@ const SearchResultsSelectedItem = ({ currentSlide, additionalMovieInfo, closeInf
                                 <li className={`${menuOption === "general-info" && "current"}`} onClick={() => setMenuOption("general-info")}>
                                     <div className="menu-button" >GENERAL INFORMATION</div><span></span>
                                 </li>
-                                {additionalMovieInfo.type == "TVShow" ? (
+                                {additionalMovieInfo.type == "Show" ? (
                                 <li className={`${menuOption === "episodes" && "current"}`} onClick={() => setMenuOption("episodes")}>
                                     <div className="menu-button">EPISODES</div><span></span>
                                 </li>

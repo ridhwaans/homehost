@@ -30,7 +30,7 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     }
 
     return (
-        additionalMovieInfo && additionalMovieInfo.type == "TVShow" && (
+        additionalMovieInfo && additionalMovieInfo.type == "Show" && (
         <div className="menu-episodes">
             <SeasonSelect items={additionalMovieInfo.seasons} onChange={changeSeason}/>
             <div className="menu-episode-content">

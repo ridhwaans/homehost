@@ -25,7 +25,7 @@ const Player = () => {
   }, [])
 
     var episode = null;
-    if (context.playerItem && context.playerItem.data && context.playerItem.data.type == "TVShow") { 
+    if (context.playerItem && context.playerItem.data && context.playerItem.data.type == "Show") { 
       episode = context.playerItem.data.seasons
       .find(season => season.season_number == context.playerItem.season_number).episodes
       .find(episode => episode.episode_number == context.playerItem.episode_number);

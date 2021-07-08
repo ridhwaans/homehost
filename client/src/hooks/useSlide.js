@@ -159,7 +159,7 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
         let details
         if (type == "Movie"){
             details = await getMovieInformation(id)
-        } else if (type == "TVShow") {
+        } else if (type == "Show") {
             details = await getTVShowInformation(id)
         }
         setAdditionalMovieInfo(details)

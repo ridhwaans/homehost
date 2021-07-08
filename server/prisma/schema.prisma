@@ -76,16 +76,11 @@ model Credit {
 	name					String
 	popularity				Float?
 	profile_path			String?
-	cast_id					Int?
 	character				String?
-	credit_id				String
+	credit_id				String		@unique
 	order					Int?
 	department				String?
 	job						String?
-	@@unique(fields: [movie_tmdb_id, tmdb_id, character], name: "unique_movie_cast_id")
-	@@unique(fields: [movie_tmdb_id, tmdb_id, job], name: "unique_movie_crew_id")
-	@@unique(fields: [tv_show_tmdb_id, tmdb_id, character], name: "unique_tv_show_cast_id")
-	@@unique(fields: [tv_show_tmdb_id, tmdb_id, job], name: "unique_tv_show_crew_id")
 }
 
 model Similar {
