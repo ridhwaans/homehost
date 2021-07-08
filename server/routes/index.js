@@ -19,17 +19,20 @@ const { getAbout,
   getTVShowsByGenre,
   getRandomTVShow,
   getTVShow,
-  getRecentlyAddedMusic,
-  getAllArtists,
+  getRandomMovieOrTVShow,
   getAllAlbums,
+  getRecentlyAddedAlbums,
+  getLatestAlbumReleases,
   getMusicAlbum,
+  getAllArtists,
+  getMostPopularArtists,
   getAllSongs,
+  getRecentlyAddedSongs,
   getMovieFilePath,
   getSongFilePath,
   getEpisodeFilePath,
   searchMoviesAndTV,
-  searchMusic,
-  getRandomMovieOrTVShow } = require('../data')
+  searchMusic } = require('../data')
 const { upsertAll } = require('../jobs')
 const router = express.Router();
 
@@ -167,11 +170,19 @@ router.get('/api/tv/:id', async (req, res) => {
 });
 
 router.get('/api/music/recently_added', async (req, res) => {
-  res.json(await getRecentlyAddedMusic());
+  res.json(await getRecentlyAddedAlbums());
+});
+
+router.get('/api/music/latest', async (req, res) => {
+  res.json(await getLatestAlbumReleases());
 });
 
 router.get('/api/music/artists', async (req, res) => {
   res.json(await getAllArtists());
+});
+
+router.get('/api/music/artists/most_popular', async (req, res) => {
+  res.json(await getMostPopularArtists());
 });
 
 router.get('/api/music/albums', async (req, res) => {
@@ -184,6 +195,10 @@ router.get('/api/music/albums/:id', async (req, res) => {
 
 router.get('/api/music/songs', async (req, res) => {
   res.json(await getAllSongs())
+});
+
+router.get('/api/music/songs/recently_added', async (req, res) => {
+  res.json(await getRecentlyAddedSongs())
 });
 
 router.get('/movies/:id', async (req, res) => {

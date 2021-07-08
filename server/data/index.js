@@ -91,7 +91,7 @@ const getMostPopularMovies = async () => {
     include: { genres: true, production_companies: true, credits: true, similar: true },
     orderBy: {
       popularity: "desc"
-      },
+    },
     take: 25
   })
   return result
@@ -102,7 +102,7 @@ const getHighestRatedMovies = async () => {
     include: { genres: true, production_companies: true, credits: true, similar: true },
     orderBy: {
       vote_average: "desc"
-      },
+    },
     take: 25
   })
   return result
@@ -231,7 +231,28 @@ const getTVShow = async (tv_show_id) => {
   return result
 }
 
-const getRecentlyAddedMusic = async () => {
+const getAllArtists = async () => {
+  const result = await prisma.artist.findMany()
+  return result
+}
+
+const getMostPopularArtists = async () => {
+  const result = await prisma.artist.findMany({
+    orderBy: {
+      popularity: "desc"
+    }
+  })
+  return result
+}
+
+const getAllAlbums = async () => {
+  const result = await prisma.album.findMany({
+    include: { artists: true, songs: true }
+  })
+  return result
+}
+
+const getRecentlyAddedAlbums = async () => {
   const result = await prisma.album.findMany({
     include: { artists: true, songs: true },
     orderBy: {
@@ -246,14 +267,12 @@ const getRecentlyAddedMusic = async () => {
   return result
 }
 
-const getAllArtists = async () => {
-  const result = await prisma.artist.findMany()
-  return result
-}
-
-const getAllAlbums = async () => {
+const getLatestAlbumReleases = async () => {
   const result = await prisma.album.findMany({
-    include: { artists: true, songs: true }
+    include: { artists: true, songs: true },
+    orderBy: {
+      release_date: "desc"
+    }
   })
   return result
 }
@@ -271,6 +290,24 @@ const getMusicAlbum = async (album_id) => {
 const getAllSongs = async () => {
   const result = await prisma.song.findMany({
     include: { album: { include: { artists: true } } }
+  })
+  const songs = result.map(song => {
+      song.album_name = song.album.name; 
+      song.album_image_url = song.album.image_url; 
+      song.artists = song.album.artists; 
+      delete song.album;
+      return song
+    })
+    .flat(Infinity)
+  return songs
+}
+
+const getRecentlyAddedSongs = async () => {
+  const result = await prisma.song.findMany({
+    include: { album: { include: { artists: true } } },
+    orderBy: {
+      mtime: "desc"
+    }
   })
   const songs = result.map(song => {
       song.album_name = song.album.name; 
@@ -336,28 +373,29 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
 }
 
 const getRandomMovieOrTVShow = async () => {
-  const result = Math.random() < (await prisma.tVShow.count() / await prisma.movie.count()).toFixed(2) ? 
+  const ratio = await prisma.tVShow.count() / await prisma.movie.count()
+  const result = await Math.random() < ratio ? 
     await getRandomTVShow() : await getRandomMovie()
   return result
 }
 
 const getRandomMovie = async () => {
-  const id = Math.floor(Math.random() * await prisma.movie.count())
+  const id = Math.floor(Math.random() * await prisma.movie.count()) + 1
   const result = await prisma.movie.findUnique({
     include: { genres: true, production_companies: true, credits: true, similar: true },
     where: {
-      tmdb_id: id
+      id: id
     }
   })
   return result
 }
 
 const getRandomTVShow = async () => {
-  const id = Math.floor(Math.random() * await prisma.tVShow.count())
+  const id = Math.floor(Math.random() * await prisma.tVShow.count()) + 1
   const result = await prisma.tVShow.findUnique({
     include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true },
     where: {
-      tmdb_id: id
+      id: id
     }
   })
   return result
@@ -380,14 +418,17 @@ module.exports = { getAbout,
   getTVShowsByGenre,
   getRandomTVShow,
   getTVShow,
-  getRecentlyAddedMusic,
-  getAllArtists,
+  getRandomMovieOrTVShow,
   getAllAlbums,
+  getRecentlyAddedAlbums,
+  getLatestAlbumReleases,
   getMusicAlbum,
+  getAllArtists,
+  getMostPopularArtists,
   getAllSongs,
+  getRecentlyAddedSongs,
   getMovieFilePath,
   getSongFilePath,
   getEpisodeFilePath,
   searchMoviesAndTV,
-  searchMusic,
-  getRandomMovieOrTVShow }
+  searchMusic }
