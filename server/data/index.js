@@ -181,21 +181,15 @@ const getHighestRatedTVShows = async () => {
   return result
 }
 
+const lastAddedEpisode = (tv_show) => {
+  return Math.max(...tv_show.seasons.map(s => s.episodes.map(e => e.mtime)).flat(Infinity))
+}
+
 const getRecentlyAddedTVShows = async () => {
   const result = await prisma.tVShow.findMany({
-    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true },
-    orderBy: {
-      seasons: {
-        _max: {
-          episodes: {
-              mtime: true
-          }
-        }
-      }
-    },
-    take: 25
+    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true }
   })
-  return result
+  return result.sort((a, b) => lastAddedEpisode(b) - lastAddedEpisode(a))
 }
 
 const getTVShowGenres = async () => {
@@ -252,19 +246,15 @@ const getAllAlbums = async () => {
   return result
 }
 
+const lastAddedSong = (album) => {
+  return Math.max(...album.songs.map(s => s.mtime))
+}
+
 const getRecentlyAddedAlbums = async () => {
   const result = await prisma.album.findMany({
-    include: { artists: true, songs: true },
-    orderBy: {
-      songs: {
-        _max: {
-          mtime: true
-        }
-      }
-    },
-    take: 25
+    include: { artists: true, songs: true }
   })
-  return result
+  return result.sort((a, b) => lastAddedSong(b) - lastAddedSong(a))
 }
 
 const getLatestAlbumReleases = async () => {
