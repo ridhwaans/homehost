@@ -129,6 +129,7 @@ model Season {
 	poster_path		String
 	season_number	Int
 	episodes 		Episode[]
+	@@unique([tv_show_tmdb_id, season_number])
 }
 
 model Episode {

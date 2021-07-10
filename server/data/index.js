@@ -3,8 +3,6 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
   
 const searchMoviesAndTV = async (keyword) => {
-  let search_results = {}
-
   const movies = await prisma.movie.findMany({
     include: { genres: true, production_companies: true, credits: true, similar: true },
     where: {
@@ -21,7 +19,6 @@ const searchMoviesAndTV = async (keyword) => {
       ]
     }
   })
-
   const tv_shows = await prisma.tVShow.findMany({
     include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true },
     where: {
@@ -55,45 +52,46 @@ const searchMoviesAndTV = async (keyword) => {
       ]
     }
   })
-
-  search_results.results = [].concat(tv_shows).concat(movies)
-  search_results.count = search_results.results.length
-  return search_results
+  const results = [].concat(tv_shows).concat(movies)
+  return {
+    results: results,
+    count: results.length
+  }
 }
 
 const searchMusic = async (keyword) => {
-  let search_results = {results: {songs:[], artists: [], albums: []}, song_count: 0, artist_count: 0, album_count: 0, total_count: 0}
   if (keyword.trim() == "") {
-    return search_results
+    return { results: { songs:[], artists: [], albums: [] } }
   }
-
-  search_results.results.songs = await prisma.song.findMany({
+  const songs = await prisma.song.findMany({
     where: {
       name: {
         contains: keyword
       }
     }
   })
-  search_results.results.artists = await prisma.artist.findMany({
+  const artists = await prisma.artist.findMany({
     where: {
       name: {
         contains: keyword
       }
     }
   })
-  search_results.results.albums = await prisma.album.findMany({
-    include: { artists: true, songs: true },
+  const albums = await prisma.album.findMany({
+    include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
     where: {
       name: {
         contains: keyword
       }
     }
   })
-  search_results.song_count = search_results.results.songs.length
-  search_results.artist_count = search_results.results.artists.length
-  search_results.album_count = search_results.results.albums.length
-  search_results.total_count = Object.values(search_results.results).reduce((acc, group) => acc + group.length, 0)
-  return search_results
+  return {
+    results: {
+      songs: songs, 
+      artists: artists, 
+      albums: albums
+    }
+  }
 }
 
 const getAbout = () => {
@@ -211,7 +209,7 @@ const getRecentlyAddedTVShows = async () => {
   const result = await prisma.tVShow.findMany({
     include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true }
   })
-  return result.sort((a, b) => lastAddedEpisode(b) - lastAddedEpisode(a))
+  return format(result.sort((a, b) => lastAddedEpisode(b) - lastAddedEpisode(a)))
 }
 
 const getTVShowGenres = async () => {
@@ -249,7 +247,7 @@ const getTVShow = async (tv_show_id) => {
 
 const getAllArtists = async () => {
   const result = await prisma.artist.findMany()
-  return result
+  return format(result)
 }
 
 const getMostPopularArtists = async () => {
@@ -263,7 +261,7 @@ const getMostPopularArtists = async () => {
 
 const getAllAlbums = async () => {
   const result = await prisma.album.findMany({
-    include: { artists: true, songs: true }
+    include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
   })
   return format(result)
 }
@@ -274,14 +272,14 @@ const lastAddedSong = (album) => {
 
 const getRecentlyAddedAlbums = async () => {
   const result = await prisma.album.findMany({
-    include: { artists: true, songs: true }
+    include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
   })
   return format(result.sort((a, b) => lastAddedSong(b) - lastAddedSong(a)))
 }
 
 const getLatestAlbumReleases = async () => {
   const result = await prisma.album.findMany({
-    include: { artists: true, songs: true },
+    include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
     orderBy: {
       release_date: "desc"
     }
@@ -291,7 +289,7 @@ const getLatestAlbumReleases = async () => {
 
 const getMusicAlbum = async (album_id) => {
   const result = await prisma.album.findUnique({
-    include: { artists: true, songs: true },
+    include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
     where: {
       spotify_id: album_id
     }
@@ -303,7 +301,7 @@ const getAllSongs = async () => {
   const result = await prisma.song.findMany({
     include: { album: { include: { artists: true } } }
   })
-  return result
+  return format(result)
 }
 
 const getRecentlyAddedSongs = async () => {
@@ -351,7 +349,7 @@ const getMovieFilePath = async (movie_id) => {
       fs_path: true
     },
     where: {
-      tmdb_id: movie_id
+      tmdb_id: parseInt(movie_id)
     }
   })
   return result.fs_path
@@ -362,8 +360,7 @@ const getEpisodeFilePath = async (tv_show_id, season_number, episode_number) => 
     select: {
       episodes: {
         where: {
-          season_number: season_number,
-          episode_number: episode_number
+          episode_number: parseInt(episode_number)
         },
         select: {
           fs_path: true
@@ -371,10 +368,13 @@ const getEpisodeFilePath = async (tv_show_id, season_number, episode_number) => 
       }
     },
     where: {
-      tv_show_tmdb_id: tv_show_id
+      tv_show_tmdb_id_season_number: {
+        tv_show_tmdb_id: parseInt(tv_show_id),
+        season_number: parseInt(season_number)
+      }
     }
   })
-  return result.fs_path
+  return result.episodes[0].fs_path
 }
 
 const getSongFilePath = async (album_id, disc_number, track_number) => {
@@ -382,8 +382,8 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
     select: {
       songs: {
         where: {
-          disc_number: disc_number,
-          track_number: track_number
+          disc_number: parseInt(disc_number),
+          track_number: parseInt(track_number)
         },
         select: {
           fs_path: true
@@ -394,7 +394,7 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
       spotify_id: album_id
     }
   })
-  return result.fs_path
+  return result.songs[0].fs_path
 }
 
 module.exports = { getAbout,
