@@ -12,4 +12,18 @@ const Type = Object.freeze({
     }
   })
 
-module.exports = { Type }
+const Collection = Object.freeze({
+  movies: 'movies',
+  tv_shows: 'tv_shows',
+  genres: 'genres',
+  production_companies: 'production_companies',
+  seasons: 'seasons',
+  episodes: 'episodes',
+  credits: 'credits',
+  similar: 'similar',
+  albums: 'albums',
+  artists: 'artists',
+  songs: 'songs'
+})
+
+module.exports = { Type, Collection }

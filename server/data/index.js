@@ -1,71 +1,96 @@
-const { shuffleArr } = require('../utils');
-const { getAll } = require('../jobs');
+const { Type, Collection } = require('../constants')
+const { shuffleArr, formatMany, formatOne } = require('../utils')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-
-var database;
-
-const multiPropsFilterMovies = (movie, keyword) => {
-  return (movie.title.match(new RegExp(keyword, 'i')) != null ||
-    movie.tagline.match(new RegExp(keyword, 'i')) != null ||
-    movie.overview.match(new RegExp(keyword, 'i')) != null
-    ) || (
-    movie.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null)
-    ) || (
-    movie.credits.crew.find(x => x.job === "Director").name.match(new RegExp(keyword, 'i')) != null)
-}
   
-const multiPropsFilterTV = (tv, keyword) => {
-  return (tv.name.match(new RegExp(keyword, 'i')) != null ||
-    tv.tagline.match(new RegExp(keyword, 'i')) != null ||
-    tv.overview.match(new RegExp(keyword, 'i')) != null
-    ) || (
-    tv.seasons.some(x => x.name.match(new RegExp(keyword, 'i')) || x.overview.match(new RegExp(keyword, 'i')) != null)
-    ) || (
-    tv.seasons.some(x => x.episodes.some(ep => ep.name.match(new RegExp(keyword, 'i')) || ep.overview.match(new RegExp(keyword, 'i')) != null))
-    ) || (
-    tv.credits.cast.some(x => x.name.match(new RegExp(keyword, 'i')) != null))
-}
-  
-const multiPropsFilterMusicSongs = async (keyword) => {
-  database = database || await getAll()
-  return database.music.map(album => album.songs
-    .map(song => {song.album_name = album.name; song.album_image_url = album.image_url; song.artists = album.artists; return song}))
-    .flat(Infinity)
-    .filter(song => song.url_path != null)
-    .filter(song => song.name.match(new RegExp(keyword, 'i')) != null)
-}
-  
-const multiPropsFilterMusicArtists = async (keyword) => {
-  database = database || await getAll()
-  let artists = [...new Map(database.music.map(music => music.artists).flat(Infinity).map(item => [item.id, item])).values()];
-  return artists.filter(x => x.name.match(new RegExp(keyword, 'i')) != null)
-}
-  
-const multiPropsFilterMusicAlbums = async (keyword) => {
-  database = database || await getAll()
-  return database.music.filter(x => x.name.match(new RegExp(keyword, 'i')) != null)
-}
-
 const searchMoviesAndTV = async (keyword) => {
-  database = database || await getAll()
-  let search_results = {};
-  search_results.results = database.tv.filter(tv => multiPropsFilterTV(tv, keyword))
-    .concat(database.movies.filter(movie => multiPropsFilterMovies(movie, keyword)));
-    search_results.count = search_results.results.length
+  let search_results = {}
+
+  const movies = await prisma.movie.findMany({
+    include: { genres: true, production_companies: true, credits: true, similar: true },
+    where: {
+      OR: [
+      { title: { contains: keyword } },
+      { tagline: { contains: keyword } },
+      { overview: { contains: keyword } },
+      { credits: {
+          some: {
+            name: { contains: keyword }
+          }
+        }
+      }
+      ]
+    }
+  })
+
+  const tv_shows = await prisma.tVShow.findMany({
+    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true },
+    where: {
+      OR: [
+      { name: { contains: keyword } },
+      { tagline: { contains: keyword } },
+      { overview: { contains: keyword } },
+      { seasons: {
+          some: {
+            OR: [
+              { name: { contains: keyword } },
+              { overview: { contains: keyword } }
+            ]
+          },
+          episodes: {
+            some: {
+              OR: [
+                { name: { contains: keyword } },
+                { overview: { contains: keyword } }
+              ]
+            }
+          }  
+        } 
+      },
+      { credits: {
+          some: {
+            name: { contains: keyword }
+          }
+        }
+      }
+      ]
+    }
+  })
+
+  search_results.results = [].concat(tv_shows).concat(movies)
+  search_results.count = search_results.results.length
 
   return search_results
 }
 
 const searchMusic = async (keyword) => {
-  database = database || await getAll()
-  let search_results = {results: {songs:[], artists: [], albums: []}, song_count: 0, artist_count: 0, album_count: 0, total_count: 0};
+  let search_results = {results: {songs:[], artists: [], albums: []}, song_count: 0, artist_count: 0, album_count: 0, total_count: 0}
   if (keyword.trim() == "") {
-    return search_results;
+    return search_results
   }
-  search_results.results.songs = await multiPropsFilterMusicSongs(keyword);
-  search_results.results.artists = await multiPropsFilterMusicArtists(keyword);
-  search_results.results.albums = await multiPropsFilterMusicAlbums(keyword);
+
+  search_results.results.songs = await prisma.song.findMany({
+    where: {
+      name: {
+        contains: keyword
+      }
+    }
+  })
+  search_results.results.artists = await prisma.artist.findMany({
+    where: {
+      name: {
+        contains: keyword
+      }
+    }
+  })
+  search_results.results.albums = await prisma.album.findMany({
+    include: { artists: true, songs: true },
+    where: {
+      name: {
+        contains: keyword
+      }
+    }
+  })
   search_results.song_count = search_results.results.songs.length
   search_results.artist_count = search_results.results.artists.length
   search_results.album_count = search_results.results.albums.length
