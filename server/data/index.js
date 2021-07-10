@@ -30,18 +30,19 @@ const searchMoviesAndTV = async (keyword) => {
           some: {
             OR: [
               { name: { contains: keyword } },
-              { overview: { contains: keyword } }
+              { overview: { contains: keyword } },
+              { episodes: {
+                  some: {
+                    OR: [
+                      { name: { contains: keyword } },
+                      { overview: { contains: keyword } }
+                    ]
+                  }
+                }
+              }
             ]
-          },
-          episodes: {
-            some: {
-              OR: [
-                { name: { contains: keyword } },
-                { overview: { contains: keyword } }
-              ]
-            }
-          }  
-        } 
+          }
+        }
       },
       { credits: {
           some: {
@@ -52,7 +53,7 @@ const searchMoviesAndTV = async (keyword) => {
       ]
     }
   })
-  const results = [].concat(tv_shows).concat(movies)
+  const results = format([].concat(tv_shows).concat(movies))
   return {
     results: results,
     count: results.length
@@ -64,10 +65,19 @@ const searchMusic = async (keyword) => {
     return { results: { songs:[], artists: [], albums: [] } }
   }
   const songs = await prisma.song.findMany({
+    include: { album: { include: { artists: true } } },
     where: {
-      name: {
-        contains: keyword
-      }
+      OR: [
+        { name: { contains: keyword } },
+        { album: {
+            artists: {
+              some: {
+                name: { contains: keyword }
+              }
+            }
+          }
+        }
+      ]
     }
   })
   const artists = await prisma.artist.findMany({
@@ -80,16 +90,22 @@ const searchMusic = async (keyword) => {
   const albums = await prisma.album.findMany({
     include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
     where: {
-      name: {
-        contains: keyword
-      }
+      OR: [
+        { name: { contains: keyword } },
+        { artists: {
+            some: {
+              name: { contains: keyword }
+            }
+          }
+        }
+      ]
     }
   })
   return {
     results: {
-      songs: songs, 
-      artists: artists, 
-      albums: albums
+      songs: format(songs), 
+      artists: format(artists), 
+      albums: format(albums)
     }
   }
 }

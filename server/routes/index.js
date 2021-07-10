@@ -215,6 +215,8 @@ router.get('/music/:album_id/:disc_number/:track_number', async (req, res) => {
 
 router.get('/api/watch/search', async (req, res) => {
   const keyword = qs.parse(req.query).q;
+  console.log(`keyword is "${keyword}"`)
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl)
   res.json(await searchMoviesAndTV(keyword));
 });
 
