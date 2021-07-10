@@ -2,7 +2,6 @@ const chokidar = require('chokidar');
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const { getMovieMetaData, getTVShowMetaData, getAlbumMetaData } = require('../models');
-const { formatKeys } = require('../utils');
 var fileSystem = [];
 var ready;
 

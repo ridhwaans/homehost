@@ -1,5 +1,4 @@
-const { Type, Collection } = require('../constants')
-const { shuffleArr, formatMany, formatOne } = require('../utils')
+const { shuffleArr, format } = require('../utils')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
   
@@ -59,7 +58,6 @@ const searchMoviesAndTV = async (keyword) => {
 
   search_results.results = [].concat(tv_shows).concat(movies)
   search_results.count = search_results.results.length
-
   return search_results
 }
 
@@ -95,7 +93,6 @@ const searchMusic = async (keyword) => {
   search_results.artist_count = search_results.results.artists.length
   search_results.album_count = search_results.results.albums.length
   search_results.total_count = Object.values(search_results.results).reduce((acc, group) => acc + group.length, 0)
-
   return search_results
 }
 
@@ -108,7 +105,7 @@ const getAllMovies = async () => {
   const result = await prisma.movie.findMany({
     include: { genres: true, production_companies: true, credits: true, similar: true }
   })
-  return result
+  return format(result)
 }
 
 const getMostPopularMovies = async () => {
@@ -119,7 +116,7 @@ const getMostPopularMovies = async () => {
     },
     take: 25
   })
-  return result
+  return format(result)
 }
 
 const getHighestRatedMovies = async () => {
@@ -130,7 +127,7 @@ const getHighestRatedMovies = async () => {
     },
     take: 25
   })
-  return result
+  return format(result)
 }
 
 const getRecentlyAddedMovies = async () => {
@@ -141,7 +138,7 @@ const getRecentlyAddedMovies = async () => {
     },
     take: 25
   })
-  return result
+  return format(result)
 }
 
 const getMovieGenres = async () => {
@@ -150,7 +147,7 @@ const getMovieGenres = async () => {
       name: "asc"
     }
   })
-  return result
+  return format(result)
 }
 
 const getMoviesByGenre = async (genre_name) => {
@@ -164,7 +161,7 @@ const getMoviesByGenre = async (genre_name) => {
       }
     }
   })
-  return shuffleArr(result)
+  return shuffleArr(format(result))
 }
 
 const getMovie = async (movie_id) => {
@@ -174,14 +171,14 @@ const getMovie = async (movie_id) => {
       tmdb_id: parseInt(movie_id)
     }
   })
-  return result
+  return format(result)
 }
 
 const getAllTVShows = async () => {
   const result = await prisma.tVShow.findMany({
     include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true }
   })
-  return result
+  return format(result)
 }
 
 const getMostPopularTVShows = async () => {
@@ -192,7 +189,7 @@ const getMostPopularTVShows = async () => {
       },
     take: 25
   })
-  return result
+  return format(result)
 }
 
 const getHighestRatedTVShows = async () => {
@@ -203,7 +200,7 @@ const getHighestRatedTVShows = async () => {
       },
     take: 25
   })
-  return result
+  return format(result)
 }
 
 const lastAddedEpisode = (tv_show) => {
@@ -223,7 +220,7 @@ const getTVShowGenres = async () => {
       name: "asc"
     }
   })
-  return result
+  return format(result)
 }
 
 const getTVShowsByGenre = async (genre_name) => {
@@ -237,7 +234,7 @@ const getTVShowsByGenre = async (genre_name) => {
       }
     }
   })
-  return shuffleArr(result)
+  return shuffleArr(format(result))
 }
 
 const getTVShow = async (tv_show_id) => {
@@ -247,7 +244,7 @@ const getTVShow = async (tv_show_id) => {
       tmdb_id: parseInt(tv_show_id)
     }
   })
-  return result
+  return format(result)
 }
 
 const getAllArtists = async () => {
@@ -261,14 +258,14 @@ const getMostPopularArtists = async () => {
       popularity: "desc"
     }
   })
-  return result
+  return format(result)
 }
 
 const getAllAlbums = async () => {
   const result = await prisma.album.findMany({
     include: { artists: true, songs: true }
   })
-  return result
+  return format(result)
 }
 
 const lastAddedSong = (album) => {
@@ -279,7 +276,7 @@ const getRecentlyAddedAlbums = async () => {
   const result = await prisma.album.findMany({
     include: { artists: true, songs: true }
   })
-  return result.sort((a, b) => lastAddedSong(b) - lastAddedSong(a))
+  return format(result.sort((a, b) => lastAddedSong(b) - lastAddedSong(a)))
 }
 
 const getLatestAlbumReleases = async () => {
@@ -289,7 +286,7 @@ const getLatestAlbumReleases = async () => {
       release_date: "desc"
     }
   })
-  return result
+  return format(result)
 }
 
 const getMusicAlbum = async (album_id) => {
@@ -299,22 +296,14 @@ const getMusicAlbum = async (album_id) => {
       spotify_id: album_id
     }
   })
-  return result
+  return format(result)
 }
 
 const getAllSongs = async () => {
   const result = await prisma.song.findMany({
     include: { album: { include: { artists: true } } }
   })
-  const songs = result.map(song => {
-      song.album_name = song.album.name; 
-      song.album_image_url = song.album.image_url; 
-      song.artists = song.album.artists; 
-      delete song.album;
-      return song
-    })
-    .flat(Infinity)
-  return songs
+  return result
 }
 
 const getRecentlyAddedSongs = async () => {
@@ -324,15 +313,36 @@ const getRecentlyAddedSongs = async () => {
       mtime: "desc"
     }
   })
-  const songs = result.map(song => {
-      song.album_name = song.album.name; 
-      song.album_image_url = song.album.image_url; 
-      song.artists = song.album.artists; 
-      delete song.album;
-      return song
-    })
-    .flat(Infinity)
-  return songs
+  return format(result)
+}
+
+const getRandomMovieOrTVShow = async () => {
+  const ratio = await prisma.tVShow.count() / await prisma.movie.count()
+  const result = await Math.random() < ratio ? 
+    await getRandomTVShow() : await getRandomMovie()
+  return format(result)
+}
+
+const getRandomMovie = async () => {
+  const id = Math.floor(Math.random() * await prisma.movie.count()) + 1
+  const result = await prisma.movie.findUnique({
+    include: { genres: true, production_companies: true, credits: true, similar: true },
+    where: {
+      id: id
+    }
+  })
+  return format(result)
+}
+
+const getRandomTVShow = async () => {
+  const id = Math.floor(Math.random() * await prisma.tVShow.count()) + 1
+  const result = await prisma.tVShow.findUnique({
+    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true },
+    where: {
+      id: id
+    }
+  })
+  return format(result)
 }
 
 const getMovieFilePath = async (movie_id) => {
@@ -385,35 +395,6 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
     }
   })
   return result.fs_path
-}
-
-const getRandomMovieOrTVShow = async () => {
-  const ratio = await prisma.tVShow.count() / await prisma.movie.count()
-  const result = await Math.random() < ratio ? 
-    await getRandomTVShow() : await getRandomMovie()
-  return result
-}
-
-const getRandomMovie = async () => {
-  const id = Math.floor(Math.random() * await prisma.movie.count()) + 1
-  const result = await prisma.movie.findUnique({
-    include: { genres: true, production_companies: true, credits: true, similar: true },
-    where: {
-      id: id
-    }
-  })
-  return result
-}
-
-const getRandomTVShow = async () => {
-  const id = Math.floor(Math.random() * await prisma.tVShow.count()) + 1
-  const result = await prisma.tVShow.findUnique({
-    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true },
-    where: {
-      id: id
-    }
-  })
-  return result
 }
 
 module.exports = { getAbout,
