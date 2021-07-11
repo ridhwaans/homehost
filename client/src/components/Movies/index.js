@@ -16,7 +16,7 @@ function Movies() {
     const [popularMovies, setPopularMovies] = useState(null)
     const [animationMovies, setAnimationMovies] = useState(null)
     const [highestRatedMovies, setHighestRatedMovies] = useState(null)
-    const [horrorMovies, setHorrorMovies] = useState(null)
+    const [warMovies, setWarMovies] = useState(null)
 
     const searchContext = useContext(SearchContext)
 
@@ -26,9 +26,9 @@ function Movies() {
         let popularMovies = await getMoviesBy("most_popular")
         let animationMovies = await getMoviesByGenre("Animation")
         let highestRatedMovies = await getMoviesBy("highest_rated")
-        let horrorMovies = await getMoviesByGenre("Horror")
+        let warMovies = await getMoviesByGenre("War")
 
-        return { recentlyAddedMovies, popularMovies, animationMovies, highestRatedMovies, horrorMovies }
+        return { recentlyAddedMovies, popularMovies, animationMovies, highestRatedMovies, warMovies }
     }
 
     useEffect(() => {
@@ -41,7 +41,7 @@ function Movies() {
             setPopularMovies(response.popularMovies)
             setAnimationMovies(response.animationMovies)
             setHighestRatedMovies(response.highestRatedMovies)
-            setHorrorMovies(response.horrorMovies)
+            setWarMovies(response.warMovies)
 
         })
 
@@ -51,7 +51,7 @@ function Movies() {
             setPopularMovies(null)
             setAnimationMovies(null)
             setHighestRatedMovies(null)
-            setHorrorMovies(null)
+            setWarMovies(null)
         }
 
 
@@ -77,7 +77,7 @@ function Movies() {
 
                 {highestRatedMovies && <Slider mainTitle={"Highest Rated"} data={highestRatedMovies} poster={true} />}
 
-                {horrorMovies && <Slider mainTitle={"Horror"} data={horrorMovies} poster={false} />}
+                {warMovies && <Slider mainTitle={"War"} data={warMovies} poster={false} />}
 
             </React.Fragment>
         )}

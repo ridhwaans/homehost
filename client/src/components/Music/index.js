@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Provider, connect } from "react-redux";
 import { createStore, combineReducers } from "redux";
 
-import { getAllArtists, getAllAlbums, getAllSongs } from "../../api"
+import { getArtistsBy, getAlbumsBy, getSongsBy } from "../../api"
 import playlistReducer from "../../store/reducers/playlists";
 import playingReducer from "../../store/reducers/playing";
 
@@ -27,9 +27,9 @@ const Music = () => {
   const [songs, setSongs] = useState(null)
 
   const fetchMusic = async () => {
-    let albums = await getAllAlbums()
-    let artists = await getAllArtists()
-    let songs = await getAllSongs()
+    let albums = await getAlbumsBy("latest")
+    let artists = await getArtistsBy("most_popular")
+    let songs = await getSongsBy("recently_added")
 
     return { albums, artists, songs }
   }

@@ -53,7 +53,7 @@ const searchMoviesAndTV = async (keyword) => {
       ]
     }
   })
-  const results = format([].concat(tv_shows).concat(movies))
+  const results = shuffleArr(format([].concat(tv_shows).concat(movies)))
   return {
     results: results,
     count: results.length

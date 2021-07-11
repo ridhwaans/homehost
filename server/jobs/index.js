@@ -35,19 +35,19 @@ watcher
 const sync = async () => {
 
   const notAvailable = await getNotAvailable()
-  const database = await getAllFiles()
-
   console.log(`notAvailable is ${notAvailable.length}`)
   console.table(notAvailable)
 
-  const filesToInsert = fileSystem.filter(x => !database.includes(x))
+  const databaseFiles = await getAllFiles()
+  const filesToInsert = fileSystem.filter(x => !databaseFiles.includes(x))
                       .filter(x => !notAvailable.includes(x))
-  const intersection = database.filter(x => fileSystem.includes(x))
-  const filesToDelete = database.filter(x => !fileSystem.includes(x))
+  const intersection = databaseFiles.filter(x => fileSystem.includes(x))
+  const filesToDelete = databaseFiles.filter(x => !fileSystem.includes(x))
 
   console.log(`intersection is ${intersection.length}`)
   console.log(`exclusiveToFileSystem is ${filesToInsert.length}`)
   console.log(`exclusiveToDatabase is ${filesToDelete.length}`)
+  
   console.table(filesToInsert)
   console.table(filesToDelete)
 
@@ -252,22 +252,6 @@ const upsertNotAvailable = async (file) => {
   })
 }
 
-const getAll = async () => {
-  var movies = await prisma.movie.findMany({
-    include: { genres: true, production_companies: true, credits: true, similar: true }
-  })
-  
-  var tv_shows = await prisma.tVShow.findMany({
-    include: { genres: true, production_companies: true, seasons: { include: { episodes: true } }, credits: true, similar: true }
-  })
-
-  var albums = await prisma.album.findMany({
-    include: { artists: true, songs: true }
-  })
-
-  return { movies: movies, tv: tv_shows, music: albums }
-}
-
 const getAllFiles = async () => {
   var movies = await prisma.movie.findMany({
     select: { fs_path: true }
@@ -338,4 +322,4 @@ const deleteManySongs = async (songs) => {
   }
 }
 
-module.exports = { getAll, upsertAll }
+module.exports = { upsertAll }

@@ -1,6 +1,6 @@
 {
   "name": "homehost-server",
-  "version": "1.5.0",
+  "version": "1.9.0",
   "private": true,
   "author": "ridhwaans",
   "license": "MIT",
@@ -26,7 +26,6 @@
     "concurrently": "^6.2.0",
     "nodemon": "^2.0.7",
     "npm-check-updates": "^11.6.0",
-    "prisma": "^2.26.0",
-    "sqlite3": "^5.0.2"
+    "prisma": "^2.26.0"
   }
 }

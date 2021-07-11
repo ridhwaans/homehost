@@ -43,11 +43,11 @@ const getMovieMetaData = async (file) => {
     release_date: movie.release_date,
     revenue: movie.revenue,
     runtime: movie.runtime,
-    tagline: movie.tagline,
+    tagline: movie.tagline ? movie.tagline : undefined,
     title: movie.title,
     vote_average: movie.vote_average,
     vote_count: movie.vote_count,
-    logo_path: logo ? logo.file_path : "",
+    logo_path: logo ? logo.file_path : undefined,
     credits: movie.credits.cast.concat(movie.credits.crew).map(credit => ({ 
       tmdb_id: credit.id, 
       adult: credit.adult, 
@@ -156,10 +156,10 @@ const getTVShowMetaData = async (file) => {
       season_number: season.season_number,
       episodes: [episode]
     })),
-    tagline: tv_show.tagline,
+    tagline: tv_show.tagline ? tv_show.tagline : undefined,
     vote_average: tv_show.vote_average,
     vote_count: tv_show.vote_count,
-    logo_path: logo ? logo.file_path : "",
+    logo_path: logo ? logo.file_path : undefined,
     credits: tv_show.credits.cast.concat(tv_show.credits.crew).map(credit => ({
       tmdb_id: credit.id, 
       adult: credit.adult, 
@@ -217,8 +217,8 @@ const getUnknownAlbumMetaData = async (file) => {
     image_url: 'http://i.imgur.com/bVnx0IY.png',
     label: 'Unknown Label',
     name: unknown_album,
-    popularity: null,
-    release_date: 'NaN',
+    popularity: undefined,
+    release_date: '',
     songs: [
       {
         spotify_id: `${unknown_id}_${track_number}`,
@@ -231,7 +231,7 @@ const getUnknownAlbumMetaData = async (file) => {
         mtime: fs.statSync(file).mtime,
         duration_ms: parseInt(await getAudioDurationInSeconds(file) * 1000),
         explicit: false,
-        preview_url: null
+        preview_url: undefined
       }
     ],
     total_tracks: track_number

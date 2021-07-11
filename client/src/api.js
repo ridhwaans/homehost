@@ -57,7 +57,7 @@ export async function getMovieGenres() {
 
 export async function getMoviesByGenre(genre) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/genres/${genre}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/genre/${genre}`)
         .then(function (response) {
             return response.data
 
@@ -121,7 +121,7 @@ export async function getTVShowGenres() {
 
 export async function getTVShowsByGenre(genre) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/genres/${genre}`)
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/genre/${genre}`)
         .then(function (response) {
             return response.data
 
@@ -190,13 +190,54 @@ export async function getAlbumInformation(id) {
         })
 }
 
-export async function getMusicBy(type) {
+export async function getAlbumsBy(type) {
 
     let discover = null
 
     switch (type) {
         case "recently_added":
-            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/music/recently_added`
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/music/albums/recently_added`
+            break;
+        case "latest":
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/music/albums/latest`
+            break;
+        default:
+
+    }
+
+    return await axios.get(discover)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getSongsBy(type) {
+
+    let discover = null
+
+    switch (type) {
+        case "recently_added":
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/music/songs/recently_added`
+            break;
+        default:
+
+    }
+
+    return await axios.get(discover)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getArtistsBy(type) {
+
+    let discover = null
+
+    switch (type) {
+        case "most_popular":
+            discover = `${process.env.REACT_APP_HOMEHOST_BASE}/api/music/artists/most_popular`
             break;
         default:
 

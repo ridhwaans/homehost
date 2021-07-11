@@ -125,7 +125,7 @@ router.get('/api/movies/genres', async (req, res) => {
   res.json(await getMovieGenres());
 });
 
-router.get('/api/movies/genres/:name', async (req, res) => {
+router.get('/api/movies/genre/:name', async (req, res) => {
   res.json(await getMoviesByGenre(req.params.name));
 });
 
@@ -157,7 +157,7 @@ router.get('/api/tv/genres', async (req, res) => {
   res.json(await getTVShowGenres());
 });
 
-router.get('/api/tv/genres/:name', async (req, res) => {
+router.get('/api/tv/genre/:name', async (req, res) => {
   res.json(await getTVShowsByGenre(req.params.name));
 });
 
@@ -169,11 +169,11 @@ router.get('/api/tv/:id', async (req, res) => {
   res.json(await getTVShow(req.params.id));
 });
 
-router.get('/api/music/recently_added', async (req, res) => {
+router.get('/api/music/albums/recently_added', async (req, res) => {
   res.json(await getRecentlyAddedAlbums());
 });
 
-router.get('/api/music/latest', async (req, res) => {
+router.get('/api/music/albums/latest', async (req, res) => {
   res.json(await getLatestAlbumReleases());
 });
 
@@ -190,6 +190,7 @@ router.get('/api/music/albums', async (req, res) => {
 });
 
 router.get('/api/music/albums/:id', async (req, res) => {
+  if (req.params.id == 'undefined') return res.json({})
   res.json(await getMusicAlbum(req.params.id));
 });
 

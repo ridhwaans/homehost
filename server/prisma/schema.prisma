@@ -36,7 +36,7 @@ model Movie {
   release_date			String
   revenue				Int
   runtime				Int
-  tagline				String
+  tagline				String?
   title					String
   vote_average			Float
   vote_count			Int
@@ -109,7 +109,7 @@ model TVShow {
   poster_path			String
   production_companies	ProductionCompany[]
   seasons				Season[]
-  tagline				String
+  tagline				String?
   vote_average			Float
   vote_count			Int
   logo_path				String?

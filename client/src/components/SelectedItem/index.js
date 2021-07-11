@@ -33,7 +33,7 @@ const SelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindo
                 <React.Fragment>
                     <div className="ai-content-area">
                         <div className="ai-content-area-container">
-                            { additionalMovieInfo.logo_path ? (<img className="logo" src={`${process.env.REACT_APP_IMAGE_BASE}w500/${currentSlide.logo_path}`} alt="boxart" />
+                            { additionalMovieInfo.logo_path ? (<div className="ai-content-area-banner-logo" style={{ backgroundImage: `url(${process.env.REACT_APP_IMAGE_BASE}w500/${currentSlide.logo_path})` }} alt="boxart" />
                             ) : ( 
                             <h3>
                                 <div>{additionalMovieInfo.type == "Movie" ? currentSlide.title : currentSlide.name}</div>

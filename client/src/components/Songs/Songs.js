@@ -72,7 +72,7 @@ const Songs = ({ loadSong, currentSong }) => {
                 <div className={style.Title}>
                   <h1>Songs</h1>
                 </div>
-                <div className={style.Categ}>something</div>
+                <div className={style.Categ}>Various categories</div>
                 <div className={style.Details}>
                   <span className={style.Text_Bold}>
                     Various Artists

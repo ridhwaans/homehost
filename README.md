@@ -26,12 +26,14 @@
 ![movies_2](media/movies_2.png)
 ## 📺 TV Shows
 ### Home
-![tv](media/tv.png)
+![tv](media/tv_1.png)
 ## 🎵 Music
 ### Home
 ![music](media/music_1.png)
-### Album
+### Search
 ![music](media/music_2.png)
+### Album
+![music](media/music_3.png)
 
 ## ⚙️ Setup
 
@@ -115,37 +117,40 @@ While running, *homehost* continuously saves and retrieves metadata for any medi
 
 #### Server-side
 
- **POST**  
- `/api?generate=movies,tv,music`  
- **GET**  
- `/api/about`  
- `/api/movies`  
- `/api/movies/most_popular`  
- `/api/movies/highest_rated`  
- `/api/movies/recently_added`  
- `/api/movies/genres`  
- `/api/movies/genres/:name`  
- `/api/movies/random`  
- `/api/movies/:id`  
- `/api/tv`  
- `/api/tv/most_popular`  
- `/api/tv/highest_rated`  
- `/api/tv/recently_added`  
- `/api/tv/genres`  
- `/api/tv/genres/:name`  
- `/api/tv/random`  
- `/api/tv/:id`  
- `/api/music/recently_added`  
- `/api/music/artists`  
- `/api/music/albums`  
- `/api/music/albums/:id`  
- `/api/music/songs`  
- `/movies/:id`  
- `/tv/:tv_show_id/:season_number/:episode_number`  
- `/music/:album_id/:disc_number/:track_number`  
- `/api/watch/search`  
- `/api/listen/search`  
- `/api/watch/billboard`  
+**POST**  
+`/api?generate=movies,tv,music`  
+**GET**  
+`/api/about`  
+`/api/movies`  
+`/api/movies/most_popular`  
+`/api/movies/highest_rated`  
+`/api/movies/recently_added`  
+`/api/movies/genres`  
+`/api/movies/genre/:name`  
+`/api/movies/random`  
+`/api/movies/:id`  
+`/api/tv`  
+`/api/tv/most_popular`  
+`/api/tv/highest_rated`  
+`/api/tv/recently_added`  
+`/api/tv/genres`  
+`/api/tv/genre/:name`  
+`/api/tv/random`  
+`/api/tv/:id`  
+`/api/music/albums/recently_added`  
+`/api/music/albums/latest`  
+`/api/music/artists`  
+`/api/music/artists/most_popular`  
+`/api/music/albums`  
+`/api/music/albums/:id`  
+`/api/music/songs`  
+`/api/music/songs/recently_added`  
+`/movies/:id`  
+`/tv/:tv_show_id/:season_number/:episode_number`  
+`/music/:album_id/:disc_number/:track_number`  
+`/api/watch/search`  
+`/api/listen/search`  
+`/api/watch/billboard`  
 
 #### Client-side
 

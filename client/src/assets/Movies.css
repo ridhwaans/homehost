@@ -1108,6 +1108,14 @@ background-position: 50% -50%;
   transform-origin: 0 0;
 }
 
+.ai-content-area-banner-logo {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 200px;
+  width: 600px;
+}
+
 
 /* PAGINATION INDICATOR DE UN SLIDER */
 
