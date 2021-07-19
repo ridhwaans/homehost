@@ -249,3 +249,39 @@ export async function getArtistsBy(type) {
 
         })
 }
+
+export async function getNotAvailable() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/not_available`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function externalSearch(type, text) {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/services/search?type=${type}&q=${text}`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getAbout() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/about`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getLibraryStats() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/library/stats`)
+        .then(function (response) {
+            return response.data
+
+        })
+}

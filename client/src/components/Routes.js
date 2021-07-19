@@ -3,6 +3,7 @@ import { Route, Switch, BrowserRouter } from "react-router-dom";
 import Movies from "./Movies"
 import TVShows from "./TVShows"
 import Music from "./Music"
+import Admin from "./Admin"
 import NotFound from "./NotFound"
 
 import PlayerContext from "./Player/context"
@@ -26,6 +27,7 @@ const Routes = () => {
                     <Route component={Movies} exact path="/movies" />
                     <Route component={TVShows} exact path="/tv" />
                     <Route component={Music} path="/music" />
+                    <Route component={Admin} path="/admin" />
                     <Route component={NotFound} />
                 </Switch>
             </BrowserRouter>

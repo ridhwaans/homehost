@@ -57,6 +57,7 @@ const sync = async () => {
   filesToInsert.length && await upsertManySongs(filesToInsert.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 
   // delete from db
+  filesToDelete.length && await deleteManyNotAvailable(filesToDelete)
   filesToDelete.length && await deleteManyMovies(filesToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
   filesToDelete.length && await deleteManyTVEpisodes(filesToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
   filesToDelete.length && await deleteManySongs(filesToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
@@ -274,6 +275,21 @@ const getNotAvailable = async () => {
   return notAvailable.map(Object.values).flat(Infinity)
 }
 
+const deleteManyNotAvailable = async (not_available) => {
+  for (let file of not_available){
+    try {
+      await prisma.notAvailable.delete({
+        where: {
+          fs_path: file
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this file", e)
+      break; // break or continue
+    }
+  }
+}
+
 const deleteManyMovies = async (movies) => {
   for (let file of movies){
     try {
@@ -322,4 +338,4 @@ const deleteManySongs = async (songs) => {
   }
 }
 
-module.exports = { upsertAll }
+module.exports = { upsertAll, getNotAvailable }

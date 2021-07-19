@@ -3,6 +3,7 @@ const qs = require('qs');
 const path = require('path');
 const express = require('express');
 const { getAbout,
+  getLibraryStats,
   getAllMovies,
   getMostPopularMovies,
   getHighestRatedMovies,
@@ -32,8 +33,9 @@ const { getAbout,
   getSongFilePath,
   getEpisodeFilePath,
   searchMoviesAndTV,
-  searchMusic } = require('../data')
-const { upsertAll } = require('../jobs')
+  searchMusic,
+  externalSearch } = require('../data')
+const { upsertAll, getNotAvailable } = require('../jobs')
 const router = express.Router();
 
 const readStreamMp4 = (req, res, file_path) => {
@@ -103,6 +105,18 @@ router.get('/api', (req, res) => {
   
 router.get('/api/about', (req, res) => {
   res.json(getAbout());
+});
+
+router.get('/api/library/stats', async (req, res) => {
+  res.json(await getLibraryStats());
+});
+
+router.get('/api/not_available', async (req, res) => {
+  res.json(await getNotAvailable());
+});
+
+router.get('/api/services/search', async (req, res) => {
+  res.json(await externalSearch(req.query.type, req.query.q));
 });
 
 router.get('/api/movies', async (req, res) => {

@@ -1,7 +1,34 @@
 const { shuffleArr, format } = require('../utils')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-  
+const metadataServiceConstructor = require('../services/metadata');
+const metadataService = new metadataServiceConstructor()
+
+const getAbout = () => {
+  return {
+    name: process.env.npm_package_name,
+    version: process.env.npm_package_version,
+    environment: process.env.NODE_ENV
+  }
+}
+
+const getLibraryStats = async () => {
+  return {
+    movies: await prisma.movie.count(), 
+    tv_shows: await prisma.tVShow.count(),
+    seasons: await prisma.season.count(),
+    episodes: await prisma.episode.count(),
+    artists: await prisma.artist.count(),
+    albums: await prisma.album.count(),
+    songs: await prisma.song.count(),
+    not_available: await prisma.notAvailable.count()
+  }
+}
+
+const externalSearch = async (type, keyword) => {
+  return await metadataService.search(type, keyword)
+}
+
 const searchMoviesAndTV = async (keyword) => {
   const movies = await prisma.movie.findMany({
     include: { genres: true, production_companies: true, credits: true, similar: true },
@@ -108,11 +135,6 @@ const searchMusic = async (keyword) => {
       albums: format(albums)
     }
   }
-}
-
-const getAbout = () => {
-  const result = {homehost: 'hello world', environment: process.env.NODE_ENV};
-  return result
 }
 
 const getAllMovies = async () => {
@@ -414,6 +436,7 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
 }
 
 module.exports = { getAbout,
+  getLibraryStats,
   getAllMovies,
   getMostPopularMovies,
   getHighestRatedMovies,
@@ -443,4 +466,5 @@ module.exports = { getAbout,
   getSongFilePath,
   getEpisodeFilePath,
   searchMoviesAndTV,
-  searchMusic }
+  searchMusic,
+  externalSearch }

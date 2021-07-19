@@ -8,7 +8,7 @@
   * [🎵 Music](#-music)
   * [⚙️ Setup](#%EF%B8%8F-setup)
     + [Naming conventions](#naming-conventions)
-    + [Generating metadata](#generating-metadata)
+    + [Database](#database)
     + [Run](#run)
     + [Routes](#routes)
       - [Server-side](#server-side)
@@ -50,18 +50,13 @@ Create a `.env` file in the `server/` directory, if it does not exist
 In `.env`, set a working API key for TMDb API and Spotify Web API, set the media paths, and set tha base url of the homehost client  
 ###### **`server/.env`**
 ```env
+TMDB_KEY = '<api_key>'
+SPOTIFY_CLIENT_ID = '<client_id>'
+SPOTIFY_CLIENT_SECRET = '<client_secret>'
+
 MOVIES_PATH = '/path/to/movies/directory'
-MOVIES_API = 'api.themoviedb.org/3'
-MOVIES_KEY = '<api_key>'
-
 TV_PATH = '/path/to/tv/directory'
-TV_API = 'api.themoviedb.org/3'
-TV_KEY = '<api_key>'
-
 MUSIC_PATH = '/path/to/music/directory'
-MUSIC_API = 'api.spotify.com/v1'
-MUSIC_CLIENT_ID = '<client_id>'
-MUSIC_CLIENT_SECRET = '<client_secret>'
 
 DATABASE_URL = 'file:./data/media.db'
 CLIENT_BASE_URL = 'http://localhost:3000'
@@ -70,30 +65,30 @@ If you dont have keys, you can request API authorization from Spotify at https:/
 
 ### Naming conventions
 
-Your media must appear in the path set by `.env`  
+Your media must appear in the paths set by `.env`  
 🎥 **Movies**  
 ```
 <movies_path>  
- - (subdirectory)?  
-   - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)  
+- (subdirectory)?  
+  - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)  
 ```
 📺 **TV**  
 ```
 <tv_path>  
- - (tv_show_directory_name <TMDb-tv-ID>)  
-   - (S<season_number>E<episode_number> episode_file_name) (.mp4|.mkv)
+- (tv_show_directory_name <TMDb-tv-show-ID>)  
+  - (S<season_number>E<episode_number> episode_file_name) (.mp4|.mkv)  
 ```
 🎵 **Music**  
 ```
 <music_path>  
- - (album_directory_name <Spotify-album-ID>)  
-   - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)  
+- (album_directory_name <Spotify-album-ID>)  
+  - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)  
 ```
 Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number  
 ```
 <music_path>  
- - Unknown Album  
-   - (track_file_name) (.mp3|.flac)
+- Unknown Album  
+  - (track_file_name) (.mp3|.flac)  
 ```
 
 ### Database
