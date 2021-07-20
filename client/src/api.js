@@ -250,6 +250,33 @@ export async function getArtistsBy(type) {
         })
 }
 
+export async function getAbout() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/about`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function getLibraryStats() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/library/stats`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function generateLibraryMetadata() {
+
+    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/library/generate?q=movies,tv,music`)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
 export async function getNotAvailable() {
 
     return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/not_available`)
@@ -268,18 +295,27 @@ export async function externalSearch(type, text) {
         })
 }
 
-export async function getAbout() {
+export async function addMovie(item) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/about`)
+    return await axios.post(`${process.env.REACT_APP_HOMEHOST_BASE}/api/movies/add`, item)
         .then(function (response) {
             return response.data
 
         })
 }
 
-export async function getLibraryStats() {
+export async function addEpisode(item) {
 
-    return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/library/stats`)
+    return await axios.post(`${process.env.REACT_APP_HOMEHOST_BASE}/api/tv/episodes/add`, item)
+        .then(function (response) {
+            return response.data
+
+        })
+}
+
+export async function addSong(item) {
+
+    return await axios.post(`${process.env.REACT_APP_HOMEHOST_BASE}/api/music/songs/add`, item)
         .then(function (response) {
             return response.data
 

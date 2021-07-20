@@ -7,13 +7,13 @@ const metadataServiceConstructor = require('../services/metadata');
 const metadataService = new metadataServiceConstructor()
 const { Type } = require('../constants');
 
-
 const getMovieMetaData = async (file) => {
+  try {
   let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
   
   console.log('GET: ' + file);
   let movie = await metadataService.get({ type: Type.Movie, id: file.match(re)[1] })
-  if (movie.status == 404) return { status: movie.status, fs_path: file }
+  if (movie.status == 404) throw "API resource was not found"
   
   let logo = movie.images.logos.find(logo => logo.iso_639_1 == "en")
   return {
@@ -72,9 +72,13 @@ const getMovieMetaData = async (file) => {
       poster_path: similar_result.poster_path
     }))
   }
+  } catch(e) {
+    return { status: 400, fs_path: file }
+  }
 }
 
 const getTVEpisodeMetaData = async (file) => {
+  try {
   let re = new RegExp(/(\d+)$/); // tv_show_id
       re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
 
@@ -84,7 +88,7 @@ const getTVEpisodeMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let episode = await metadataService.get({ type: Type.TV.Episode, tv_show_id: tv_show_id, season_number: season_number, episode_number: episode_number })
-  if (episode.status == 404) return { status: episode.status, fs_path: file }
+  if (episode.status == 404) throw "API resource was not found"
 
   return {
     type: Type.TV.Episode,
@@ -102,9 +106,13 @@ const getTVEpisodeMetaData = async (file) => {
     vote_average: episode.vote_average,
     vote_count: episode.vote_count
   }
+  } catch(e) {
+    return { status: 400, fs_path: file }
+  }
 }
 
 const getTVShowMetaData = async (file) => {
+  try {
   let re = new RegExp(/(\d+)$/); // tv_show_id
       re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
       
@@ -114,10 +122,10 @@ const getTVShowMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let tv_show = await metadataService.get({ type: Type.TV.Show, id: tv_show_id })
-  if (tv_show.status == 404) return { status: tv_show.status, fs_path: file }
+  if (tv_show.status == 404) throw "API resource was not found"
 
   let episode = await getTVEpisodeMetaData(file)
-  if (episode.status == 404) return { status: episode.status, fs_path: file }
+  if (episode.status == 404) throw "API resource was not found"
 
   tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
   let logo = tv_show.images.logos.find(logo => logo.iso_639_1 == "en")
@@ -185,6 +193,9 @@ const getTVShowMetaData = async (file) => {
     })),
     imdb_id: tv_show.external_ids.imdb_id
   }
+  } catch(e) {
+    return { status: 400, fs_path: file }
+  }
 }
 
 const getLastUnknownAlbumTrackNumber = async () => {
@@ -239,6 +250,7 @@ const getUnknownAlbumMetaData = async (file) => {
 }
 
 const getAlbumMetaData = async (file) => {
+  try {
   let re = new RegExp(/(\w+)$/); // album_id
       re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
       unknown_album = "Unknown Album";
@@ -252,7 +264,7 @@ const getAlbumMetaData = async (file) => {
 
   // find the Spotify music album
   let album = await metadataService.get({ type: Type.Music.Album, id: album_path.match(re)[1] })
-  if (album.status == 404) return { status: album.status, fs_path: file }
+  if (album.status == 404) throw "API resource was not found"
   // find missing artist(s) information for the Spotify music album
   for (var current_artist of album.artists) {
     let artist = await metadataService.get({ type: Type.Music.Artist, id: current_artist.id })
@@ -267,7 +279,7 @@ const getAlbumMetaData = async (file) => {
   album.tracks.items = album.tracks.items.filter((item) => { 
     if ((item.disc_number == disc_number) && (item.track_number == track_number)) { return true } 
   })
-  if (album.tracks.items.length == 0) return { status: 404, fs_path: file }
+  if (album.tracks.items.length == 0) throw "API resource was not found"
 
   return {
     type: Type.Music.Album,
@@ -300,6 +312,92 @@ const getAlbumMetaData = async (file) => {
     })),
     total_tracks: album.total_tracks
   }
+  } catch(e) {
+    return { status: 400, fs_path: file }
+  }
 }
-  
-module.exports = { getMovieMetaData, getTVShowMetaData, getAlbumMetaData }
+
+const moveMovieFile = (item) => {
+  try {
+    // https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+    const filename = item.title.replace(/[/\\?%*:|"<>]/g, '-')
+    const filetype = item.fs_path.match(/\.[0-9a-z]+$/i)[0]
+    const dest = `${process.env.MOVIES_PATH}/${filename} (${item.release_year}) ${item.id}${filetype}`
+
+    console.log(`source: ${item.fs_path}`)
+    console.log(`destination: ${dest}`)
+
+    fs.rename(item.fs_path, dest, (err) => {
+      if (err) throw err;
+      console.log('Move complete');
+      return { status: 200, fs_path: dest }
+    })
+  } catch(e) {
+    console.log('There was an error moving this file')
+    return { status: 500, fs_path: item.fs_path }
+  }
+}
+
+const moveEpisodeFile = (item) => {
+  try {
+    const filetype = item.fs_path.match(/\.[0-9a-z]+$/i)[0]
+    let filename 
+    filename = path.basename(item.fs_path).replace(/.mp4|.mkv/gi,'')
+    // https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+    filename = filename.replace(/[/\\?%*:|"<>]/g, '-')
+    const dirname = `${item.tv_show_name.replace(/[/\\?%*:|"<>]/g, '-')} ${item.tv_show_id}`
+    const dest = `${process.env.TV_PATH}/${dirname}/S${item.season_number}E${item.episode_number} ${filename}${filetype}`
+
+    console.log(`source: ${item.fs_path}`)
+    console.log(`destination: ${dest}`)
+    
+    if (!fs.existsSync(`${process.env.TV_PATH}/${dirname}`)){
+      fs.mkdirSync(`${process.env.TV_PATH}/${dirname}`);
+    }
+    fs.rename(item.fs_path, dest, (err) => {
+      if (err) throw err;
+      console.log('Move complete');
+      return { status: 200, fs_path: dest }
+    })
+  } catch(e) {
+    console.log('There was an error moving this file')
+    return { status: 500, fs_path: item.fs_path }
+  }
+}
+
+const moveSongFile = (item) => {
+  try {
+    const filetype = item.fs_path.match(/\.[0-9a-z]+$/i)[0]
+    let filename 
+    let dirname
+    let dest
+
+    if (item.album_name == "Unknown Album") {
+      filename = path.basename(item.fs_path).replace(/.mp3|.flac/gi,'')
+      filename = filename.replace(/[/\\?%*:|"<>]/g, '-')
+      dirname = item.album_name
+      dest = `${process.env.MUSIC_PATH}/${dirname}/${filename}${filetype}`
+    } else {
+      // https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+      filename = item.name.replace(/[/\\?%*:|"<>]/g, '-')
+      dirname = `${item.album_name.replace(/[/\\?%*:|"<>]/g, '-')} (${item.album_release_year}) ${item.album_id}`
+      dest = `${process.env.MUSIC_PATH}/${dirname}/${item.disc_number}-${item.track_number} ${filename}${filetype}`
+    }
+    console.log(`source: ${item.fs_path}`)
+    console.log(`destination: ${dest}`)
+    
+    if (!fs.existsSync(`${process.env.MUSIC_PATH}/${dirname}`)){
+      fs.mkdirSync(`${process.env.MUSIC_PATH}/${dirname}`);
+    }
+    fs.rename(item.fs_path, dest, (err) => {
+      if (err) throw err;
+      console.log('Move complete');
+      return { status: 200, fs_path: dest }
+    })
+  } catch(e) {
+    console.log('There was an error moving this file')
+    return { status: 500, fs_path: item.fs_path }
+  }
+}
+
+module.exports = { getMovieMetaData, getTVShowMetaData, getAlbumMetaData, moveMovieFile, moveEpisodeFile, moveSongFile }

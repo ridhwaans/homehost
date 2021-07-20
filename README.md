@@ -65,7 +65,7 @@ If you dont have keys, you can request API authorization from Spotify at https:/
 
 ### Naming conventions
 
-Your media must appear in the paths set by `.env`  
+Your media must appear in the locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)  
 🎥 **Movies**  
 ```
 <movies_path>  

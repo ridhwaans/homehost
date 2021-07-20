@@ -2255,6 +2255,17 @@ background-position: 50% -50%;
 }
 
 /* ADMIN */
+
+.admin {
+  overflow: auto;
+  padding: 0 128px;
+}
+
+.media-finder {
+  overflow: auto;
+  margin-bottom: 25px;
+}
+
 /* Style the tab */
 .tab {
   float: left;
@@ -2267,7 +2278,8 @@ background-position: 50% -50%;
 
 /* Style the buttons inside the tab */
 .tab button {
-  display: block;
+  display: flex;
+  align-items: center;
   background-color: inherit;
   color: black;
   padding: 22px 16px;
@@ -2290,10 +2302,16 @@ background-position: 50% -50%;
   background-color: #ccc;
 }
 
+/* Style the icon inside the button */
+.tab .icon {
+  padding: 5px;
+  font-size: 3rem;
+}
+
 /* Style the tab content */
 .tabcontent {
   float: left;
-  padding: 0px 12px;
+  padding: 12px 12px;
   border: 1px solid #ccc;
   width: 70%;
   border-left: none;
@@ -2301,12 +2319,13 @@ background-position: 50% -50%;
   overflow-y: scroll;
 }
 
-.movie-search-result-item {
+.search-result-item {
   display: flex;
+  padding: 5px 0px;
 }
 
-.song-search-result-item {
-  display: flex;
+.search-result-item div {
+  padding-left: 10px;
 }
 
 pre code {

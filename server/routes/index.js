@@ -36,6 +36,7 @@ const { getAbout,
   searchMusic,
   externalSearch } = require('../data')
 const { upsertAll, getNotAvailable } = require('../jobs')
+const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models')
 const router = express.Router();
 
 const readStreamMp4 = (req, res, file_path) => {
@@ -92,16 +93,6 @@ const readStreamMpeg = (req, res, file_path) => {
     fs.createReadStream(file_path).pipe(res);
   }
 }
-
-router.get('/api', (req, res) => {
-  if (process.env.NODE_ENV == 'dev' && req.query.generate){
-    const filter = req.query.generate.split(',');
-    upsertAll(filter);
-    res.json('Generating metadata. Please wait...');
-  } else {
-    res.json('Dev mode only')
-  }
-});
   
 router.get('/api/about', (req, res) => {
   res.json(getAbout());
@@ -111,12 +102,36 @@ router.get('/api/library/stats', async (req, res) => {
   res.json(await getLibraryStats());
 });
 
+router.get('/api/library/generate', async (req, res) => {
+  const start = new Date()
+  res.write(`${start.toISOString()} Generating metadata. Please wait...`);
+  const filter = req.query.q.split(',');
+  await upsertAll(filter)
+  const end = new Date()
+  res.write(`${end.toISOString()} Done`);
+  res.write(`in ${(end - start) / 1000} s`);
+  res.end();
+});
+
 router.get('/api/not_available', async (req, res) => {
   res.json(await getNotAvailable());
 });
 
 router.get('/api/services/search', async (req, res) => {
   res.json(await externalSearch(req.query.type, req.query.q));
+});
+
+router.post('/api/movies/add', async (req, res) => {
+  console.log(req.body)
+  res.json(await moveMovieFile(req.body));
+});
+
+router.post('/api/tv/episodes/add', async (req, res) => {
+  res.json(await moveEpisodeFile(req.body));
+});
+
+router.post('/api/music/songs/add', async (req, res) => {
+  res.json(await moveSongFile(req.body));
 });
 
 router.get('/api/movies', async (req, res) => {

@@ -14,6 +14,7 @@ generator client {
 model NotAvailable {
 	id      				Int      	@id @default(autoincrement())
 	fs_path					String		@unique
+	type					String
 }
 
 model Movie {

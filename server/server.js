@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const figlet = require('figlet');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,11 +19,11 @@ app.use((req, res, next) => {
 });
 
 // Include routes
+app.use(bodyParser.json());
 app.use('/', require('./routes'));
 
 console.log(figlet.textSync('homehost'));
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 console.log(`Current NODE_ENV is ${process.env.NODE_ENV}`);
-
 console.log(`Current DATABASE_URL is ${process.env.DATABASE_URL}`)

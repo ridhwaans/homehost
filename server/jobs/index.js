@@ -2,8 +2,13 @@ const chokidar = require('chokidar');
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const { getMovieMetaData, getTVShowMetaData, getAlbumMetaData } = require('../models');
+const { Type } = require('../constants');
 var fileSystem = [];
 var ready;
+
+if (new Set([process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH]).size != 3) {
+  throw "Each media must be in a unique location and cannot share the same directory path(s)" 
+}
 
 var watcher = chokidar.watch([process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH], {
   ignored: /(^|[\/\\])\../, // ignore dotfiles
@@ -34,21 +39,21 @@ watcher
 
 const sync = async () => {
 
-  const notAvailable = await getNotAvailable()
-  console.log(`notAvailable is ${notAvailable.length}`)
-  console.table(notAvailable)
+  const notAvailableFiles = await getNotAvailableFiles()
+  console.log(`notAvailable is ${notAvailableFiles.length}`)
+  console.table(notAvailableFiles)
 
   const databaseFiles = await getAllFiles()
   const filesToInsert = fileSystem.filter(x => !databaseFiles.includes(x))
-                      .filter(x => !notAvailable.includes(x))
+                        .filter(x => !notAvailableFiles.includes(x))
   const intersection = databaseFiles.filter(x => fileSystem.includes(x))
-  const filesToDelete = databaseFiles.filter(x => !fileSystem.includes(x))
+  const filesToDelete = databaseFiles.concat(notAvailableFiles)
+                        .filter(x => !fileSystem.includes(x))
 
   console.log(`intersection is ${intersection.length}`)
   console.log(`exclusiveToFileSystem is ${filesToInsert.length}`)
-  console.log(`exclusiveToDatabase is ${filesToDelete.length}`)
-  
   console.table(filesToInsert)
+  console.log(`exclusiveToDatabase is ${filesToDelete.length}`)
   console.table(filesToDelete)
 
   // insert to db
@@ -63,14 +68,14 @@ const sync = async () => {
   filesToDelete.length && await deleteManySongs(filesToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
 }
 
-const upsertAll = (filter = ["movies", "tv", "music"]) => {
+const upsertAll = async (media = ["movies", "tv", "music"]) => {
   let jobs = []
-  filter.map(media => {
-    if (media == "movies") jobs.push(upsertManyMovies(fileSystem.filter(file => file.startsWith(process.env.MOVIES_PATH))))
-    if (media == "tv") jobs.push(upsertManyTVEpisodes(fileSystem.filter(file => file.startsWith(process.env.TV_PATH))))
-    if (media == "music") jobs.push(upsertManySongs(fileSystem.filter(file => file.startsWith(process.env.MUSIC_PATH))))
-  })
-  jobs.reduce((p, fn) => p.then(fn), Promise.resolve())
+  for (let type of media) {
+    if (type == "movies") jobs.push(await upsertManyMovies(fileSystem.filter(file => file.startsWith(process.env.MOVIES_PATH))))
+    if (type == "tv") jobs.push(await upsertManyTVEpisodes(fileSystem.filter(file => file.startsWith(process.env.TV_PATH))))
+    if (type == "music") jobs.push(await upsertManySongs(fileSystem.filter(file => file.startsWith(process.env.MUSIC_PATH))))
+  }
+  return jobs
 }
 
 const upsertManyMovies = async (movies) => {
@@ -79,8 +84,8 @@ const upsertManyMovies = async (movies) => {
   for (let file of movies){
     try {
       let result = await getMovieMetaData(file);
-      if (result.status == 404) {
-        upsertNotAvailable(result.fs_path)
+      if (result.status == 400) {
+        upsertNotAvailable(Type.Movie, result.fs_path)
         continue;
       }
 
@@ -132,8 +137,8 @@ const upsertManyTVEpisodes = async (episodes) => {
   for (let file of episodes){
     try {
       let result = await getTVShowMetaData(file)
-      if (result.status == 404) {
-        upsertNotAvailable(result.fs_path)
+      if (result.status == 400) {
+        upsertNotAvailable(Type.TV.Episode, result.fs_path)
         continue;
       }
 
@@ -209,8 +214,8 @@ const upsertManySongs = async (songs) => {
   for (let file of songs) {
     try {
       let result = await getAlbumMetaData(file)
-      if (result.status == 404) {
-        upsertNotAvailable(result.fs_path)
+      if (result.status == 400) {
+        upsertNotAvailable(Type.Music.Song, result.fs_path)
         continue;
       }
 
@@ -241,16 +246,17 @@ const upsertManySongs = async (songs) => {
       break; // break or continue
     }
   }
-
   console.log('[MUSIC] Done')
 }
 
-const upsertNotAvailable = async (file) => {
+const upsertNotAvailable = async (type, file) => {
+  const not_available = { type: type, fs_path: file }
   await prisma.notAvailable.upsert({
     where: { fs_path: file },
-    update: { fs_path: file },
-    create: { fs_path: file }
+    update: not_available,
+    create: not_available
   })
+  console.log('[NOT AVAILABLE] Done')
 }
 
 const getAllFiles = async () => {
@@ -263,16 +269,19 @@ const getAllFiles = async () => {
   var songs = await prisma.song.findMany({
     select: { fs_path: true }
   })
-
   return [].concat(movies).concat(episodes).concat(songs).map(Object.values).flat(Infinity)
 }
 
-const getNotAvailable = async () => {
-  var notAvailable = await prisma.notAvailable.findMany({
+const getNotAvailableFiles = async () => {
+  var result = await prisma.notAvailable.findMany({
     select: { fs_path: true }
   })
+  return result.map(Object.values).flat(Infinity)
+}
 
-  return notAvailable.map(Object.values).flat(Infinity)
+const getNotAvailable = async () => {
+  const result = await prisma.notAvailable.findMany()
+  return result
 }
 
 const deleteManyNotAvailable = async (not_available) => {
@@ -284,10 +293,11 @@ const deleteManyNotAvailable = async (not_available) => {
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this file", e)
-      break; // break or continue
+      console.log("There was a problem removing this file")
+      continue; // break or continue
     }
   }
+  console.log('[NOT AVAILABLE] Done')
 }
 
 const deleteManyMovies = async (movies) => {
@@ -295,15 +305,15 @@ const deleteManyMovies = async (movies) => {
     try {
       await prisma.movie.delete({
         where: {
-          tmdb_id: file.id 
+          fs_path: file
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this movie", e)
-      break; // break or continue
+      console.log("There was a problem removing this movie")
+      continue; // break or continue
     }
-  console.log('[MOVIES] Done')
   }
+  console.log('[MOVIES] Done')
 }
 
 const deleteManyTVEpisodes = async (episodes) => {
@@ -311,15 +321,15 @@ const deleteManyTVEpisodes = async (episodes) => {
     try {
       await prisma.episode.delete({
         where: {
-          tmdb_id: file.id 
+          fs_path: file
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this episode", e)
-      break; // break or continue
+      console.log("There was a problem removing this episode")
+      continue; // break or continue
     }
-  console.log('[TV] Done')
   }
+  console.log('[TV] Done')
 }
 
 const deleteManySongs = async (songs) => {
@@ -327,15 +337,15 @@ const deleteManySongs = async (songs) => {
     try {
       await prisma.song.delete({
         where: {
-          spotify_id: file.id 
+          fs_path: file
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this song", e)
-      break; // break or continue
+      console.log("There was a problem removing this song")
+      continue; // break or continue
     }
-  console.log('[MUSIC] Done')
   }
+  console.log('[MUSIC] Done')
 }
 
 module.exports = { upsertAll, getNotAvailable }

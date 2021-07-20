@@ -170,7 +170,7 @@ const getRecentlyAddedMovies = async () => {
   const result = await prisma.movie.findMany({
     include: { genres: true, production_companies: true, credits: true, similar: true },
     orderBy: {
-      mtime: "desc"
+      ctime: "desc"
     },
     take: 25
   })
