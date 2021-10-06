@@ -176,12 +176,14 @@ model Artist {
 	image_url				String
 	popularity				Int?
 	albums    				Album[]
+	songs					Song[]
 }
 
 model Song {
 	id      				Int      	@id @default(autoincrement())
 	album_spotify_id  		String
 	album    				Album    	@relation(fields: [album_spotify_id], references: [spotify_id], onDelete: Cascade)
+	artists					Artist[]
 	spotify_id				String		@unique
 	fs_path					String   	@unique
 	url_path				String		@unique

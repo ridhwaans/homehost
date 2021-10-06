@@ -106,7 +106,6 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   key={item.id}
                   song={item}
                   artists={album.artists}
-                  index={index}
                   current={currentSong && item.id === currentSong.id ? true : false}
                   songClicked={() => songClicked(item)}
                 />

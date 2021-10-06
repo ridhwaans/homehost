@@ -9,7 +9,6 @@ import style from "./SongItem.module.css";
 export const SongItem = ({
   song,
   artists,
-  index,
   songClicked,
   current,
 }) => {
@@ -25,7 +24,7 @@ export const SongItem = ({
         >
           <div className={style.Index}>
             <span style={current ? { color: "#1db954" } : { color: "white" }}>
-              {current ? <img src={NowPlaying} alt="nowPlaying" /> : index + 1}
+              {current ? <img src={NowPlaying} alt="nowPlaying" /> : song.track_number}
             </span>
             <button>
               {current ? <Pause/> : <Play/>} 

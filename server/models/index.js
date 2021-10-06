@@ -280,6 +280,14 @@ const getAlbumMetaData = async (file) => {
     if ((item.disc_number == disc_number) && (item.track_number == track_number)) { return true } 
   })
   if (album.tracks.items.length == 0) throw "API resource was not found"
+  // find missing artist(s) information for the Spotify track
+  for (var track_item of album.tracks.items) {
+    for (var current_artist of track_item.artists) {
+      let artist = await metadataService.get({ type: Type.Music.Artist, id: current_artist.id })
+      current_artist.image_url = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
+      current_artist.popularity = artist.popularity
+    }
+  }
 
   return {
     type: Type.Music.Album,
@@ -298,6 +306,7 @@ const getAlbumMetaData = async (file) => {
     popularity: album.popularity,
     release_date: album.release_date,
     songs: album.tracks.items.map(track_item => ({
+      artists: track_item.artists,
       spotify_id: track_item.id,
       fs_path: file,
       url_path: `/music/${album.id}/${track_item.disc_number}/${track_item.track_number}`,
