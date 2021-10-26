@@ -2271,7 +2271,7 @@ background-position: 50% -50%;
   float: left;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
-  width: 30%;
+  /* width: 30%; */
   height: 600px;
   overflow-y: scroll;
 }

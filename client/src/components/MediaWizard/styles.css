@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla&Fira+Sans&family=Poppins&display=swap');
+
+.main {
+    font-family: 'Karla', sans-serif;
+    height: 100vh;
+}
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.wrapper {
+    border-radius: 15px;
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 10px rgb(0 0 0 / 0.2);
+    align-items: center;
+    height: 400px;
+    width: 500px;
+}
+
+.contain {
+    padding: 10px;
+     text-align: center;
+ }
+ .form {
+     display: flex;
+     padding: 10px;
+     flex-direction: column;
+     width: 380px;
+     height: 300px;
+ }
+ .formInput{
+     border-radius: 5px;
+     border-color: #e5e5e5;
+     border-style: solid;
+     border-width: 0.5px;
+     margin-bottom: 10px;
+     padding: 10px;
+ }
+ .formSubmit {
+     border-radius: 5px;
+     color: #03045e;
+     padding: 8px;
+     border-style: solid;
+     border-color: #03045e;
+     width: 75px;
+     align-self: flex-end;
+ }
+
+ .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.otpimg {
+    width: 120px;
+    padding: 5px;
+}
+
+.formSelect{
+    width: 380px;
+    border-radius: 5px;
+    border-color: #e5e5e5;
+    border-style: solid;
+    border-width: 0.5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.multipleButtons {
+    padding: 10px;
+    align-self: flex-end;
+}
+.multipleButton {
+    margin-right: 5px;
+    border-radius: 5px;
+     color: #03045e;
+     padding: 8px;
+     border-style: solid;
+     border-color: #03045e;
+     width: 75px;
+}
+
+.done {
+    width: 65px;
+    margin-bottom: 10px;
+}
+.doneSubmit {
+    margin-top: 10px;
+    border-radius: 5px;
+    color: #03045e;
+    padding: 8px;
+    border-style: solid;
+    border-color: #03045e;
+    width: 85px;
+}

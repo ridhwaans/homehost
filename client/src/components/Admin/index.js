@@ -4,26 +4,36 @@ import { useDebounce } from "../../hooks/useDebounce"
 import AdminHeader from "../AdminHeader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFileVideo, faFileAudio } from '@fortawesome/free-solid-svg-icons'
+import StepForm from '../MediaWizard/StepForm';
+//import AppContext from '../MediaWizard/Context';
 
 const Admin = () => {
 
   const [about, setAbout] = useState(null)
   const [stats, setStats] = useState(null)
-  const [notAvailable, setNotAvailable] = useState(null)
-  const [selectedFile, setSelectedFile] = useState(null)
-  const [searchBox, setSearchBox] = useState(false)
-  const inputRef = useRef(null)
-  const [ searchInput, updateSearchInput ] = useState(null)
-  const [ searchResults, setSearchResults ] = useState(null)
+  // const [notAvailable, setNotAvailable] = useState(null)
+  // const [selectedFile, setSelectedFile] = useState(null)
+  // const [searchBox, setSearchBox] = useState(false)
+  // const inputRef = useRef(null)
+  // const [ searchInput, updateSearchInput ] = useState(null)
+  // const [ searchResults, setSearchResults ] = useState(null)
 
-  const dInput = useDebounce(searchInput, 1000);
+  // const dInput = useDebounce(searchInput, 1000);
+
+  // const [step, setStep] = useState(0);
+  // const [selectedFile, setSelectedFile] = useState(null)
+  // const [searchBox, setSearchBox] = useState(false)
+  // const inputRef = useRef(null)
+  // const [ searchInput, updateSearchInput ] = useState(null)
+  // const [ searchResults, setSearchResults ] = useState(null)
+
+ 
 
   const fetch = async () => {
     let about = await getAbout()
     let stats = await getLibraryStats()
-    let notAvailable = await getNotAvailable()
 
-    return { about, stats, notAvailable }
+    return { about, stats }
   }
 
   useEffect(() => {
@@ -33,102 +43,103 @@ const Admin = () => {
     fetch().then(response => {
       setAbout(response.about)
       setStats(response.stats)
-      setNotAvailable(response.notAvailable)
+      console.log("this is happening")
     })
       return () => {
         setAbout(null)
         setStats(null)
-        setNotAvailable(null)
       }
   }, [])
 
-  const toggleSearchBox = () => {
-    if (!searchBox && inputRef.current) inputRef.current.focus();
-    setSearchBox(prevState => !prevState)
-  }
+  // const toggleSearchBox = () => {
+  //   if (!searchBox && inputRef.current) inputRef.current.focus();
+  //   setSearchBox(prevState => !prevState)
+  // }
 
-  const fetchSearchResults = async (type, text) => {
-    let searchResults
-    if (type == 'Movie'){
-      searchResults = await externalSearch(type, text)
-    } else if (type == 'Song') {
-      searchResults = await externalSearch(type, text)
-    }
-    return { searchResults }
-  }
+  // const fetchSearchResults = async (type, text) => {
+  //   let searchResults
+  //   if (type == 'Movie'){
+  //     searchResults = await externalSearch(type, text)
+  //   } else if (type == 'Song') {
+  //     searchResults = await externalSearch(type, text)
+  //   }
+  //   return { searchResults }
+  // }
   
-  useEffect(() => {
-    if (!selectedFile || dInput && dInput.trim().length == 0) return;
-    fetchSearchResults(selectedFile.type, dInput).then(response => {
-      setSearchResults(response.searchResults)
-    })
-      return () => {
-        setSearchResults(null)
-      }
-  }, [dInput])
+  // useEffect(() => {
+  //   if (!selectedFile || dInput && dInput.trim().length == 0) return;
+  //   fetchSearchResults(selectedFile.type, dInput).then(response => {
+  //     setSearchResults(response.searchResults)
+  //   })
+  //     return () => {
+  //       setSearchResults(null)
+  //     }
+  // }, [dInput])
 
-  const changeSelection = (item) => {
-    updateSearchInput(null)
-    setSearchResults(null)
-    setSelectedFile(item)
-  }
+  // const changeSelection = (item) => {
+  //   updateSearchInput(null)
+  //   setSearchResults(null)
+  //   setSelectedFile(item)
+  // }
 
-  const applyMovie = async (item) => {
-    await addMovie({
-      type: selectedFile.type,
-      fs_path: selectedFile.fs_path,
-      id: item.id,
-      title: item.title,
-      release_year: parseInt(item.release_date)
-    })
-  }
+  // const applyMovie = async (item) => {
+  //   await addMovie({
+  //     type: selectedFile.type,
+  //     fs_path: selectedFile.fs_path,
+  //     id: item.id,
+  //     title: item.title,
+  //     release_year: parseInt(item.release_date)
+  //   })
+  // }
 
-  const applyEpisode = async (item) => {
-    await addEpisode({
-      type: selectedFile.type,
-      fs_path: selectedFile.fs_path,
-      id: item.id,
-      title: item.title
-    })
-  }
+  // const applyEpisode = async (item) => {
+  //   await addEpisode({
+  //     type: selectedFile.type,
+  //     fs_path: selectedFile.fs_path,
+  //     id: item.id,
+  //     title: item.title
+  //   })
+  // }
 
-  const applySong = async (item) => {
-    await addSong({
-      type: selectedFile.type,
-      fs_path: selectedFile.fs_path,
-      album_id: item.album.id,
-      album_name: item.album.name,
-      album_release_year: parseInt(item.album.release_date),
-      name: item.name,
-      disc_number: item.disc_number,
-      track_number: item.track_number
-    })
-  }
+  // const applySong = async (item) => {
+  //   await addSong({
+  //     type: selectedFile.type,
+  //     fs_path: selectedFile.fs_path,
+  //     album_id: item.album.id,
+  //     album_name: item.album.name,
+  //     album_release_year: parseInt(item.album.release_date),
+  //     name: item.name,
+  //     disc_number: item.disc_number,
+  //     track_number: item.track_number
+  //   })
+  // }
 
-  const applyUnknownAlbumSong = async () => {
-    await addSong({
-      type: selectedFile.type,
-      fs_path: selectedFile.fs_path,
-      album_name: "Unknown Album"
-    })
-  }
+  // const applyUnknownAlbumSong = async () => {
+  //   await addSong({
+  //     type: selectedFile.type,
+  //     fs_path: selectedFile.fs_path,
+  //     album_name: "Unknown Album"
+  //   })
+  // }
 
-  const unknownAlbum = (
-    <div className="search-result-item">
-      <img src={`http://i.imgur.com/bVnx0IY.png`}  width="125" height="125"/>
-      <div>
-        <h2>{`Didn't find anything? Add to Unknown Album`}</h2>
-        <button
-          onClick={e =>
-            window.confirm("Are you sure you want to apply this item?") &&
-            applyUnknownAlbumSong()
-          }
-          >Apply</button>
-      </div>
-    </div>
-  )
+  // const unknownAlbum = (
+  //   <div className="search-result-item">
+  //     <img src={`http://i.imgur.com/bVnx0IY.png`}  width="125" height="125"/>
+  //     <div>
+  //       <h2>{`Didn't find anything? Add to Unknown Album`}</h2>
+  //       <button
+  //         onClick={e =>
+  //           window.confirm("Are you sure you want to apply this item?") &&
+  //           applyUnknownAlbumSong()
+  //         }
+  //         >Apply</button>
+  //     </div>
+  //   </div>
+  // )
   
   return (
+    <React.Fragment>
+    
     <div className="movies">
     <AdminHeader />
     <div className="admin">
@@ -187,8 +198,10 @@ const Admin = () => {
         </code>
       </pre>
     </div>
-
-    <div className="media-finder">
+    
+      <StepForm />
+    
+    {/* <div className="media-finder">
       <h2>Media Finder</h2>
       <p>This is a file helper to find media that is currently not available. After the media is found, it will be added to the library and become available</p>
       {selectedFile && <p>Selected file is {selectedFile.fs_path}</p>}
@@ -246,10 +259,12 @@ const Admin = () => {
           </div>
         ))}
       </div>}
-    </div>
+    </div> */}
 
     </div>
     </div>
+    
+    </React.Fragment>
   );
 };
 
