@@ -2313,7 +2313,7 @@ background-position: 50% -50%;
   float: left;
   padding: 12px 12px;
   border: 1px solid #ccc;
-  width: 70%;
+  /* width: 70%; */
   border-left: none;
   height: 600px;
   overflow-y: scroll;

@@ -6,7 +6,13 @@ const FormTwo = () => {
     const myContext = useContext(AppContext);
     const updateContext = myContext.fileDetails;
 
-    const next = () => {
+    const next = (type) => {
+        updateContext.setSelectedFile(
+            {                   
+                ...updateContext.selectedFile,
+                type: type
+            }
+        )
         updateContext.setStep(updateContext.currentPage + 1)
     };
     const previous = () => {
@@ -21,22 +27,23 @@ const FormTwo = () => {
                 <form className="form">
                     <div className="radio">
                         <label>
-                            <input type="radio" value="Movie" checked={true} />
+                            <input type="radio" value="Movie" checked={true} onClick={() => next("Movie")}/>
                             Movie
                         </label>
                         </div>
                         <div className="radio">
                         <label>
-                            <input type="radio" value="Episode" />
-                            Song
+                            <input type="radio" value="Episode" onClick={() => next("Episode")}/>
+                            TV Episode
                         </label>
                         </div>
                         <div className="radio">
                         <label>
-                            <input type="radio" value="Song" />
-                            TV Episode
+                            <input type="radio" value="Song" onClick={() => next("Song")}/>
+                            Song
                         </label>
                     </div>
+                    <button className="formSubmit" value="Previous" type="submit" onClick={previous}>Go Back </button>
                 </form>
             </div>
         </div>

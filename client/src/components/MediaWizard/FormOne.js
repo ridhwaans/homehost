@@ -33,12 +33,18 @@ const FormOne = () => {
         next()
     }
     
-    const next = () => {
-        if (updateContext.selectedFile) {
-            if (updateContext.selectedFile.fs_path == null) {
+    const next = (item) => {
+        //if (updateContext.selectedFile) {
+
+            if (item.fs_path == null) {
                 console.log('Please choose a file')
-            } else (updateContext.setStep(updateContext.currentPage + 1))
-        }
+            } else {
+                console.log(JSON.stringify(item))
+                updateContext.setSelectedFile(item)
+                updateContext.setStep(prevStep => prevStep + 1)
+            }
+        //}
+        
     };
 
     console.log(JSON.stringify(updateContext))
@@ -48,7 +54,7 @@ const FormOne = () => {
             <form className="form">
                 <div className="tab">
                     {notAvailable && notAvailable.map(item => (
-                    <button key={item.id} onClick={() => changeSelection(item)}>
+                    <button type="button" key={item.id} onClick={() => next(item)}>
                         <span className="icon">
                         {item.type == 'Movie' || item.type == 'Episode'? <FontAwesomeIcon icon={faFileVideo}/> : null}
                         {item.type == 'Song'? <FontAwesomeIcon icon={faFileAudio}/> : null}
