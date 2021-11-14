@@ -105,7 +105,7 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                 <SongItem
                   key={item.id}
                   song={item}
-                  artists={album.artists}
+                  artists={item.artists}
                   current={currentSong && item.id === currentSong.id ? true : false}
                   songClicked={() => songClicked(item)}
                 />

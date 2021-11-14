@@ -50,7 +50,7 @@ export const SongItem = ({
                   song.explicit ? style.Artist_sub : style.Artist_badg,
                 ].join(", ")}
               >
-                {artists[0].name}
+                {artists.map(a => a.name).join(", ")}
               </span>
             </div>
           </div>

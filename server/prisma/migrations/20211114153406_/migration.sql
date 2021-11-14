@@ -1,7 +1,8 @@
 -- CreateTable
 CREATE TABLE "NotAvailable" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "fs_path" TEXT NOT NULL
+    "fs_path" TEXT NOT NULL,
+    "type" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -229,6 +230,14 @@ CREATE TABLE "_AlbumToArtist" (
     FOREIGN KEY ("B") REFERENCES "Artist" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "_ArtistToSong" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+    FOREIGN KEY ("A") REFERENCES "Artist" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY ("B") REFERENCES "Song" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "NotAvailable.fs_path_unique" ON "NotAvailable"("fs_path");
 
@@ -327,3 +336,9 @@ CREATE UNIQUE INDEX "_AlbumToArtist_AB_unique" ON "_AlbumToArtist"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_AlbumToArtist_B_index" ON "_AlbumToArtist"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ArtistToSong_AB_unique" ON "_ArtistToSong"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ArtistToSong_B_index" ON "_ArtistToSong"("B");

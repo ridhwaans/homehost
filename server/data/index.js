@@ -327,7 +327,7 @@ const getLatestAlbumReleases = async () => {
 
 const getMusicAlbum = async (album_id) => {
   const result = await prisma.album.findUnique({
-    include: { artists: true, songs: { include: { album: { include: { artists: true } } } } },
+    include: { artists: true, songs: { include: { artists: true } } },
     where: {
       spotify_id: album_id
     }

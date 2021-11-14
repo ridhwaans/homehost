@@ -232,6 +232,7 @@ const getUnknownAlbumMetaData = async (file) => {
     release_date: '',
     songs: [
       {
+        artists: [{ type: Type.Music.Artist, spotify_id: unknown_id, name: 'Unknown Artist', image_url: 'http://i.imgur.com/bVnx0IY.png' }],
         spotify_id: `${unknown_id}_${track_number}`,
         name: path.basename(file).replace(/.mp3|.flac/gi,''),
         disc_number: disc_number,
@@ -306,7 +307,13 @@ const getAlbumMetaData = async (file) => {
     popularity: album.popularity,
     release_date: album.release_date,
     songs: album.tracks.items.map(track_item => ({
-      artists: track_item.artists,
+      artists: track_item.artists.map(artist => ({
+        type: Type.Music.Artist,
+        spotify_id: artist.id,
+        name: artist.name,
+        image_url: artist.image_url,
+        popularity: artist.popularity
+      })),
       spotify_id: track_item.id,
       fs_path: file,
       url_path: `/music/${album.id}/${track_item.disc_number}/${track_item.track_number}`,

@@ -229,12 +229,20 @@ const upsertManySongs = async (songs) => {
         },
         songs: {
           connectOrCreate: result.songs.map(s => ({
-            create: s,
+            create: { 
+              ...s,
+              artists: {
+                connectOrCreate: s.artists.map(a => ({
+                  create: a,
+                  where: { spotify_id: a.spotify_id }
+                }))
+              }
+            },
             where: { spotify_id: s.spotify_id }
           }))
         }
       }
-      
+
       await prisma.album.upsert({
         where: { spotify_id: result.spotify_id },
         update: album,
