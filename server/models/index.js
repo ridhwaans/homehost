@@ -13,7 +13,7 @@ const getMovieMetaData = async (file) => {
   
   console.log('GET: ' + file);
   let movie = await metadataService.get({ type: Type.Movie, id: file.match(re)[1] })
-  if (movie.status == 404) throw "API resource was not found"
+  if (movie.status == 404 || movie.status_code == 34) throw "API resource was not found"
   
   let logo = movie.images.logos.find(logo => logo.iso_639_1 == "en")
   return {
@@ -88,7 +88,7 @@ const getTVEpisodeMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let episode = await metadataService.get({ type: Type.TV.Episode, tv_show_id: tv_show_id, season_number: season_number, episode_number: episode_number })
-  if (episode.status == 404) throw "API resource was not found"
+  if (episode.status == 404 || episode.status_code == 34) throw "API resource was not found"
 
   return {
     type: Type.TV.Episode,
@@ -122,10 +122,10 @@ const getTVShowMetaData = async (file) => {
   let season_number = parseInt(file.match(re2)[1])
   let episode_number = parseInt(file.match(re2)[2])
   let tv_show = await metadataService.get({ type: Type.TV.Show, id: tv_show_id })
-  if (tv_show.status == 404) throw "API resource was not found"
+  if (tv_show.status == 404 || tv_show.status_code == 34) throw "API resource was not found"
 
   let episode = await getTVEpisodeMetaData(file)
-  if (episode.status == 404) throw "API resource was not found"
+  if (episode.status == 400) throw "API resource was not found"
 
   tv_show.seasons = tv_show.seasons.filter(season => season.season_number == season_number.toString())
   let logo = tv_show.images.logos.find(logo => logo.iso_639_1 == "en")
@@ -265,11 +265,12 @@ const getAlbumMetaData = async (file) => {
 
   // find the Spotify music album
   let album = await metadataService.get({ type: Type.Music.Album, id: album_path.match(re)[1] })
-  if (album.status == 404) throw "API resource was not found"
+  if (album.error && album.error.status == 400) throw "API resource was not found"
+
   // find missing artist(s) information for the Spotify music album
   for (var current_artist of album.artists) {
     let artist = await metadataService.get({ type: Type.Music.Artist, id: current_artist.id })
-    current_artist.image_url = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
+    current_artist.image_url = artist.images[0] ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
     current_artist.popularity = artist.popularity
   }
 
@@ -285,7 +286,7 @@ const getAlbumMetaData = async (file) => {
   for (var track_item of album.tracks.items) {
     for (var current_artist of track_item.artists) {
       let artist = await metadataService.get({ type: Type.Music.Artist, id: current_artist.id })
-      current_artist.image_url = artist.images ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
+      current_artist.image_url = artist.images[0] ? artist.images[0].url : 'http://i.imgur.com/bVnx0IY.png'
       current_artist.popularity = artist.popularity
     }
   }

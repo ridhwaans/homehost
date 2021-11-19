@@ -125,7 +125,7 @@ const upsertManyMovies = async (movies) => {
 
     } catch(e) {
       console.log("There was a problem adding this movie", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[MOVIES] Done')
@@ -202,7 +202,7 @@ const upsertManyTVEpisodes = async (episodes) => {
 
     } catch(e) {
       console.log("There was a problem adding this episode", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[TV] Done')
@@ -251,7 +251,7 @@ const upsertManySongs = async (songs) => {
 
     } catch(e) {
       console.log("There was a problem adding this song", e)
-      break; // break or continue
+      continue; // break or continue
     }
   }
   console.log('[MUSIC] Done')
