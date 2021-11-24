@@ -50,7 +50,7 @@ const FormOne = () => {
     console.log(JSON.stringify(updateContext))
     return (
         <div className="contain">
-            <p>Enter Your Details</p>
+            <p>Choose a file</p>
             <form className="form">
                 <div className="tab">
                     {notAvailable && notAvailable.map(item => (

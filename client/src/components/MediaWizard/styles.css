@@ -31,6 +31,18 @@
      width: 380px;
      height: 300px;
  }
+
+.radioForm {
+    display: flex;
+    flex-direction: row;
+}
+
+.radio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
  .formInput{
      border-radius: 5px;
      border-color: #e5e5e5;

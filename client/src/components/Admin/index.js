@@ -36,7 +36,7 @@ const Admin = () => {
     <AdminHeader />
     <div className="admin">
     <div>
-      <h2>About</h2>
+      <h2>Server Information</h2>
       {about && Object.keys(about).map(key => {
           return <p>{`${key}: ${about[key]}`}</p>
       })}

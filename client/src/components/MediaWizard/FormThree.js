@@ -33,7 +33,7 @@ const FormThree = () => {
     
     useEffect(() => {
         if (!updateContext.selectedFile || (dInput && dInput.trim().length == 0)) return;
-        console.log(dInput, updateContext.selectedFile.type)
+        console.log(`type: ${updateContext.selectedFile.type}, search: ${dInput}`)
         fetchSearchResults(updateContext.selectedFile.type, dInput).then(response => {
         setSearchResults(response.searchResults)
         })
@@ -54,7 +54,7 @@ const FormThree = () => {
         <img src={`http://i.imgur.com/bVnx0IY.png`}  width="125" height="125"/>
         <div>
             <h2>{`Didn't find anything? Add to Unknown Album`}</h2>
-            <button onClick={next}>Next applyUnknownAlbumSong()</button>
+            <button onClick={next}>Apply</button>
         </div>
         </div>
     )
@@ -80,7 +80,7 @@ const FormThree = () => {
                     <div>
                         <h2>{`${item.title} (${item.original_language}, ${parseInt(item.release_date)})`}</h2>
                         <h3>{`TMDB ID: ${item.id}`}</h3>
-                        <button onClick={next}>Next applyMovie(item)</button>
+                        <button onClick={next}>Apply</button>
                         </div>
                     </div>
                     ))}
@@ -92,7 +92,7 @@ const FormThree = () => {
                             <h2>{`${item.disc_number}-${item.track_number} "${item.name}"`}</h2>
                             <h3>{`${item.album.name} (${parseInt(item.album.release_date)})`}</h3>
                             <h4>{`Spotify Album ID: ${item.album.id}`}</h4>
-                            <button onClick={next}>Next applySong(item)</button>
+                            <button onClick={next}>Apply</button>
                         </div>
                     </div>
                     ))}

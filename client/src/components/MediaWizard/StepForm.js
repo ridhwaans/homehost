@@ -27,7 +27,7 @@ const StepForm = () => {
                  <img src="https://www.vectorlogo.zone/logos/dartlang/dartlang-ar21.svg" alt="logo" />
              </div>
              <div className="body">
-                 <h3>Multi Step Form using ReactJS</h3>
+                 <h3>Media Wizard</h3>
                  <div className="wrapper">
                  <ProgressBar />
                  {step === 0 && <FormOne /> }

@@ -22,26 +22,29 @@ const FormTwo = () => {
     return (
         <div className="container">
             <p>What type of file is this? <b>{updateContext.selectedFile.fs_path}</b></p>
-            <img className="otpimg" src="https://ecall-messaging.com/wp-content/uploads/2020/11/eCall_Illustration_mTAN.svg" alt="otp-img" />
+            <div>
+            </div>
             <div className="formContain">
                 <form className="form">
-                    <div className="radio">
+                <div className="radioForm">
+                    <div className="radio" onClick={() => next("Movie")}>
+                        <img className="otpimg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSphyVbgs_TuSMfe6KlGUIEuujPrS1lgY8hpw&usqp=CAU" alt="otp-img" />
                         <label>
-                            <input type="radio" value="Movie" checked={true} onClick={() => next("Movie")}/>
                             Movie
                         </label>
                         </div>
-                        <div className="radio">
+                        <div className="radio" onClick={() => next("Episode")}>
+                        <img className="otpimg" src="https://static.thenounproject.com/png/3962601-200.png" alt="otp-img" />
                         <label>
-                            <input type="radio" value="Episode" onClick={() => next("Episode")}/>
                             TV Episode
                         </label>
                         </div>
-                        <div className="radio">
+                        <div className="radio" onClick={() => next("Song")}>
+                        <img className="otpimg" src="http://i.imgur.com/bVnx0IY.png" alt="otp-img" />
                         <label>
-                            <input type="radio" value="Song" onClick={() => next("Song")}/>
                             Song
                         </label>
+                    </div>
                     </div>
                     <button className="formSubmit" value="Previous" type="submit" onClick={previous}>Go Back </button>
                 </form>
