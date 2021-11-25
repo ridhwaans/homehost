@@ -40,16 +40,12 @@ function AdminHeader() {
 
     return (
         <div className="header-height-pinned">
-
-
-            <div className={`header ${pinHeader ? 'pin-header' : ''}`} ref={ref}>
+            <div className="header pin-header" ref={ref}>
                 <div className="logo">
                     <img src={logo} alt={"logo"} />
                 </div>
 
                 <div className="header-options">
-                    <div><span className="icon"><FontAwesomeIcon icon={faGift} /></span></div>
-                    <div><span className="icon"><FontAwesomeIcon icon={faBell} /></span></div>
                     <div className="account-menu">
                         <div className="account-dropdown-menu">
                             <span className="presentation">
@@ -57,7 +53,6 @@ function AdminHeader() {
                             </span>
                             <span className="caret"></span>
                         </div>
-
                     </div>
                 </div>
 

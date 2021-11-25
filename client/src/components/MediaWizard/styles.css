@@ -2,7 +2,6 @@
 
 .main {
     font-family: 'Karla', sans-serif;
-    height: 100vh;
 }
 .body {
     display: flex;
@@ -29,7 +28,7 @@
      padding: 10px;
      flex-direction: column;
      width: 380px;
-     height: 300px;
+     height: 260px;
  }
 
 .radioForm {

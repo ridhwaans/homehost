@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import AppContext from './Context';
-import './styles.css';
+import { getNotAvailable } from "../../api"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFileVideo, faFileAudio } from '@fortawesome/free-solid-svg-icons'
-import { getNotAvailable } from "../../api"
+import './styles.css';
 
 const FormOne = () => {
     const [notAvailable, setNotAvailable] = useState(null)

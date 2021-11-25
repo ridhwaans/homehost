@@ -23,11 +23,7 @@ const StepForm = () => {
     return (
         <AppContext.Provider value={{fileDetails}}>
             <div className="main">
-            <div className="navbar">
-                 <img src="https://www.vectorlogo.zone/logos/dartlang/dartlang-ar21.svg" alt="logo" />
-             </div>
              <div className="body">
-                 <h3>Media Wizard</h3>
                  <div className="wrapper">
                  <ProgressBar />
                  {step === 0 && <FormOne /> }
