@@ -8,6 +8,7 @@ import { SongItem } from "./SongItem/SongItem";
 import FastAverageColor from "fast-average-color";
 import style from "./AlbumDetail.module.css";
 import Time from "../../assets/AlbumDetail/Time";
+import { DiscHeader } from "./DiscHeader/DiscHeader";
 
 const AlbumDetail = ({ loadSong, currentSong }) => {
     const { id } = useParams();
@@ -50,6 +51,10 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
       }
     };
 
+    const discOne = album && album.songs && album.songs.filter(item => item.disc_number == 1)
+    const discTwo = album && album.songs && album.songs.filter(item => item.disc_number == 2)
+    console.log("disc1 is" + JSON.stringify(discOne))
+    console.log("disc2 is" + JSON.stringify(discTwo))
     return (
       <React.Fragment>
         {album && album.songs && (
@@ -96,12 +101,13 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   <div></div>
                   <div></div>
                   <div className={style.Length}>
-                    <Time />
+                    <Time/>
                   </div>
                 </div>
               </div>
-
-              {album.songs.map((item, index) => (
+              
+              {discOne.length > 0 && discTwo.length > 0 && (<DiscHeader number={1}/>)}
+              {discOne.map((item, index) => (
                 <SongItem
                   key={item.id}
                   song={item}
@@ -110,6 +116,18 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
                   songClicked={() => songClicked(item)}
                 />
               ))}
+
+              {discTwo.length > 0 && (<DiscHeader number={2}/>)}
+              {discTwo.map((item, index) => (
+                <SongItem
+                  key={item.id}
+                  song={item}
+                  artists={item.artists}
+                  current={currentSong && item.id === currentSong.id ? true : false}
+                  songClicked={() => songClicked(item)}
+                />
+              ))}
+
             </div>
             <div className={style.List_Footer}>
               <p>© {parseInt(album.release_date)} {album.label} </p>

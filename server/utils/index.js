@@ -39,6 +39,10 @@ const format = (result) => {
         result.artists = result.album.artists
         delete result.album
       }
+
+      if (result.songs) {
+        result.songs.sort((a, b) => (a.disc_number - b.disc_number || a.track_number - b.track_number))
+      }
     }
     Object.entries(result).forEach(([key, value]) => {
       if (Array.isArray(value)) format(value)
