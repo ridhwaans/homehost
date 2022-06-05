@@ -97,7 +97,7 @@ From `server/`, run `npx prisma migrate dev` to create the database and necessar
 Run `npm run start-dev` to start the application in dev mode  
 *homehost* scans the media paths and adds the files to the database  
 Wait for the async job to finish generating metadata and save  
-To explore all media data, run `prisma studio` to go to `http://localhost:5555`  
+To explore all media data, run `npx prisma studio` and go to `http://localhost:5555`  
 To reset the database and clear all data, run `npx prisma migrate reset`  
 
 ### Run

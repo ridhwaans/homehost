@@ -53,8 +53,7 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
 
     const discOne = album && album.songs && album.songs.filter(item => item.disc_number == 1)
     const discTwo = album && album.songs && album.songs.filter(item => item.disc_number == 2)
-    console.log("disc1 is" + JSON.stringify(discOne))
-    console.log("disc2 is" + JSON.stringify(discTwo))
+
     return (
       <React.Fragment>
         {album && album.songs && (

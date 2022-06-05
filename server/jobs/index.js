@@ -20,6 +20,8 @@ watcher.on('ready', () => {
   ready = true;
   collection = watcher.getWatched()
   ready && sync()
+  ready && deleteEmptyAlbums()
+  ready && deleteIdleArtists()
 })
 
 watcher
@@ -354,6 +356,54 @@ const deleteManySongs = async (songs) => {
     }
   }
   console.log('[MUSIC] Done')
+}
+
+const deleteEmptyAlbums = async () => {
+  const result = await prisma.album.findMany({
+    where: {
+      songs: {
+          none: {}
+      }
+    }
+  })
+
+  for (let album of result){
+    try {
+      await prisma.album.delete({
+        where: {
+          id: album.id
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this album", e)
+      continue; // break or continue
+    }
+  }
+}
+
+const deleteIdleArtists = async () => {
+  const result = await prisma.artist.findMany({
+    where: {
+      AND: [
+      { songs: { none: {} } },
+      { albums: { none: {} } }
+      ]
+    }
+  })
+
+  for (let artist of result){
+    try {
+      await prisma.artist.delete({
+        where: {
+          id: artist.id
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this artist", e)
+      continue; // break or continue
+    }
+  }
+
 }
 
 module.exports = { upsertAll, getNotAvailable }
