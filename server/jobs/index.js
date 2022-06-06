@@ -20,8 +20,6 @@ watcher.on('ready', () => {
   ready = true;
   collection = watcher.getWatched()
   ready && sync()
-  ready && deleteEmptyAlbums()
-  ready && deleteIdleArtists()
 })
 
 watcher
@@ -58,6 +56,7 @@ const sync = async () => {
   console.log(`exclusiveToDatabase is ${filesToDelete.length}`)
   console.table(filesToDelete)
 
+  console.log('Syncing now...')
   // insert to db
   filesToInsert.length && await upsertManyMovies(filesToInsert.filter(file => file.startsWith(process.env.MOVIES_PATH)))
   filesToInsert.length && await upsertManyTVEpisodes(filesToInsert.filter(file => file.startsWith(process.env.TV_PATH)))
@@ -68,6 +67,12 @@ const sync = async () => {
   filesToDelete.length && await deleteManyMovies(filesToDelete.filter(file => file.startsWith(process.env.MOVIES_PATH)))
   filesToDelete.length && await deleteManyTVEpisodes(filesToDelete.filter(file => file.startsWith(process.env.TV_PATH)))
   filesToDelete.length && await deleteManySongs(filesToDelete.filter(file => file.startsWith(process.env.MUSIC_PATH)))
+
+  await deleteEmptyAlbums()
+  await deleteIdleArtists()
+  await deleteEmptySeasons()
+  await deleteEmptyTVShows()
+  console.log('Sync complete')
 }
 
 const upsertAll = async (media = ["movies", "tv", "music"]) => {
@@ -303,7 +308,7 @@ const deleteManyNotAvailable = async (not_available) => {
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this file")
+      console.log("There was a problem removing this file", e)
       continue; // break or continue
     }
   }
@@ -319,7 +324,7 @@ const deleteManyMovies = async (movies) => {
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this movie")
+      console.log("There was a problem removing this movie", e)
       continue; // break or continue
     }
   }
@@ -335,7 +340,7 @@ const deleteManyTVEpisodes = async (episodes) => {
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this episode")
+      console.log("There was a problem removing this episode", e)
       continue; // break or continue
     }
   }
@@ -351,7 +356,7 @@ const deleteManySongs = async (songs) => {
         }
       })
     } catch(e) {
-      console.log("There was a problem removing this song")
+      console.log("There was a problem removing this song", e)
       continue; // break or continue
     }
   }
@@ -403,7 +408,52 @@ const deleteIdleArtists = async () => {
       continue; // break or continue
     }
   }
+}
 
+const deleteEmptySeasons = async () => {
+  const result = await prisma.season.findMany({
+    where: {
+      episodes: { 
+        none: {} 
+      } 
+    }
+  })
+
+  for (let season of result){
+    try {
+      await prisma.season.delete({
+        where: {
+          id: season.id
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this season", e)
+      continue; // break or continue
+    }
+  }
+}
+
+const deleteEmptyTVShows = async () => {
+  const result = await prisma.tVShow.findMany({
+    where: {
+      seasons: { 
+        none: {} 
+      }
+    }
+  })
+
+  for (let tVShow of result){
+    try {
+      await prisma.tVShow.delete({
+        where: {
+          id: tVShow.id
+        }
+      })
+    } catch(e) {
+      console.log("There was a problem removing this TV show", e)
+      continue; // break or continue
+    }
+  }
 }
 
 module.exports = { upsertAll, getNotAvailable }

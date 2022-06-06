@@ -9,7 +9,7 @@ function Footer() {
         <div className="footer">
 
             <div className="footer-content">
-                <span className="copyright">&copy; 2021 </span> made using <span className="react-icon"><FontAwesomeIcon icon={faReact} /></span> by
+                <span className="copyright">&copy; {new Date().getFullYear()} </span> made using <span className="react-icon"><FontAwesomeIcon icon={faReact} /></span> by
             </div>
 
             <div className="social-links">
