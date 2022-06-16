@@ -1,6 +1,5 @@
 import React from "react"
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 import ListItem from "./ListItem/ListItem"
 import SidebarOption from "./SidebarOption/SidebarOption"
 import style from "./SideBar.module.css"
@@ -69,8 +68,4 @@ const SideBar = ({ albums }) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return { albums: state.albums.albums, };
-};
-
-export default connect(mapStateToProps)(SideBar);
+export default SideBar;

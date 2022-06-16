@@ -9,14 +9,17 @@ import FastAverageColor from "fast-average-color";
 import style from "./Songs.module.css";
 import Time from "../../assets/AlbumDetail/Time";
 
-const Songs = ({ loadSong, currentSong }) => {
+const Songs = () => {
     const location = useLocation()
     const { data } = location.state
 
     const { id } = useParams();
     const [album, setAlbum] = useState(null);
     const coverRef = useRef(null);
-  
+
+    const loadSong = (song) => {}
+    const currentSong = null;
+
     useEffect(() => {
       loadAlbumDetails(id);
     }, [id]);
@@ -121,17 +124,5 @@ const Songs = ({ loadSong, currentSong }) => {
       </React.Fragment>
     );
   };
-  
-  const mapStateToProps = (state) => {
-    return {
-      currentSong: state.playing.song,
-    };
-  };
-  
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      loadSong: (song) => dispatch({ type: "load", song }),
-    };
-  };
 
-  export default connect(mapStateToProps, mapDispatchToProps)(Songs);
+  export default Songs;

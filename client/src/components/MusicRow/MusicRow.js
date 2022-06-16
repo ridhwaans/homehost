@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import AlbumItem from "../Albums/AlbumItem/AlbumItem"
 import ArtistItem from "../Artists/ArtistItem/ArtistItem"
 import { SongItemMini } from "../Songs/SongItemMini/SongItemMini"
 import style from "./MusicRow.module.css"
 
-const MusicRow = ({ mainTitle, data, music_type, loadSong, currentSong, playPause }) => {
+const MusicRow = ({ mainTitle, data, musicType, loadSong, currentSong, playPause }) => {
 
   const songClicked = (song) => {
     if (song.url_path || song.preview_url) {
@@ -14,22 +13,24 @@ const MusicRow = ({ mainTitle, data, music_type, loadSong, currentSong, playPaus
     }
   };
 
+  console.log("MusicRow data is")
+  console.log(data)
     return (
       <React.Fragment>
         <div className={style.MusicRow}>
           <div className={style.RowHeader}>
               <span className={style.Title}>{mainTitle}</span>
-              <Link style={{ textDecoration: "none", color: "white" }} to={{ pathname: `/music/${music_type}`, state: { data: data } }} >
+              <Link style={{ textDecoration: "none", color: "white" }} to={{ pathname: `/music/${musicType}`}} state= {{ data: data }} >
                   <span>SEE ALL</span>
               </Link>
           </div>
 
-          {(music_type === "albums" || music_type === "artists") && <div className={style.Container}>
-            {music_type === "albums" && data && data.map(item => { return <AlbumItem key={item.id} album={item}/> }) }
-            {music_type === "artists" && data && data.map(item => { return <ArtistItem key={item.id} artist={item}/> }) }
+          {(musicType === "albums" || musicType === "artists") && <div className={style.Container}>
+            {musicType === "albums" && data && data.map(item => { return <AlbumItem key={item.id} album={item}/> }) }
+            {musicType === "artists" && data && data.map(item => { return <ArtistItem key={item.id} artist={item}/> }) }
           </div>}
           
-          {(music_type === "songs") && <div className={style.SongItemsContainer}>
+          {(musicType === "songs") && <div className={style.SongItemsContainer}>
             {data && data.map((item, index) => {
               return <SongItemMini
                 key={item.id}
@@ -46,16 +47,4 @@ const MusicRow = ({ mainTitle, data, music_type, loadSong, currentSong, playPaus
     )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    currentSong: state.playing.song,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loadSong: (song) => dispatch({ type: "load", song }),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MusicRow);
+export default MusicRow;

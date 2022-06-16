@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from "react"
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import musicSearchContext from "../MusicSearch/context"
 import { searchMusicBy } from "../../api"
 import { useDebounce } from "../../hooks/useDebounce"
@@ -8,7 +8,7 @@ import style from "../MusicHome/MusicHome.module.css"
 
 const MusicSearch = () => {
     const context = useContext(musicSearchContext)
-    const history = useHistory()
+    const navigate = useNavigate()
     const location = useLocation()
     const [songs, setSongs] = useState(null)
     const [albums, setAlbums] = useState(null)
@@ -30,7 +30,7 @@ const MusicSearch = () => {
     // The below use effect will trigger when ever one of the following changes:
     //      - context.searchInput: When ever the current search value updates.
     //      - location.pathname: When ever the current route updates.
-    //      - history: This will most likely never change for the lifetime of the app.
+    //      - navigate: This will most likely never change for the lifetime of the app.
     useEffect(() => {
         let basePath = location.pathname;
 
@@ -49,14 +49,14 @@ const MusicSearch = () => {
 
         // Check new path is indeed a new path.
         // This is to deal with the fact that location.pathname is a dependency of the useEffect
-        // Changing the route with history.push will update the route causing this useEffect to
+        // Changing the route with navigate.push will update the route causing this useEffect to
         // refire. If we continually push the calculated path onto the history even if it is the
         // same as the current path we would end up with a loop.
         if (newPath !== location.pathname) {
-            history.push(newPath);
+            navigate(newPath);
         }
         console.log(`basePath is ${basePath}, newPath is ${newPath}`)
-    }, [dInput, location.pathname, history])
+    }, [dInput, location.pathname, navigate])
 
     useEffect(() => {
 
@@ -72,9 +72,9 @@ const MusicSearch = () => {
     return (
         <React.Fragment>
         <div className={style.MusicHome}>
-            <MusicRow mainTitle={"Songs"} data={songs} music_type={"songs"}/>
-            <MusicRow mainTitle={"Albums"} data={albums} music_type={"albums"}/>
-            <MusicRow mainTitle={"Artists"} data={artists} music_type={"artists"}/>
+            <MusicRow mainTitle={"Songs"} data={songs} musicType={"songs"}/>
+            <MusicRow mainTitle={"Albums"} data={albums} musicType={"albums"}/>
+            <MusicRow mainTitle={"Artists"} data={artists} musicType={"artists"}/>
         </div>
         </React.Fragment>
     )

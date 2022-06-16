@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
 import Sound from "react-sound";
 import { millisToMinutesAndSeconds, useBar } from "../../utils";
 import style from "./NowPlayingBar.module.css";
@@ -129,17 +128,4 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
   }
 };
 
-const mapStateToProps = (state) => {
-  return {
-    song: state.playing.song,
-    playing: state.playing.playing,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    playPause: () => dispatch({ type: "playpause" }),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(NowPlayingBar);
+export default NowPlayingBar;

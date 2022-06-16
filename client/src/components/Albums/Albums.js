@@ -5,6 +5,8 @@ import style from "./Albums.module.css"
 
 const Albums = () => {
   const location = useLocation()
+  console.log("Albums location is")
+  console.log(location)
   const { data } = location.state
 
     return (

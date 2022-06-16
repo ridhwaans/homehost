@@ -4,17 +4,20 @@ import { useParams } from "react-router-dom";
 
 import { findTotalDurationMillis, millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
+import { DiscHeader } from "./DiscHeader/DiscHeader";
 import { SongItem } from "./SongItem/SongItem";
 import FastAverageColor from "fast-average-color";
 import style from "./AlbumDetail.module.css";
 import Time from "../../assets/AlbumDetail/Time";
-import { DiscHeader } from "./DiscHeader/DiscHeader";
 
-const AlbumDetail = ({ loadSong, currentSong }) => {
+const AlbumDetail = () => {
     const { id } = useParams();
     const [album, setAlbum] = useState(null);
     const coverRef = useRef(null);
   
+    const loadSong = (song) => {}
+    const currentSong = null;
+
     useEffect(() => {
       loadAlbumDetails(id);
     }, [id]);
@@ -137,17 +140,5 @@ const AlbumDetail = ({ loadSong, currentSong }) => {
       </React.Fragment>
     );
   };
-  
-  const mapStateToProps = (state) => {
-    return {
-      currentSong: state.playing.song,
-    };
-  };
-  
-  const mapDispatchToProps = (dispatch) => {
-    return {
-      loadSong: (song) => dispatch({ type: "load", song }),
-    };
-  };
 
-  export default connect(mapStateToProps, mapDispatchToProps)(AlbumDetail);
+  export default AlbumDetail;

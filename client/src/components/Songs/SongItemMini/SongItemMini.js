@@ -13,6 +13,13 @@ export const SongItemMini = ({
   songClicked,
   current,
 }) => {
+
+  console.log("song is")
+  console.log(song)
+  
+  console.log("artists is")
+  console.log(artists)
+
   return (
     <React.Fragment>
       {song && (

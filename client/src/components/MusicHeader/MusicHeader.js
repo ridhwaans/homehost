@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MusicSearchContext from "../MusicSearch/context"
 import { debounce } from "../../utils"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,7 +7,7 @@ import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid
 import style from "./MusicHeader.module.css"
 
 const MusicHeader = ({ account }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const ref = useRef(null)
@@ -18,8 +18,8 @@ const MusicHeader = ({ account }) => {
   return (
     <div className={style.Header}>
         <div className={style.BackForward}>
-          <button onClick={() => { history.goBack() }} className={style.Icon}><FontAwesomeIcon icon={faChevronLeft} /></button>
-          <button onClick={() => { history.goForward() }} className={style.Icon}><FontAwesomeIcon icon={faChevronRight} /></button>
+          <button onClick={() => { navigate(-1) }} className={style.Icon}><FontAwesomeIcon icon={faChevronLeft} /></button>
+          <button onClick={() => { navigate(1) }} className={style.Icon}><FontAwesomeIcon icon={faChevronRight} /></button>
         </div>
         {location.pathname.startsWith("/music/search") && <div className={style.SearchBar}>
           <span className={style.Icon}><FontAwesomeIcon icon={faSearch} /></span>
