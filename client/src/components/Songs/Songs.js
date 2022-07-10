@@ -5,7 +5,7 @@ import { useParams, useLocation } from "react-router-dom";
 import { millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
 import { SongItem } from "./SongItem/SongItem";
-import FastAverageColor from "fast-average-color";
+import { FastAverageColor } from "fast-average-color";
 import style from "./Songs.module.css";
 import Time from "../../assets/AlbumDetail/Time";
 

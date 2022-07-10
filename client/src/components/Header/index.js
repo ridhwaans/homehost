@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import SearchContext from "../Search/context"
 import { debounce } from "../../utils"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons'
 import logo from "../../assets/logos/Homehost_White.svg"
+import { useSharedState } from "../../hooks/useSharedState"
 
 function Header() {
 
@@ -12,8 +12,7 @@ function Header() {
     const ref = useRef(null)
     const inputRef = useRef(null)
 
-    const { searchInput, updateSearchInput } = useContext(SearchContext)
-
+    const [searchInput, setSearchInput] = useSharedState('searchInput')
 
     const handleScroll = () => {
 
@@ -94,7 +93,7 @@ function Header() {
                         <input className="searchInput"
                             ref={inputRef}
                             value={searchInput}
-                            onChange={(e) => updateSearchInput(e.currentTarget.value)}
+                            onChange={(e) => setSearchInput(e.currentTarget.value)}
                             onBlur={() => setSearchBox(false)}
                             type="text" placeholder="Titles, People, Genres..." maxLength="80" />
                     </div>

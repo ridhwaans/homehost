@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import SearchContext from "../Search/context"
 import { debounce } from "../../utils"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons'
@@ -11,9 +10,6 @@ function AdminHeader() {
     const [searchBox, setSearchBox] = useState(false)
     const ref = useRef(null)
     const inputRef = useRef(null)
-
-    const { searchInput, updateSearchInput } = useContext(SearchContext)
-
 
     const handleScroll = () => {
 

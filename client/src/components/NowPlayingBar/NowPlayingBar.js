@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Sound from "react-sound";
+import useSound from 'use-sound';
 import { millisToMinutesAndSeconds, useBar } from "../../utils";
 import style from "./NowPlayingBar.module.css";
 import Like from "../../assets/NowPlayingBar/Like";
@@ -23,6 +23,8 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
     song.url_path = song.preview_url;
     song.duration_ms = 30000;
   }
+
+  const [play, { stop, isPlaying }] = useSound(song.url_path);
 
   useEffect(() => {
     // Adjust time when progress bar is clicked
@@ -110,19 +112,6 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
             </div>
           </div>
         </footer>
-        { song.url_path && (
-          <Sound
-            url={`${process.env.REACT_APP_HOMEHOST_BASE}${song.url_path}`}
-            playStatus={playing ? "PLAYING" : "PAUSED"}
-            onPlaying={({ position }) => {
-              setTime(position);
-              setProgress((position * 100) / song.duration_ms);
-            }}
-            onFinishedPlaying={() => playPause()}
-            volume={mute ? 0 : volume}
-            position={time}
-          />
-        )}
       </div>
     );
   }

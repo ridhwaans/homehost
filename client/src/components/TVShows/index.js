@@ -6,7 +6,7 @@ import BigBillboard from "../BigBillboard"
 import MediumBillboard from "../MediumBillboard"
 import Slider from "../Slider"
 import Search from '../Search';
-import SearchContext from "../Search/context"
+import { useSharedState } from "../../hooks/useSharedState"
 
 import '../../assets/Movies.css';
 
@@ -17,8 +17,7 @@ function TVShows() {
     const [animationTVShows, setAnimationTVShows] = useState(null)
     const [highestRatedTVShows, setHighestRatedTVShows] = useState(null)
 
-    const searchContext = useContext(SearchContext)
-
+    const [searchInput, setSearchInput] = useSharedState('searchInput')
 
     const fetchTVShows = async () => {
         let recentlyAddedTVShows = await getTVShowsBy("recently_added")
@@ -62,7 +61,7 @@ function TVShows() {
         <div className="background-app">
         <Player />
         <Header />
-        {searchContext.searchInput.length > 0 ? (<Search />) : (
+        {searchInput?.length > 0 ? (<Search />) : (
             <React.Fragment>
                 <BigBillboard />
 

@@ -8,11 +8,14 @@ const shuffleArr = (arr) => {
 }
 
 const format = (result) => {
+  try {
+  if (!result) return result 
   if (Array.isArray(result)) {
     result.map(i => {
       format(i)
     })
-  } else if (Object.keys(result).length) {
+  }
+  if (Object.keys(result).length) {
     if (result.tmdb_id) {
       result.id = result.tmdb_id
       delete result.tmdb_id
@@ -49,6 +52,9 @@ const format = (result) => {
     })
   }
   return result
+  } catch(e) {
+    console.log("There was a problem", e)
+  }
 }
 
 module.exports = { shuffleArr, format }

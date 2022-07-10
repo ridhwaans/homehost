@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react"
-import PlayerContext from "../Player/context"
+import { useSharedState } from "../../hooks/useSharedState"
 import SeasonSelect from "./SeasonSelect"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons'
 
 const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
-    const { playerItem, setPlayerItem } = useContext(PlayerContext)
+    const [playerItem, setPlayerItem] = useSharedState('playerContext')
     const [seasonNumber, setSeasonNumber] = useState(1)
     const [showOverlay, setShowOverlay] = useState(null)
 

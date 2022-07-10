@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react"
-import PlayerContext from "../Player/context"
+import { useSharedState } from "../../hooks/useSharedState"
 import SliderContext from "../Slider/context"
 import Episodes from "../Episodes"
 import Similar from "../Similar"
@@ -12,7 +12,7 @@ import { faImdb } from '@fortawesome/free-brands-svg-icons'
 const SearchResultsSelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindow }) => {
 
     const [menuOption, setMenuOption] = useState("general-info")
-    const { playerItem, setPlayerItem } = useContext(PlayerContext)
+    const [playerItem, setPlayerItem] = useSharedState('playerContext')
     const sliderContext = useContext(SliderContext);
     
     const noEpisodesTab = () => {

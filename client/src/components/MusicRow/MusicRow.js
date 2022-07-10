@@ -13,14 +13,14 @@ const MusicRow = ({ mainTitle, data, musicType, loadSong, currentSong, playPause
     }
   };
 
-  console.log("MusicRow data is")
-  console.log(data)
+  //console.log("MusicRow data is")
+  //console.log(data)
     return (
       <React.Fragment>
         <div className={style.MusicRow}>
           <div className={style.RowHeader}>
               <span className={style.Title}>{mainTitle}</span>
-              <Link style={{ textDecoration: "none", color: "white" }} to={{ pathname: `/music/${musicType}`}} state= {{ data: data }} >
+              <Link style={{ textDecoration: "none", color: "white" }} to={{ pathname: `/music/${musicType}`}} state={{ data: data }} >
                   <span>SEE ALL</span>
               </Link>
           </div>

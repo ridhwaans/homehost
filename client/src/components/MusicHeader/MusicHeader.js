@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import MusicSearchContext from "../MusicSearch/context"
 import { debounce } from "../../utils"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import style from "./MusicHeader.module.css"
+import { useSharedState } from "../../hooks/useSharedState"
 
 const MusicHeader = ({ account }) => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const MusicHeader = ({ account }) => {
   const ref = useRef(null)
   const inputRef = useRef(null)
 
-  const { searchInput, updateSearchInput } = useContext(MusicSearchContext)
+  const [searchInput, setSearchInput] = useSharedState('musicSearchInput', '')
 
   return (
     <div className={style.Header}>
@@ -28,7 +28,7 @@ const MusicHeader = ({ account }) => {
             type="text"
             ref={inputRef}
             value={searchInput}
-            onChange={(e) => updateSearchInput(e.currentTarget.value)}
+            onChange={(e) => setSearchInput(e.currentTarget.value)}
           />
         </div>}
       <div className={style.HeaderRight}>

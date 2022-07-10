@@ -1,20 +1,20 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom";
-import musicSearchContext from "../MusicSearch/context"
 import { searchMusicBy } from "../../api"
 import { useDebounce } from "../../hooks/useDebounce"
 import MusicRow from "../MusicRow/MusicRow";
 import style from "../MusicHome/MusicHome.module.css"
+import { useSharedState } from "../../hooks/useSharedState"
 
 const MusicSearch = () => {
-    const context = useContext(musicSearchContext)
+    const [searchInput, setSearchInput] = useSharedState('musicSearchInput', '')
     const navigate = useNavigate()
     const location = useLocation()
     const [songs, setSongs] = useState(null)
     const [albums, setAlbums] = useState(null)
     const [artists, setArtists] = useState(null)
 
-    const dInput = useDebounce(context.searchInput, 1000);
+    const dInput = useDebounce(searchInput, 1000);
 
     const fetchData = useCallback(async () => {
         return await searchMusicBy(dInput, null).then(response => {
@@ -39,13 +39,15 @@ const MusicSearch = () => {
         // duplicate "/search/" appends could be added with out a small amount of pre-processing.
         const searchIndex = basePath.indexOf('/search/');
 
+        console.log(`basePath is ${basePath}, searchIndex is ${searchIndex}, musicSearchInput is ${searchInput}`)
+
         // Remove previous "/search/" if found.
         if (searchIndex >= 0) {
-            basePath = basePath.substr(0, searchIndex);
+            basePath = basePath.substring(0, searchIndex);
         }
 
         // Calculate new path.
-        const newPath = `${basePath}/search/${encodeURI(context.searchInput)}`;
+        const newPath = `${basePath}/search/${encodeURI(searchInput)}`;
 
         // Check new path is indeed a new path.
         // This is to deal with the fact that location.pathname is a dependency of the useEffect

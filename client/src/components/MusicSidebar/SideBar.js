@@ -15,11 +15,11 @@ const SideBar = ({ albums }) => {
             </div>
         </Link>
 
-        <a style={{ textDecoration: "none", color: "white" }} href="/">
-            <SidebarOption Icon={faHome} option="Home"/>
-        </a>
-
-        <Link style={{ textDecoration: "none", color: "white" }} to="/music/search">
+        <Link style={{ textDecoration: "none", color: "white" }} to="/music">
+            <SidebarOption Icon={faHome} option="Home" />
+        </Link>
+        
+        <Link style={{ textDecoration: "none", color: "white" }} to="/music/search/">
             <SidebarOption Icon={faSearch} option="Search" />
         </Link>
 

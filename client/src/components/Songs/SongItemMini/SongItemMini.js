@@ -14,11 +14,11 @@ export const SongItemMini = ({
   current,
 }) => {
 
-  console.log("song is")
-  console.log(song)
+  // console.log("song is")
+  // console.log(song)
   
-  console.log("artists is")
-  console.log(artists)
+  // console.log("artists is")
+  // console.log(artists)
 
   return (
     <React.Fragment>

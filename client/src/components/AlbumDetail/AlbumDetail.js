@@ -6,7 +6,7 @@ import { findTotalDurationMillis, millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
 import { DiscHeader } from "./DiscHeader/DiscHeader";
 import { SongItem } from "./SongItem/SongItem";
-import FastAverageColor from "fast-average-color";
+import { FastAverageColor } from "fast-average-color";
 import style from "./AlbumDetail.module.css";
 import Time from "../../assets/AlbumDetail/Time";
 

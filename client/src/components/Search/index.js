@@ -1,14 +1,14 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from "react"
-import searchContext from "../Search/context"
 import { searchMoviesBy } from "../../api"
 import { useDebounce } from "../../hooks/useDebounce"
 import SearchResults from "../SearchResults"
+import { useSharedState } from "../../hooks/useSharedState"
 
 const Search = () => {
-    const context = useContext(searchContext)
+    const [searchInput, setSearchInput] = useSharedState('searchInput')
     const [movies, setMovies] = useState(null)
 
-    const dInput = useDebounce(context.searchInput, 1000);
+    const dInput = useDebounce(searchInput, 1000);
 
     const fetchData = useCallback(async () => {
         return await searchMoviesBy(dInput, null).then(response => {

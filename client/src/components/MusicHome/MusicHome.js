@@ -5,13 +5,13 @@ import { getArtistsBy, getAlbumsBy, getSongsBy } from "../../api"
 import MusicRow from "../MusicRow/MusicRow";
 import style from "./MusicHome.module.css"
 
+const musicFromLocalStorage = JSON.parse(localStorage.getItem('music') || '[]')
+
 const MusicHome = () => {
 
-    const [albums, setAlbums] = useState(null)
-    const [artists, setArtists] = useState(null)
-    const [songs, setSongs] = useState(null)
+    const [music, setMusic] = useState(musicFromLocalStorage)
 
-    const music = useSelector((state) => state.music);
+    //const music = useSelector((state) => state.music);
     const dispatch = useDispatch()
     
 
@@ -24,23 +24,15 @@ const MusicHome = () => {
     }
 
     useEffect(() => {
-        
+        localStorage.setItem('music', JSON.stringify(music))
+    }, [music])
+
+    useEffect(() => {
         fetchMusic().then(response => {
-            
-          setAlbums(response.albums)
-          setArtists(response.artists)
-          setSongs(response.songs)
-        
-          dispatch(addManyAlbums(response.albums));
-          dispatch(addManyArtists(response.artists));
-          dispatch(addManySongs(response.songs));
-          
-          
+            setMusic(response)
         })
         return () => {
-          setAlbums(null)
-          setArtists(null)
-          setSongs(null)
+          setMusic(null)
         }
     }, [])
 
@@ -50,9 +42,9 @@ const MusicHome = () => {
     return (
         <React.Fragment>
         <div className={style.MusicHome}>
-            <MusicRow mainTitle={"Recently Added Songs"} data={songs} musicType={"songs"}/>
-            <MusicRow mainTitle={"Latest Album Releases"} data={albums} musicType={"albums"}/>
-            <MusicRow mainTitle={"Top Artists"} data={artists} musicType={"artists"}/>
+            {music && (<MusicRow mainTitle={"Recently Added Songs"} data={music.songs} musicType={"songs"}/>)}
+            {music && (<MusicRow mainTitle={"Latest Album Releases"} data={music.albums} musicType={"albums"}/>)}
+            {music && (<MusicRow mainTitle={"Top Artists"} data={music.artists} musicType={"artists"}/>)}
         </div>
         </React.Fragment>
     )

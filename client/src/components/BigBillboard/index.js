@@ -1,30 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { getBillboardItem } from "../../api"
-import PlayerContext from "../Player/context"
+import { useSharedState } from "../../hooks/useSharedState"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-
+import useSWR from 'swr'
 
 function BigBillboard() {
+    const { data: item } = useSWR(`${process.env.REACT_APP_HOMEHOST_BASE}/api/watch/billboard`)
+    const [playerItem, setPlayerItem] = useSharedState('playerContext')
 
-    const [item, setItem] = useState(null)
-    const { playerItem, setPlayerItem } = useContext(PlayerContext)
-
-    const fetchBillboardItem = async () => {
-        const item = await getBillboardItem()
-        return item
-    }
-
-    useEffect(() => {
-
-        fetchBillboardItem().then(item => {
-            setItem(item)
-        })
-        return () => setItem(null)
-
-    }, [])
-
-    
     return (
         item && (
         <div className="billboard-content-limits">
