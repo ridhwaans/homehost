@@ -4,12 +4,15 @@ import AlbumItem from "../Albums/AlbumItem/AlbumItem"
 import ArtistItem from "../Artists/ArtistItem/ArtistItem"
 import { SongItemMini } from "../Songs/SongItemMini/SongItemMini"
 import style from "./MusicRow.module.css"
+import { useSharedState } from "../../hooks/useSharedState"
 
-const MusicRow = ({ mainTitle, data, musicType, loadSong, currentSong, playPause }) => {
+const MusicRow = ({ mainTitle, data, musicType }) => {
+
+  const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
 
   const songClicked = (song) => {
     if (song.url_path || song.preview_url) {
-      loadSong(song);
+      setCurrentSong(song);
     }
   };
 

@@ -8,6 +8,7 @@ import { SongItem } from "./SongItem/SongItem";
 import { FastAverageColor } from "fast-average-color";
 import style from "./Songs.module.css";
 import Time from "../../assets/AlbumDetail/Time";
+import { useSharedState } from "../../hooks/useSharedState"
 
 const Songs = () => {
     const location = useLocation()
@@ -17,8 +18,7 @@ const Songs = () => {
     const [album, setAlbum] = useState(null);
     const coverRef = useRef(null);
 
-    const loadSong = (song) => {}
-    const currentSong = null;
+    const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
 
     useEffect(() => {
       loadAlbumDetails(id);
@@ -52,7 +52,7 @@ const Songs = () => {
 
     const songClicked = (song) => {
       if (song.url_path || song.preview_url) {
-        loadSong(song);
+        setCurrentSong(song);
       }
     };
 

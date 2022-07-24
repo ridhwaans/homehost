@@ -7,57 +7,119 @@ import Play from "../../assets/NowPlayingBar/Play";
 import Pause from "../../assets/NowPlayingBar/Pause";
 import Volume from "../../assets/NowPlayingBar/Volume";
 import VolumeMuted from "../../assets/NowPlayingBar/VolumeMuted";
+import { useSharedState } from "../../hooks/useSharedState"
 
-const NowPlayingBar = ({ playPause, song, playing }) => {
-  const [time, setTime] = useState(0);
-  const timeRef = useRef(null);
-  
-  const [volume, setVolume] = useState(70);
-  const volumeRef = useRef(null);
-  
-  const [progress, setProgress] = useState(0);
-  const [mute, setMute] = useState(false);
+const NowPlayingBar = () => {
+  // state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+
+  // references
+  const audioPlayer = useRef();   // reference our audio component
+  const progressBar = useRef();   // reference our progress bar
+  const animationRef = useRef();  // reference the animation
+  const volumeBar = useRef();  // reference our volume bar
+
+  const [currentSong, setCurrentSong] = useSharedState('currentSong')
 
   const barCallBack = useBar;
-  if (song && song.preview_url != null && song.url_path == null){
-    song.url_path = song.preview_url;
-    song.duration_ms = 30000;
+  if (currentSong && currentSong.preview_url != null && currentSong.url_path == null){
+    currentSong.url_path = currentSong.preview_url;
+    currentSong.duration_ms = 30000;
   }
 
-  const [play, { stop, isPlaying }] = useSound(song.url_path);
+  // if (!audioPlayer.current) return;
 
   useEffect(() => {
-    // Adjust time when progress bar is clicked
-    song && setTime((progress * song.duration_ms ) / 100);
-  }, [progress]);
+    if (!audioPlayer.current) return;
+    const seconds = Math.floor(audioPlayer.current.duration);
+    setDuration(seconds);
+    progressBar.current.max = seconds;
+  }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
+  
+  // useEffect(() => {
+  //   //Reset progress if the currentSong change
+  //   console.log(currentSong?.url_path)
+  //   setProgress(0);
+  //   setTime(0);
+  //   togglePlayPause()
+  // }, [currentSong?.url_path]);
 
-  useEffect(() => {
-    //Reset progress if the song change
-    setProgress(0);
-    setTime(0);
-  }, [song]);
+  // useEffect(() => {
+  //   if (volume < 5) {
+  //     setMute(true);
+  //   } else {
+  //     setMute(false);
+  //   }
+  // }, [volume]);
 
-  useEffect(() => {
-    if (volume < 5) {
-      setMute(true);
+  const calculateTime = (secs) => {
+    const minutes = Math.floor(secs / 60);
+    const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(secs % 60);
+    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${returnedMinutes}:${returnedSeconds}`;
+  }
+
+  const togglePlayPause = () => {
+    const prevValue = isPlaying;
+    setIsPlaying(!prevValue);
+    if (!prevValue) {
+      audioPlayer.current.play();
+      animationRef.current = requestAnimationFrame(whilePlaying)
     } else {
-      setMute(false);
+      audioPlayer.current.pause();
+      cancelAnimationFrame(animationRef.current);
     }
-  }, [volume]);
+    console.log(`currentSong is `)
+    console.log(currentSong)
+  }
 
-  if (!song) {
+  const whilePlaying = () => {
+    progressBar.current.value = audioPlayer.current.currentTime;
+    changePlayerCurrentTime();
+    animationRef.current = requestAnimationFrame(whilePlaying);
+  }
+
+  const changeRange = () => {
+    audioPlayer.current.currentTime = progressBar.current.value;
+    changePlayerCurrentTime();
+  }
+
+  const changePlayerCurrentTime = () => {
+    progressBar.current.style.setProperty('--seek-before-width', `${progressBar.current.value / duration * 100}%`)
+    setCurrentTime(progressBar.current.value);
+  }
+
+  const changeVolume = () => {
+    audioPlayer.current.volume = isMuted ? 0 : volumeBar.current.value;
+  }
+
+  const toggleMute = () => {
+    const prevValue = isMuted;
+    setIsMuted(!prevValue);
+    if (!prevValue) {
+      audioPlayer.current.volume = 0
+    } else {
+      audioPlayer.current.volume = 0.7
+    }
+  }
+
+  if (!currentSong) {
     return null;
   } else {
     return (    
         <div className={style.Player}>
-        <footer>
+          <footer>
           <div className={style.Song}>
             <div className={style.Img}>
-              <img src={song.album_image_url} alt="song" />
+              <img src={currentSong.album_image_url} alt="currentSong" />
             </div>
             <div className={style.Infos}>
-              <div className={style.Name}>{song.name}</div>
-              <div className={style.Artist}>{song.artists[0].name}</div>
+              <div className={style.Name}>{currentSong.name}</div>
+              <div className={style.Artist}>{currentSong.artists[0].name}</div>
             </div>
             <div className={style.Like}>
               <Like />
@@ -66,52 +128,54 @@ const NowPlayingBar = ({ playPause, song, playing }) => {
 
           <div className={style.Controls}>
             <div>
-              <button onClick={playPause}>
-                {playing ? <Pause /> : <Play />}
+              <button onClick={togglePlayPause}>
+                {isPlaying ? <Pause /> : <Play />}
               </button>
             </div>
             <div className={style.BarContainer}>
-              <div>{millisToMinutesAndSeconds(time)}</div>
-              <div
-                className={style.Wrapper}
-                onClick={(event) => barCallBack(event, timeRef, setProgress)}
-                ref={timeRef}
-              >
+              {/* {<div>{millisToMinutesAndSeconds(time)}</div>} */}
+              
+              {/* current time */}
+              <div className={style.currentTime}>{calculateTime(currentTime)}</div>
+      
+              {/* {<div className={style.Wrapper}>
                 <div className={style.Bar}>
-                  <div
-                    className={style.Progress}
-                    style={{ transform: `translateX(-${100 - progress}%)` }}
-                  />
+                  <input type="range" className={style.Progress} defaultValue="0" ref={progressBar} onChange={changeRange} />
                 </div>
-                <button style={{ left: `${progress}%` }} />
-              </div>
-              <div>{millisToMinutesAndSeconds(song.duration_ms)}</div>
+              </div>} */}
+
+               {/* progress bar */}
+               <div className={style.Wrapper}>
+                <div className={style.Bar}>
+                  <input type="range" className={style.progressBar} defaultValue="0" ref={progressBar} onChange={changeRange} />
+                </div>
+                </div>
+
+              {/* {<div>{millisToMinutesAndSeconds(currentSong.duration_ms)}</div>} */}
+              
+              {/* duration */}
+              <div className={style.duration}>{(duration && !isNaN(duration)) && calculateTime(duration)}</div>
+
             </div>
           </div>
+          
 
           <div className={style.Volume}>
             <div>
-              <button onClick={() => setMute(!mute)}>
-                {mute ? <VolumeMuted /> : <Volume />}
+              <button onClick={toggleMute}>
+                {isMuted ? <VolumeMuted /> : <Volume />}
               </button>
             </div>
-            <div
-              className={style.Wrapper}
-              onClick={(event) => barCallBack(event, volumeRef, setVolume)}
-              ref={volumeRef}
-            >
+
+            <div className={style.Wrapper}>
               <div className={style.Bar}>
-                <div
-                  className={style.Progress}
-                  style={{
-                    transform: `translateX(-${mute ? "100" : 100 - volume}%)`,
-                  }}
-                />
+                <input type="range" className={style.progressBar} defaultValue="70" ref={volumeBar} onChange={changeVolume} />
               </div>
-              <button style={{ left: `${mute ? "0" : volume}%` }} />
             </div>
+
           </div>
-        </footer>
+          </footer>
+          <audio ref={audioPlayer} src={`${process.env.REACT_APP_HOMEHOST_BASE}${currentSong.url_path}`} preload="metadata"></audio>
       </div>
     );
   }
