@@ -4,21 +4,19 @@
     z-index: 4;
     height: 90px;
     color: white;
-    display: flex;
     width: 100%;
     position: sticky;
     bottom: 0;
-}
-.Player footer {
     border-top: 1px solid #282828;
     padding: 0 16px;
     display: flex;
-    flex: 1;
+    justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
 }
-.Player .Song, .Player .Volume {
-    width: 30%;
-    min-width: 180px;
+
+.Player .Controls {
+    width: 40%;
 }
 .Song {
     display: flex;
@@ -49,7 +47,6 @@
     fill: white;
 }
 .Controls {
-    width: 40%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -76,33 +73,13 @@
     width: 100%;
     align-items: center;
 }
-.Controls .BarContainer div {
-    min-width: 40px;
-    text-align: center;
-    font-size: 11px;
-    font-weight: 400;
-    color: #b3b3b3;
-}
-.Controls .BarContainer .Wrapper {
-    width: 100%;
-}
-.Controls .BarContainer .Wrapper .Bar {
-    width: 100%;
-}
-.Controls .BarContainer .Wrapper .Bar .Progress {
-    transform: translateX(-100%);
-}
+
 .Volume {
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
-.Volume:hover .Bar .Progress {
-    background-color: #1db954;
-}
-.Volume:hover button {
-    opacity: 1;
-}
+
 .Volume button {
     display: flex;
     align-items: center;
@@ -117,93 +94,6 @@
     min-width: 32px;
     fill: currentcolor;
 }
-.Volume .Wrapper .Bar {
-    width: 100px;
-}
-.Volume .Wrapper .Bar .Progress {
-    transform: translateX(-20%);
-}
-.Wrapper {
-    height: 12px;
-    display: flex;
-    align-items: center;
-    position: relative;
-}
-.Wrapper:hover .Bar .Progress {
-    background-color: #1db954;
-}
-.Wrapper:hover button {
-    opacity: 1;
-}
-.Wrapper .Bar {
-    overflow: hidden;
-    border-radius: 4px;
-    height: 4px;
-    background-color: var(--bg-color);
-}
-.Wrapper .Bar .Progress {
-    border-radius: 4px;
-    background-color: var(--fg-color);
-    width: 100%;
-    height: 4px;
-}
-.Wrapper button {
-    background-color: #fff;
-    border: 0;
-    border-radius: 50%;
-    height: 12px;
-    width: 12px;
-    opacity: 0;
-    z-index: 100;
-    position: absolute;
-    left: 20%;
-    min-width: none;
-    margin-bottom: 0 !important;
-    margin-left: -6px;
-}
-
-/* NEW CSS */
-
-.audioPlayer {
-    --primary: #f40082;
-    --secondary: #ffd200;
-  
-    align-items: center;
-    display: flex;
-    width: 700px;
-  }
-  
-  .forwardBackward {
-    background: none;
-    border: none;
-    display: flex;
-    align-items: center;
-    font-family: monospace;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .forwardBackward:hover {
-    color: var(--primary);
-  }
-  
-  .playPause {
-    background: var(--primary);
-    border: none;
-    border-radius: 50%;
-    width: 75px;
-    height: 75px;
-    font-size: 32px;
-    color: var(--secondary);
-    display: flex;
-    justify-content: center;
-    align-items:center;
-  }
-  
-  .play {
-    position: relative;
-    left: 5px;
-  }
   
   .currentTime,
   .duration {
@@ -216,12 +106,12 @@
   }
   
   .progressBar {
-    --bar-bg: #ffe3d4;
+    --bar-bg: #535353;
     --seek-before-width: 0;
-    --seek-before-color: #ffc2a1;
-    --knobby: #3452a5;
-    --selectedKnobby: #26c9c3;
-  
+    --seek-before-color: #b3b3b3; /* #1db954; */
+    --knobby: #fff;
+    --selectedKnobby: #fff;
+    
     appearance: none;
     background: var(--bar-bg);;
     border-radius: 10px;
@@ -291,6 +181,7 @@
     margin: -2px 0 0 0;
     z-index: 3;
     box-sizing: border-box;
+    opacity: 0;
   }
   
   /* knobby while dragging - chrome and safari */
@@ -316,4 +207,13 @@
   .progressBar:active::-moz-range-thumb {
     transform: scale(1.2);
     background: var(--selectedKnobby);
+  }
+
+  .progressBar:hover::before {
+    opacity: 1;
+    background-color: #1db954;
+  }
+
+  .progressBar:hover::-webkit-slider-thumb {
+    opacity: 1;
   }

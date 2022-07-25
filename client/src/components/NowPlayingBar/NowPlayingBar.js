@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import useSound from 'use-sound';
 import { millisToMinutesAndSeconds, useBar } from "../../utils";
 import style from "./NowPlayingBar.module.css";
 import Like from "../../assets/NowPlayingBar/Like";
@@ -15,6 +14,7 @@ const NowPlayingBar = () => {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [currentVolume, setCurrentVolume] = useState(0.7);
 
   // references
   const audioPlayer = useRef();   // reference our audio component
@@ -30,30 +30,12 @@ const NowPlayingBar = () => {
     currentSong.duration_ms = 30000;
   }
 
-  // if (!audioPlayer.current) return;
-
   useEffect(() => {
     if (!audioPlayer.current) return;
     const seconds = Math.floor(audioPlayer.current.duration);
     setDuration(seconds);
     progressBar.current.max = seconds;
   }, [audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState]);
-  
-  // useEffect(() => {
-  //   //Reset progress if the currentSong change
-  //   console.log(currentSong?.url_path)
-  //   setProgress(0);
-  //   setTime(0);
-  //   togglePlayPause()
-  // }, [currentSong?.url_path]);
-
-  // useEffect(() => {
-  //   if (volume < 5) {
-  //     setMute(true);
-  //   } else {
-  //     setMute(false);
-  //   }
-  // }, [volume]);
 
   const calculateTime = (secs) => {
     const minutes = Math.floor(secs / 60);
@@ -94,7 +76,10 @@ const NowPlayingBar = () => {
   }
 
   const changeVolume = () => {
-    audioPlayer.current.volume = isMuted ? 0 : volumeBar.current.value;
+    audioPlayer.current.volume = isMuted ? 0 : volumeBar.current.value / 100;
+    volumeBar.current.style.setProperty('--seek-before-width', `${volumeBar.current.value}%`)
+    setCurrentVolume(volumeBar.current.value)
+    console.log(`volumeBar ${volumeBar.current.value}, currentVolume ${currentVolume}`)
   }
 
   const toggleMute = () => {
@@ -103,7 +88,7 @@ const NowPlayingBar = () => {
     if (!prevValue) {
       audioPlayer.current.volume = 0
     } else {
-      audioPlayer.current.volume = 0.7
+      audioPlayer.current.volume = currentVolume / 100
     }
   }
 
@@ -111,8 +96,9 @@ const NowPlayingBar = () => {
     return null;
   } else {
     return (    
-        <div className={style.Player}>
-          <footer>
+      <div className={style.Player}>
+
+          {/* Left */}
           <div className={style.Song}>
             <div className={style.Img}>
               <img src={currentSong.album_image_url} alt="currentSong" />
@@ -126,6 +112,7 @@ const NowPlayingBar = () => {
             </div>
           </div>
 
+          {/* Middle */}
           <div className={style.Controls}>
             <div>
               <button onClick={togglePlayPause}>
@@ -133,49 +120,23 @@ const NowPlayingBar = () => {
               </button>
             </div>
             <div className={style.BarContainer}>
-              {/* {<div>{millisToMinutesAndSeconds(time)}</div>} */}
-              
-              {/* current time */}
               <div className={style.currentTime}>{calculateTime(currentTime)}</div>
-      
-              {/* {<div className={style.Wrapper}>
-                <div className={style.Bar}>
-                  <input type="range" className={style.Progress} defaultValue="0" ref={progressBar} onChange={changeRange} />
-                </div>
-              </div>} */}
-
-               {/* progress bar */}
-               <div className={style.Wrapper}>
-                <div className={style.Bar}>
-                  <input type="range" className={style.progressBar} defaultValue="0" ref={progressBar} onChange={changeRange} />
-                </div>
-                </div>
-
-              {/* {<div>{millisToMinutesAndSeconds(currentSong.duration_ms)}</div>} */}
-              
-              {/* duration */}
+              <input type="range" className={style.progressBar} defaultValue="0" ref={progressBar} onChange={changeRange} />
               <div className={style.duration}>{(duration && !isNaN(duration)) && calculateTime(duration)}</div>
-
             </div>
           </div>
-          
 
+          {/* Right */}
           <div className={style.Volume}>
             <div>
               <button onClick={toggleMute}>
                 {isMuted ? <VolumeMuted /> : <Volume />}
               </button>
             </div>
-
-            <div className={style.Wrapper}>
-              <div className={style.Bar}>
-                <input type="range" className={style.progressBar} defaultValue="70" ref={volumeBar} onChange={changeVolume} />
-              </div>
-            </div>
-
+            <input type="range" className={style.progressBar} defaultValue="70" ref={volumeBar} onChange={changeVolume} />
           </div>
-          </footer>
-          <audio ref={audioPlayer} src={`${process.env.REACT_APP_HOMEHOST_BASE}${currentSong.url_path}`} preload="metadata"></audio>
+
+        <audio ref={audioPlayer} src={`${process.env.REACT_APP_HOMEHOST_BASE}${currentSong.url_path}`} preload="metadata"></audio>
       </div>
     );
   }
