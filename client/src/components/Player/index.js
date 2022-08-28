@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { useSharedState } from "../../hooks/useSharedState"
-import ReactNetflixPlayer from "react-netflix-player";
+import { ReactNetflixPlayer } from "react-netflix-player";
 
   
 const Player = () => {

@@ -7,10 +7,6 @@
 /server/prisma/data/*.db
 /server/prisma/data/*.db-journal
 
-# lock files
-package-lock.json
-yarn.lock
-
 # dependencies
 node_modules/
 
@@ -30,5 +26,3 @@ node_modules/
 .env.production.local
 
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
