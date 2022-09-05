@@ -10,16 +10,10 @@ export const SongItemMini = ({
   song,
   artists,
   index,
-  songClicked,
+  changeSong,
   current,
 }) => {
-
-  // console.log("song is")
-  // console.log(song)
   
-  // console.log("artists is")
-  // console.log(artists)
-
   return (
     <React.Fragment>
       {song && (
@@ -28,7 +22,7 @@ export const SongItemMini = ({
             style.Item,
             (song.url_path || song.preview_url) ? style.Enabled : style.Disabled,
           ].join(" ")}
-          onClick={songClicked}
+          onClick={() => changeSong(song)}
         >
 
           <div className={style.Title}>

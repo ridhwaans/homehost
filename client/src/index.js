@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppProvider } from './contexts/context'
 
 ReactDOM.render(
-        <App/>,
+    <AppProvider>
+        <App/>
+    </AppProvider>,
     document.getElementById('root')
     );
 

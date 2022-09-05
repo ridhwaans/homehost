@@ -1,5 +1,7 @@
 import axios from "axios"
 
+export const fetcher = (url) => fetch(`${process.env.REACT_APP_HOMEHOST_BASE}/api${url}`).then((res) => res.json());
+
 export async function searchMoviesBy(text, page = 1) {
 
     return await axios.get(`${process.env.REACT_APP_HOMEHOST_BASE}/api/watch/search?q=${text}`)

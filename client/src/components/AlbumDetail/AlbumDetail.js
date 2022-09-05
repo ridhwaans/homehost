@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
+
+import useSWR from 'swr'
+import { fetcher } from "../../api"
 
 import { findTotalDurationMillis, millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
@@ -13,14 +15,9 @@ import { useSharedState } from "../../hooks/useSharedState"
 
 const AlbumDetail = () => {
     const { id } = useParams();
-    const [album, setAlbum] = useState(null);
     const coverRef = useRef(null);
-
+    const { data: album } = useSWR(`/music/albums/${id}`, fetcher);
     const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
-
-    useEffect(() => {
-      loadAlbumDetails(id);
-    }, [id]);
   
     useEffect(() => {
       if (coverRef.current) {
@@ -41,12 +38,6 @@ const AlbumDetail = () => {
           });
       }
     }, [album]);
-
-    const loadAlbumDetails = async (albumId) => {
-      await getAlbumInformation(albumId).then((data) => {
-        setAlbum(data);
-      });
-    };
 
     const songClicked = (song) => {
       if (song.url_path || song.preview_url) {

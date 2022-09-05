@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { connect } from "react-redux";
-import { useParams, useLocation } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 import { millisToEnglishWords } from "../../utils";
-import { getAlbumInformation } from "../../api"
 import { SongItem } from "./SongItem/SongItem";
 import { FastAverageColor } from "fast-average-color";
 import style from "./Songs.module.css";
@@ -13,17 +10,9 @@ import { useSharedState } from "../../hooks/useSharedState"
 const Songs = () => {
     const location = useLocation()
     const { data } = location.state
-
-    const { id } = useParams();
-    const [album, setAlbum] = useState(null);
     const coverRef = useRef(null);
-
     const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
 
-    useEffect(() => {
-      loadAlbumDetails(id);
-    }, [id]);
-  
     useEffect(() => {
       if (coverRef.current) {
         coverRef.current.crossOrigin = "Anonymous";
@@ -42,13 +31,7 @@ const Songs = () => {
             console.log(err);
           });
       }
-    }, [album]);
-
-    const loadAlbumDetails = async (albumId) => {
-      await getAlbumInformation(albumId).then((data) => {
-        setAlbum(data);
-      });
-    };
+    });
 
     const songClicked = (song) => {
       if (song.url_path || song.preview_url) {

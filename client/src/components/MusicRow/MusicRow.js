@@ -5,23 +5,11 @@ import ArtistItem from "../Artists/ArtistItem/ArtistItem"
 import { SongItemMini } from "../Songs/SongItemMini/SongItemMini"
 import style from "./MusicRow.module.css"
 import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 const MusicRow = ({ mainTitle, data, musicType }) => {
+  const { playerState, changeSong } = useGlobalContext();  
 
-  //const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
-  const [playerState, setPlayerState] = useSharedState('player')
-
-  const songClicked = (song) => {
-    if (song.url_path || song.preview_url) {
-      //setCurrentSong(song);
-      setPlayerState(playerState => ({
-        ...playerState, currentSong: song, idOfSong: song.id
-      }));
-    }
-  };
-
-  //console.log("MusicRow data is")
-  //console.log(data)
     return (
       <React.Fragment>
         <div className={style.MusicRow}>
@@ -45,7 +33,7 @@ const MusicRow = ({ mainTitle, data, musicType }) => {
                 artists={item.artists}
                 index={index}
                 current={playerState?.currentSong && item.id === playerState.currentSong.id ? true : false}
-                songClicked={() => songClicked(item)}
+                changeSong={changeSong}
                 /> })}
           </div>}
 
