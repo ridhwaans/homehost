@@ -1,50 +1,38 @@
-import React from "react";
-import NowPlaying from "../../../assets/AlbumDetail/NowPlaying.gif";
-import Play from "../../../assets/NowPlayingBar/Play";
-import Pause from "../../../assets/NowPlayingBar/Pause";
-import { millisToMinutesAndSeconds, formatDate } from "../../../utils";
-import style from "./SongItemMini.module.css";
+import React from 'react';
+import Play from '../../../assets/NowPlayingBar/Play';
+import Pause from '../../../assets/NowPlayingBar/Pause';
+import { millisToMinutesAndSeconds, formatDate } from '../../../utils';
+import style from './SongItemMini.module.css';
 
-
-export const SongItemMini = ({
-  song,
-  songClicked,
-  current
-}) => {
-  
+export const SongItemMini = ({ song, songClicked, current }) => {
   return (
     <React.Fragment>
       {song && (
         <div
           className={[
             style.Item,
-            (song.url_path || song.preview_url) ? style.Enabled : style.Disabled,
-          ].join(" ")}
+            song.url_path || song.preview_url ? style.Enabled : style.Disabled,
+          ].join(' ')}
           onClick={songClicked}
         >
-
           <div className={style.Title}>
             <div className={style.ImageContainer}>
-                <img src={song.album_image_url} alt="cover img"/>
-                <button>
-                    {current ? <Pause/> : <Play/>} 
-                </button>
+              <img src={song.album_image_url} alt="cover img" />
+              <button>{current ? <Pause /> : <Play />}</button>
             </div>
             <div className={style.NameContainer}>
               <div
                 className={style.Name}
-                style={current ? { color: "#1db954" } : { color: "white" }}
+                style={current ? { color: '#1db954' } : { color: 'white' }}
               >
                 <span>{song.name}</span>
               </div>
-              {song.explicit && (
-                <span className={style.Explicit}>e</span>
-              )}
+              {song.explicit && <span className={style.Explicit}>e</span>}
               <span
                 className={[
                   style.Artist,
                   song.explicit ? style.Artist_sub : style.Artist_badg,
-                ].join(", ")}
+                ].join(', ')}
               >
                 {song.artists[0].name}
               </span>

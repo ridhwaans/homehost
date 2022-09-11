@@ -1,20 +1,20 @@
 const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apl",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apl',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
-  
+
 export const formatDate = (dateString) => {
-  const arr = dateString.split("-");
+  const arr = dateString.split('-');
 
   const year = arr[0];
   const month = months[parseInt(arr[1]) - 1];
@@ -26,8 +26,8 @@ export const formatDate = (dateString) => {
 export function millisToMinutesAndSeconds(millis) {
   var minutes = Math.floor(millis / 60000);
   var seconds = parseInt(((millis % 60000) / 1000).toFixed(0));
-  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-};
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+}
 
 export const useBar = (event, elmRef, callback) => {
   if (elmRef.current) {
@@ -35,8 +35,11 @@ export const useBar = (event, elmRef, callback) => {
     const left = elmRef.current.getBoundingClientRect().left;
 
     const { screen } = window;
-    const { availLeft, availTop } = screen;
-    const hostScreenX=event.screenX-availLeft+ (availLeft ? (screen.width - screen.availWidth) : 0);
+    const { availLeft } = screen;
+    const hostScreenX =
+      event.screenX -
+      availLeft +
+      (availLeft ? screen.width - screen.availWidth : 0);
     const pos = hostScreenX; //event.screenX;
 
     const scale = right - left;
@@ -56,21 +59,24 @@ export const millisToEnglishWords = (ms) => {
   m = m % 60;
   d = Math.floor(h / 24);
   h = h % 24;
-  let res = { days: d, hours: h, min: m, sec: s }
-  res = Object.entries(res).filter(piece => piece[1] != 0).map(piece => `${piece[1]} ${piece[0]}`).join(", ");
+  let res = { days: d, hours: h, min: m, sec: s };
+  res = Object.entries(res)
+    .filter((piece) => piece[1] !== 0)
+    .map((piece) => `${piece[1]} ${piece[0]}`)
+    .join(', ');
   return res;
 };
 
 export const findTotalDurationMillis = (items) => {
   const sum = (acc, item) => {
     let add = 0;
-    if (item.preview_url != null){
+    if (item.preview_url != null) {
       add = 30;
     }
-    if (item.url_path != null){
+    if (item.url_path != null) {
       add = item.duration_ms;
     }
     return acc + add;
-  }
-  return items.reduce((acc, item) => sum(acc,item), 0)
+  };
+  return items.reduce((acc, item) => sum(acc, item), 0);
 };

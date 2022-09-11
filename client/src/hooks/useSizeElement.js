@@ -1,19 +1,16 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react';
 
 const useSizeElement = () => {
-    const elementRef = useRef(null);
-    const [width, setWidth] = useState(0);
+  const elementRef = useRef(null);
+  const [width, setWidth] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
+    if (elementRef.current) {
+      setWidth(elementRef.current.clientWidth);
+    }
+  }, [elementRef.current]);
 
-        if (elementRef.current) {
-
-            setWidth(elementRef.current.clientWidth);
-        }
-
-    }, [elementRef.current]);
-
-    return { width, elementRef };
-}
+  return { width, elementRef };
+};
 
 export default useSizeElement;

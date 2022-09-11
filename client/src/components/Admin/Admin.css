@@ -1,144 +1,148 @@
 @font-face {
-    font-family: "Netflix Sans";
-    font-weight: 100;
-    font-display: optional;
-    src: url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff2) format('woff2'), url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff) format('woff')
+  font-family: 'Netflix Sans';
+  font-weight: 100;
+  font-display: optional;
+  src: url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff2)
+      format('woff2'),
+    url(https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Th.woff)
+      format('woff');
 }
 
 pre {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 pre code {
-    background-color: #eee;
-    border: 1px solid #999;
-    display: block;
-    padding: 20px;
-    color: black;
-    font-family: monospace;
-    font-size: 120%;
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  padding: 20px;
+  color: black;
+  font-family: monospace;
+  font-size: 120%;
 }
 
 .admin-html-and-body {
-    margin: 0;
-    font-family: "Netflix Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background: #f3f3f3;
+  margin: 0;
+  font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f3f3f3;
 }
 
 .responsive-account-container {
-    display: block;
-    width: 90%;
-    font-size: 1em;
-    min-width: 300px;
-    min-height: 400px;
-    position: relative;
-    color: #333;
-    -webkit-tap-highlight-color: transparent;
-    margin: 0 auto;
+  display: block;
+  width: 90%;
+  font-size: 1em;
+  min-width: 300px;
+  min-height: 400px;
+  position: relative;
+  color: #333;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0 auto;
 }
 
 .account-section {
-    margin-bottom: 5px;
-    background: #fff;
-    border: 1px solid #999;
-    padding: 10px;
-    position: relative;
+  margin-bottom: 5px;
+  background: #fff;
+  border: 1px solid #999;
+  padding: 10px;
+  position: relative;
 }
 
 .account-section-heading {
-    font-size: 1.14em;
-    color: #757575;
-    font-weight: 400;
-    padding: 0;
-    margin-top: 15px;
-    margin-bottom: 20px;
+  font-size: 1.14em;
+  color: #757575;
+  font-weight: 400;
+  padding: 0;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 .account-section-heading {
-    font-size: 1.25em;
-    font-weight: 400;
+  font-size: 1.25em;
+  font-weight: 400;
 }
 
 .account-section-content {
-    position: relative;
+  position: relative;
 }
 
 .account-section-item {
-    color: #757575;
+  color: #757575;
 }
 
 .account-section-item {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 @media only screen and (min-width: 740px) {
-    .responsive-account-container {
-        width: 95%;
-        max-width: 1024px;
-        font-size: 1em;
-    }
+  .responsive-account-container {
+    width: 95%;
+    max-width: 1024px;
+    font-size: 1em;
+  }
 }
 
 @media screen and (min-width: 740px) {
-    h1 {
-        font-size: 2.15em;
-        margin: 0 0 0.55em;
-    }
+  h1 {
+    font-size: 2.15em;
+    margin: 0 0 0.55em;
+  }
 }
 
 @media only screen and (min-width: 500px) {
-    .account-section {
-        border-top: 1px solid #999;
-        border-right: none;
-        border-bottom: none;
-        border-left: none;
-        padding: 0;
-        background-color: inherit;
-        min-height: 4.5em;
-    }
+  .account-section {
+    border-top: 1px solid #999;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+    padding: 0;
+    background-color: inherit;
+    min-height: 4.5em;
+  }
 }
 
 @media only screen and (min-width: 740px) {
-    .account-section-header {
-        width: 270px;
-        position: absolute;
-        left: 0;
-        padding-right: 10px;
-        z-index: 2;
-    }
+  .account-section-header {
+    width: 270px;
+    position: absolute;
+    left: 0;
+    padding-right: 10px;
+    z-index: 2;
+  }
 }
 
 @media only screen and (min-width: 500px) {
-    .account-section-heading {
-        font-size: 1.125em;
-    }
+  .account-section-heading {
+    font-size: 1.125em;
+  }
 }
 
 @media only screen and (min-width: 740px) {
-    .account-section-content {
-        margin-top: 15px;
-        padding-left: 270px;
-    }
+  .account-section-content {
+    margin-top: 15px;
+    padding-left: 270px;
+  }
 }
 
 @media only screen and (min-width: 500px) {
-    .account-section-group {
-        float: left;
-        width: 50%;
-        background-color: inherit;
-    }
+  .account-section-group {
+    float: left;
+    width: 50%;
+    background-color: inherit;
+  }
 }
 
 @media only screen and (min-width: 740px) {
-    .account-section-item {
-        margin-bottom: 10px;
-    }
+  .account-section-item {
+    margin-bottom: 10px;
+  }
 }
 
 /* MEDIA WIZARD */
@@ -146,72 +150,67 @@ pre code {
 /* Style the tab */
 
 .tab {
-    float: left;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-    /* width: 30%; */
-    height: 600px;
-    overflow-y: scroll;
+  float: left;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  /* width: 30%; */
+  height: 600px;
+  overflow-y: scroll;
 }
-
 
 /* Style the buttons inside the tab */
 
 .tab button {
-    display: flex;
-    align-items: center;
-    background-color: inherit;
-    color: black;
-    padding: 22px 16px;
-    width: 100%;
-    border: none;
-    outline: none;
-    text-align: left;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 17px;
+  display: flex;
+  align-items: center;
+  background-color: inherit;
+  color: black;
+  padding: 22px 16px;
+  width: 100%;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 17px;
 }
-
 
 /* Change background color of buttons on hover */
 
 .tab button:hover {
-    background-color: #ddd;
+  background-color: #ddd;
 }
-
 
 /* Create an active/current "tab button" class */
 
 .tab button.active {
-    background-color: #ccc;
+  background-color: #ccc;
 }
-
 
 /* Style the icon inside the button */
 
 .tab .icon {
-    padding: 5px;
-    font-size: 3rem;
+  padding: 5px;
+  font-size: 3rem;
 }
-
 
 /* Style the tab content */
 
 .tabcontent {
-    float: left;
-    padding: 12px 12px;
-    border: 1px solid #ccc;
-    /* width: 70%; */
-    border-left: none;
-    height: 600px;
-    overflow-y: scroll;
+  float: left;
+  padding: 12px 12px;
+  border: 1px solid #ccc;
+  /* width: 70%; */
+  border-left: none;
+  height: 600px;
+  overflow-y: scroll;
 }
 
 .search-result-item {
-    display: flex;
-    padding: 5px 0px;
+  display: flex;
+  padding: 5px 0px;
 }
 
 .search-result-item div {
-    padding-left: 10px;
+  padding-left: 10px;
 }

@@ -1,20 +1,15 @@
-import React from "react";
-import style from "./DiscHeader.module.css";
-import Disc from "../../../assets/AlbumDetail/Disc";
+import React from 'react';
+import style from './DiscHeader.module.css';
+import Disc from '../../../assets/AlbumDetail/Disc';
 
-export const DiscHeader = ({number}) => {
+export const DiscHeader = ({ number }) => {
   return (
     <React.Fragment>
-      {(
-        <div
-          className={[
-            style.Item,
-             style.Enabled,
-          ].join(" ")}
-        >
+      {
+        <div className={[style.Item, style.Enabled].join(' ')}>
           <div className={style.Index}>
-            <span style={{ color: "white" }}>
-              <Disc/>
+            <span style={{ color: 'white' }}>
+              <Disc />
             </span>
           </div>
 
@@ -32,7 +27,7 @@ export const DiscHeader = ({number}) => {
             <button className={style.More}>...</button>
           </div>
         </div>
-      )}
+      }
     </React.Fragment>
   );
 };

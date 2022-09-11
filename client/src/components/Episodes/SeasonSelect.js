@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-function SeasonSelect({ items, onChange, isOpen = false, multiSelect = false }) {
+function SeasonSelect({
+  items,
+  onChange,
+  isOpen = false,
+  multiSelect = false,
+}) {
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState([]);
   const toggle = () => setOpen(!open);
@@ -29,20 +34,11 @@ function SeasonSelect({ items, onChange, isOpen = false, multiSelect = false }) 
     onChange(item.season_number);
   }
 
-  function isItemInSelection(item) {
-    if (
-      selection.some((current) => current.season_number === item.season_number)
-    ) {
-      return true;
-    }
-    return false;
-  }
-
   return (
-    <div className="custom-select" style={{ width: "220px" }}>
+    <div className="custom-select" style={{ width: '220px' }}>
       <div
         tabIndex={0}
-        className={"select-selected" + (open ? " select-arrow-active" : "")}
+        className={'select-selected' + (open ? ' select-arrow-active' : '')}
         role="button"
         onKeyPress={() => toggle(!open)}
         onClick={() => toggle(!open)}
@@ -55,11 +51,11 @@ function SeasonSelect({ items, onChange, isOpen = false, multiSelect = false }) 
             <div
               key={item.season_number}
               onClick={() => handleOnClick(item)}
-              className={"select-item"}
+              className={'select-item'}
             >
               {item.name}
               &nbsp;&nbsp;
-              <span className={"subitem-right"}>{`(${
+              <span className={'subitem-right'}>{`(${
                 item.episodes.length
               } Episode${item.episodes.length > 1 ? `s` : ``})`}</span>
             </div>

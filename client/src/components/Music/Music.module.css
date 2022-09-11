@@ -1,34 +1,37 @@
 .MusicBody {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #121212;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #121212;
 }
 
 code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 :root {
-    --color-secondary: #b3b3b3;
-    --bg-color: #535353;
-    --fg-color: #b3b3b3;
-    --green-color: #1db954;
-    --nav-bar-width: 232px;
+  --color-secondary: #b3b3b3;
+  --bg-color: #535353;
+  --fg-color: #b3b3b3;
+  --green-color: #1db954;
+  --nav-bar-width: 232px;
 }
 
 .App {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr auto;
-    gap: 0px 0px;
-    grid-template-areas:
-        "Sidebar Header"
-        "Sidebar Body"
-        "Player Player";
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 0px 0px;
+  grid-template-areas:
+    'Sidebar Header'
+    'Sidebar Body'
+    'Player Player';
 }
 .Error {
-    color: white;
-    text-align: center;
-    margin-top: 100px;
+  color: white;
+  text-align: center;
+  margin-top: 100px;
 }

@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 const Play = () => {
-    return (
-      <svg
+  return (
+    <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1em"
       width="1em"
@@ -10,6 +10,6 @@ const Play = () => {
     >
       <path d="M4.018 14L14.41 8 4.018 2z" />
     </svg>
-      );
+  );
 };
 export default Play;

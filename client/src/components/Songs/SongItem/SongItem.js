@@ -1,35 +1,26 @@
-import React from "react";
-import NowPlaying from "../../../assets/AlbumDetail/NowPlaying.gif";
-import Play from "../../../assets/NowPlayingBar/Play";
-import Pause from "../../../assets/NowPlayingBar/Pause";
-import { millisToMinutesAndSeconds, formatDate } from "../../../utils";
-import style from "../../AlbumDetail/SongItem/SongItem.module.css";
+import React from 'react';
+import NowPlaying from '../../../assets/AlbumDetail/NowPlaying.gif';
+import Play from '../../../assets/NowPlayingBar/Play';
+import Pause from '../../../assets/NowPlayingBar/Pause';
+import { millisToMinutesAndSeconds, formatDate } from '../../../utils';
+import style from '../../AlbumDetail/SongItem/SongItem.module.css';
 
-
-export const SongItem = ({
-  song,
-  artists,
-  index,
-  songClicked,
-  current,
-}) => {
+export const SongItem = ({ song, artists, index, songClicked, current }) => {
   return (
     <React.Fragment>
       {song && (
         <div
           className={[
             style.Item,
-            (song.url_path || song.preview_url) ? style.Enabled : style.Disabled,
-          ].join(" ")}
+            song.url_path || song.preview_url ? style.Enabled : style.Disabled,
+          ].join(' ')}
           onClick={songClicked}
         >
           <div className={style.Index}>
-            <span style={current ? { color: "#1db954" } : { color: "white" }}>
+            <span style={current ? { color: '#1db954' } : { color: 'white' }}>
               {current ? <img src={NowPlaying} alt="nowPlaying" /> : index + 1}
             </span>
-            <button>
-              {current ? <Pause/> : <Play/>} 
-            </button>
+            <button>{current ? <Pause /> : <Play />}</button>
           </div>
 
           <div className={style.Title}>
@@ -37,20 +28,18 @@ export const SongItem = ({
             <div className={style.NameContainer}>
               <div
                 className={style.Name}
-                style={current ? { color: "#1db954" } : { color: "white" }}
+                style={current ? { color: '#1db954' } : { color: 'white' }}
               >
                 <span>{song.name}</span>
               </div>
-              {song.explicit && (
-                <span className={style.Explicit}>e</span>
-              )}
+              {song.explicit && <span className={style.Explicit}>e</span>}
               <span
                 className={[
                   style.Artist,
                   song.explicit ? style.Artist_sub : style.Artist_badg,
-                ].join(", ")}
+                ].join(', ')}
               >
-                {artists.map(a => a.name).join(", ")}
+                {artists.map((a) => a.name).join(', ')}
               </span>
             </div>
           </div>

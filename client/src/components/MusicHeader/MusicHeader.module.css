@@ -2,7 +2,7 @@
   display: flex;
   height: 44px;
   padding: 16px;
-  transition: background-color .25s;
+  transition: background-color 0.25s;
   grid-area: Header;
   position: sticky;
   top: 0;
@@ -17,7 +17,7 @@
 }
 
 .BackForward > button {
-  background-color: rgba(0,0,0,.7); /*grey;*/
+  background-color: rgba(0, 0, 0, 0.7); /*grey;*/
   border: none;
   border-radius: 50%;
   color: #fff;
@@ -26,7 +26,6 @@
   width: 32px;
   margin-right: 16px;
 }
-
 
 .SearchBar {
   flex: 0.5;

@@ -1,77 +1,80 @@
 .Item {
-    height: 54px;
-    display: grid;
-    grid-template-columns: [index] 16px [first] 6fr [var1] 4fr [var2] 3fr [last] minmax(120px, 1fr);
-    grid-gap: 16px;
-    padding: 0 16px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16px;
-    color: #b3b3b3;
-    border-radius: 4px;
+  height: 54px;
+  display: grid;
+  grid-template-columns: [index] 16px [first] 6fr [var1] 4fr [var2] 3fr [last] minmax(
+      120px,
+      1fr
+    );
+  grid-gap: 16px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #b3b3b3;
+  border-radius: 4px;
 }
 .Item div {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 .Index {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 .Index span {
-    display: inline-block;
-    position: absolute;
+  display: inline-block;
+  position: absolute;
 }
 .Index button {
-    position: absolute;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    color: #fff;
-    display: none;
+  position: absolute;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #fff;
+  display: none;
 }
 .Title {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 .Title img {
-    height: 40px;
-    object-fit: cover;
-    margin-right: 16px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 16px;
 }
 .Title .NameContainer {
-    display: grid;
-    grid-template: "title title" "badges subtitle" / auto 1fr;
-    column-gap: 8px;
-    align-items: center;
-    height: 40px;
+  display: grid;
+  grid-template: 'title title' 'badges subtitle' / auto 1fr;
+  column-gap: 8px;
+  align-items: center;
+  height: 40px;
 }
 .Title .NameContainer span {
-    font-size: 14px;
-    font-weight: 400;
+  font-size: 14px;
+  font-weight: 400;
 }
 .Title .NameContainer .Name {
-    grid-area: title;
-    color: white;
+  grid-area: title;
+  color: white;
 }
 .Title .NameContainer .Name span {
-    font-size: 16px;
-    font-weight: 400;
+  font-size: 16px;
+  font-weight: 400;
 }
 .Length {
-    display: flex;
-    justify-self: end;
+  display: flex;
+  justify-self: end;
 }
 .Length .More {
-    background: transparent;
-    border: 0;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 0;
-    display: inline-block;
-    text-align: center;
-    align-items: flex-start;
-    opacity: 0;
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0;
+  display: inline-block;
+  text-align: center;
+  align-items: flex-start;
+  opacity: 0;
 }
 .Disabled {
-    cursor: not-allowed !important;
+  cursor: not-allowed !important;
 }
