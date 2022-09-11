@@ -13,9 +13,9 @@ const MusicHome = () => {
     return (
         <React.Fragment>
         <div className={style.MusicHome}>
-            <MusicRow mainTitle={"Recently Added Songs"} data={songs.data} musicType={"songs"}/>)
-            <MusicRow mainTitle={"Latest Album Releases"} data={albums.data} musicType={"albums"}/>)
-            <MusicRow mainTitle={"Top Artists"} data={artists.data} musicType={"artists"}/>)
+            <MusicRow mainTitle={"Recently Added Songs"} data={songs.data} musicType={"songs"}/>
+            <MusicRow mainTitle={"Latest Album Releases"} data={albums.data} musicType={"albums"}/>
+            <MusicRow mainTitle={"Top Artists"} data={artists.data} musicType={"artists"}/>
         </div>
         </React.Fragment>
     )

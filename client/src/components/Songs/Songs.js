@@ -5,13 +5,13 @@ import { SongItem } from "./SongItem/SongItem";
 import { FastAverageColor } from "fast-average-color";
 import style from "./Songs.module.css";
 import Time from "../../assets/AlbumDetail/Time";
-import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 const Songs = () => {
     const location = useLocation()
     const { data } = location.state
     const coverRef = useRef(null);
-    const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
+    const { playerState, changeSong } = useGlobalContext(); 
 
     useEffect(() => {
       if (coverRef.current) {
@@ -32,12 +32,6 @@ const Songs = () => {
           });
       }
     });
-
-    const songClicked = (song) => {
-      if (song.url_path || song.preview_url) {
-        setCurrentSong(song);
-      }
-    };
 
     return (
       <React.Fragment>
@@ -89,12 +83,9 @@ const Songs = () => {
 
               {data.map((item, index) => (
                 <SongItem
-                  key={item.id}
                   song={item}
-                  artists={item.artists}
-                  index={index}
-                  current={currentSong && item.id === currentSong.id ? true : false}
-                  songClicked={() => songClicked(item)}
+                  current={playerState.currentSong && item.id === playerState.currentSong.id ? true : false}
+                  songClicked={() => changeSong(item, data)}
                 />
               ))}
             </div>

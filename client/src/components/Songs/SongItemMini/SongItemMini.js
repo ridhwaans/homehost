@@ -8,10 +8,8 @@ import style from "./SongItemMini.module.css";
 
 export const SongItemMini = ({
   song,
-  artists,
-  index,
-  changeSong,
-  current,
+  songClicked,
+  current
 }) => {
   
   return (
@@ -22,7 +20,7 @@ export const SongItemMini = ({
             style.Item,
             (song.url_path || song.preview_url) ? style.Enabled : style.Disabled,
           ].join(" ")}
-          onClick={() => changeSong(song)}
+          onClick={songClicked}
         >
 
           <div className={style.Title}>
@@ -48,7 +46,7 @@ export const SongItemMini = ({
                   song.explicit ? style.Artist_sub : style.Artist_badg,
                 ].join(", ")}
               >
-                {artists[0].name}
+                {song.artists[0].name}
               </span>
             </div>
           </div>

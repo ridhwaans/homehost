@@ -11,14 +11,14 @@ import { SongItem } from "./SongItem/SongItem";
 import { FastAverageColor } from "fast-average-color";
 import style from "./AlbumDetail.module.css";
 import Time from "../../assets/AlbumDetail/Time";
-import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 const AlbumDetail = () => {
     const { id } = useParams();
     const coverRef = useRef(null);
     const { data: album } = useSWR(`/music/albums/${id}`, fetcher);
-    const [currentSong, setCurrentSong] = useSharedState('currentSong', '')
-  
+    const { playerState, changeSong } = useGlobalContext(); 
+
     useEffect(() => {
       if (coverRef.current) {
         coverRef.current.crossOrigin = "Anonymous";
@@ -38,12 +38,6 @@ const AlbumDetail = () => {
           });
       }
     }, [album]);
-
-    const songClicked = (song) => {
-      if (song.url_path || song.preview_url) {
-        setCurrentSong(song);
-      }
-    };
 
     const discOne = album && album.songs && album.songs.filter(item => item.disc_number == 1)
     const discTwo = album && album.songs && album.songs.filter(item => item.disc_number == 2)
@@ -102,22 +96,18 @@ const AlbumDetail = () => {
               {discOne.length > 0 && discTwo.length > 0 && (<DiscHeader number={1}/>)}
               {discOne.map((item, index) => (
                 <SongItem
-                  key={item.id}
                   song={item}
-                  artists={item.artists}
-                  current={currentSong && item.id === currentSong.id ? true : false}
-                  songClicked={() => songClicked(item)}
+                  current={playerState.currentSong && item.id === playerState.currentSong.id ? true : false}
+                  songClicked={() => changeSong(item.id, album.songs)}
                 />
               ))}
 
               {discTwo.length > 0 && (<DiscHeader number={2}/>)}
               {discTwo.map((item, index) => (
                 <SongItem
-                  key={item.id}
                   song={item}
-                  artists={item.artists}
-                  current={currentSong && item.id === currentSong.id ? true : false}
-                  songClicked={() => songClicked(item)}
+                  current={playerState.currentSong && item.id === playerState.currentSong.id ? true : false}
+                  songClicked={() => changeSong(item.id, album.songs)}
                 />
               ))}
 

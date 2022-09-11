@@ -4,19 +4,22 @@ import style from "./NowPlayingBar.module.css";
 import Like from "../../assets/NowPlayingBar/Like";
 import Play from "../../assets/NowPlayingBar/Play";
 import Pause from "../../assets/NowPlayingBar/Pause";
+import Previous from "../../assets/NowPlayingBar/Previous";
+import Next from "../../assets/NowPlayingBar/Next";
+import Shuffle from "../../assets/NowPlayingBar/Shuffle";
+import {Repeat, RepeatOne} from "../../assets/NowPlayingBar/Repeat";
 import Volume from "../../assets/NowPlayingBar/Volume";
 import VolumeMuted from "../../assets/NowPlayingBar/VolumeMuted";
 import { useSharedState } from "../../hooks/useSharedState"
 import { useGlobalContext } from '../../contexts/context'
 
 const NowPlayingBar = () => {
-  const { audioPlayer, progressBar, volumeBar, playerState, togglePlayPause, toggleMute, changeVolume, changeProgress, calculateTime } = useGlobalContext();
-
-  playerState && console.log(`currentSong is ${playerState.currentSong?.name}, idOfSong is ${playerState.idOfSong}`)
+  const { audioPlayer, progressBar, volumeBar, playerState, togglePlayPause, previousSong, nextSong, toggleMute, changeVolume, changeProgress, calculateTime, REPEAT_STATES, toggleRepeat, toggleShuffle } = useGlobalContext();
 
   if (!playerState.currentSong) {
     return null;
   } else {
+
     return (    
       <div className={style.Player}>
 
@@ -35,10 +38,18 @@ const NowPlayingBar = () => {
           </div>
 
           {/* Middle */}
-          <div className={style.Controls}>
-            <div>
-              <button onClick={togglePlayPause}>
+          <div className={style.Middle}>
+            <div className={style.Controls}>
+              <button className={`${style.iconButton} ${playerState.shuffle ? style.activeIcon : ""}`} onClick={toggleShuffle}>
+                <Shuffle/>
+              </button>
+              <button className={style.button} onClick={previousSong}><Previous/></button>
+              <button className={style.playButton} onClick={togglePlayPause}>
                 {playerState.isPlaying ? <Pause /> : <Play />}
+              </button>
+              <button className={style.button} onClick={nextSong}><Next/></button>
+              <button className={`${style.iconButton} ${playerState.repeat !== REPEAT_STATES.REPEAT_OFF ? style.activeIcon : ""}`} onClick={toggleRepeat}>
+                { playerState.repeat != REPEAT_STATES.REPEAT_ONE ? <Repeat/> : <RepeatOne/> }
               </button>
             </div>
             <div className={style.BarContainer}>

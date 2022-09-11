@@ -15,9 +15,6 @@
     box-sizing: border-box;
 }
 
-.Player .Controls {
-    width: 40%;
-}
 .Song {
     display: flex;
     flex-direction: row;
@@ -46,53 +43,96 @@
     height: 16px;
     fill: white;
 }
-.Controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+.Middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.Controls button {
-    border: none;
-    color: #181818;
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    margin-bottom: 12px;
+
+.Player .Middle {
+  width: 40%;
 }
-.Controls button:hover {
-    transform: scale(1.06);
-    transition: none 33ms cubic-bezier(0.3, 0, 0, 1);
-    transition-property: all;
+
+.Controls{
+  width: 224px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
-.Controls .BarContainer {
+
+.Controls div button svg{
+  fill: black !important;
+}
+.button{
+  border: 0;
+  background: transparent;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button svg{
+  font-size: 16px;
+  fill: hsla(0,0%,100%,.7);
+  color: hsla(0,0%,100%,.7);
+}
+
+.Controls svg:hover{
+  fill: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+}
+
+.iconButton{
+  border: 0;
+  background: transparent;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton svg{
+  font-size: 16px;
+  fill: hsla(0,0%,100%,.7);
+  color: hsla(0,0%,100%,.7);
+}
+.iconButton:hover svg{
+  fill: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+}
+
+.activeIcon svg{
+  fill: #1db954 !important;
+  color: #1db954 !important;
+}
+
+.playButton{
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  color: #000;
+  border: none;
+  background-color: #fff;
+  padding: 0;
+  transition: .2s;
+}
+.playButton:hover{
+  transform: scale(1.1);
+}
+.playButton svg{
+  fill: #000 !important;
+}
+
+.Middle .BarContainer {
     display: flex;
     width: 100%;
     align-items: center;
-}
-
-.Volume {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.Volume button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    border: none;
-    color: #b3b3b3;
-    height: 32px;
-    width: 32px;
-}
-.Volume button svg {
-    min-width: 32px;
-    fill: currentcolor;
 }
   
   .currentTime,
@@ -217,3 +257,25 @@
   .progressBar:hover::-webkit-slider-thumb {
     opacity: 1;
   }
+
+
+  .Volume {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.Volume button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    color: #b3b3b3;
+    height: 32px;
+    width: 32px;
+}
+.Volume button svg {
+    min-width: 32px;
+    fill: currentcolor;
+}

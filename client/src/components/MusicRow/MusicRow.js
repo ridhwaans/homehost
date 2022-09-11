@@ -28,12 +28,9 @@ const MusicRow = ({ mainTitle, data, musicType }) => {
           {(musicType === "songs") && <div className={style.SongItemsContainer}>
             {data && data.map((item, index) => {
               return <SongItemMini
-                key={item.id}
                 song={item}
-                artists={item.artists}
-                index={index}
                 current={playerState?.currentSong && item.id === playerState.currentSong.id ? true : false}
-                changeSong={changeSong}
+                songClicked={() => changeSong(item.id, data)}
                 /> })}
           </div>}
 

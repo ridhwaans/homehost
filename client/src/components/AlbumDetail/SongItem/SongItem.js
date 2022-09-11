@@ -8,9 +8,8 @@ import style from "./SongItem.module.css";
 
 export const SongItem = ({
   song,
-  artists,
   songClicked,
-  current,
+  current
 }) => {
   return (
     <React.Fragment>
@@ -49,7 +48,7 @@ export const SongItem = ({
                   song.explicit ? style.Artist_sub : style.Artist_badg,
                 ].join(", ")}
               >
-                {artists.map(a => a.name).join(", ")}
+                {song.artists.map(a => a.name).join(", ")}
               </span>
             </div>
           </div>

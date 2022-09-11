@@ -1,8 +1,14 @@
 import React from 'react'
 const Pause = () => {
-    return (<svg role="img" height="16" width="16" viewBox="0 0 16 16">
-      <path fill="none" d="M0 0h16v16H0z"></path>
-      <path d="M3 2h3v12H3zM10 2h3v12h-3z"></path>
-    </svg>);
+    return (
+      <svg 
+      height=".7em" 
+      viewBox="-45 0 327 327" 
+      width=".7em" 
+      xmlns="http://www.w3.org/2000/svg"
+    >
+        <path d="m158 0h71c4.417969 0 8 3.582031 8 8v311c0 4.417969-3.582031 8-8 8h-71c-4.417969 0-8-3.582031-8-8v-311c0-4.417969 3.582031-8 8-8zm0 0"/><path d="m8 0h71c4.417969 0 8 3.582031 8 8v311c0 4.417969-3.582031 8-8 8h-71c-4.417969 0-8-3.582031-8-8v-311c0-4.417969 3.582031-8 8-8zm0 0"/>
+    </svg>
+      );
 };
 export default Pause;

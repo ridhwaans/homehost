@@ -5,22 +5,31 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
 
+  const REPEAT_STATES = Object.freeze({
+    REPEAT_OFF: 0,
+    REPEAT_ALL: 1,
+    REPEAT_ONE: 2
+  });
+
   // references
   const audioPlayer = useRef();   // reference our audio component
   const progressBar = useRef();   // reference our progress bar
   const animationRef = useRef();  // reference the animation
   const volumeBar = useRef();  // reference our volume bar
 
-  const [playerState, setPlayerState] = useSharedState('player',
+
+  const [playerState, setPlayerState] = useState(
     {
+      currentIndex: null,
+      playlist: [],
       currentSong: null,
-      idOfSong: null,
       isPlaying: false,
       currentTime: 0,
       duration: 0,
       isMuted: false,
       currentVolume: 0.7,
-      prevSong: null
+      repeat: REPEAT_STATES.REPEAT_OFF,
+      shuffle: false
     }
   );
 
@@ -32,7 +41,7 @@ const AppProvider = ({ children }) => {
       ...playerState, duration: seconds
     }));
     progressBar.current.max = seconds;
-    console.log("use effect A " + JSON.stringify(playerState))
+    //console.log("use effect A " + JSON.stringify(playerState))
 
   }, [playerState?.currentSong, audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState])
 
@@ -43,10 +52,16 @@ const AppProvider = ({ children }) => {
       audioPlayer.current.play();
       animationRef.current = requestAnimationFrame(whilePlaying)
     }
-    console.log("use effect B " + JSON.stringify(playerState))
+    //console.log("use effect B " + JSON.stringify(playerState))
 
-  }, [playerState?.idOfSong, audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState])
+  }, [playerState?.currentIndex, audioPlayer?.current?.loadedmetadata, audioPlayer?.current?.readyState])
 
+  useEffect(() => {
+    if (playerState.currentTime >= playerState.duration) {
+      nextSong()
+    }
+    //console.log("use effect C")
+  }, [playerState?.currentTime])
 
   const calculateTime = (secs) => {
     const minutes = Math.floor(secs / 60);
@@ -83,7 +98,7 @@ const AppProvider = ({ children }) => {
   }
 
   const changeCurrentTime = () => {
-    console.log(`progressBar.current.value / playerState.duration: ${progressBar.current.value} / ${playerState.duration}`)
+    //console.log(`progressBar.current.value / playerState.duration: ${progressBar.current.value} / ${playerState.duration}`)
     progressBar.current.style.setProperty('--seek-before-width', `${progressBar.current.value / playerState.duration * 100}%`)
     setPlayerState(playerState => ({
       ...playerState, currentTime: progressBar.current.value
@@ -96,7 +111,7 @@ const AppProvider = ({ children }) => {
     setPlayerState(playerState => ({
       ...playerState, currentVolume: volumeBar.current.value
     }));
-    console.log(`volumeBar.current.value is ${volumeBar.current.value}, currentVolume is ${playerState.currentVolume}`)
+    //console.log(`volumeBar.current.value is ${volumeBar.current.value}, currentVolume is ${playerState.currentVolume}`)
   }
 
   const toggleMute = () => {
@@ -112,81 +127,77 @@ const AppProvider = ({ children }) => {
     }
   }
 
+  const changeSong = (songId, playlist) => {
+    let index = playlist.findIndex(item => item.id === songId)
 
-  const changeSong = (song) => {
-    if (song.url_path || song.preview_url) {
-      //setCurrentSong(song);
-      setPlayerState(playerState => ({
-        ...playerState, currentSong: song, idOfSong: song.id
-      }));
-    }
-    console.log("changeSong " + JSON.stringify(playerState))
+    setPlayerState(playerState => ({
+      ...playerState, currentSong: playlist[index], playlist: playlist, currentIndex: index
+    }));
+
+    //console.log("changeSong " + JSON.stringify(playerState))
   };
 
+  const nextSong = () => {
+    //console.log(`nextSong` + `${playerState.repeat == REPEAT_STATES.REPEAT_ONE}`)
+    if (audioPlayer.current && playerState.repeat == REPEAT_STATES.REPEAT_ONE) {
+      audioPlayer.current.currentTime = 0;
+      return;
+    }
+      setPlayerState(playerState => {
+         if (playerState.currentIndex >= playerState.playlist.length - 1) {
+            return {...playerState, currentIndex: 0}
+          } else {
+            return {...playerState, currentIndex: playerState.currentIndex + 1}
+          }
+      });
 
-  //   // TODO NEW PLAYER FUNCTIONALITY
-  // const nextSong = () => {
-  //     console.log('next');
-  //     setIndexOfSong(oldIndex => {
-  //         if (oldIndex >= songsList.length) {
-  //             return 1
-  //         } else {
-  //             return oldIndex + 1;
-  //         }
-  //     })
+      //console.log(`NEXT SONG: currentIndex: ${playerState.currentIndex} and playerState.playlist.length: ${playerState.playlist.length}`)
 
-  //     if (indexOfSong !== songsList.length) {
-  //         setCurrentSong(songsList[indexOfSong])
-  //     }
-  // }
-  // const previousSong = () => {
-  //     console.log('prev')
-  //     setIndexOfSong(oldIndex => {
-  //         if (oldIndex <= 1) {
-  //             return 0;
-  //         }
-  //         else {
-  //             return oldIndex - 1;
-  //         }
-  //     })
-  //     setCurrentSong(songsList[indexOfSong])
-  //     // if (indexOfSong !== 0) {
-  //     //     setCurrentSong(songsList[indexOfSong])
-  //     // }
-  // }
+      if (playerState.currentIndex !== playerState.playlist.length) {
+        setPlayerState(playerState => ({
+          ...playerState, currentSong: playerState.playlist[playerState.currentIndex]
+        }));
+      }
+  }
 
-  // const changeFavourite = (id) => {
-  //     //find song by finding id of clicked item, and change favourite status of this song
-  //     const newSongs = songsList.map(song => {
-  //         if (song.id === id) {
+  const previousSong = () => {
+      setPlayerState(playerState => {
+        if (playerState.currentIndex <= 0) {
+          return {...playerState, currentIndex: playerState.playlist.length - 1}
+        } else {
+          return {...playerState, currentIndex: playerState.currentIndex - 1}
+        }
+      });
 
-  //             return { ...song, favourite: !song.favourite }
-  //         }
-  //         else {
-  //             return song;
-  //         }
-  //     })
-  //     setSongsList(newSongs);
-  // }
+      setPlayerState(playerState => ({
+        ...playerState, currentSong: playerState.playlist[playerState.currentIndex]
+      }));
+  }
 
-  // useEffect(() => {
-  //     if (currentTime >= duration) {
-  //         setIndexOfSong((oldIndex) => {
-  //             //check our boundaries so we wont go past our max of songs
-  //             if (oldIndex >= songsList.length - 1) {
-  //                 return 0
-  //             } else {
-  //                 return oldIndex + 1;
-  //             }
-  //         })
-  //         //dont setup new song if reached end of playlist or it will cause an error
-  //         if (indexOfSong !== songsList.length) {
-  //             setCurrentSong(songsList[indexOfSong])
-  //         }
-  //     }
-  //     // eslint-disable-next-line
-  // }, [currentTime])
+  const toggleRepeat = () => {
+    if (playerState.repeat == REPEAT_STATES.REPEAT_OFF) {
+      setPlayerState(playerState => ({
+        ...playerState, repeat: REPEAT_STATES.REPEAT_ALL
+      }));
+    } else if (playerState.repeat == REPEAT_STATES.REPEAT_ALL) {
+      setPlayerState(playerState => ({
+        ...playerState, repeat: REPEAT_STATES.REPEAT_ONE
+      }));
+    } else if (playerState.repeat == REPEAT_STATES.REPEAT_ONE) {
+      setPlayerState(playerState => ({
+        ...playerState, repeat: REPEAT_STATES.REPEAT_OFF
+      }));
+  }
+  //console.log(`toggleRepeat state ${playerState.repeat}`)
+}
 
+  const toggleShuffle = () => {
+    const prevValue = playerState.shuffle;
+    setPlayerState(playerState => ({
+      ...playerState, shuffle: !prevValue
+    }));
+    //console.log(`toggleShuffle state ${playerState.shuffle}`)
+  }
 
   return <AppContext.Provider value={{
     audioPlayer,
@@ -196,10 +207,15 @@ const AppProvider = ({ children }) => {
     playerState,
     togglePlayPause,
     toggleMute,
+    toggleShuffle,
+    toggleRepeat,
+    REPEAT_STATES,
     changeProgress,
     changeVolume,
     calculateTime,
-    changeSong
+    changeSong,
+    nextSong,
+    previousSong
   }}>
     {children}
   </AppContext.Provider>
