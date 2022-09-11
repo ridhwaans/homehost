@@ -9,7 +9,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@reduxjs/toolkit": "^1.8.5",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.3.0",
+    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "axios": "^0.27.2",
     "fast-average-color": "^9.1.1",
@@ -25,10 +25,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "build": "react-scripts build",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix"
   },
   "browserslist": {
     "production": [
@@ -43,6 +42,6 @@
     ]
   },
   "devDependencies": {
-    "npm-check-updates": "^16.0.6"
+    "npm-check-updates": "^16.1.2"
   }
 }
