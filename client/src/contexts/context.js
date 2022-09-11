@@ -4,6 +4,11 @@ const AppContext = React.createContext();
 
 
 const AppProvider = ({ children }) => {
+  
+  const [moviesAndTVSearchInput, setMoviesAndTVSearchInput] = useState('')
+  const [moviesAndTVPlayerState, setMoviesAndTVPlayerState] = useState('')
+
+  const [musicSearchInput, setMusicSearchInput] = useState('')
 
   const REPEAT_STATES = Object.freeze({
     REPEAT_OFF: 0,
@@ -200,11 +205,17 @@ const AppProvider = ({ children }) => {
   }
 
   return <AppContext.Provider value={{
+    moviesAndTVSearchInput,
+    setMoviesAndTVSearchInput,
+    moviesAndTVPlayerState,
+    setMoviesAndTVPlayerState,
+    musicSearchInput,
+    setMusicSearchInput,
+    playerState,
     audioPlayer,
     progressBar,
     animationRef,
     volumeBar,
-    playerState,
     togglePlayPause,
     toggleMute,
     toggleShuffle,

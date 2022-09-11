@@ -1,13 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { getBillboardItem } from "../../api"
+import useSWR from 'swr'
 import { useSharedState } from "../../hooks/useSharedState"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import useSWR from 'swr'
+import { useGlobalContext } from '../../contexts/context'
 
 function BigBillboard() {
-    const { data: item } = useSWR(`${process.env.REACT_APP_HOMEHOST_BASE}/api/watch/billboard`)
-    const [playerItem, setPlayerItem] = useSharedState('playerContext')
+    const { data: item } = useSWR(`/watch/billboard`)
+    //const [playerItem, setPlayerItem] = useSharedState('playerContext')
+    const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } = useGlobalContext();
 
     return (
         item && (
@@ -40,7 +42,7 @@ function BigBillboard() {
 
                         <div className="billboard-link">
                             <a className="play-link">
-                                <button className="hasLabel" onClick={() => {item.type == "Movie" ? setPlayerItem(item) : setPlayerItem({data: item, season_number: item.seasons[0].season_number, episode_number: item.seasons[0].episodes[0].episode_number})} }>
+                                <button className="hasLabel" onClick={() => {item.type == "Movie" ? setMoviesAndTVPlayerState(item) : setMoviesAndTVPlayerState({data: item, season_number: item.seasons[0].season_number, episode_number: item.seasons[0].episodes[0].episode_number})} }>
                                     <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
                                     <span>Play</span>
                                 </button>

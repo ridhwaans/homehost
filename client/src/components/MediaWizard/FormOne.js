@@ -1,30 +1,15 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import AppContext from './Context';
 import { getNotAvailable } from "../../api"
+import useSWR from 'swr'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faFileVideo, faFileAudio } from '@fortawesome/free-solid-svg-icons'
 import './styles.css';
 
 const FormOne = () => {
-    const [notAvailable, setNotAvailable] = useState(null)
+    const { data: notAvailable } = useSWR(`/not_available`)    
     let myContext = useContext(AppContext);
     let updateContext = myContext.fileDetails;
-
-    const fetch = async () => {
-        let notAvailable = await getNotAvailable()
-    
-        return { notAvailable }
-      }
-
-    useEffect(() => {
-    
-        fetch().then(response => {
-          setNotAvailable(response.notAvailable)
-        })
-          return () => {
-            setNotAvailable(null)
-          }
-      }, [])
 
     const changeSelection = (item) => {
         //alert(JSON.stringify(item))

@@ -1,38 +1,32 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from "react"
 import { searchMoviesBy } from "../../api"
+import useSWR from 'swr'
 import { useDebounce } from "../../hooks/useDebounce"
 import SearchResults from "../SearchResults"
 import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
+
+const fetcher = url => fetch(`${process.env.REACT_APP_HOMEHOST_BASE}/api` + url).then(r => r.json())
 
 const Search = () => {
-    const [searchInput, setSearchInput] = useSharedState('searchInput')
-    const [movies, setMovies] = useState(null)
 
-    const dInput = useDebounce(searchInput, 1000);
+    //const [searchInput, setSearchInput] = useSharedState('searchsearchInput')
+    const { moviesAndTVSearchInput, setMoviesAndTVSearchInput } = useGlobalContext();
 
-    const fetchData = useCallback(async () => {
-        return await searchMoviesBy(dInput, null).then(response => {
+    const debouncedSearch = useDebounce(moviesAndTVSearchInput, 1000);
 
-            setMovies(response.results)
-        })
+    const { data } = useSWR(() => debouncedSearch ? `/watch/search?q=${debouncedSearch}` : null);
+    
+    //console.log(`Search(), moviesAndTVSearchInput: ${moviesAndTVSearchInput}, debouncedSearch: ${debouncedSearch}, movies.length: ${movies?.length}`)
+    //console.log(movies)
 
-    }, [dInput]);
-
-
-    useEffect(() => {
-
-        fetchData()
-        return () => setMovies(null)
-        
-    }, [dInput])
-
-    return (
+    if (data) return (
         <div className="search-background">
 
-            {movies ? (
+            {data.results ? (
                 <React.Fragment>
-                    {movies.length ? (
-                        <SearchResults mainTitle={`Results for "${dInput}"`} data={movies} poster={false} />
+                    {data.results.length ? (
+                        <SearchResults mainTitle={`Results for "${debouncedSearch}"`} data={data.results} poster={false} />
 
                     ) : (<div className="not-found">No results :/ </div>)}
                 </React.Fragment>

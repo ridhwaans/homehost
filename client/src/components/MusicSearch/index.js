@@ -1,31 +1,41 @@
 import React, { useContext, useRef, useEffect, useState, useCallback } from "react"
 import { useNavigate, useLocation } from "react-router-dom";
 import { searchMusicBy } from "../../api"
+import useSWR from 'swr'
 import { useDebounce } from "../../hooks/useDebounce"
 import MusicRow from "../MusicRow/MusicRow";
 import style from "../MusicHome/MusicHome.module.css"
 import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 const MusicSearch = () => {
-    const [searchInput, setSearchInput] = useSharedState('musicSearchInput', '')
+    //const [searchInput, setSearchInput] = useSharedState('musicSearchInput')
+    const { musicSearchInput, setMusicSearchInput } = useGlobalContext();
+
     const navigate = useNavigate()
     const location = useLocation()
-    const [songs, setSongs] = useState(null)
-    const [albums, setAlbums] = useState(null)
-    const [artists, setArtists] = useState(null)
+    // const [songs, setSongs] = useState(null)
+    // const [albums, setAlbums] = useState(null)
+    // const [artists, setArtists] = useState(null)
 
-    const dInput = useDebounce(searchInput, 1000);
+    
 
-    const fetchData = useCallback(async () => {
-        return await searchMusicBy(dInput, null).then(response => {
+    //const dInput = useDebounce(searchInput, 1000);
 
-            setSongs(response.results.songs)
-            setAlbums(response.results.albums)
-            setArtists(response.results.artists)
+    const debouncedSearch = useDebounce(musicSearchInput, 1000);
 
-        })
+    const { data } = useSWR(() => debouncedSearch ? `/listen/search?q=${debouncedSearch}` : null);
 
-    }, [dInput]);
+    // const fetchData = useCallback(async () => {
+    //     return await searchMusicBy(dInput, null).then(response => {
+
+    //         setSongs(response.results.songs)
+    //         setAlbums(response.results.albums)
+    //         setArtists(response.results.artists)
+
+    //     })
+
+    // }, [dInput]);
 
     // The below use effect will trigger when ever one of the following changes:
     //      - context.searchInput: When ever the current search value updates.
@@ -39,7 +49,7 @@ const MusicSearch = () => {
         // duplicate "/search/" appends could be added with out a small amount of pre-processing.
         const searchIndex = basePath.indexOf('/search/');
 
-        console.log(`basePath is ${basePath}, searchIndex is ${searchIndex}, musicSearchInput is ${searchInput}`)
+        console.log(`basePath is ${basePath}, searchIndex is ${searchIndex}, musicSearchInput is ${musicSearchInput}`)
 
         // Remove previous "/search/" if found.
         if (searchIndex >= 0) {
@@ -47,7 +57,7 @@ const MusicSearch = () => {
         }
 
         // Calculate new path.
-        const newPath = `${basePath}/search/${encodeURI(searchInput)}`;
+        const newPath = `${basePath}/search/${encodeURI(musicSearchInput)}`;
 
         // Check new path is indeed a new path.
         // This is to deal with the fact that location.pathname is a dependency of the useEffect
@@ -58,25 +68,25 @@ const MusicSearch = () => {
             navigate(newPath);
         }
         console.log(`basePath is ${basePath}, newPath is ${newPath}`)
-    }, [dInput, location.pathname, navigate])
+    }, [debouncedSearch, location.pathname, navigate])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        fetchData()
+    //     fetchData()
 
-        return () => {
-            setSongs(null)
-            setAlbums(null)
-            setArtists(null)
-        }
-    }, [dInput])
+    //     return () => {
+    //         setSongs(null)
+    //         setAlbums(null)
+    //         setArtists(null)
+    //     }
+    // }, [dInput])
 
-    return (
+    if (data && data.results) return (
         <React.Fragment>
         <div className={style.MusicHome}>
-            <MusicRow mainTitle={"Songs"} data={songs} musicType={"songs"}/>
-            <MusicRow mainTitle={"Albums"} data={albums} musicType={"albums"}/>
-            <MusicRow mainTitle={"Artists"} data={artists} musicType={"artists"}/>
+            <MusicRow mainTitle={"Songs"} data={data.results.songs} musicType={"songs"}/>
+            <MusicRow mainTitle={"Albums"} data={data.results.albums} musicType={"albums"}/>
+            <MusicRow mainTitle={"Artists"} data={data.results.artists} musicType={"artists"}/>
         </div>
         </React.Fragment>
     )

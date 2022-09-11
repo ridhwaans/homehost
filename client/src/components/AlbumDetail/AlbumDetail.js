@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-
 import useSWR from 'swr'
-import { fetcher } from "../../api"
-
 import { findTotalDurationMillis, millisToEnglishWords } from "../../utils";
 import { getAlbumInformation } from "../../api"
 import { DiscHeader } from "./DiscHeader/DiscHeader";
@@ -16,7 +13,7 @@ import { useGlobalContext } from '../../contexts/context'
 const AlbumDetail = () => {
     const { id } = useParams();
     const coverRef = useRef(null);
-    const { data: album } = useSWR(`/music/albums/${id}`, fetcher);
+    const { data: album } = useSWR(`/music/albums/${id}`);
     const { playerState, changeSong } = useGlobalContext(); 
 
     useEffect(() => {

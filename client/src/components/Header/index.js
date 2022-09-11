@@ -4,15 +4,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons'
 import logo from "../../assets/logos/Homehost_White.svg"
 import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 function Header() {
+
+    const { moviesAndTVSearchInput, setMoviesAndTVSearchInput } = useGlobalContext();
 
     const [pinHeader, setHeader] = useState(false)
     const [searchBox, setSearchBox] = useState(false)
     const ref = useRef(null)
     const inputRef = useRef(null)
 
-    const [searchInput, setSearchInput] = useSharedState('searchInput')
+    //const [searchInput, setSearchInput] = useSharedState('headersearchInput')
 
     const handleScroll = () => {
 
@@ -92,8 +95,8 @@ function Header() {
                         <span className="icon" onClick={() => toggleSearchBox()}><FontAwesomeIcon icon={faSearch} /></span>
                         <input className="searchInput"
                             ref={inputRef}
-                            value={searchInput}
-                            onChange={(e) => setSearchInput(e.currentTarget.value)}
+                            value={moviesAndTVSearchInput}
+                            onChange={(e) => setMoviesAndTVSearchInput(e.currentTarget.value)}
                             onBlur={() => setSearchBox(false)}
                             type="text" placeholder="Titles, People, Genres..." maxLength="80" />
                     </div>

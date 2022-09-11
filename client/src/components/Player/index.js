@@ -1,10 +1,11 @@
 import React, { useEffect, useContext } from 'react';
 import { useSharedState } from "../../hooks/useSharedState"
 import { ReactNetflixPlayer } from "react-netflix-player";
-
+import { useGlobalContext } from '../../contexts/context'
   
 const Player = () => {
-  const [playerItem, setPlayerItem] = useSharedState('playerContext')
+  //const [moviesAndTVPlayerState, setmoviesAndTVPlayerState] = useSharedState('playerContext')
+  const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } = useGlobalContext();
 
   const openFullscreen = () => {
     var elem = document.getElementById("player");
@@ -18,58 +19,58 @@ const Player = () => {
     
   }
 
-    playerItem && openFullscreen()
+    moviesAndTVPlayerState && openFullscreen()
     var episode = null;
-    if (playerItem && playerItem.data && playerItem.data.type == "Show") { 
-      episode = playerItem.data.seasons
-      .find(season => season.season_number == playerItem.season_number).episodes
-      .find(episode => episode.episode_number == playerItem.episode_number);
+    if (moviesAndTVPlayerState && moviesAndTVPlayerState.data && moviesAndTVPlayerState.data.type == "Show") { 
+      episode = moviesAndTVPlayerState.data.seasons
+      .find(season => season.season_number == moviesAndTVPlayerState.season_number).episodes
+      .find(episode => episode.episode_number == moviesAndTVPlayerState.episode_number);
     }
     var episodeList = [];
     if (episode != null) {
-      playerItem.data.seasons
-      .find(season => season.season_number == playerItem.season_number).episodes
+      moviesAndTVPlayerState.data.seasons
+      .find(season => season.season_number == moviesAndTVPlayerState.season_number).episodes
       .map(episode => episodeList.push({id: episode.episode_number, nome: episode.name, playing: false}))
-      episodeList.find(episode => episode.id == playerItem.episode_number).playing = true;
+      episodeList.find(episode => episode.id == moviesAndTVPlayerState.episode_number).playing = true;
     }
     var nextEpisode = null;
     if (episode != null) {
-      if (playerItem.episode_number == episodeList.length) {
+      if (moviesAndTVPlayerState.episode_number == episodeList.length) {
         nextEpisode = {}
       } else {
-        nextEpisode = episodeList[playerItem.episode_number]
+        nextEpisode = episodeList[moviesAndTVPlayerState.episode_number]
       }
     }
-    console.log(playerItem && `playerItem is ${playerItem}`)
+    //console.log(moviesAndTVPlayerState && `moviesAndTVPlayerState is ${moviesAndTVPlayerState}`)
     // source: https://github.com/Lucasmg37/react-netflix-player/blob/master/example/index.js
     return (
       <React.Fragment>
-      {playerItem && (
+      {moviesAndTVPlayerState && (
         <div id={"player"} >
           <ReactNetflixPlayer
-            src={`${process.env.REACT_APP_HOMEHOST_BASE}${playerItem.type == "Movie" ? playerItem.url_path : episode.url_path}`}
+            src={`${process.env.REACT_APP_HOMEHOST_BASE}${moviesAndTVPlayerState.type == "Movie" ? moviesAndTVPlayerState.url_path : episode.url_path}`}
             // Pause screen 
             // movie or show name
-            title={playerItem.type == "Movie" ? playerItem.title : playerItem.data.name}
+            title={moviesAndTVPlayerState.type == "Movie" ? moviesAndTVPlayerState.title : moviesAndTVPlayerState.data.name}
             // episode name
-            subTitle={playerItem.type == "Movie" ? "" : `S${playerItem.season_number}E${playerItem.episode_number} ${episode.name}`}
+            subTitle={moviesAndTVPlayerState.type == "Movie" ? "" : `S${moviesAndTVPlayerState.season_number}E${moviesAndTVPlayerState.episode_number} ${episode.name}`}
             // Player bar
             // movie or show name
-            titleMedia={playerItem.type == "Movie" ? playerItem.title : playerItem.data.name}
+            titleMedia={moviesAndTVPlayerState.type == "Movie" ? moviesAndTVPlayerState.title : moviesAndTVPlayerState.data.name}
             // episode name
-            extraInfoMedia={playerItem.type == "Movie" ? "" : `S${playerItem.season_number}E${playerItem.episode_number} ${episode.name}`}
+            extraInfoMedia={moviesAndTVPlayerState.type == "Movie" ? "" : `S${moviesAndTVPlayerState.season_number}E${moviesAndTVPlayerState.episode_number} ${episode.name}`}
             playerLanguage="en"
-            backButton={() => { setPlayerItem(null) }}
+            backButton={() => { setMoviesAndTVPlayerState(null) }}
             // The player uses all the viewport
             fullPlayer
             autoPlay
             startPosition={0}
             // The info of the next video action
-            dataNext={playerItem.type == "Movie" ? {} : {title: nextEpisode.nome} }
+            dataNext={moviesAndTVPlayerState.type == "Movie" ? {} : {title: nextEpisode.nome} }
             // The action call when the next video is clicked
             onNextClick={() => {}}
             // The list reproduction data, will be render in this order
-            reprodutionList={playerItem.type == "Movie" ? [] : episodeList}
+            reprodutionList={moviesAndTVPlayerState.type == "Movie" ? [] : episodeList}
             // The function call when an item in reproductionList is clicked
             onClickItemListReproduction={(id, playing) => {
               return {

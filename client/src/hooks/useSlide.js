@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import useSWR from 'swr'
 import { getMovieInformation, getTVShowInformation } from "../api"
 
 const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
@@ -15,6 +16,8 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
     const hasPrev = distance < 0;
     const hasNext = (viewed + totalInViewport) < countElements;
 
+    //const { data: additionalMovieInfo } = useSWR(`/movies/${id}`)
+    //const { data: additionaTVShowInfo } = useSWR(`/tv/${id}`)
     const [additionalMovieInfo, setAdditionalMovieInfo] = useState(null)
 
     useEffect(() => {

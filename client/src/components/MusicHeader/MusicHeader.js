@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import style from "./MusicHeader.module.css"
 import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 const MusicHeader = ({ account }) => {
   const navigate = useNavigate();
@@ -13,7 +14,8 @@ const MusicHeader = ({ account }) => {
   const ref = useRef(null)
   const inputRef = useRef(null)
 
-  const [searchInput, setSearchInput] = useSharedState('musicSearchInput', '')
+  //const [searchInput, setSearchInput] = useSharedState('musicSearchInput')
+  const { musicSearchInput, setMusicSearchInput } = useGlobalContext();
 
   return (
     <div className={style.Header}>
@@ -27,8 +29,8 @@ const MusicHeader = ({ account }) => {
             placeholder="Search for Artists, Songs, or Podcasts"
             type="text"
             ref={inputRef}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.currentTarget.value)}
+            value={musicSearchInput}
+            onChange={(e) => setMusicSearchInput(e.currentTarget.value)}
           />
         </div>}
       <div className={style.HeaderRight}>

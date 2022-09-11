@@ -5,10 +5,9 @@ import MusicRow from "../MusicRow/MusicRow"
 import style from "./MusicHome.module.css"
 
 const MusicHome = () => {
-
-    const albums = useSWR('/music/albums', fetcher);
-    const artists = useSWR('/music/artists', fetcher);
-    const songs = useSWR('/music/songs', fetcher);
+    const albums = useSWR('/music/albums/latest');
+    const artists = useSWR('/music/artists/most_popular');
+    const songs = useSWR('/music/songs/recently_added');
 
     return (
         <React.Fragment>

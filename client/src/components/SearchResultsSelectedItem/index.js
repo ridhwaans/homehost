@@ -8,13 +8,15 @@ import Details from "../Details"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons'
 import { faImdb } from '@fortawesome/free-brands-svg-icons'
+import { useGlobalContext } from '../../contexts/context'
 
 const SearchResultsSelectedItem = ({ currentSlide, additionalMovieInfo, closeInformationWindow }) => {
 
     const [menuOption, setMenuOption] = useState("general-info")
-    const [playerItem, setPlayerItem] = useSharedState('playerContext')
+    //const [playerItem, setPlayerItem] = useSharedState('playerContext')
     const sliderContext = useContext(SliderContext);
-    
+    const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } = useGlobalContext();
+
     const noEpisodesTab = () => {
         setMenuOption("general-info")
     }
@@ -66,7 +68,7 @@ const SearchResultsSelectedItem = ({ currentSlide, additionalMovieInfo, closeInf
 
                                     <div className="actions">
                                         <div className="play-link">
-                                            <button className="hasLabel" onClick={() => {additionalMovieInfo.type == "Movie" ? setPlayerItem(additionalMovieInfo) : setPlayerItem({data: additionalMovieInfo, season_number: additionalMovieInfo.seasons[0].season_number, episode_number: additionalMovieInfo.seasons[0].episodes[0].episode_number})}}>
+                                            <button className="hasLabel" onClick={() => {additionalMovieInfo.type == "Movie" ? setMoviesAndTVPlayerState(additionalMovieInfo) : setMoviesAndTVPlayerState({data: additionalMovieInfo, season_number: additionalMovieInfo.seasons[0].season_number, episode_number: additionalMovieInfo.seasons[0].episodes[0].episode_number})}}>
                                                 <span className="play-icon"><FontAwesomeIcon icon={faPlay} /></span>
                                                 <span>Play</span>
                                             </button>

@@ -3,9 +3,11 @@ import { useSharedState } from "../../hooks/useSharedState"
 import SeasonSelect from "./SeasonSelect"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons'
+import { useGlobalContext } from '../../contexts/context'
 
 const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
-    const [playerItem, setPlayerItem] = useSharedState('playerContext')
+    //const [playerItem, setPlayerItem] = useSharedState('playerContext')
+    const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } = useGlobalContext();
     const [seasonNumber, setSeasonNumber] = useState(1)
     const [showOverlay, setShowOverlay] = useState(null)
 
@@ -20,10 +22,6 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     const onHoverLeave = () => {
         setShowOverlay(null)
     }
-
-    useEffect(() => {
-        
-    }, [])
 
     if (additionalMovieInfo && additionalMovieInfo.type == "Movie"){
         noEpisodesTab()
@@ -46,7 +44,7 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
                                 {(showOverlay == index) && <div className="episode-item-image-overlay">
                                     <span><FontAwesomeIcon icon={faPlayCircle} /></span>
                                 </div>}
-                                <img onClick={() => setPlayerItem({data: additionalMovieInfo, season_number: seasonNumber, episode_number: index+1})} src={`${process.env.REACT_APP_IMAGE_BASE}w500_and_h282_face/${episode.still_path}`} alt={"item"} />
+                                <img onClick={() => setMoviesAndTVPlayerState({data: additionalMovieInfo, season_number: seasonNumber, episode_number: index+1})} src={`${process.env.REACT_APP_IMAGE_BASE}w500_and_h282_face/${episode.still_path}`} alt={"item"} />
                             </div>
                             <div className="episode-item-metada">
                                 <span className="episode-item-title">{episode.name}</span><br />

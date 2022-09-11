@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { getTVShowsBy, getTVShowsByGenre } from "../../api"
+import useSWR from 'swr'
 import Player from "../Player"
 import Header from "../Header"
 import BigBillboard from "../BigBillboard"
@@ -7,61 +8,30 @@ import MediumBillboard from "../MediumBillboard"
 import Slider from "../Slider"
 import Search from '../Search';
 import { useSharedState } from "../../hooks/useSharedState"
+import { useGlobalContext } from '../../contexts/context'
 
 import '../../assets/Movies.css';
 
 function TVShows() {
-
-    const [recentlyAddedTVShows, setRecentlyAddedTVShows] = useState(null)
-    const [popularTVShows, setPopularTVShows] = useState(null)
-    const [animationTVShows, setAnimationTVShows] = useState(null)
-    const [highestRatedTVShows, setHighestRatedTVShows] = useState(null)
-
-    const [searchInput, setSearchInput] = useSharedState('searchInput')
-
-    const fetchTVShows = async () => {
-        let recentlyAddedTVShows = await getTVShowsBy("recently_added")
-        let popularTVShows = await getTVShowsBy("most_popular")
-        let animationTVShows = await getTVShowsByGenre("Animation")
-        let highestRatedTVShows = await getTVShowsBy("highest_rated")
-
-        return { recentlyAddedTVShows, popularTVShows, animationTVShows, highestRatedTVShows }
-    }
+    const { data: recentlyAddedTVShows } = useSWR(`/tv/recently_added`)  
+    const { data: popularTVShows } = useSWR(`/tv/most_popular`)
+    const { data: highestRatedTVShows } = useSWR(`/tv/highest_rated`)
+    const { data: animationTVShows } = useSWR(`/tv/genre/Animation`)
+    
+    //const [searchInput, setSearchInput] = useSharedState('tvshowsearchInput')
+    const { moviesAndTVSearchInput, setMoviesAndTVSearchInput } = useGlobalContext();
 
     useEffect(() => {
         document.documentElement.className = "movies-html-and-body"; //<html>
         document.body.className = "movies-html-and-body"; //<body>
-
-        fetchTVShows().then(response => {
-
-            setRecentlyAddedTVShows(response.recentlyAddedTVShows)
-            setPopularTVShows(response.popularTVShows)
-            setAnimationTVShows(response.animationTVShows)
-            setHighestRatedTVShows(response.highestRatedTVShows)
-
-        })
-
-
-        return () => {
-            setRecentlyAddedTVShows(null)
-            setPopularTVShows(null)
-            setAnimationTVShows(null)
-            setHighestRatedTVShows(null)
-        }
-
-
     }, [])
-
-
-
-
 
     return (
         <div className="movies">
         <div className="background-app">
         <Player />
         <Header />
-        {searchInput?.length > 0 ? (<Search />) : (
+        {moviesAndTVSearchInput?.length > 0 ? (<Search />) : (
             <React.Fragment>
                 <BigBillboard />
 

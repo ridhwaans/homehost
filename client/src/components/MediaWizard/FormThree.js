@@ -7,6 +7,8 @@ import { faSearch, faFileVideo, faFileAudio } from '@fortawesome/free-solid-svg-
 import './styles.css'
 
 const FormThree = () => {
+    // const { data: searchResults } = useSWR(`/services/search?type=${type}&q=${text}`)  
+
     const [searchBox, setSearchBox] = useState(false)
     const inputRef = useRef(null)
     const [ searchInput, updateSearchInput ] = useState(null)

@@ -18,13 +18,13 @@ import useSWR, { SWRConfig } from 'swr'
 
 const App = () => {
 
-    const [playerItem, setPlayerItem] = useState(null)
+    //const [playerItem, setPlayerItem] = useState(null)
 
     return (
         <React.Fragment>
             <SWRConfig
                 value={{
-                    fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+                    fetcher: (resource, init) => fetch(`${process.env.REACT_APP_HOMEHOST_BASE}/api` + resource, init).then(res => res.json())
                 }}
             >
                 <BrowserRouter basename={process.env.PUBLIC_URL}>

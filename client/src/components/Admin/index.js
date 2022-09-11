@@ -1,34 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { getAbout, getLibraryStats } from "../../api"
+import useSWR from 'swr'
 import AdminHeader from "../AdminHeader"
 import StepForm from '../MediaWizard/StepForm';
 import Footer from "../Footer"
 import "./Admin.css"
 
 const Admin = () => {
-
-  const [about, setAbout] = useState(null)
-  const [stats, setStats] = useState(null)
-
-  const fetch = async () => {
-    let about = await getAbout()
-    let stats = await getLibraryStats()
-
-    return { about, stats }
-  }
+  const {data : about } = useSWR('/about');
+  const {data : stats } = useSWR('/library/stats');
 
   useEffect(() => {
     document.documentElement.className = "admin-html-and-body"; //<head>
     document.body.className = "admin-html-and-body"; //<body>
-
-    fetch().then(response => {
-      setAbout(response.about)
-      setStats(response.stats)
-    })
-      return () => {
-        setAbout(null)
-        setStats(null)
-      }
   }, [])
   
   return (
