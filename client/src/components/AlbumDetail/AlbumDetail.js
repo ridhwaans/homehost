@@ -38,9 +38,13 @@ const AlbumDetail = () => {
   }, [album]);
 
   const discOne =
-    album && album.songs && album.songs.filter((item) => item.disc_number === 1);
+    album &&
+    album.songs &&
+    album.songs.filter((item) => item.disc_number === 1);
   const discTwo =
-    album && album.songs && album.songs.filter((item) => item.disc_number === 2);
+    album &&
+    album.songs &&
+    album.songs.filter((item) => item.disc_number === 2);
 
   return (
     <React.Fragment>

@@ -1,29 +1,35 @@
 import React from 'react';
-import { addMovie, addEpisode, addSong } from '../../api';
 import './styles.css';
 import { useGlobalContext } from '../../contexts/context';
 
+const addItem = (resource, data) =>
+  fetch(`${process.env.REACT_APP_HOMEHOST_BASE}/api` + resource, {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
+
 const FormFour = () => {
-  const { mediaWizard, setMediaWizard } =
-    useGlobalContext();
+  const { mediaWizard, setMediaWizard } = useGlobalContext();
 
   const next = () => {
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
-      currentStep:  mediaWizard.currentStep + 1 
+      currentStep: mediaWizard.currentStep + 1,
     }));
-
   };
 
   const previous = () => {
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
-      currentStep:  mediaWizard.currentStep - 1 
+      currentStep: mediaWizard.currentStep - 1,
     }));
   };
 
   const applyMovie = async (item) => {
-    await addMovie({
+    await addItem('movies/add', {
       type: mediaWizard.selectedFile.type,
       fs_path: mediaWizard.selectedFile.fs_path,
       id: item.id,
@@ -33,7 +39,7 @@ const FormFour = () => {
   };
 
   const applyEpisode = async (item) => {
-    await addEpisode({
+    await addItem('tv/episodes/add', {
       type: mediaWizard.selectedFile.type,
       fs_path: mediaWizard.selectedFile.fs_path,
       id: item.id,
@@ -42,7 +48,7 @@ const FormFour = () => {
   };
 
   const applySong = async (item) => {
-    await addSong({
+    await addItem('music/songs/add', {
       type: mediaWizard.selectedFile.type,
       fs_path: mediaWizard.selectedFile.fs_path,
       album_id: item.album.id,
@@ -55,7 +61,7 @@ const FormFour = () => {
   };
 
   const applyUnknownAlbumSong = async () => {
-    await addSong({
+    await addItem('music/songs/add', {
       type: mediaWizard.selectedFile.type,
       fs_path: mediaWizard.selectedFile.fs_path,
       album_name: 'Unknown Album',

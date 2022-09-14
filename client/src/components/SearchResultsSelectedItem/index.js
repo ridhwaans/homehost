@@ -86,9 +86,7 @@ const SearchResultsSelectedItem = ({
                           <FontAwesomeIcon icon={faImdb} />
                         </a>
                       </span>
-                      <span className="score">
-                        {currentSlide.vote_average}
-                      </span>
+                      <span className="score">{currentSlide.vote_average}</span>
                       <span className="year">{currentSlide.release_date}</span>
                       <span className="duration">
                         {currentSlide.type === 'Movie'
@@ -111,8 +109,7 @@ const SearchResultsSelectedItem = ({
                               : setMoviesAndTVPlayerState({
                                   data: currentSlide,
                                   season_number:
-                                    currentSlide.seasons[0]
-                                      .season_number,
+                                    currentSlide.seasons[0].season_number,
                                   episode_number:
                                     currentSlide.seasons[0].episodes[0]
                                       .episode_number,
@@ -137,12 +134,10 @@ const SearchResultsSelectedItem = ({
                     <div className="meta-lists">
                       <p className="inline-list">
                         <span>Featuring:</span>
-                        {currentSlide.credits.cast.map(
-                          (person, index) => {
-                            if (index < 6) return person.name + ' ';
-                            return null;
-                          }
-                        )}
+                        {currentSlide.credits.cast.map((person, index) => {
+                          if (index < 6) return person.name + ' ';
+                          return null;
+                        })}
                       </p>
                       <p className="inline-list">
                         <span>Genres:</span>

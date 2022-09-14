@@ -2,11 +2,10 @@ import React from 'react';
 import { useGlobalContext } from '../../contexts/context';
 
 const ProgressBar = () => {
-  const { mediaWizard, setMediaWizard } =
-    useGlobalContext();
+  const { mediaWizard, setMediaWizard } = useGlobalContext();
 
   console.log(`ProgressBar ` + JSON.stringify(mediaWizard));
-  
+
   const percent = mediaWizard.currentStep * 100;
   const percentage = mediaWizard.currentStep;
 

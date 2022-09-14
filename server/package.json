@@ -12,21 +12,21 @@
     "start": "NODE_ENV=prod node server"
   },
   "dependencies": {
-    "@prisma/client": "^3.14.0",
+    "@prisma/client": "^4.3.1",
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
     "chokidar": "^3.5.3",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "figlet": "^1.5.2",
     "get-audio-duration": "^3.1.0",
-    "qs": "^6.10.3",
+    "qs": "^6.11.0",
     "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
-    "concurrently": "^7.2.1",
-    "nodemon": "^2.0.16",
-    "npm-check-updates": "^13.1.1",
-    "prisma": "^3.14.0"
+    "concurrently": "^7.4.0",
+    "nodemon": "^2.0.19",
+    "npm-check-updates": "^16.1.2",
+    "prisma": "^4.3.1"
   }
 }

@@ -11,10 +11,8 @@ import { useGlobalContext } from '../../contexts/context';
 
 const FormOne = () => {
   const { data: notAvailable } = useSWR(`/not_available`);
-  const { mediaWizard, setMediaWizard } =
-    useGlobalContext();
+  const { mediaWizard, setMediaWizard } = useGlobalContext();
 
-  
   console.log(`FormOne ` + JSON.stringify(mediaWizard));
   const changeSelection = (item) => {
     //updateContext.setSelectedFile(item);
@@ -30,12 +28,10 @@ const FormOne = () => {
       setMediaWizard((mediaWizard) => ({
         ...mediaWizard,
         selectedFile: item,
-        currentStep:  parseInt(mediaWizard.currentStep) + 1 
+        currentStep: parseInt(mediaWizard.currentStep) + 1,
       }));
-
     }
   };
-
 
   return (
     <div className="contain">

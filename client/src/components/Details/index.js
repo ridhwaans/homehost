@@ -27,11 +27,7 @@ const Details = ({ currentSlide }) => {
           })}
         </div>
 
-        {findOnebyType(
-          'Directing',
-          'Directing',
-          currentSlide.credits.crew
-        )}
+        {findOnebyType('Directing', 'Directing', currentSlide.credits.crew)}
 
         {findOnebyType('Editing', 'Editing', currentSlide.credits.crew)}
 

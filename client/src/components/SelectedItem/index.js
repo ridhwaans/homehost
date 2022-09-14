@@ -8,10 +8,7 @@ import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { faImdb } from '@fortawesome/free-brands-svg-icons';
 import { useGlobalContext } from '../../contexts/context';
 
-const SelectedItem = ({
-  currentSlide,
-  closeInformationWindow,
-}) => {
+const SelectedItem = ({ currentSlide, closeInformationWindow }) => {
   const [menuOption, setMenuOption] = useState('general-info');
   const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } =
     useGlobalContext();
@@ -72,9 +69,7 @@ const SelectedItem = ({
                         <FontAwesomeIcon icon={faImdb} />
                       </a>
                     </span>
-                    <span className="score">
-                      {currentSlide.vote_average}
-                    </span>
+                    <span className="score">{currentSlide.vote_average}</span>
                     <span className="year">{currentSlide.release_date}</span>
                     <span className="duration">
                       {currentSlide.type === 'Movie'

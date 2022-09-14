@@ -3,26 +3,21 @@ import './styles.css';
 import { useGlobalContext } from '../../contexts/context';
 
 const FormTwo = () => {
-  const { mediaWizard, setMediaWizard } =
-    useGlobalContext();
+  const { mediaWizard, setMediaWizard } = useGlobalContext();
 
   const next = (type) => {
-
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
-      selectedFile: {...mediaWizard.selectedFile, type: type},
-      currentStep:  mediaWizard.currentStep + 1 
+      selectedFile: { ...mediaWizard.selectedFile, type: type },
+      currentStep: mediaWizard.currentStep + 1,
     }));
-
   };
   const previous = () => {
-
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
-      selectedFile: {...mediaWizard.selectedFile, type: null},
-      currentStep:  mediaWizard.currentStep - 1 
+      selectedFile: { ...mediaWizard.selectedFile, type: null },
+      currentStep: mediaWizard.currentStep - 1,
     }));
-
   };
 
   return (

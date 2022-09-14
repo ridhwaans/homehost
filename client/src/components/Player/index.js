@@ -28,7 +28,8 @@ const Player = () => {
   ) {
     episode = moviesAndTVPlayerState.data.seasons
       .find(
-        (season) => season.season_number === moviesAndTVPlayerState.season_number
+        (season) =>
+          season.season_number === moviesAndTVPlayerState.season_number
       )
       .episodes.find(
         (episode) =>
@@ -39,7 +40,8 @@ const Player = () => {
   if (episode != null) {
     moviesAndTVPlayerState.data.seasons
       .find(
-        (season) => season.season_number === moviesAndTVPlayerState.season_number
+        (season) =>
+          season.season_number === moviesAndTVPlayerState.season_number
       )
       .episodes.map((episode) =>
         episodeList.push({

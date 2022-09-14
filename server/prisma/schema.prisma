@@ -35,7 +35,7 @@ model Movie {
   poster_path			String
   production_companies	ProductionCompany[]
   release_date			String
-  revenue				Int
+  revenue				BigInt
   runtime				Int
   tagline				String?
   title					String

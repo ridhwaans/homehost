@@ -17,7 +17,6 @@ import NotFound from './NotFound';
 import { SWRConfig } from 'swr';
 
 const App = () => {
-
   return (
     <React.Fragment>
       <SWRConfig

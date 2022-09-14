@@ -2,10 +2,9 @@ import React, { useContext, useState, useRef, useEffect } from 'react';
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-
   const [mediaWizard, setMediaWizard] = useState({
     currentStep: 0,
-    selectedFile: null
+    selectedFile: null,
   });
 
   const [moviesAndTVSearchInput, setMoviesAndTVSearchInput] = useState('');
@@ -164,7 +163,10 @@ const AppProvider = ({ children }) => {
   };
 
   const nextSong = () => {
-    if (audioPlayer.current && playerState.repeat === REPEAT_STATES.REPEAT_ONE) {
+    if (
+      audioPlayer.current &&
+      playerState.repeat === REPEAT_STATES.REPEAT_ONE
+    ) {
       audioPlayer.current.currentTime = 0;
       return;
     }
@@ -236,7 +238,7 @@ const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        mediaWizard, 
+        mediaWizard,
         setMediaWizard,
         moviesAndTVSearchInput,
         setMoviesAndTVSearchInput,

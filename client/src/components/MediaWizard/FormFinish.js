@@ -3,7 +3,7 @@ import './styles.css';
 
 const FormFinish = () => {
   const finish = () => {
-    console.log("finish");
+    console.log('finish');
   };
   return (
     <div className="container">

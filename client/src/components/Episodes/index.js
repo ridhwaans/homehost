@@ -30,10 +30,7 @@ const Episodes = ({ currentSlide, noEpisodesTab }) => {
     currentSlide &&
     currentSlide.type === 'Show' && (
       <div className="menu-episodes">
-        <SeasonSelect
-          items={currentSlide.seasons}
-          onChange={changeSeason}
-        />
+        <SeasonSelect items={currentSlide.seasons} onChange={changeSeason} />
         <div className="menu-episode-content">
           {currentSlide.seasons
             .find((season) => season.season_number === seasonNumber)

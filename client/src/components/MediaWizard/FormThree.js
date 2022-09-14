@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { externalSearch } from '../../api';
 import { useDebounce } from '../../hooks/useDebounce';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,51 +15,30 @@ const FormThree = () => {
   const inputRef = useRef(null);
   const [searchInput, updateSearchInput] = useState('');
   const debouncedSearch = useDebounce(searchInput, 1000);
-  const { mediaWizard, setMediaWizard } =
-    useGlobalContext();
+  const { mediaWizard, setMediaWizard } = useGlobalContext();
 
-  const {data : searchResults} = useSWR(mediaWizard?.selectedFile?.type !== "Episode" ? `/services/search?type=${mediaWizard.selectedFile.type}&q=${debouncedSearch}` : null);
+  const { data: searchResults } = useSWR(
+    mediaWizard?.selectedFile?.type !== 'Episode'
+      ? `/services/search?type=${mediaWizard.selectedFile.type}&q=${debouncedSearch}`
+      : null
+  );
 
   const toggleSearchBox = () => {
     if (!searchBox && inputRef.current) inputRef.current.focus();
     setSearchBox((prevState) => !prevState);
   };
 
-  const fetchSearchResults = async (type, text) => {
-    let searchResults;
-    if (type === 'Movie') {
-      searchResults = await externalSearch(type, text);
-    } else if (type === 'Song') {
-      searchResults = await externalSearch(type, text);
-    }
-    return { searchResults };
-  };
-
-  // useEffect(() => {
-  //   if (!updateContext.selectedFile || (dInput && dInput.trim().length === 0))
-  //     return;
-  //   console.log(`type: ${updateContext.selectedFile.type}, search: ${dInput}`);
-  //   fetchSearchResults(updateContext.selectedFile.type, dInput).then(
-  //     (response) => {
-  //       setSearchResults(response.searchResults);
-  //     }
-  //   );
-  //   return () => {
-  //     setSearchResults(null);
-  //   };
-  // }, [dInput]);
-
   const next = () => {
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
-      currentStep:  mediaWizard.currentStep + 1 
+      currentStep: mediaWizard.currentStep + 1,
     }));
   };
 
   const previous = () => {
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
-      currentStep:  mediaWizard.currentStep - 1 
+      currentStep: mediaWizard.currentStep - 1,
     }));
   };
 

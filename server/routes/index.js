@@ -39,6 +39,10 @@ const { upsertAll, getNotAvailable } = require('../jobs')
 const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models')
 const router = express.Router();
 
+BigInt.prototype.toJSON = () => {       
+  return this.toString()
+}
+
 const readStreamMp4 = (req, res, file_path) => {
   const stat = fs.statSync(file_path)
   const fileSize = stat.size
