@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getMovieInformation, getTVShowInformation } from '../api';
 
 const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
   const [viewed, setViewed] = useState(0);
@@ -13,10 +12,6 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
   const [sliderPages, setSliderPages] = useState(0);
   const hasPrev = distance < 0;
   const hasNext = viewed + totalInViewport < countElements;
-
-  // const { data: additionalMovieInfo } = useSWR(`/movies/${id}`)
-  // const { data: additionaTVShowInfo } = useSWR(`/tv/${id}`)
-  const [additionalMovieInfo, setAdditionalMovieInfo] = useState(null);
 
   useEffect(() => {
     if (containerRef.current && data) {
@@ -121,18 +116,10 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
   const selectSlide = async (type, id) => {
     const selected = await content.filter((item) => item.id === id)[0];
     setCurrentSlide(selected);
-    let details;
-    if (type === 'Movie') {
-      details = await getMovieInformation(id);
-    } else if (type === 'Show') {
-      details = await getTVShowInformation(id);
-    }
-    setAdditionalMovieInfo(details);
   };
 
   const closeInformationWindow = () => {
     setCurrentSlide(null);
-    setAdditionalMovieInfo(null);
   };
 
   const scaleTiles = (e) => {
@@ -245,7 +232,7 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
     slideProps,
     content,
     currentSlide,
-    additionalMovieInfo,
+    currentSlide,
     paginationIndicator,
   };
 };

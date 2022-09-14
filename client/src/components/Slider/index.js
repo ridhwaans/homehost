@@ -28,7 +28,6 @@ function Slider({ mainTitle, data, poster }) {
     hasNext,
     content,
     currentSlide,
-    additionalMovieInfo,
     paginationIndicator,
   } = useSlider(width, ref, data.length, data, poster);
 
@@ -120,7 +119,6 @@ function Slider({ mainTitle, data, poster }) {
         {currentSlide && (
           <SelectedItem
             currentSlide={currentSlide}
-            additionalMovieInfo={additionalMovieInfo}
             closeInformationWindow={closeInformationWindow}
           />
         )}

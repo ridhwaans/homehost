@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Details = ({ additionalMovieInfo }) => {
+const Details = ({ currentSlide }) => {
   const findOnebyType = (name, type, data) => {
     let first = data.find((item, index) => item.department === type);
 
@@ -19,7 +19,7 @@ const Details = ({ additionalMovieInfo }) => {
       <div className="menu-details-content">
         <div className="menu-details-item">
           <span className="details-item-title">Cast</span>
-          {additionalMovieInfo.credits.cast.map((item, index) => {
+          {currentSlide.credits.cast.map((item, index) => {
             if (index < 10) {
               return <span key={index}>{item.name}</span>;
             }
@@ -30,24 +30,24 @@ const Details = ({ additionalMovieInfo }) => {
         {findOnebyType(
           'Directing',
           'Directing',
-          additionalMovieInfo.credits.crew
+          currentSlide.credits.crew
         )}
 
-        {findOnebyType('Editing', 'Editing', additionalMovieInfo.credits.crew)}
+        {findOnebyType('Editing', 'Editing', currentSlide.credits.crew)}
 
-        {findOnebyType('Sound', 'Sound', additionalMovieInfo.credits.crew)}
+        {findOnebyType('Sound', 'Sound', currentSlide.credits.crew)}
 
         <div className="menu-details-item">
           <span className="details-item-title">Genres</span>
-          {additionalMovieInfo.genres.map((item, index) => {
+          {currentSlide.genres.map((item, index) => {
             return <span key={index}>{item.name}</span>;
           })}
         </div>
 
-        {additionalMovieInfo.production_companies[0] && (
+        {currentSlide.production_companies[0] && (
           <div className="menu-details-item">
             <span className="details-item-title">Production</span>
-            <span>{additionalMovieInfo.production_companies[0].name}</span>
+            <span>{currentSlide.production_companies[0].name}</span>
           </div>
         )}
       </div>

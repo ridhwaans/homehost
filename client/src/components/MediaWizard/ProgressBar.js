@@ -1,12 +1,14 @@
-import React, { useContext } from 'react';
-import AppContext from './Context';
+import React from 'react';
+import { useGlobalContext } from '../../contexts/context';
 
 const ProgressBar = () => {
-  const myContext = useContext(AppContext);
-  const updateContext = myContext.fileDetails;
+  const { mediaWizard, setMediaWizard } =
+    useGlobalContext();
 
-  const percent = updateContext.currentPage * 100;
-  const percentage = updateContext.currentPage;
+  console.log(`ProgressBar ` + JSON.stringify(mediaWizard));
+  
+  const percent = mediaWizard.currentStep * 100;
+  const percentage = mediaWizard.currentStep;
 
   const background = {
     backgroundColor: '#dee2e6',

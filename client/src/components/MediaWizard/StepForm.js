@@ -1,39 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './styles.css';
-import AppContext from './Context';
 import FormOne from './FormOne';
 import FormTwo from './FormTwo';
 import FormThree from './FormThree';
 import FormFour from './FormFour';
 import FormFinish from './FormFinish';
 import ProgressBar from './ProgressBar';
+import { useGlobalContext } from '../../contexts/context';
 
 const StepForm = () => {
-  const [step, setStep] = useState(0);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const { mediaWizard, setMediaWizard } =
+    useGlobalContext();
 
-  const fileDetails = {
-    selectedFile: selectedFile,
-    currentPage: step,
-    setSelectedFile,
-    setStep,
-  };
-  console.log(step);
-  return (
-    <AppContext.Provider value={{ fileDetails }}>
+    return (
       <div className="main">
         <div className="body">
           <div className="wrapper">
             <ProgressBar />
-            {step === 0 && <FormOne />}
-            {step === 1 && <FormTwo />}
-            {step === 2 && <FormThree />}
-            {step === 3 && <FormFour />}
-            {step === 4 && <FormFinish />}
+            {mediaWizard.currentStep === 0 && <FormOne />}
+            {mediaWizard.currentStep === 1 && <FormTwo />}
+            {mediaWizard.currentStep === 2 && <FormThree />}
+            {mediaWizard.currentStep === 3 && <FormFour />}
+            {mediaWizard.currentStep === 4 && <FormFinish />}
           </div>
         </div>
       </div>
-    </AppContext.Provider>
   );
 };
 

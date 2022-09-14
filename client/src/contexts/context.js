@@ -2,6 +2,12 @@ import React, { useContext, useState, useRef, useEffect } from 'react';
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
+
+  const [mediaWizard, setMediaWizard] = useState({
+    currentStep: 0,
+    selectedFile: null
+  });
+
   const [moviesAndTVSearchInput, setMoviesAndTVSearchInput] = useState('');
   const [moviesAndTVPlayerState, setMoviesAndTVPlayerState] = useState('');
 
@@ -230,6 +236,8 @@ const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        mediaWizard, 
+        setMediaWizard,
         moviesAndTVSearchInput,
         setMoviesAndTVSearchInput,
         moviesAndTVPlayerState,

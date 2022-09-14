@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import AppContext from './Context';
+import React from 'react';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -8,14 +7,17 @@ import {
   faFileAudio,
 } from '@fortawesome/free-solid-svg-icons';
 import './styles.css';
+import { useGlobalContext } from '../../contexts/context';
 
 const FormOne = () => {
   const { data: notAvailable } = useSWR(`/not_available`);
-  let myContext = useContext(AppContext);
-  let updateContext = myContext.fileDetails;
+  const { mediaWizard, setMediaWizard } =
+    useGlobalContext();
 
+  
+  console.log(`FormOne ` + JSON.stringify(mediaWizard));
   const changeSelection = (item) => {
-    updateContext.setSelectedFile(item);
+    //updateContext.setSelectedFile(item);
     next();
   };
 
@@ -24,12 +26,17 @@ const FormOne = () => {
       console.log('Please choose a file');
     } else {
       console.log(JSON.stringify(item));
-      updateContext.setSelectedFile(item);
-      updateContext.setStep((prevStep) => prevStep + 1);
+
+      setMediaWizard((mediaWizard) => ({
+        ...mediaWizard,
+        selectedFile: item,
+        currentStep:  parseInt(mediaWizard.currentStep) + 1 
+      }));
+
     }
   };
 
-  console.log(JSON.stringify(updateContext));
+
   return (
     <div className="contain">
       <p>Choose a file</p>

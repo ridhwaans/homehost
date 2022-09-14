@@ -10,7 +10,6 @@ import { useGlobalContext } from '../../contexts/context';
 
 const SelectedItem = ({
   currentSlide,
-  additionalMovieInfo,
   closeInformationWindow,
 }) => {
   const [menuOption, setMenuOption] = useState('general-info');
@@ -35,11 +34,11 @@ const SelectedItem = ({
         <div className="ai-background-nav-shadow"></div>
       </div>
 
-      {additionalMovieInfo ? (
+      {currentSlide ? (
         <React.Fragment>
           <div className="ai-content-area">
             <div className="ai-content-area-container">
-              {additionalMovieInfo.logo_path ? (
+              {currentSlide.logo_path ? (
                 <div
                   className="ai-content-area-banner-logo"
                   style={{
@@ -50,7 +49,7 @@ const SelectedItem = ({
               ) : (
                 <h3>
                   <div>
-                    {additionalMovieInfo.type === 'Movie'
+                    {currentSlide.type === 'Movie'
                       ? currentSlide.title
                       : currentSlide.name}
                   </div>
@@ -63,9 +62,9 @@ const SelectedItem = ({
                     <span className="imdb">
                       <a
                         href={`${process.env.REACT_APP_TMDB_BASE}${
-                          additionalMovieInfo.type === 'Movie'
-                            ? additionalMovieInfo.imdb_id
-                            : additionalMovieInfo.imdb_id
+                          currentSlide.type === 'Movie'
+                            ? currentSlide.imdb_id
+                            : currentSlide.imdb_id
                         }`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -74,14 +73,14 @@ const SelectedItem = ({
                       </a>
                     </span>
                     <span className="score">
-                      {additionalMovieInfo.vote_average}
+                      {currentSlide.vote_average}
                     </span>
                     <span className="year">{currentSlide.release_date}</span>
                     <span className="duration">
-                      {additionalMovieInfo.type === 'Movie'
-                        ? `${additionalMovieInfo.runtime}m`
-                        : `${additionalMovieInfo.seasons.length} Season${
-                            additionalMovieInfo.seasons.length > 1 ? `s` : ``
+                      {currentSlide.type === 'Movie'
+                        ? `${currentSlide.runtime}m`
+                        : `${currentSlide.seasons.length} Season${
+                            currentSlide.seasons.length > 1 ? `s` : ``
                           }`}
                     </span>
                   </div>
@@ -93,14 +92,14 @@ const SelectedItem = ({
                       <button
                         className="hasLabel"
                         onClick={() => {
-                          additionalMovieInfo.type === 'Movie'
-                            ? setMoviesAndTVPlayerState(additionalMovieInfo)
+                          currentSlide.type === 'Movie'
+                            ? setMoviesAndTVPlayerState(currentSlide)
                             : setMoviesAndTVPlayerState({
-                                data: additionalMovieInfo,
+                                data: currentSlide,
                                 season_number:
-                                  additionalMovieInfo.seasons[0].season_number,
+                                  currentSlide.seasons[0].season_number,
                                 episode_number:
-                                  additionalMovieInfo.seasons[0].episodes[0]
+                                  currentSlide.seasons[0].episodes[0]
                                     .episode_number,
                               });
                         }}
@@ -123,14 +122,14 @@ const SelectedItem = ({
                   <div className="meta-lists">
                     <p className="inline-list">
                       <span>Featuring:</span>
-                      {additionalMovieInfo.credits.cast.map((person, index) => {
+                      {currentSlide.credits.cast.map((person, index) => {
                         if (index < 6) return person.name + ' ';
                         return null;
                       })}
                     </p>
                     <p className="inline-list">
                       <span>Genres:</span>
-                      {additionalMovieInfo.genres.map((genre, index) => {
+                      {currentSlide.genres.map((genre, index) => {
                         if (index < 6) return genre.name + ' ';
                         return null;
                       })}
@@ -138,11 +137,11 @@ const SelectedItem = ({
                   </div>
                 </div>
               ) : menuOption === 'episodes' ? (
-                <Episodes additionalMovieInfo={additionalMovieInfo} />
+                <Episodes currentSlide={currentSlide} />
               ) : menuOption === 'similar' ? (
-                <Similar additionalMovieInfo={additionalMovieInfo} />
+                <Similar currentSlide={currentSlide} />
               ) : menuOption === 'details' ? (
-                <Details additionalMovieInfo={additionalMovieInfo} />
+                <Details currentSlide={currentSlide} />
               ) : null}
 
               <ul className="menu">
@@ -153,7 +152,7 @@ const SelectedItem = ({
                   <div className="menu-button">GENERAL INFORMATION</div>
                   <span></span>
                 </li>
-                {additionalMovieInfo.type === 'Show' ? (
+                {currentSlide.type === 'Show' ? (
                   <li
                     className={`${menuOption === 'episodes' && 'current'}`}
                     onClick={() => setMenuOption('episodes')}

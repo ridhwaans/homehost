@@ -7,7 +7,7 @@ import { useGlobalContext } from '../../contexts/context';
 const Search = () => {
   const { moviesAndTVSearchInput, setMoviesAndTVSearchInput } =
     useGlobalContext();
-
+  
   const debouncedSearch = useDebounce(moviesAndTVSearchInput, 1000);
 
   const { data } = useSWR(() =>

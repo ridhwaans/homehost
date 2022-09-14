@@ -1,26 +1,34 @@
-import React, { useContext } from 'react';
-import AppContext from './Context';
+import React from 'react';
 import './styles.css';
+import { useGlobalContext } from '../../contexts/context';
 
 const FormTwo = () => {
-  const myContext = useContext(AppContext);
-  const updateContext = myContext.fileDetails;
+  const { mediaWizard, setMediaWizard } =
+    useGlobalContext();
 
   const next = (type) => {
-    updateContext.setSelectedFile({
-      ...updateContext.selectedFile,
-      type: type,
-    });
-    updateContext.setStep(updateContext.currentPage + 1);
+
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      selectedFile: {...mediaWizard.selectedFile, type: type},
+      currentStep:  mediaWizard.currentStep + 1 
+    }));
+
   };
   const previous = () => {
-    updateContext.setStep(updateContext.currentPage - 1);
+
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      selectedFile: {...mediaWizard.selectedFile, type: null},
+      currentStep:  mediaWizard.currentStep - 1 
+    }));
+
   };
 
   return (
     <div className="container">
       <p>
-        What type of file is this? <b>{updateContext.selectedFile.fs_path}</b>
+        What type of file is this? <b>{mediaWizard.selectedFile.fs_path}</b>
       </p>
       <div></div>
       <div className="formContain">

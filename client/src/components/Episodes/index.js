@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { useGlobalContext } from '../../contexts/context';
 
-const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
+const Episodes = ({ currentSlide, noEpisodesTab }) => {
   const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } =
     useGlobalContext();
   const [seasonNumber, setSeasonNumber] = useState(1);
@@ -22,20 +22,20 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
     setShowOverlay(null);
   };
 
-  if (additionalMovieInfo && additionalMovieInfo.type === 'Movie') {
+  if (currentSlide && currentSlide.type === 'Movie') {
     noEpisodesTab();
   }
 
   return (
-    additionalMovieInfo &&
-    additionalMovieInfo.type === 'Show' && (
+    currentSlide &&
+    currentSlide.type === 'Show' && (
       <div className="menu-episodes">
         <SeasonSelect
-          items={additionalMovieInfo.seasons}
+          items={currentSlide.seasons}
           onChange={changeSeason}
         />
         <div className="menu-episode-content">
-          {additionalMovieInfo.seasons
+          {currentSlide.seasons
             .find((season) => season.season_number === seasonNumber)
             .episodes.map((episode, index) => {
               return (
@@ -55,7 +55,7 @@ const Episodes = ({ additionalMovieInfo, noEpisodesTab }) => {
                     <img
                       onClick={() =>
                         setMoviesAndTVPlayerState({
-                          data: additionalMovieInfo,
+                          data: currentSlide,
                           season_number: seasonNumber,
                           episode_number: index + 1,
                         })

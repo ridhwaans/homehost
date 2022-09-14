@@ -1,10 +1,10 @@
 import React from 'react';
 
-const Similar = ({ additionalMovieInfo }) => {
+const Similar = ({ currentSlide }) => {
   return (
     <div className="menu-similar">
       <div className="menu-similar-content">
-        {additionalMovieInfo.similar.map((similarMovie, index) => {
+        {currentSlide.similar.map((similarMovie, index) => {
           if (index < 4) {
             return (
               <div className="similar-item" key={index}>
@@ -16,7 +16,7 @@ const Similar = ({ additionalMovieInfo }) => {
                 </div>
                 <div className="similar-item-metada">
                   <span className="similar-item-title">
-                    {additionalMovieInfo.type === 'Movie'
+                    {currentSlide.type === 'Movie'
                       ? similarMovie.title
                       : similarMovie.name}
                   </span>

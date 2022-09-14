@@ -1,7 +1,6 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { externalSearch } from '../../api';
 import { useDebounce } from '../../hooks/useDebounce';
-import AppContext from './Context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,
@@ -9,16 +8,18 @@ import {
   faFileAudio,
 } from '@fortawesome/free-solid-svg-icons';
 import './styles.css';
+import useSWR from 'swr';
+import { useGlobalContext } from '../../contexts/context';
 
 const FormThree = () => {
   const [searchBox, setSearchBox] = useState(false);
   const inputRef = useRef(null);
-  const [searchInput, updateSearchInput] = useState(null);
-  const [searchResults, setSearchResults] = useState(null);
-  const dInput = useDebounce(searchInput, 1000);
+  const [searchInput, updateSearchInput] = useState('');
+  const debouncedSearch = useDebounce(searchInput, 1000);
+  const { mediaWizard, setMediaWizard } =
+    useGlobalContext();
 
-  const myContext = useContext(AppContext);
-  const updateContext = myContext.fileDetails;
+  const {data : searchResults} = useSWR(mediaWizard?.selectedFile?.type !== "Episode" ? `/services/search?type=${mediaWizard.selectedFile.type}&q=${debouncedSearch}` : null);
 
   const toggleSearchBox = () => {
     if (!searchBox && inputRef.current) inputRef.current.focus();
@@ -35,25 +36,32 @@ const FormThree = () => {
     return { searchResults };
   };
 
-  useEffect(() => {
-    if (!updateContext.selectedFile || (dInput && dInput.trim().length === 0))
-      return;
-    console.log(`type: ${updateContext.selectedFile.type}, search: ${dInput}`);
-    fetchSearchResults(updateContext.selectedFile.type, dInput).then(
-      (response) => {
-        setSearchResults(response.searchResults);
-      }
-    );
-    return () => {
-      setSearchResults(null);
-    };
-  }, [dInput]);
+  // useEffect(() => {
+  //   if (!updateContext.selectedFile || (dInput && dInput.trim().length === 0))
+  //     return;
+  //   console.log(`type: ${updateContext.selectedFile.type}, search: ${dInput}`);
+  //   fetchSearchResults(updateContext.selectedFile.type, dInput).then(
+  //     (response) => {
+  //       setSearchResults(response.searchResults);
+  //     }
+  //   );
+  //   return () => {
+  //     setSearchResults(null);
+  //   };
+  // }, [dInput]);
 
   const next = () => {
-    updateContext.setStep(updateContext.currentPage + 1);
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      currentStep:  mediaWizard.currentStep + 1 
+    }));
   };
+
   const previous = () => {
-    updateContext.setStep(updateContext.currentPage - 1);
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      currentStep:  mediaWizard.currentStep - 1 
+    }));
   };
 
   const unknownAlbum = (
@@ -69,12 +77,12 @@ const FormThree = () => {
   return (
     <div className="container">
       <p>
-        Find the {updateContext.selectedFile.type}
-        <b>{updateContext.selectedFile.fs_path}</b>
+        Find the {mediaWizard.selectedFile.type}
+        <b>{mediaWizard.selectedFile.fs_path}</b>
       </p>
       <div className="formContain">
         <form className="form">
-          {updateContext.selectedFile && (
+          {mediaWizard.selectedFile && (
             <div className="tabcontent">
               <div className={`${searchBox ? 'searchBox' : 'searchIcon'}`}>
                 <span className="icon" onClick={() => toggleSearchBox()}>
@@ -91,7 +99,7 @@ const FormThree = () => {
                   maxLength="80"
                 />
               </div>
-              {updateContext.selectedFile.type === 'Movie' &&
+              {mediaWizard.selectedFile.type === 'Movie' &&
                 searchResults &&
                 searchResults.results.map((item) => (
                   <div className="search-result-item">
@@ -109,8 +117,8 @@ const FormThree = () => {
                     </div>
                   </div>
                 ))}
-              {updateContext.selectedFile.type === 'Song' && unknownAlbum}
-              {updateContext.selectedFile.type === 'Song' &&
+              {mediaWizard.selectedFile.type === 'Song' && unknownAlbum}
+              {mediaWizard.selectedFile.type === 'Song' &&
                 searchResults &&
                 searchResults.tracks.items.map((item) => (
                   <div className="search-result-item">

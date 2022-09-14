@@ -1,24 +1,31 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { addMovie, addEpisode, addSong } from '../../api';
-import AppContext from './Context';
 import './styles.css';
+import { useGlobalContext } from '../../contexts/context';
 
 const FormFour = () => {
-  const myContext = useContext(AppContext);
-  const updateContext = myContext.fileDetails;
+  const { mediaWizard, setMediaWizard } =
+    useGlobalContext();
 
   const next = () => {
-    updateContext.setStep(updateContext.currentPage + 1);
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      currentStep:  mediaWizard.currentStep + 1 
+    }));
+
   };
 
   const previous = () => {
-    updateContext.setStep(updateContext.currentPage - 1);
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      currentStep:  mediaWizard.currentStep - 1 
+    }));
   };
 
   const applyMovie = async (item) => {
     await addMovie({
-      type: updateContext.selectedFile.type,
-      fs_path: updateContext.selectedFile.fs_path,
+      type: mediaWizard.selectedFile.type,
+      fs_path: mediaWizard.selectedFile.fs_path,
       id: item.id,
       title: item.title,
       release_year: parseInt(item.release_date),
@@ -27,8 +34,8 @@ const FormFour = () => {
 
   const applyEpisode = async (item) => {
     await addEpisode({
-      type: updateContext.selectedFile.type,
-      fs_path: updateContext.selectedFile.fs_path,
+      type: mediaWizard.selectedFile.type,
+      fs_path: mediaWizard.selectedFile.fs_path,
       id: item.id,
       title: item.title,
     });
@@ -36,8 +43,8 @@ const FormFour = () => {
 
   const applySong = async (item) => {
     await addSong({
-      type: updateContext.selectedFile.type,
-      fs_path: updateContext.selectedFile.fs_path,
+      type: mediaWizard.selectedFile.type,
+      fs_path: mediaWizard.selectedFile.fs_path,
       album_id: item.album.id,
       album_name: item.album.name,
       album_release_year: parseInt(item.album.release_date),
@@ -49,8 +56,8 @@ const FormFour = () => {
 
   const applyUnknownAlbumSong = async () => {
     await addSong({
-      type: updateContext.selectedFile.type,
-      fs_path: updateContext.selectedFile.fs_path,
+      type: mediaWizard.selectedFile.type,
+      fs_path: mediaWizard.selectedFile.fs_path,
       album_name: 'Unknown Album',
     });
   };
