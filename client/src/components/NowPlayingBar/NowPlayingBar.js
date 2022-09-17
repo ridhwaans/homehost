@@ -16,8 +16,10 @@ const NowPlayingBar = () => {
     audioPlayer,
     progressBar,
     volumeBar,
+    animationRef,
     playerState,
     togglePlayPause,
+    songChanged,
     previousSong,
     nextSong,
     toggleMute,
@@ -127,6 +129,7 @@ const NowPlayingBar = () => {
           ref={audioPlayer}
           src={`${process.env.REACT_APP_HOMEHOST_BASE}${playerState.currentSong.url_path}`}
           preload="metadata"
+          onLoadedMetadata={songChanged}
         ></audio>
       </div>
     );

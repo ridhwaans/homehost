@@ -29,42 +29,13 @@ const AppProvider = ({ children }) => {
     playlist: [],
     currentSong: null,
     isPlaying: false,
-    currentTime: 0,
-    duration: 0,
+    currentTime: null,
+    duration: null,
     isMuted: false,
     currentVolume: 0.7,
     repeat: REPEAT_STATES.REPEAT_OFF,
     shuffle: false,
   });
-
-  useEffect(() => {
-    if (!audioPlayer.current) return;
-    const seconds = Math.floor(audioPlayer.current.duration);
-
-    setPlayerState((playerState) => ({
-      ...playerState,
-      duration: seconds,
-    }));
-    progressBar.current.max = seconds;
-    //console.log("use effect A " + JSON.stringify(playerState))
-  }, [
-    playerState?.currentSong,
-    audioPlayer?.current?.loadedmetadata,
-    audioPlayer?.current?.readyState,
-  ]);
-
-  useEffect(() => {
-    if (playerState.isPlaying) {
-      audioPlayer.current.pause();
-      audioPlayer.current.play();
-      animationRef.current = requestAnimationFrame(whilePlaying);
-    }
-    //console.log("use effect B " + JSON.stringify(playerState))
-  }, [
-    playerState?.currentIndex,
-    audioPlayer?.current?.loadedmetadata,
-    audioPlayer?.current?.readyState,
-  ]);
 
   useEffect(() => {
     if (playerState.currentTime >= playerState.duration) {
@@ -112,7 +83,7 @@ const AppProvider = ({ children }) => {
     //console.log(`progressBar.current.value / playerState.duration: ${progressBar.current.value} / ${playerState.duration}`)
     progressBar.current.style.setProperty(
       '--seek-before-width',
-      `${(progressBar.current.value / playerState.duration) * 100}%`
+      `${(progressBar.current.value / audioPlayer.current.duration) * 100}%`
     );
     setPlayerState((playerState) => ({
       ...playerState,
@@ -132,7 +103,7 @@ const AppProvider = ({ children }) => {
       ...playerState,
       currentVolume: volumeBar.current.value,
     }));
-    //console.log(`volumeBar.current.value is ${volumeBar.current.value}, currentVolume is ${playerState.currentVolume}`)
+    //console.log(`volumeBar.current.value: ${volumeBar.current.value}, playerState.currentVolume: ${playerState.currentVolume}`)
   };
 
   const toggleMute = () => {
@@ -149,6 +120,22 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const songChanged = () => {
+    //console.log(`audioPlayer.current.duration: ${audioPlayer.current.duration}`)
+    const seconds = Math.floor(audioPlayer.current.duration);
+
+    setPlayerState((playerState) => ({
+      ...playerState,
+      isPlaying: true,
+      duration: seconds,
+    }));
+    progressBar.current.max = seconds;
+
+    audioPlayer.current.pause();
+    audioPlayer.current.play();
+    animationRef.current = requestAnimationFrame(whilePlaying);
+  };
+
   const changeSong = (songId, playlist) => {
     let index = playlist.findIndex((item) => item.id === songId);
 
@@ -158,8 +145,6 @@ const AppProvider = ({ children }) => {
       playlist: playlist,
       currentIndex: index,
     }));
-
-    //console.log("changeSong " + JSON.stringify(playerState))
   };
 
   const nextSong = () => {
@@ -178,8 +163,7 @@ const AppProvider = ({ children }) => {
       }
     });
 
-    //console.log(`NEXT SONG: currentIndex: ${playerState.currentIndex} and playerState.playlist.length: ${playerState.playlist.length}`)
-
+    //console.log(`playerState.currentIndex: ${playerState.currentIndex}, playerState.playlist.length: ${playerState.playlist.length}`)
     if (playerState.currentIndex !== playerState.playlist.length) {
       setPlayerState((playerState) => ({
         ...playerState,
@@ -223,7 +207,7 @@ const AppProvider = ({ children }) => {
         repeat: REPEAT_STATES.REPEAT_OFF,
       }));
     }
-    //console.log(`toggleRepeat state ${playerState.repeat}`)
+    //console.log(`playerState.repeat: ${playerState.repeat}`)
   };
 
   const toggleShuffle = () => {
@@ -232,7 +216,7 @@ const AppProvider = ({ children }) => {
       ...playerState,
       shuffle: !prevValue,
     }));
-    //console.log(`toggleShuffle state ${playerState.shuffle}`)
+    //console.log(`playerState.shuffle: ${playerState.shuffle}`)
   };
 
   return (
@@ -259,6 +243,7 @@ const AppProvider = ({ children }) => {
         changeProgress,
         changeVolume,
         calculateTime,
+        songChanged,
         changeSong,
         nextSong,
         previousSong,

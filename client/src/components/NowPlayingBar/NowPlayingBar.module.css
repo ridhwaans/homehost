@@ -138,11 +138,15 @@
 .currentTime,
 .duration {
   font-family: monospace;
-  font-size: 16px;
+  font-size: 14px;
+  color: var(--color-secondary);
 }
 
 .currentTime {
-  margin-left: 25px;
+  margin-right: 10px;
+}
+.duration {
+  margin-left: 10px;
 }
 
 .progressBar {
@@ -157,7 +161,7 @@
   border-radius: 10px;
   position: relative;
   width: 100%;
-  height: 11px;
+  height: 5px;
   outline: none;
 }
 
@@ -167,7 +171,7 @@
   border-radius: 10px;
   position: relative;
   width: 100%;
-  height: 11px;
+  height: 5px;
   outline: none;
 }
 
@@ -177,7 +181,7 @@
   border-radius: 10px;
   position: relative;
   width: 100%;
-  height: 11px;
+  height: 5px;
   outline: none;
 }
 
@@ -188,7 +192,7 @@
 /* progress bar - chrome and safari */
 .progressBar::before {
   content: '';
-  height: 11px;
+  height: 5px;
   width: var(--seek-before-width);
   background-color: var(--seek-before-color);
   border-top-left-radius: 10px;
@@ -205,7 +209,7 @@
   background-color: var(--seek-before-color);
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  height: 11px;
+  height: 5px;
 }
 
 /* knobby - chrome and safari */
@@ -218,7 +222,7 @@
   background-color: var(--knobby);
   cursor: pointer;
   position: relative;
-  margin: -2px 0 0 0;
+  margin: -4px 0 0 0;
   z-index: 3;
   box-sizing: border-box;
   opacity: 0;
