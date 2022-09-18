@@ -1,7 +1,8 @@
 import React from 'react';
-import Play from '../../../assets/NowPlayingBar/Play';
+
 import Pause from '../../../assets/NowPlayingBar/Pause';
-import { millisToMinutesAndSeconds, formatDate } from '../../../utils';
+import Play from '../../../assets/NowPlayingBar/Play';
+import { millisToMinutesAndSeconds } from '../../../utils';
 import style from './SongItemMini.module.css';
 
 export const SongItemMini = ({ song, songClicked, current }) => {

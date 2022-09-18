@@ -1,16 +1,16 @@
-import React, { useRef, useEffect } from 'react';
+import {
+  faChevronLeft,
+  faChevronRight,
+  faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useEffect, useRef } from 'react';
+
+import useSlider from '../../hooks/useSlide';
+import useWindowWidth from '../../hooks/useWindowWidth';
 import SelectedItem from '../SelectedItem';
 import SliderItem from '../SliderItem';
 import SliderContext from './context';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChevronRight,
-  faChevronLeft,
-  faUndo,
-} from '@fortawesome/free-solid-svg-icons';
-
-import useWindowWidth from '../../hooks/useWindowWidth';
-import useSlider from '../../hooks/useSlide';
 
 function Slider({ mainTitle, data, poster }) {
   const width = useWindowWidth();

@@ -1,14 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { useDebounce } from '../../hooks/useDebounce';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faFileVideo,
-  faFileAudio,
-} from '@fortawesome/free-solid-svg-icons';
-import './styles.css';
+import React, { useRef, useState } from 'react';
 import useSWR from 'swr';
+
 import { useGlobalContext } from '../../contexts/context';
+import { useDebounce } from '../../hooks/useDebounce';
+import './styles.css';
 
 const FormThree = () => {
   const [searchBox, setSearchBox] = useState(false);
@@ -80,7 +77,7 @@ const FormThree = () => {
               {mediaWizard.selectedFile.type === 'Movie' &&
                 searchResults &&
                 searchResults.results.map((item) => (
-                  <div className="search-result-item">
+                  <div key={item.id} className="search-result-item">
                     <img
                       src={`${process.env.REACT_APP_IMAGE_BASE}original/${item.poster_path}`}
                       width="100"
@@ -99,7 +96,7 @@ const FormThree = () => {
               {mediaWizard.selectedFile.type === 'Song' &&
                 searchResults &&
                 searchResults.tracks.items.map((item) => (
-                  <div className="search-result-item">
+                  <div key={item.id} className="search-result-item">
                     <img
                       src={item.album.images[0].url}
                       width="125"

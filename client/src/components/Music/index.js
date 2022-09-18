@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import SideBar from '../MusicSidebar/SideBar';
 import MusicHeader from '../MusicHeader/MusicHeader';
+import SideBar from '../MusicSidebar/SideBar';
 import NowPlayingBar from '../NowPlayingBar/NowPlayingBar';
 import style from './Music.module.css';
 

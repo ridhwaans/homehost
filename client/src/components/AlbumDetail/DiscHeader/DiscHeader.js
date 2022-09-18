@@ -1,6 +1,7 @@
 import React from 'react';
-import style from './DiscHeader.module.css';
+
 import Disc from '../../../assets/AlbumDetail/Disc';
+import style from './DiscHeader.module.css';
 
 export const DiscHeader = ({ number }) => {
   return (

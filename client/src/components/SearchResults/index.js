@@ -1,29 +1,24 @@
-import React, { useRef, useEffect } from 'react';
-import SearchResultsSelectedItem from '../SearchResultsSelectedItem';
-import SearchResultsItem from '../SearchResultsItem';
-import SliderContext from './context';
+import React, { useEffect, useRef } from 'react';
 
-import useWindowWidth from '../../hooks/useWindowWidth';
 import useSlider from '../../hooks/useSlide';
+import useWindowWidth from '../../hooks/useWindowWidth';
+import SearchResultsItem from '../SearchResultsItem';
+import SearchResultsSelectedItem from '../SearchResultsSelectedItem';
+import SliderContext from './context';
 
 function SearchResults({ mainTitle, data, poster }) {
   const width = useWindowWidth();
   const ref = useRef(null);
 
   const {
-    moveSection,
     selectSlide,
     closeInformationWindow,
     scaleTiles,
     resetSize,
-    sliderPages,
     slideProps,
-    hasPrev,
-    hasNext,
     content,
     currentSlide,
     additionalMovieInfo,
-    paginationIndicator,
   } = useSlider(width, ref, data.length, data, poster);
 
   const contextValue = {

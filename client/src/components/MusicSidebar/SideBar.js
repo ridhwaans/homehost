@@ -1,20 +1,21 @@
+import {
+  faBook,
+  faFilm,
+  faFolderPlus,
+  faHome,
+  faList,
+  faMusic,
+  faPodcast,
+  faSearch,
+  faTv,
+} from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ListItem from './ListItem/ListItem';
-import SidebarOption from './SidebarOption/SidebarOption';
-import style from './SideBar.module.css';
+
 import logo from '../../assets/logos/Homehost_White.svg';
-import {
-  faHome,
-  faSearch,
-  faMusic,
-  faFilm,
-  faTv,
-  faPodcast,
-  faBook,
-  faFolderPlus,
-  faList,
-} from '@fortawesome/free-solid-svg-icons';
+import ListItem from './ListItem/ListItem';
+import style from './SideBar.module.css';
+import SidebarOption from './SidebarOption/SidebarOption';
 
 const SideBar = ({ albums }) => {
   return (

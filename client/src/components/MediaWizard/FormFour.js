@@ -1,6 +1,7 @@
 import React from 'react';
-import './styles.css';
+
 import { useGlobalContext } from '../../contexts/context';
+import './styles.css';
 
 const addItem = (resource, data) =>
   fetch(`${process.env.REACT_APP_HOMEHOST_BASE}/api` + resource, {
@@ -19,6 +20,11 @@ const FormFour = () => {
       ...mediaWizard,
       currentStep: mediaWizard.currentStep + 1,
     }));
+    if (mediaWizard.selectedFile.name === 'Unknown Album')
+      applyUnknownAlbumSong();
+    if (mediaWizard.selectedFile.type === 'Song') applySong();
+    if (mediaWizard.selectedFile.type === 'Episode') applyEpisode();
+    if (mediaWizard.selectedFile.name === 'Movie') applyMovie();
   };
 
   const previous = () => {

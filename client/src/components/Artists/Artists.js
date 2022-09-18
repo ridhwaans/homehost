@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+
 import ArtistItem from './ArtistItem/ArtistItem';
 import style from './Artists.module.css';
 

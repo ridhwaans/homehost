@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import style from './AlbumItem.module.css';
+
 import Play from '../../../assets/NowPlayingBar/Play';
+import style from './AlbumItem.module.css';
 
 const AlbumItem = (props) => {
   var album = props.album;

@@ -1,6 +1,7 @@
-import React from 'react';
-import style from './SidebarOption.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+
+import style from './SidebarOption.module.css';
 
 function SidebarOption({ Icon, option }) {
   return (

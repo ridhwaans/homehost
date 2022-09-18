@@ -2,7 +2,7 @@ import React from 'react';
 
 const Details = ({ currentSlide }) => {
   const findOnebyType = (name, type, data) => {
-    let first = data.find((item, index) => item.department === type);
+    let first = data.find((item) => item.department === type);
 
     if (first) {
       return (

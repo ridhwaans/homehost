@@ -1,14 +1,14 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import SliderContext from '../SearchResults/context';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleDown,
   faPlayCircle,
-  faThumbsUp,
   faPlus,
+  faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import useVisibility from '../../hooks/useVisibility';
+import SliderContext from '../SearchResults/context';
 
 function SearchResultsItem(props) {
   const ref = useRef(null);
@@ -43,14 +43,6 @@ function SearchResultsItem(props) {
   useVisibility(ref, itemVisible, itemNotVisible);
 
   useEffect(() => {}, [inViewport, setInViewport]);
-
-  const translate = `translateX(${props.transform})`;
-
-  const styled = {
-    transform: translate,
-    transformOrigin: props.origin,
-    transition: 'all 0.3s ease-in-out',
-  };
 
   return (
     <div

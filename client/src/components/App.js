@@ -1,20 +1,18 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Movies from './Movies';
-import TVShows from './TVShows';
-import Music from './Music';
-
-import MusicHome from './MusicHome/MusicHome';
-import MusicSearch from './MusicSearch';
-import Albums from './Albums/Albums';
-import AlbumDetail from './AlbumDetail/AlbumDetail';
-import Artists from './Artists/Artists';
-import Songs from './Songs/Songs';
+import { SWRConfig } from 'swr';
 
 import Admin from './Admin';
+import AlbumDetail from './AlbumDetail/AlbumDetail';
+import Albums from './Albums/Albums';
+import Artists from './Artists/Artists';
+import Movies from './Movies';
+import Music from './Music';
+import MusicHome from './MusicHome/MusicHome';
+import MusicSearch from './MusicSearch';
 import NotFound from './NotFound';
-
-import { SWRConfig } from 'swr';
+import Songs from './Songs/Songs';
+import TVShows from './TVShows';
 
 const App = () => {
   return (

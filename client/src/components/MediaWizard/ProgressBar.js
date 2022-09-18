@@ -1,8 +1,9 @@
 import React from 'react';
+
 import { useGlobalContext } from '../../contexts/context';
 
 const ProgressBar = () => {
-  const { mediaWizard, setMediaWizard } = useGlobalContext();
+  const { mediaWizard } = useGlobalContext();
 
   console.log(`ProgressBar ` + JSON.stringify(mediaWizard));
 

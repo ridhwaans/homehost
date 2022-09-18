@@ -1,55 +1,67 @@
 <h2 align="center"> homehost </h2>
 
 <h3 align="center"> homehost is made for streaming your media collection within the home network </h3>
-<h4 align="center"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music, 📚 Books, 📒 Comics, 🎙️ Podcasts </h4>
+<h4 align="center"> Features: 🎥 Movies, 📺 TV Shows, 🎵 Music </h4>
 
-  * [🎥 Movies](#-movies)
-  * [📺 TV Shows](#-tv-shows)
-  * [🎵 Music](#-music)
-  * [⚙️ Setup](#%EF%B8%8F-setup)
-    + [Naming conventions](#naming-conventions)
-    + [Database](#database)
-    + [Run](#run)
-    + [Routes](#routes)
-      - [Server-side](#server-side)
-      - [Client-side](#client-side)
-  * [Development](#development)
-  * [Powered by](#powered-by)
-  * [License](#license)
-  * [Disclaimer](#disclaimer)
-    + [General Copyright Statement](#general-copyright-statement)
+- [🎥 Movies](#-movies)
+- [📺 TV Shows](#-tv-shows)
+- [🎵 Music](#-music)
+- [⚙️ Setup](#%EF%B8%8F-setup)
+  - [Naming conventions](#naming-conventions)
+  - [Database](#database)
+  - [Run](#run)
+  - [Routes](#routes)
+    - [Server-side](#server-side)
+    - [Client-side](#client-side)
+- [Development](#development)
+- [Powered by](#powered-by)
+- [License](#license)
+- [Disclaimer](#disclaimer)
+  - [General Copyright Statement](#general-copyright-statement)
 
 ## 🎥 Movies
+
 ### Home
+
 ![movies_1](media/movies_1.png)
+
 ### Search
+
 ![movies_2](media/movies_2.png)
+
 ## 📺 TV Shows
+
 ### Home
+
 ![tv](media/tv_1.png)
+
 ## 🎵 Music
+
 ### Home
+
 ![music](media/music_1.png)
+
 ### Search
+
 ![music](media/music_2.png)
+
 ### Album
+
 ![music](media/music_3.png)
 
 ## ⚙️ Setup
 
-Run `npm install` from the `client/` directory and from the `server/` directory  
-Create a `.env` file in the `client/` directory, if it does not exist  
-In `.env`, set the base url of the homehost server  
-###### **`client/.env`**
+Run `npm install`
+
+In `.env`, set a working API key for TMDb API and Spotify Web API, set the media paths, and set tha base url of the homehost client
+
+###### **`.env`**
+
 ```env
 REACT_APP_HOMEHOST_BASE = "http://localhost:5000"
 REACT_APP_IMAGE_BASE = "https://image.tmdb.org/t/p/"
 REACT_APP_TMDB_BASE = "https://www.imdb.com/title/"
-```  
-Create a `.env` file in the `server/` directory, if it does not exist  
-In `.env`, set a working API key for TMDb API and Spotify Web API, set the media paths, and set tha base url of the homehost client  
-###### **`server/.env`**
-```env
+
 TMDB_KEY = '<api_key>'
 SPOTIFY_CLIENT_ID = '<client_id>'
 SPOTIFY_CLIENT_SECRET = '<client_secret>'
@@ -61,52 +73,60 @@ MUSIC_PATH = '/path/to/music/directory'
 DATABASE_URL = 'file:./data/media.db'
 CLIENT_BASE_URL = 'http://localhost:3000'
 ```
-If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction  
+
+If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
 
 ### Naming conventions
 
 Your media must appear in the locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)  
-🎥 **Movies**  
+🎥 **Movies**
+
 ```
-<movies_path>  
-- (subdirectory)?  
-  - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)  
+<movies_path>
+- (subdirectory)?
+  - (movie_file_name <TMDb-movie-ID>) (.mp4|.mkv)
 ```
-📺 **TV**  
+
+📺 **TV**
+
 ```
-<tv_path>  
-- (tv_show_directory_name <TMDb-tv-show-ID>)  
-  - (S<season_number>E<episode_number> episode_file_name) (.mp4|.mkv)  
+<tv_path>
+- (tv_show_directory_name <TMDb-tv-show-ID>)
+  - (S<season_number>E<episode_number> episode_file_name) (.mp4|.mkv)
 ```
-🎵 **Music**  
+
+🎵 **Music**
+
 ```
-<music_path>  
-- (album_directory_name <Spotify-album-ID>)  
-  - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)  
+<music_path>
+- (album_directory_name <Spotify-album-ID>)
+  - ((<disc_number>-)?<track_number> track_file_name) (.mp3|.flac)
 ```
-Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number  
+
+Tracks not found on Spotify can be put in a directory titled `Unknown Album` sans disc/ track number
+
 ```
-<music_path>  
-- Unknown Album  
-  - (track_file_name) (.mp3|.flac)  
+<music_path>
+- Unknown Album
+  - (track_file_name) (.mp3|.flac)
 ```
 
 ### Database
 
-From `server/`, run `npx prisma migrate dev` to create the database and necessary migrations  
-Run `npm run start-dev` to start the application in dev mode  
-*homehost* scans the media paths and adds the files to the database  
+Run `npm run db:squash` to create the database and necessary migrations  
+Run `npm run start` to start the application in dev mode  
+_homehost_ scans the media paths and adds the files to the database  
 Wait for the async job to finish generating metadata and save  
-To explore all media data, run `npx prisma studio` from `server/` and go to `http://localhost:5555`  
-To reset the database and clear all data, run `npx prisma migrate reset` from `server/`  
+To browse data, run `npm run db:browse` and go to `http://localhost:5555`  
+To reset the database and clear all data, run `npm run db:reset`
 
 ### Run
 
-Run `npm run start-dev` from the `server/` directory to start the application in dev mode  
+Run `npm run start` to start the application in dev mode  
 By default, the server port is `5000`, client port is `3000`  
-Run `npm start` from the `server/` directory to start the application as prod  
+Run `npm run start:prod` to start the application as prod  
 By default, client and server will run on `5000`  
-While running, *homehost* continuously saves and retrieves metadata for any media files that were added, moved or removed  
+While running, _homehost_ continuously saves and retrieves information for any media that was added, moved or removed
 
 ### Routes
 
@@ -145,12 +165,11 @@ While running, *homehost* continuously saves and retrieves metadata for any medi
 `/music/:album_id/:disc_number/:track_number`  
 `/api/watch/search`  
 `/api/listen/search`  
-`/api/watch/billboard`  
+`/api/watch/billboard`
 
 #### Client-side
 
-`/movies`, `/tv`, `/music`  
-TODO `/books`, `/comics`, `/podcasts`  
+`/movies`, `/tv`, `/music`
 
 ## Development
 

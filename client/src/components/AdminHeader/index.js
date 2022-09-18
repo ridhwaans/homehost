@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import logo from '../../assets/logos/Homehost_White.svg';
 
 function AdminHeader() {
-  const [pinHeader, setHeader] = useState(false);
+  const [setHeader] = useState(false);
   const ref = useRef(null);
 
   const handleScroll = () => {

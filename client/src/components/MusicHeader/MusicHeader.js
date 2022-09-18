@@ -1,13 +1,14 @@
-import React, { useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faSearch,
   faChevronLeft,
   faChevronRight,
+  faSearch,
 } from '@fortawesome/free-solid-svg-icons';
-import style from './MusicHeader.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useGlobalContext } from '../../contexts/context';
+import style from './MusicHeader.module.css';
 
 const MusicHeader = ({ account }) => {
   const navigate = useNavigate();

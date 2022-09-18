@@ -1,4 +1,5 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {

@@ -2,7 +2,8 @@ const fs = require('fs');
 const qs = require('qs');
 const path = require('path');
 const express = require('express');
-const { getAbout,
+const {
+  getAbout,
   getLibraryStats,
   getAllMovies,
   getMostPopularMovies,
@@ -34,70 +35,73 @@ const { getAbout,
   getEpisodeFilePath,
   searchMoviesAndTV,
   searchMusic,
-  externalSearch } = require('../data')
-const { upsertAll, getNotAvailable } = require('../jobs')
-const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models')
+  externalSearch,
+} = require('../data');
+const { upsertAll, getNotAvailable } = require('../jobs');
+const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models');
 const router = express.Router();
 
-BigInt.prototype.toJSON = () => {       
-  return this.toString()
-}
+BigInt.prototype.toJSON = () => {
+  return this.toString();
+};
 
 const readStreamMp4 = (req, res, file_path) => {
-  const stat = fs.statSync(file_path)
-  const fileSize = stat.size
-  const range = req.headers.range
+  const stat = fs.statSync(file_path);
+  const fileSize = stat.size;
+  const range = req.headers.range;
   if (range) {
-    const parts = range.replace(/bytes=/, "").split("-")
-    const start = parseInt(parts[0], 10)
-    const end = parts[1] 
-      ? parseInt(parts[1], 10)
-      : fileSize-1
-    const chunksize = (end-start)+1
-    const file = fs.createReadStream(file_path, {start, end})
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunksize = end - start + 1;
+    const file = fs.createReadStream(file_path, { start, end });
     const head = {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
       'Accept-Ranges': 'bytes',
       'Content-Length': chunksize,
       'Content-Type': 'video/mp4',
-    }
+    };
     res.writeHead(206, head);
     file.pipe(res);
   } else {
     const head = {
       'Content-Length': fileSize,
       'Content-Type': 'video/mp4',
-    }
-    res.writeHead(200, head)
-    fs.createReadStream(file_path).pipe(res)
+    };
+    res.writeHead(200, head);
+    fs.createReadStream(file_path).pipe(res);
   }
-}
+};
 
 const readStreamMpeg = (req, res, file_path) => {
   var stat = fs.statSync(file_path);
   var total = stat.size;
   if (req.headers.range) {
     var range = req.headers.range;
-    var parts = range.replace(/bytes=/, "").split("-");
+    var parts = range.replace(/bytes=/, '').split('-');
     var partialstart = parts[0];
     var partialend = parts[1];
 
     var start = parseInt(partialstart, 10);
-    var end = partialend ? parseInt(partialend, 10) : total-1;
-    var chunksize = (end-start)+1;
-    var readStream = fs.createReadStream(file_path, {start: start, end: end});
+    var end = partialend ? parseInt(partialend, 10) : total - 1;
+    var chunksize = end - start + 1;
+    var readStream = fs.createReadStream(file_path, { start: start, end: end });
     res.writeHead(206, {
-        'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
-        'Accept-Ranges': 'bytes', 'Content-Length': chunksize,
-        'Content-Type': 'video/mp4'
+      'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'video/mp4',
     });
     readStream.pipe(res);
   } else {
-    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/mpeg' });
+    res.writeHead(200, {
+      'Content-Length': total,
+      'Content-Type': 'audio/mpeg',
+    });
     fs.createReadStream(file_path).pipe(res);
   }
-}
-  
+};
+
 router.get('/api/about', (req, res) => {
   res.json(getAbout());
 });
@@ -107,11 +111,11 @@ router.get('/api/library/stats', async (req, res) => {
 });
 
 router.get('/api/library/generate', async (req, res) => {
-  const start = new Date()
+  const start = new Date();
   res.write(`${start.toISOString()} Generating metadata. Please wait...`);
   const filter = req.query.q.split(',');
-  await upsertAll(filter)
-  const end = new Date()
+  await upsertAll(filter);
+  const end = new Date();
   res.write(`${end.toISOString()} Done`);
   res.write(`in ${(end - start) / 1000} s`);
   res.end();
@@ -126,7 +130,7 @@ router.get('/api/services/search', async (req, res) => {
 });
 
 router.post('/api/movies/add', async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   res.json(await moveMovieFile(req.body));
 });
 
@@ -154,7 +158,7 @@ router.get('/api/movies/recently_added', async (req, res) => {
   res.json(await getRecentlyAddedMovies());
 });
 
-router.get('/api/movies/genres', async (req, res) => {  
+router.get('/api/movies/genres', async (req, res) => {
   res.json(await getMovieGenres());
 });
 
@@ -171,7 +175,7 @@ router.get('/api/movies/:id', async (req, res) => {
 });
 
 router.get('/api/tv', async (req, res) => {
-  res.json(await getAllTVShows())
+  res.json(await getAllTVShows());
 });
 
 router.get('/api/tv/most_popular', async (req, res) => {
@@ -219,58 +223,77 @@ router.get('/api/music/artists/most_popular', async (req, res) => {
 });
 
 router.get('/api/music/albums', async (req, res) => {
-  res.json(await getAllAlbums())
+  res.json(await getAllAlbums());
 });
 
 router.get('/api/music/albums/:id', async (req, res) => {
-  if (req.params.id == 'undefined') return res.json({})
+  if (req.params.id == 'undefined') return res.json({});
   res.json(await getMusicAlbum(req.params.id));
 });
 
 router.get('/api/music/songs', async (req, res) => {
-  res.json(await getAllSongs())
+  res.json(await getAllSongs());
 });
 
 router.get('/api/music/songs/recently_added', async (req, res) => {
-  res.json(await getRecentlyAddedSongs())
+  res.json(await getRecentlyAddedSongs());
 });
 
 router.get('/movies/:id', async (req, res) => {
-  readStreamMp4(req, res, await getMovieFilePath(req.params.id))
+  readStreamMp4(req, res, await getMovieFilePath(req.params.id));
 });
 
-router.get('/tv/:tv_show_id/:season_number/:episode_number', async (req, res) => {
-  readStreamMp4(req, res, await getEpisodeFilePath(req.params.tv_show_id,req.params.season_number,req.params.episode_number))
-});
+router.get(
+  '/tv/:tv_show_id/:season_number/:episode_number',
+  async (req, res) => {
+    readStreamMp4(
+      req,
+      res,
+      await getEpisodeFilePath(
+        req.params.tv_show_id,
+        req.params.season_number,
+        req.params.episode_number
+      )
+    );
+  }
+);
 
 router.get('/music/:album_id/:disc_number/:track_number', async (req, res) => {
-  readStreamMpeg(req, res, await getSongFilePath(req.params.album_id, req.params.disc_number, req.params.track_number))
+  readStreamMpeg(
+    req,
+    res,
+    await getSongFilePath(
+      req.params.album_id,
+      req.params.disc_number,
+      req.params.track_number
+    )
+  );
 });
 
 router.get('/api/watch/search', async (req, res) => {
   const keyword = qs.parse(req.query).q;
-  console.log(`keyword is "${keyword}"`)
-  console.log(req.protocol + '://' + req.get('host') + req.originalUrl)
+  console.log(`keyword is "${keyword}"`);
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
   res.json(await searchMoviesAndTV(keyword));
 });
 
 router.get('/api/listen/search', async (req, res) => {
   const keyword = qs.parse(req.query).q;
-  console.log(`keyword is "${keyword}"`)
-  console.log(req.protocol + '://' + req.get('host') + req.originalUrl)
+  console.log(`keyword is "${keyword}"`);
+  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
   res.json(await searchMusic(keyword));
 });
 
 router.get('/api/watch/billboard', async (req, res) => {
-  const billboardItem = await getRandomMovieOrTVShow()
+  const billboardItem = await getRandomMovieOrTVShow();
   // get by id: getMovie(), getTVShow()
   res.json(billboardItem);
 });
 
 // Handles any requests that don't match the routes above
-if (process.env.NODE_ENV == 'prod'){
+if (process.env.NODE_ENV == 'production') {
   router.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../../client/build/index.html'));
+    res.sendFile(path.resolve(__dirname, '../../build/index.html'));
   });
 }
 

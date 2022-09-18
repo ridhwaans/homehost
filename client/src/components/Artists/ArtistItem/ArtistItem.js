@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import style from './ArtistItem.module.css';
+
 import Play from '../../../assets/NowPlayingBar/Play';
+import style from './ArtistItem.module.css';
 
 const ArtistItem = (props) => {
   var artist = props.artist;

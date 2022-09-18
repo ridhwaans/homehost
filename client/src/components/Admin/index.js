@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import useSWR from 'swr';
+
 import AdminHeader from '../AdminHeader';
-import StepForm from '../MediaWizard/StepForm';
 import Footer from '../Footer';
+import StepForm from '../MediaWizard/StepForm';
 import './Admin.css';
 
 const Admin = () => {
@@ -18,7 +19,7 @@ const Admin = () => {
     <React.Fragment>
       <AdminHeader />
       <div className="responsive-account-container">
-        <h1 class="account-header">Account</h1>
+        <h1 className="account-header">Account</h1>
 
         <div className="account-section">
           <header className="account-section-header">
@@ -27,15 +28,15 @@ const Admin = () => {
 
           <section className="account-section-content">
             {about &&
-              Object.keys(about).map((key) => {
-                return <p>{`${key}: ${about[key]}`}</p>;
+              Object.keys(about).map((prop, index) => {
+                return <p key={index}>{`${prop}: ${about[prop]}`}</p>;
               })}
           </section>
         </div>
 
         <div className="account-section">
           <header className="account-section-header">
-            <h2 class="account-section-heading">Library</h2>
+            <h2 className="account-section-heading">Library</h2>
           </header>
 
           <section className="account-section-content">
@@ -56,7 +57,7 @@ const Admin = () => {
 
         <div className="account-section">
           <header className="account-section-header">
-            <h2 class="account-section-heading">Media Wizard</h2>
+            <h2 className="account-section-heading">Media Wizard</h2>
           </header>
 
           <section className="account-section-content">
@@ -66,7 +67,7 @@ const Admin = () => {
 
         <div className="account-section">
           <header className="account-section-header">
-            <h2 class="account-section-heading">Naming Conventions</h2>
+            <h2 className="account-section-heading">Naming Conventions</h2>
           </header>
 
           <section className="account-section-content">

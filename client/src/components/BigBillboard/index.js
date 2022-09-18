@@ -1,14 +1,14 @@
+import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+
 import { useGlobalContext } from '../../contexts/context';
 
 function BigBillboard() {
   const { data: item } = useSWR(`/watch/billboard`);
 
-  const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } =
-    useGlobalContext();
+  const { setMoviesAndTVPlayerState } = useGlobalContext();
 
   return (
     item && (

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import { faFilm, faMusic, faTv } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMusic, faFilm, faTv } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect } from 'react';
 
 import '../../assets/Movies.css';
 
@@ -10,6 +10,7 @@ function NotFound() {
     document.body.className = 'movies-html-and-body'; //<body>
   }, []);
 
+  const NOT_FOUND_TEXT = "Sorry, we can't find that page";
   return (
     <div className="movies">
       <div
@@ -21,7 +22,7 @@ function NotFound() {
         <div className="not-found-content">
           <h1>Not found</h1>
           <div className="not-found-content-body">
-            <p>Sorry, we can't find that page</p>
+            <p>{NOT_FOUND_TEXT}</p>
             <div className="not-found-content-buttons">
               <a className="play-link" href={'/movies'}>
                 <button className="hasLabel">
@@ -51,7 +52,7 @@ function NotFound() {
           </div>
         </div>
 
-        <span id="" class="imageSource" data-uia="">
+        <span id="" className="imageSource" data-uia="">
           FROM <strong>WALL·E</strong>
         </span>
       </div>

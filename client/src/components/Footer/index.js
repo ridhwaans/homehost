@@ -1,7 +1,6 @@
-import React from 'react';
-
+import { faGithub, faReact } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faReact, faGithub } from '@fortawesome/free-brands-svg-icons';
+import React from 'react';
 
 function Footer() {
   return (

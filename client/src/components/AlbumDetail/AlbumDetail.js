@@ -1,13 +1,14 @@
+import { FastAverageColor } from 'fast-average-color';
 import React, { useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { findTotalDurationMillis, millisToEnglishWords } from '../../utils';
-import { DiscHeader } from './DiscHeader/DiscHeader';
-import { SongItem } from './SongItem/SongItem';
-import { FastAverageColor } from 'fast-average-color';
-import style from './AlbumDetail.module.css';
+
 import Time from '../../assets/AlbumDetail/Time';
 import { useGlobalContext } from '../../contexts/context';
+import { findTotalDurationMillis, millisToEnglishWords } from '../../utils';
+import style from './AlbumDetail.module.css';
+import { DiscHeader } from './DiscHeader/DiscHeader';
+import { SongItem } from './SongItem/SongItem';
 
 const AlbumDetail = () => {
   const { id } = useParams();
@@ -98,8 +99,9 @@ const AlbumDetail = () => {
             {discOne.length > 0 && discTwo.length > 0 && (
               <DiscHeader number={1} />
             )}
-            {discOne.map((item, index) => (
+            {discOne.map((item) => (
               <SongItem
+                key={item.id}
                 song={item}
                 current={
                   playerState.currentSong &&
@@ -112,8 +114,9 @@ const AlbumDetail = () => {
             ))}
 
             {discTwo.length > 0 && <DiscHeader number={2} />}
-            {discTwo.map((item, index) => (
+            {discTwo.map((item) => (
               <SongItem
+                key={item.id}
                 song={item}
                 current={
                   playerState.currentSong &&

@@ -1,22 +1,22 @@
 import React from 'react';
-import style from './NowPlayingBar.module.css';
+
 import Like from '../../assets/NowPlayingBar/Like';
-import Play from '../../assets/NowPlayingBar/Play';
-import Pause from '../../assets/NowPlayingBar/Pause';
-import Previous from '../../assets/NowPlayingBar/Previous';
 import Next from '../../assets/NowPlayingBar/Next';
-import Shuffle from '../../assets/NowPlayingBar/Shuffle';
+import Pause from '../../assets/NowPlayingBar/Pause';
+import Play from '../../assets/NowPlayingBar/Play';
+import Previous from '../../assets/NowPlayingBar/Previous';
 import { Repeat, RepeatOne } from '../../assets/NowPlayingBar/Repeat';
+import Shuffle from '../../assets/NowPlayingBar/Shuffle';
 import Volume from '../../assets/NowPlayingBar/Volume';
 import VolumeMuted from '../../assets/NowPlayingBar/VolumeMuted';
 import { useGlobalContext } from '../../contexts/context';
+import style from './NowPlayingBar.module.css';
 
 const NowPlayingBar = () => {
   const {
     audioPlayer,
     progressBar,
     volumeBar,
-    animationRef,
     playerState,
     togglePlayPause,
     songChanged,

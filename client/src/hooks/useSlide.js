@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
   const [viewed, setViewed] = useState(0);
@@ -208,9 +208,9 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
     return false;
   };
 
-  const resetSize = (e) => {
+  const resetSize = () => {
     setContent((prevState) => {
-      let newState = prevState.map((item, index) => {
+      let newState = prevState.map((item) => {
         item.transform = '0px';
         return item;
       });
@@ -231,7 +231,6 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
     sliderPages,
     slideProps,
     content,
-    currentSlide,
     currentSlide,
     paginationIndicator,
   };

@@ -1,15 +1,16 @@
 import React from 'react';
-import './styles.css';
-import FormOne from './FormOne';
-import FormTwo from './FormTwo';
-import FormThree from './FormThree';
-import FormFour from './FormFour';
-import FormFinish from './FormFinish';
-import ProgressBar from './ProgressBar';
+
 import { useGlobalContext } from '../../contexts/context';
+import FormFinish from './FormFinish';
+import FormFour from './FormFour';
+import FormOne from './FormOne';
+import FormThree from './FormThree';
+import FormTwo from './FormTwo';
+import ProgressBar from './ProgressBar';
+import './styles.css';
 
 const StepForm = () => {
-  const { mediaWizard, setMediaWizard } = useGlobalContext();
+  const { mediaWizard } = useGlobalContext();
 
   return (
     <div className="main">

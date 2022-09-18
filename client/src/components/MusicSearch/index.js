@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import { useDebounce } from '../../hooks/useDebounce';
-import MusicRow from '../MusicRow/MusicRow';
-import style from '../MusicHome/MusicHome.module.css';
+
 import { useGlobalContext } from '../../contexts/context';
+import { useDebounce } from '../../hooks/useDebounce';
+import style from '../MusicHome/MusicHome.module.css';
+import MusicRow from '../MusicRow/MusicRow';
 
 const MusicSearch = () => {
-  const { musicSearchInput, setMusicSearchInput } = useGlobalContext();
+  const { musicSearchInput } = useGlobalContext();
 
   const navigate = useNavigate();
   const location = useLocation();

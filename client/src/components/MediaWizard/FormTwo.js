@@ -1,6 +1,7 @@
 import React from 'react';
-import './styles.css';
+
 import { useGlobalContext } from '../../contexts/context';
+import './styles.css';
 
 const FormTwo = () => {
   const { mediaWizard, setMediaWizard } = useGlobalContext();

@@ -1,17 +1,16 @@
+import { faImdb } from '@fortawesome/free-brands-svg-icons';
+import { faPlay, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
+
+import { useGlobalContext } from '../../contexts/context';
+import Details from '../Details';
 import Episodes from '../Episodes';
 import Similar from '../Similar';
-import Details from '../Details';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faPlus, faPlay } from '@fortawesome/free-solid-svg-icons';
-import { faImdb } from '@fortawesome/free-brands-svg-icons';
-import { useGlobalContext } from '../../contexts/context';
 
 const SelectedItem = ({ currentSlide, closeInformationWindow }) => {
   const [menuOption, setMenuOption] = useState('general-info');
-  const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } =
-    useGlobalContext();
+  const { setMoviesAndTVPlayerState } = useGlobalContext();
 
   return (
     <div className="additional-information">

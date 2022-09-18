@@ -1,4 +1,0 @@
-{
-  "extends": ["react-app", "prettier"],
-  "ignorePatterns": ["**/build/static/js/*.js"]
-}

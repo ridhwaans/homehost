@@ -1,14 +1,14 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import SliderContext from '../Slider/context';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faAngleDown,
   faPlayCircle,
-  faThumbsUp,
   faPlus,
+  faThumbsUp,
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import useVisibility from '../../hooks/useVisibility';
+import SliderContext from '../Slider/context';
 
 function SliderItem(props) {
   const ref = useRef(null);

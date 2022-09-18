@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import useSWR from 'swr';
-import Player from '../Player';
-import Header from '../Header';
-import BigBillboard from '../BigBillboard';
-import Slider from '../Slider';
-import Search from '../Search';
-import { useGlobalContext } from '../../contexts/context';
 
 import '../../assets/Movies.css';
+import { useGlobalContext } from '../../contexts/context';
+import BigBillboard from '../BigBillboard';
+import Header from '../Header';
+import Player from '../Player';
+import Search from '../Search';
+import Slider from '../Slider';
 
 function Movies() {
   useEffect(() => {
@@ -21,8 +21,7 @@ function Movies() {
   const { data: animationMovies } = useSWR('/movies/genre/Animation');
   const { data: warMovies } = useSWR('/movies/genre/War');
 
-  const { moviesAndTVSearchInput, setMoviesAndTVSearchInput } =
-    useGlobalContext();
+  const { moviesAndTVSearchInput } = useGlobalContext();
 
   return (
     <div className="movies">

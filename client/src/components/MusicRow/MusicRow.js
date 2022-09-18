@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import { useGlobalContext } from '../../contexts/context';
 import AlbumItem from '../Albums/AlbumItem/AlbumItem';
 import ArtistItem from '../Artists/ArtistItem/ArtistItem';
 import { SongItemMini } from '../Songs/SongItemMini/SongItemMini';
 import style from './MusicRow.module.css';
-import { useGlobalContext } from '../../contexts/context';
 
 const MusicRow = ({ mainTitle, data, musicType }) => {
   const { playerState, changeSong } = useGlobalContext();
@@ -41,9 +42,10 @@ const MusicRow = ({ mainTitle, data, musicType }) => {
         {musicType === 'songs' && (
           <div className={style.SongItemsContainer}>
             {data &&
-              data.map((item, index) => {
+              data.map((item) => {
                 return (
                   <SongItemMini
+                    key={item.id}
                     song={item}
                     current={
                       playerState?.currentSong &&

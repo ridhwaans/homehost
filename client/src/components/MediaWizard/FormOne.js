@@ -1,23 +1,16 @@
+import { faFileAudio, faFileVideo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch,
-  faFileVideo,
-  faFileAudio,
-} from '@fortawesome/free-solid-svg-icons';
-import './styles.css';
+
 import { useGlobalContext } from '../../contexts/context';
+import './styles.css';
 
 const FormOne = () => {
   const { data: notAvailable } = useSWR(`/not_available`);
   const { mediaWizard, setMediaWizard } = useGlobalContext();
 
   console.log(`FormOne ` + JSON.stringify(mediaWizard));
-  const changeSelection = (item) => {
-    //updateContext.setSelectedFile(item);
-    next();
-  };
 
   const next = (item) => {
     if (item.fs_path === null) {

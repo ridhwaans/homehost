@@ -1,8 +1,9 @@
 import React from 'react';
+
 import NowPlaying from '../../../assets/AlbumDetail/NowPlaying.gif';
-import Play from '../../../assets/NowPlayingBar/Play';
 import Pause from '../../../assets/NowPlayingBar/Pause';
-import { millisToMinutesAndSeconds, formatDate } from '../../../utils';
+import Play from '../../../assets/NowPlayingBar/Play';
+import { formatDate, millisToMinutesAndSeconds } from '../../../utils';
 import style from '../../AlbumDetail/SongItem/SongItem.module.css';
 
 export const SongItem = ({ song, artists, index, songClicked, current }) => {

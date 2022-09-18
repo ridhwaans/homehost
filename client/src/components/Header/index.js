@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import { faBell, faGift, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faGift, faBell } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useRef, useState } from 'react';
+
 import logo from '../../assets/logos/Homehost_White.svg';
 import { useGlobalContext } from '../../contexts/context';
 

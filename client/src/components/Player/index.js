@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReactNetflixPlayer } from 'react-netflix-player';
+
 import { useGlobalContext } from '../../contexts/context';
 
 const Player = () => {

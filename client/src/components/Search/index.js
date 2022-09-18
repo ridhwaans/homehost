@@ -1,12 +1,12 @@
 import React from 'react';
 import useSWR from 'swr';
+
+import { useGlobalContext } from '../../contexts/context';
 import { useDebounce } from '../../hooks/useDebounce';
 import SearchResults from '../SearchResults';
-import { useGlobalContext } from '../../contexts/context';
 
 const Search = () => {
-  const { moviesAndTVSearchInput, setMoviesAndTVSearchInput } =
-    useGlobalContext();
+  const { moviesAndTVSearchInput } = useGlobalContext();
 
   const debouncedSearch = useDebounce(moviesAndTVSearchInput, 1000);
 

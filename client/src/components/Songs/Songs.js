@@ -1,11 +1,11 @@
+import { FastAverageColor } from 'fast-average-color';
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { millisToEnglishWords } from '../../utils';
-import { SongItem } from './SongItem/SongItem';
-import { FastAverageColor } from 'fast-average-color';
-import style from './Songs.module.css';
+
 import Time from '../../assets/AlbumDetail/Time';
 import { useGlobalContext } from '../../contexts/context';
+import { SongItem } from './SongItem/SongItem';
+import style from './Songs.module.css';
 
 const Songs = () => {
   const location = useLocation();
@@ -79,8 +79,9 @@ const Songs = () => {
               </div>
             </div>
 
-            {data.map((item, index) => (
+            {data.map((item) => (
               <SongItem
+                key={item.id}
                 song={item}
                 current={
                   playerState.currentSong &&

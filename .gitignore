@@ -2,10 +2,8 @@
 
 # general
 .env
-/server/prisma/data/*.txt
-/server/prisma/data/*.json
-/server/prisma/data/*.db
-/server/prisma/data/*.db-journal
+**/prisma/data/*.db
+**/prisma/data/*.db-journal
 
 # dependencies
 node_modules/
@@ -14,9 +12,7 @@ node_modules/
 /coverage
 
 # production
-/client/build
-/client/public/bundle.js
-/client/public/bundle.js.LICENSE.txt
+build/
 
 # misc
 .DS_Store

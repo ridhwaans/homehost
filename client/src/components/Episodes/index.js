@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import SeasonSelect from './SeasonSelect';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useState } from 'react';
+
 import { useGlobalContext } from '../../contexts/context';
+import SeasonSelect from './SeasonSelect';
 
 const Episodes = ({ currentSlide, noEpisodesTab }) => {
-  const { moviesAndTVPlayerState, setMoviesAndTVPlayerState } =
-    useGlobalContext();
+  const { setMoviesAndTVPlayerState } = useGlobalContext();
   const [seasonNumber, setSeasonNumber] = useState(1);
   const [showOverlay, setShowOverlay] = useState(null);
 
