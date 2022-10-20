@@ -7,6 +7,10 @@ const shuffleArr = (arr) => {
   return newArr;
 };
 
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
 const format = (result) => {
   try {
     if (!result) return result;
@@ -39,6 +43,8 @@ const format = (result) => {
       if (result.spotify_id) {
         result.id = result.spotify_id;
         delete result.spotify_id;
+        delete result.fs_path;
+
         if (result.album) {
           result.album_name = result.album.name;
           result.album_image_url = result.album.image_url;

@@ -89,7 +89,7 @@ const getMovieMetaData = async (file) => {
 const getTVEpisodeMetaData = async (file) => {
   try {
     let re = new RegExp(/(\d+)$/); // tv_show_id
-    re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
+    let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
 
     console.log('GET: ' + file);
     // find tv episode on TMDb
@@ -129,7 +129,7 @@ const getTVEpisodeMetaData = async (file) => {
 const getTVShowMetaData = async (file) => {
   try {
     let re = new RegExp(/(\d+)$/); // tv_show_id
-    re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
+    let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
 
     console.log('GET: ' + file);
     // find tv show on TMDb
@@ -238,7 +238,7 @@ const getLastUnknownAlbumTrackNumber = async () => {
 
 const getUnknownAlbumMetaData = async (file) => {
   let re = new RegExp(/(\w+)$/); // album_id
-  re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
+  let re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
   unknown_album = 'Unknown Album';
   unknown_id = 'no_spotify_id';
 
@@ -295,7 +295,7 @@ const getUnknownAlbumMetaData = async (file) => {
 const getAlbumMetaData = async (file) => {
   try {
     let re = new RegExp(/(\w+)$/); // album_id
-    re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
+    let re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
     unknown_album = 'Unknown Album';
 
     console.log('GET: ' + file);

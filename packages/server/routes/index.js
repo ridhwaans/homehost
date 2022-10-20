@@ -41,10 +41,6 @@ const { upsertAll, getNotAvailable } = require('../jobs');
 const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models');
 const router = express.Router();
 
-BigInt.prototype.toJSON = () => {
-  return this.toString();
-};
-
 const readStreamMp4 = (req, res, file_path) => {
   const stat = fs.statSync(file_path);
   const fileSize = stat.size;
@@ -293,7 +289,7 @@ router.get('/api/watch/billboard', async (req, res) => {
 // Handles any requests that don't match the routes above
 if (process.env.NODE_ENV == 'production') {
   router.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../../build/index.html'));
+    res.sendFile(path.resolve(__dirname, '../../client/build/index.html'));
   });
 }
 

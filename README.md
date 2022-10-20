@@ -51,17 +51,19 @@
 
 ## ⚙️ Setup
 
-Run `npm install`
+Run `npm run install`, then `npm run install-packages`
 
 In `.env`, set a working API key for TMDb API and Spotify Web API, set the media paths, and set tha base url of the homehost client
 
-###### **`.env`**
+######
 
 ```env
+# packages/client/.env
 REACT_APP_HOMEHOST_BASE = "http://localhost:5000"
 REACT_APP_IMAGE_BASE = "https://image.tmdb.org/t/p/"
-REACT_APP_TMDB_BASE = "https://www.imdb.com/title/"
+REACT_APP_IMDB_BASE = "https://www.imdb.com"
 
+# packages/server/.env
 TMDB_KEY = '<api_key>'
 SPOTIFY_CLIENT_ID = '<client_id>'
 SPOTIFY_CLIENT_SECRET = '<client_secret>'
@@ -76,9 +78,12 @@ CLIENT_BASE_URL = 'http://localhost:3000'
 
 If you dont have keys, you can request API authorization from Spotify at https://developer.spotify.com/documentation/web-api/, and TMDb at https://developers.themoviedb.org/3/getting-started/introduction
 
-### Naming conventions
+### Media
 
 Your media must appear in the locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)  
+
+#### Naming conventions
+
 🎥 **Movies**
 
 ```
@@ -112,20 +117,18 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 ```
 
 ### Database
-
-Run `npm run db:squash` to create the database and necessary migrations  
-Run `npm run start` to start the application in dev mode  
+  
+Run `npm run init-db` to create migrations from schema, apply them, generate the database client  
 _homehost_ scans the media paths and adds the files to the database  
 Wait for the async job to finish generating metadata and save  
-To browse data, run `npm run db:browse` and go to `http://localhost:5555`  
-To reset the database and clear all data, run `npm run db:reset`
+To browse data, run `npm run browse-db` and go to `http://localhost:5555`  
+To clear all data, run `npm run clear-db`
 
 ### Run
 
-Run `npm run start` to start the application in dev mode  
+Run `npm run start` to start the application  
 By default, the server port is `5000`, client port is `3000`  
-Run `npm run start:prod` to start the application as prod  
-By default, client and server will run on `5000`  
+Run `npm run start:prod` to start the application as prod (default port is `5000`)  
 While running, _homehost_ continuously saves and retrieves information for any media that was added, moved or removed
 
 ### Routes
@@ -173,11 +176,11 @@ While running, _homehost_ continuously saves and retrieves information for any m
 
 ## Development
 
-Works best in <img src="client/src/assets/logos/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
+Works best in <img src="packages/client/assets/logos/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
 
 ## Powered by
 
-<p><img src="client/src/assets/logos/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="client/src/assets/logos/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
+<p><img src="packages/client/assets/logos/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="packages/client/assets/logos/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
 
 ## License
 

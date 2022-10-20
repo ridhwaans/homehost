@@ -55,7 +55,7 @@ const sync = async () => {
   console.log(`notAvailable is ${notAvailableFiles.length}`);
   console.table(notAvailableFiles);
 
-  const databaseFiles = await getAllFiles();
+  const databaseFiles = await getAvailableFiles();
   const filesToInsert = fileSystem
     .filter((x) => !databaseFiles.includes(x))
     .filter((x) => !notAvailableFiles.includes(x));
@@ -318,7 +318,7 @@ const upsertNotAvailable = async (type, file) => {
   console.log('[NOT AVAILABLE] Done');
 };
 
-const getAllFiles = async () => {
+const getAvailableFiles = async () => {
   var movies = await prisma.movie.findMany({
     select: { fs_path: true },
   });
@@ -362,6 +362,26 @@ const deleteManyNotAvailable = async (not_available) => {
     }
   }
   console.log('[NOT AVAILABLE] Done');
+};
+
+const deleteAllNotAvailable = async () => {
+  ready = false;
+  const result = await prisma.notAvailable.findMany();
+
+  for (let notAvailable of result) {
+    try {
+      await prisma.notAvailable.delete({
+        where: {
+          id: notAvailable.id,
+        },
+      });
+    } catch (e) {
+      console.log('There was a problem removing this item', e);
+      continue; // break or continue
+    }
+  }
+  console.log('[NOT AVAILABLE] Done');
+  process.exit();
 };
 
 const deleteManyMovies = async (movies) => {
@@ -502,4 +522,4 @@ const deleteEmptyTVShows = async () => {
   }
 };
 
-module.exports = { upsertAll, getNotAvailable };
+module.exports = { upsertAll, getNotAvailable, deleteAllNotAvailable };

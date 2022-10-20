@@ -9,7 +9,7 @@ require('dotenv').config();
 
 // Serve the static files from the React app
 if (process.env.NODE_ENV == 'production') {
-  app.use(express.static(path.join(__dirname, '../build')));
+  app.use(express.static(path.join(__dirname, '../client/build')));
 }
 // CORS
 app.use((req, res, next) => {

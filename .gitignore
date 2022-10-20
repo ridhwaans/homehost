@@ -2,8 +2,8 @@
 
 # general
 .env
-**/prisma/data/*.db
-**/prisma/data/*.db-journal
+**/*.db
+**/*.db-journal
 
 # dependencies
 node_modules/

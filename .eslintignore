@@ -1,5 +1,7 @@
-/build
-/node_modules
-package.json
-package-lock.json
-README.md
+**/build
+**/dist
+**/node_modules
+**/package.json
+**/package-lock.json
+**/README.md
+packages/server

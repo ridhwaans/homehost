@@ -74,7 +74,7 @@ const SearchResultsSelectedItem = ({
                     <div className="metadata">
                       <span className="imdb">
                         <a
-                          href={`${process.env.REACT_APP_TMDB_BASE}${
+                          href={`${process.env.REACT_APP_IMDB_BASE}/title/${
                             currentSlide.type === 'Movie'
                               ? currentSlide.imdb_id
                               : currentSlide.imdb_id

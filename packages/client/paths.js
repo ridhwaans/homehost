@@ -4,7 +4,7 @@ module.exports = {
   // Config files
   config: path.resolve(__dirname),
   // Source files
-  src: path.resolve(__dirname, 'client/src'),
+  src: path.resolve(__dirname),
   // Production build files
   build: path.resolve(__dirname, 'build'),
   // Static files that get copied to build folder

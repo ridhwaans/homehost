@@ -5,25 +5,18 @@
     "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "overrides": [
     {
-      "files": ["client/**/*.js"],
-      "parser": "@babel/eslint-parser",
-      "parserOptions": {
-        "requireConfigFile": false,
-        "ecmaFeatures": {
-          "jsx": true
-        },
-        "babelOptions": {
-          "presets": ["@babel/preset-react"]
-        }
-      },
-      "extends": ["eslint:recommended", "plugin:react/recommended"],
+      "files": ["packages/client/**/*.js"],
       "rules": {
-        "react/prop-types": 0
+      "react/prop-types": 0
       }
     }
   ]
