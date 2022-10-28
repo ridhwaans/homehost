@@ -1,0 +1,26 @@
+version: '2'
+services:
+  server:
+    build:
+      context: ./packages/server/
+    command: npm run start:dev
+    ports:
+      - 5000:5000
+    dns:
+      - 8.8.8.8
+    env_file: ./packages/server/.env
+    volumes:
+      - ${MOVIES_PATH}:${MOVIES_PATH}
+      - ${TV_PATH}:${TV_PATH}
+      - ${MUSIC_PATH}:${MUSIC_PATH}
+  client:
+    build:
+      context: ./packages/client/
+    command: npm run start:dev
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    dns:
+      - 8.8.8.8
+    env_file: ./packages/client/.env

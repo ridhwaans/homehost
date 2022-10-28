@@ -11,6 +11,7 @@ var fileSystem = [];
 var ready;
 
 if (
+  process.env.NODE_ENV != 'demo' &&
   new Set([
     process.env.MOVIES_PATH,
     process.env.TV_PATH,
@@ -28,10 +29,16 @@ var watcher = chokidar.watch(
   }
 );
 
+if (process.env.NODE_ENV == 'demo') {
+  watcher.close().then(() => {
+    console.log('Sync is turned off');
+    ready = false;
+  });
+}
+
 watcher.on('ready', () => {
   console.log('Initial scan complete. Ready for changes');
   ready = true;
-  collection = watcher.getWatched();
   ready && sync();
 });
 
@@ -105,31 +112,6 @@ const sync = async () => {
   await deleteEmptySeasons();
   await deleteEmptyTVShows();
   console.log('Sync complete');
-};
-
-const upsertAll = async (media = ['movies', 'tv', 'music']) => {
-  let jobs = [];
-  for (let type of media) {
-    if (type == 'movies')
-      jobs.push(
-        await upsertManyMovies(
-          fileSystem.filter((file) => file.startsWith(process.env.MOVIES_PATH))
-        )
-      );
-    if (type == 'tv')
-      jobs.push(
-        await upsertManyTVEpisodes(
-          fileSystem.filter((file) => file.startsWith(process.env.TV_PATH))
-        )
-      );
-    if (type == 'music')
-      jobs.push(
-        await upsertManySongs(
-          fileSystem.filter((file) => file.startsWith(process.env.MUSIC_PATH))
-        )
-      );
-  }
-  return jobs;
 };
 
 const upsertManyMovies = async (movies) => {
@@ -357,31 +339,11 @@ const deleteManyNotAvailable = async (not_available) => {
         },
       });
     } catch (e) {
-      console.log('There was a problem removing this file', e);
-      continue; // break or continue
-    }
-  }
-  console.log('[NOT AVAILABLE] Done');
-};
-
-const deleteAllNotAvailable = async () => {
-  ready = false;
-  const result = await prisma.notAvailable.findMany();
-
-  for (let notAvailable of result) {
-    try {
-      await prisma.notAvailable.delete({
-        where: {
-          id: notAvailable.id,
-        },
-      });
-    } catch (e) {
       console.log('There was a problem removing this item', e);
       continue; // break or continue
     }
   }
   console.log('[NOT AVAILABLE] Done');
-  process.exit();
 };
 
 const deleteManyMovies = async (movies) => {
@@ -522,4 +484,48 @@ const deleteEmptyTVShows = async () => {
   }
 };
 
-module.exports = { upsertAll, getNotAvailable, deleteAllNotAvailable };
+const deleteAllNotAvailable = async () => {
+  const result = await prisma.notAvailable.findMany();
+
+  for (let notAvailable of result) {
+    try {
+      await prisma.notAvailable.delete({
+        where: {
+          id: notAvailable.id,
+        },
+      });
+    } catch (e) {
+      console.log('There was a problem removing this item', e);
+      continue; // break or continue
+    }
+  }
+  process.exit();
+};
+
+const updateManyFsPaths = async () => {
+  const video_path = './_demo/sample.mp4';
+  const audio_path = './_demo/sample.mp3';
+
+  var movies = await prisma.movie.updateMany({
+    data: {
+      fs_path: video_path,
+    },
+  });
+  var episodes = await prisma.episode.updateMany({
+    data: {
+      fs_path: video_path,
+    },
+  });
+  var songs = await prisma.song.updateMany({
+    data: {
+      fs_path: audio_path,
+    },
+  });
+  process.exit();
+};
+
+module.exports = {
+  getNotAvailable,
+  deleteAllNotAvailable,
+  updateManyFsPaths,
+};

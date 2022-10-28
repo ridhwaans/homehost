@@ -23,35 +23,35 @@
 
 ### Home
 
-![movies_1](media/movies_1.png)
+![movies_1](docs/public/movies_1.png)
 
 ### Search
 
-![movies_2](media/movies_2.png)
+![movies_2](docs/public/movies_2.png)
 
 ## 📺 TV Shows
 
 ### Home
 
-![tv](media/tv_1.png)
+![tv](docs/public/tv_1.png)
 
 ## 🎵 Music
 
 ### Home
 
-![music](media/music_1.png)
+![music](docs/public/music_1.png)
 
 ### Search
 
-![music](media/music_2.png)
+![music](docs/public/music_2.png)
 
 ### Album
 
-![music](media/music_3.png)
+![music](docs/public/music_3.png)
 
 ## ⚙️ Setup
 
-Run `npm run install`, then `npm run install-packages`
+Run `npm run install-packages`
 
 In `.env`, set a working API key for TMDb API and Spotify Web API, set the media paths, and set tha base url of the homehost client
 
@@ -80,7 +80,7 @@ If you dont have keys, you can request API authorization from Spotify at https:/
 
 ### Media
 
-Your media must appear in the locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)  
+Your media must appear in the absolute path locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)  
 
 #### Naming conventions
 
@@ -118,11 +118,11 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 
 ### Database
   
-Run `npm run init-db` to create migrations from schema, apply them, generate the database client  
+Run `npm run db:migrate` to create migrations from schema, apply them, generate the database client  
 _homehost_ scans the media paths and adds the files to the database  
 Wait for the async job to finish generating metadata and save  
-To browse data, run `npm run browse-db` and go to `http://localhost:5555`  
-To clear all data, run `npm run clear-db`
+To browse data, run `npm run db:browse` and go to `http://localhost:5555`  
+To clear all data, run `npm run db:clear`
 
 ### Run
 
@@ -134,11 +134,11 @@ While running, _homehost_ continuously saves and retrieves information for any m
 ### Routes
 
 #### Server-side
-
-**POST**  
-`/api?generate=movies,tv,music`  
+ 
 **GET**  
 `/api/about`  
+`/api/library/stats`  
+`/api/not_available`  
 `/api/movies`  
 `/api/movies/most_popular`  
 `/api/movies/highest_rated`  
@@ -176,11 +176,11 @@ While running, _homehost_ continuously saves and retrieves information for any m
 
 ## Development
 
-Works best in <img src="packages/client/assets/logos/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
+Works best in <img src="docs/public/Chrome.svg" width="16" height="16" title="Google Chrome"> Chrome. Coming to Desktop, iOS, Android.
 
 ## Powered by
 
-<p><img src="packages/client/assets/logos/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="packages/client/assets/logos/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
+<p><img src="docs/public/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="docs/public/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
 
 ## License
 

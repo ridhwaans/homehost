@@ -79,7 +79,7 @@ const Songs = () => {
               </div>
             </div>
 
-            {data.map((item) => (
+            {data.map((item, index) => (
               <SongItem
                 key={item.id}
                 song={item}
@@ -89,7 +89,8 @@ const Songs = () => {
                     ? true
                     : false
                 }
-                songClicked={() => changeSong(item, data)}
+                songClicked={() => changeSong(item.id, data)}
+                index={index}
               />
             ))}
           </div>

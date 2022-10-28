@@ -52,6 +52,13 @@ const format = (result) => {
           delete result.album;
         }
 
+        if (result.album_type) {
+          result.songs.map((s) => {
+            s.album_name = result.name;
+            s.album_image_url = result.image_url;
+          });
+        }
+
         if (result.songs) {
           result.songs.sort(
             (a, b) =>

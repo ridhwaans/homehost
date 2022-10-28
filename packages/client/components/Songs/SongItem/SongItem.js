@@ -6,7 +6,7 @@ import Play from '../../../assets/NowPlayingBar/Play';
 import { formatDate, millisToMinutesAndSeconds } from '../../../utils';
 import style from '../../AlbumDetail/SongItem/SongItem.module.css';
 
-export const SongItem = ({ song, artists, index, songClicked, current }) => {
+export const SongItem = ({ song, songClicked, current, index }) => {
   return (
     <React.Fragment>
       {song && (
@@ -40,7 +40,7 @@ export const SongItem = ({ song, artists, index, songClicked, current }) => {
                   song.explicit ? style.Artist_sub : style.Artist_badg,
                 ].join(', ')}
               >
-                {artists.map((a) => a.name).join(', ')}
+                {song.artists.map((a) => a.name).join(', ')}
               </span>
             </div>
           </div>

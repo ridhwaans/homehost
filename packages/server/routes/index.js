@@ -37,7 +37,7 @@ const {
   searchMusic,
   externalSearch,
 } = require('../data');
-const { upsertAll, getNotAvailable } = require('../jobs');
+const { getNotAvailable } = require('../jobs');
 const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models');
 const router = express.Router();
 
@@ -104,17 +104,6 @@ router.get('/api/about', (req, res) => {
 
 router.get('/api/library/stats', async (req, res) => {
   res.json(await getLibraryStats());
-});
-
-router.get('/api/library/generate', async (req, res) => {
-  const start = new Date();
-  res.write(`${start.toISOString()} Generating metadata. Please wait...`);
-  const filter = req.query.q.split(',');
-  await upsertAll(filter);
-  const end = new Date();
-  res.write(`${end.toISOString()} Done`);
-  res.write(`in ${(end - start) / 1000} s`);
-  res.end();
 });
 
 router.get('/api/not_available', async (req, res) => {

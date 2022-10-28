@@ -6,7 +6,7 @@
         "db:migrate": "rm -rf prisma/migrations; npx prisma migrate dev",
         "db:browse": "npx prisma studio",
         "db:clear": "npx prisma migrate reset",
-        "db:clear-not-available": "node -e 'require(\"./jobs\").deleteAllNotAvailable()'"
+        "db:clear-not-available": "NODE_ENV=demo node -e 'require(\"./jobs\").deleteAllNotAvailable()'"
     },
     "prisma": {
         "schema": "prisma/schema.prisma"
@@ -16,7 +16,7 @@
         "npm": ">= 8.19.0"
     },
     "dependencies": {
-        "@prisma/client": "^4.5.0",
+        "@prisma/client": "^4.6.0",
         "axios": "^1.1.3",
         "body-parser": "^1.20.1",
         "chokidar": "^3.5.3",
@@ -28,6 +28,6 @@
     },
     "devDependencies": {
         "dotenv": "^16.0.3",
-        "prisma": "^4.5.0"
+        "prisma": "^4.6.0"
     }
 }

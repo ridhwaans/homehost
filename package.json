@@ -5,16 +5,16 @@
   "author": "ridhwaans",
   "license": "MIT",
   "scripts": {
-  "pre-commit-lint": "npx lint-staged",
-  "install-server": "npm install --prefix packages/server",
-  "install-client": "npm install --prefix packages/client",
-  "install-packages": "npm install; npm run install-server; npm run install-client",
-  "init-db": "npm run db:migrate --prefix packages/server",
-  "browse-db": "npm run db:browse --prefix packages/server",
-  "clear-db": "npm run db:clear --prefix packages/server",
-  "clear-not-available": "npm run db:clear-not-available --prefix packages/server",
-  "start": "concurrently --kill-others-on-fail \"npm run start:dev --prefix packages/server\" \"npm run start:dev --prefix packages/client\"",
-  "start:prod": "npm run start:prod --prefix packages/client; npm run start:prod --prefix packages/server"
+    "pre-commit-lint": "npx lint-staged",
+    "install-server": "npm install --prefix packages/server",
+    "install-client": "npm install --prefix packages/client",
+    "install-packages": "npm install; npm run install-server; npm run install-client",
+    "db:migrate": "npm run db:migrate --prefix packages/server",
+    "db:browse": "npm run db:browse --prefix packages/server",
+    "db:clear": "npm run db:clear --prefix packages/server",
+    "db:clear-not-available": "npm run db:clear-not-available --prefix packages/server",
+    "start": "concurrently --kill-others-on-fail \"npm run start:dev --prefix packages/server\" \"npm run start:dev --prefix packages/client\"",
+    "start:prod": "npm run start:prod --prefix packages/client; npm run start:prod --prefix packages/server"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -25,12 +25,12 @@
     ]
   },
   "devDependencies": {
-  "concurrently": "^7.4.0",
-  "eslint": "^8.25.0",
-  "eslint-plugin-react": "^7.31.10",
-  "husky": "^8.0.1",
-  "lint-staged": "^13.0.3",
-  "npm-check-updates": "^16.3.14",
-  "prettier": "^2.7.1"
+    "concurrently": "^7.5.0",
+    "eslint": "^8.27.0",
+    "eslint-plugin-react": "^7.31.10",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "npm-check-updates": "^16.3.16",
+    "prettier": "^2.7.1"
   }
-  }
+}
