@@ -182,6 +182,10 @@ Works best in <img src="docs/public/Chrome.svg" width="16" height="16" title="Go
 
 <p><img src="docs/public/Spotify_Green.svg" width="200" height="150" title="Spotify Web API">&emsp;<img src="docs/public/TMDB_Green.svg" width="150" height="150" title="TMDb API"></p>
 
+## Contributing
+
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

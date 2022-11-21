@@ -14,7 +14,8 @@
     "db:clear": "npm run db:clear --prefix packages/server",
     "db:clear-not-available": "npm run db:clear-not-available --prefix packages/server",
     "start": "concurrently --kill-others-on-fail \"npm run start:dev --prefix packages/server\" \"npm run start:dev --prefix packages/client\"",
-    "start:prod": "npm run start:prod --prefix packages/client; npm run start:prod --prefix packages/server"
+    "start:prod": "npm run start:prod --prefix packages/client; npm run start:prod --prefix packages/server",
+    "start:demo": "npm run start:prod --prefix packages/client; npm run start:demo --prefix packages/server"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

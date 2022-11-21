@@ -5,6 +5,7 @@ const express = require('express');
 const {
   getAbout,
   getLibraryStats,
+  getAllNotAvailable,
   getAllMovies,
   getMostPopularMovies,
   getHighestRatedMovies,
@@ -37,7 +38,6 @@ const {
   searchMusic,
   externalSearch,
 } = require('../data');
-const { getNotAvailable } = require('../jobs');
 const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models');
 const router = express.Router();
 
@@ -107,7 +107,7 @@ router.get('/api/library/stats', async (req, res) => {
 });
 
 router.get('/api/not_available', async (req, res) => {
-  res.json(await getNotAvailable());
+  res.json(await getAllNotAvailable());
 });
 
 router.get('/api/services/search', async (req, res) => {
