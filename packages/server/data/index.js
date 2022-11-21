@@ -25,6 +25,11 @@ const getLibraryStats = async () => {
   };
 };
 
+const getAllNotAvailable = async () => {
+  const result = await prisma.notAvailable.findMany();
+  return result;
+};
+
 const externalSearch = async (type, keyword) => {
   return await metadataService.search(type, keyword);
 };
@@ -554,6 +559,7 @@ const getSongFilePath = async (album_id, disc_number, track_number) => {
 module.exports = {
   getAbout,
   getLibraryStats,
+  getAllNotAvailable,
   getAllMovies,
   getMostPopularMovies,
   getHighestRatedMovies,
