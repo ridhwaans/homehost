@@ -1,20 +1,17 @@
 {
     "name": "server",
     "scripts": {
-        "start:dev": "node --watch server",
-        "start:demo": "DISABLE_SYNC=true NODE_ENV=production node --watch server",
-        "start:prod": "NODE_ENV=production node server",
+        "start:dev": "node index",
+        "start:demo": "DISABLE_SYNC=true NODE_ENV=production node index",
+        "start:prod": "NODE_ENV=production node index",
         "db:migrate": "rm -rf prisma/migrations; npx prisma migrate dev",
         "db:browse": "npx prisma studio",
         "db:clear": "npx prisma migrate reset",
-        "db:clear-not-available": "DISABLE_SYNC=true node -e 'require(\"./jobs\").clearNotAvailable()'"
+        "db:clear-not-available": "DISABLE_SYNC=true node -e 'require(\"./jobs\").clearNotAvailable()'",
+        "start": "npm run start:prod --prefix ../client; npm run start:demo"
     },
     "prisma": {
         "schema": "prisma/schema.prisma"
-    },
-    "engines": {
-        "node": ">= 19.0.0",
-        "npm": ">= 8.19.0"
     },
     "dependencies": {
         "@prisma/client": "^4.6.0",

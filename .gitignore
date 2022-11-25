@@ -4,7 +4,7 @@
 **/*.db-journal
 
 # client
-build/
+
 
 # docs 
 .next/
@@ -12,6 +12,7 @@ build/
 # common
 .env
 node_modules/
+.vercel/
 
 # misc
 .DS_Store
