@@ -4,13 +4,12 @@
 **/*.db-journal
 
 # client
-
+build/
 
 # docs 
 .next/
 
 # common
-.env
 node_modules/
 .vercel/
 

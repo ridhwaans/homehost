@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { getAudioDurationInSeconds } = require('get-audio-duration');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const metadataServiceConstructor = require('../services/metadata');
@@ -283,7 +282,7 @@ const getUnknownAlbumMetaData = async (file) => {
         url_path: `/music/${unknown_id}/${disc_number}/${track_number}`,
         ctime: fs.statSync(file).ctime,
         mtime: fs.statSync(file).mtime,
-        duration_ms: parseInt((await getAudioDurationInSeconds(file)) * 1000),
+        duration_ms: parseInt(30 * 1000),
         explicit: false,
         preview_url: undefined,
       },
