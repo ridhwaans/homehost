@@ -10,45 +10,47 @@ const { Type } = require('../constants');
 var fileSystem = [];
 var ready;
 
-if (process.env.DISABLE_SYNC == false) {
-  if (
-    new Set([
-      process.env.MOVIES_PATH,
-      process.env.TV_PATH,
-      process.env.MUSIC_PATH,
-    ]).size != 3
-  ) {
-    throw 'Each media must be in a unique location and cannot share the same directory path(s)';
-  }
-
-  var watcher = chokidar.watch(
-    [process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH],
-    {
-      ignored: /(^|[\/\\])\../, // ignore dotfiles
-      persistent: true,
+const fileWatcher = () => {
+  if (process.env.DISABLE_SYNC != true) {
+    if (
+      new Set([
+        process.env.MOVIES_PATH,
+        process.env.TV_PATH,
+        process.env.MUSIC_PATH,
+      ]).size != 3
+    ) {
+      throw 'Each media must be in a unique location and cannot share the same directory path(s)';
     }
-  );
 
-  watcher.on('ready', () => {
-    console.log('Initial scan complete. Ready for changes');
-    ready = true;
-    ready && sync();
-  });
+    var watcher = chokidar.watch(
+      [process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH],
+      {
+        ignored: /(^|[\/\\])\../, // ignore dotfiles
+        persistent: true,
+      }
+    );
 
-  watcher
-    .on('add', (path) => {
-      console.log(`File ${path} has been added`);
-      fileSystem.push(path);
-      ready && sync();
-    })
-    .on('change', (path) => {
-      console.log(`File ${path} has been changed`);
-    })
-    .on('unlink', (path) => {
-      console.log(`File ${path} has been removed`);
-      fileSystem = fileSystem.filter((e) => e !== path);
+    watcher.on('ready', () => {
+      console.log('Initial scan complete. Ready for changes');
+      ready = true;
       ready && sync();
     });
+
+    watcher
+      .on('add', (path) => {
+        console.log(`File ${path} has been added`);
+        fileSystem.push(path);
+        ready && sync();
+      })
+      .on('change', (path) => {
+        console.log(`File ${path} has been changed`);
+      })
+      .on('unlink', (path) => {
+        console.log(`File ${path} has been removed`);
+        fileSystem = fileSystem.filter((e) => e !== path);
+        ready && sync();
+      });
+  }
 
   const sync = async () => {
     const notAvailableFiles = await getNotAvailableFiles();
@@ -471,7 +473,9 @@ if (process.env.DISABLE_SYNC == false) {
       }
     }
   };
-}
+
+  return watcher;
+};
 
 const clearNotAvailable = async () => {
   const result = await prisma.notAvailable.findMany();
@@ -514,6 +518,7 @@ const createDemoFsPaths = async () => {
 };
 
 module.exports = {
+  fileWatcher,
   clearNotAvailable,
   createDemoFsPaths,
 };
