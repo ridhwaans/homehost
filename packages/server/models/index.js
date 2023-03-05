@@ -89,7 +89,7 @@ const getMovieMetaData = async (file) => {
 const getTVEpisodeMetaData = async (file) => {
   try {
     let re = new RegExp(/(\d+)$/); // tv_show_id
-    let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
+    let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/i); // S(season_number)E(episode_number)
 
     console.log('GET: ' + file);
     // find tv episode on TMDb
@@ -129,7 +129,7 @@ const getTVEpisodeMetaData = async (file) => {
 const getTVShowMetaData = async (file) => {
   try {
     let re = new RegExp(/(\d+)$/); // tv_show_id
-    let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/); // S(season_number)E(episode_number)
+    let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/i); // S(season_number)E(episode_number)
 
     console.log('GET: ' + file);
     // find tv show on TMDb
