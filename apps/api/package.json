@@ -1,0 +1,45 @@
+{
+    "name": "server",
+    "scripts": {
+        "build2": "tsc -p tsconfig.json",
+        "build": "ncc build src/server.ts -o dist",
+        "dev": "node --watch -r ts-node/register -r tsconfig-paths/register src/server.ts",
+        "start": "DISABLE_SYNC=true ts-node -r tsconfig-paths/register src/server.ts",
+        "start:demo": "DISABLE_SYNC=true NODE_ENV=production node --watch src/server",
+        "start:prod": "NODE_ENV=production node src/server",
+        "db:migrate": "rm -rf prisma/migrations; npx prisma migrate dev",
+        "db:browse": "npx prisma studio",
+        "db:clear": "npx prisma migrate reset",
+        "db:clear-not-available": "DISABLE_SYNC=true node -e 'require(\"./jobs\").clearNotAvailable()'"
+    },
+    "prisma": {
+        "schema": "src/prisma/schema.prisma"
+    },
+    "engines": {
+        "node": ">= 18.11.0"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.3.1",
+        "@types/express": "^4.17.17",
+        "@types/node": "^20.6.3",
+        "@types/qs": "^6.9.8",
+        "axios": "^1.5.0",
+        "body-parser": "^1.20.2",
+        "chokidar": "^3.5.3",
+        "express": "^4.18.2",
+        "figlet": "^1.6.0",
+        "get-audio-duration": "^4.0.1",
+        "qs": "^6.11.2",
+        "tsconfig-paths": "^4.2.0",
+        "universal-cookie": "^6.1.1",
+        "zod": "^3.22.2"
+    },
+    "devDependencies": {
+        "@vercel/ncc": "^0.38.0",
+        "concurrently": "^8.2.1",
+        "dotenv": "^16.3.1",
+        "prisma": "^5.3.1",
+        "ts-node": "^10.9.1",
+        "typescript": "latest"
+    }
+}

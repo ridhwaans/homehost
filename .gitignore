@@ -8,13 +8,22 @@ _demo/
 # client
 build/
 
-# docs 
+# docs
 .next/
 
 # common
 .env
+.env.local
 node_modules/
 
 # misc
 .DS_Store
 *Zone.Identifier
+
+# vercel
+.turbo
+.vercel
+/.next/
+dist
+
+migrations/

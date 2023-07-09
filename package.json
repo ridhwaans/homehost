@@ -4,18 +4,23 @@
   "private": true,
   "author": "ridhwaans",
   "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "pre-commit-lint": "npx lint-staged",
-    "install-server": "npm install --prefix packages/server",
-    "install-client": "npm install --prefix packages/client",
+    "install-server": "npm install --prefix apps/api",
+    "install-client": "npm install --prefix apps/web",
     "install-packages": "npm install; npm run install-server; npm run install-client",
     "db:migrate": "npm run db:migrate --prefix packages/server",
     "db:browse": "npm run db:browse --prefix packages/server",
     "db:clear": "npm run db:clear --prefix packages/server",
     "db:clear-not-available": "npm run db:clear-not-available --prefix packages/server",
-    "start": "concurrently --kill-others-on-fail \"npm run start:dev --prefix packages/server\" \"npm run start:dev --prefix packages/client\"",
+    "start": "concurrently --kill-others-on-fail \"npm run start:dev --prefix apps/api\" \"npm run dev --prefix apps/web\"",
     "start:prod": "npm run start:prod --prefix packages/client; npm run start:prod --prefix packages/server",
-    "start:demo": "npm run start:prod --prefix packages/client; npm run start:demo --prefix packages/server"
+    "start:demo": "npm run start:prod --prefix packages/client; npm run start:demo --prefix packages/server",
+    "dev": "turbo run dev --parallel"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -26,12 +31,15 @@
     ]
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "eslint": "^8.35.0",
-    "eslint-plugin-react": "^7.32.2",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.2",
-    "npm-check-updates": "^16.7.10",
-    "prettier": "^2.8.4"
+    "lint-staged": "^15.2.0",
+    "npm-check-updates": "^16.14.12",
+    "prettier": "^3.1.1"
+  },
+  "dependencies": {
+    "turbo": "^1.11.2"
   }
 }

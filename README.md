@@ -80,7 +80,7 @@ If you dont have keys, you can request API authorization from Spotify at https:/
 
 ### Media
 
-Your media must appear in the absolute path locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)  
+Your media must appear in the absolute path locations set by `.env`. Each media must be in a unique location and cannot share the same directory path(s)
 
 #### Naming conventions
 
@@ -117,57 +117,58 @@ Tracks not found on Spotify can be put in a directory titled `Unknown Album` san
 ```
 
 ### Database
-  
-Run `npm run db:migrate` to create migrations from schema, apply them, generate the database client  
-_homehost_ scans the media paths and adds the files to the database  
-Wait for the async job to finish generating metadata and save  
-To browse data, run `npm run db:browse` and go to `http://localhost:5555`  
+
+Run `npx prisma migrate dev --name init`
+Run `npm run db:migrate` to create migrations from schema, apply them, generate the database client
+_homehost_ scans the media paths and adds the files to the database
+Wait for the async job to finish generating metadata and save
+To browse data, run `npm run db:browse` and go to `http://localhost:5555`
 To clear all data, run `npm run db:clear`
 
 ### Run
 
-Run `npm run start` to start the application  
-By default, the server port is `5000`, client port is `3000`  
-Run `npm run start:prod` to start the application as prod (default port is `5000`)  
+Run `npm run start` to start the application
+By default, the server port is `5000`, client port is `3000`
+Run `npm run start:prod` to start the application as prod (default port is `5000`)
 While running, _homehost_ continuously saves and retrieves information for any media that was added, moved or removed
 
 ### Routes
 
 #### Server-side
- 
-**GET**  
-`/api/about`  
-`/api/library/stats`  
-`/api/not_available`  
-`/api/movies`  
-`/api/movies/most_popular`  
-`/api/movies/highest_rated`  
-`/api/movies/recently_added`  
-`/api/movies/genres`  
-`/api/movies/genre/:name`  
-`/api/movies/random`  
-`/api/movies/:id`  
-`/api/tv`  
-`/api/tv/most_popular`  
-`/api/tv/highest_rated`  
-`/api/tv/recently_added`  
-`/api/tv/genres`  
-`/api/tv/genre/:name`  
-`/api/tv/random`  
-`/api/tv/:id`  
-`/api/music/albums/recently_added`  
-`/api/music/albums/latest`  
-`/api/music/artists`  
-`/api/music/artists/most_popular`  
-`/api/music/albums`  
-`/api/music/albums/:id`  
-`/api/music/songs`  
-`/api/music/songs/recently_added`  
-`/movies/:id`  
-`/tv/:tv_show_id/:season_number/:episode_number`  
-`/music/:album_id/:disc_number/:track_number`  
-`/api/watch/search`  
-`/api/listen/search`  
+
+**GET**
+`/api/about`
+`/api/library/stats`
+`/api/not_available`
+`/api/movies`
+`/api/movies/most_popular`
+`/api/movies/highest_rated`
+`/api/movies/recently_added`
+`/api/movies/genres`
+`/api/movies/genre/:name`
+`/api/movies/random`
+`/api/movies/:id`
+`/api/tv`
+`/api/tv/most_popular`
+`/api/tv/highest_rated`
+`/api/tv/recently_added`
+`/api/tv/genres`
+`/api/tv/genre/:name`
+`/api/tv/random`
+`/api/tv/:id`
+`/api/music/albums/recently_added`
+`/api/music/albums/latest`
+`/api/music/artists`
+`/api/music/artists/most_popular`
+`/api/music/albums`
+`/api/music/albums/:id`
+`/api/music/songs`
+`/api/music/songs/recently_added`
+`/movies/:id`
+`/tv/:tv_show_id/:season_number/:episode_number`
+`/music/:album_id/:disc_number/:track_number`
+`/api/watch/search`
+`/api/listen/search`
 `/api/watch/billboard`
 
 #### Client-side
