@@ -3,7 +3,7 @@ services:
   server:
     build:
       context: ./packages/server/
-    command: npm run start:dev
+    command: yarn start:dev
     ports:
       - 5000:5000
     dns:
@@ -16,7 +16,7 @@ services:
   client:
     build:
       context: ./packages/client/
-    command: npm run start:dev
+    command: yarn start:dev
     depends_on:
       - server
     ports:
