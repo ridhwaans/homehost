@@ -10,7 +10,7 @@ WORKDIR /usr/app
 COPY package*.json ./
 
 # Installs all node packages
-RUN npm install
+RUN yarn install
 
 # Copies everything over to Docker environment
 COPY . .
