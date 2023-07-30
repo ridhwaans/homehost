@@ -13,8 +13,8 @@
         "schema": "prisma/schema.prisma"
     },
     "engines": {
-        "node": ">= 19.0.0",
-        "npm": ">= 8.19.0"
+        "node": ">= 18.0.0",
+        "yarn": ">= 1.22.19"
     },
     "dependencies": {
         "@prisma/client": "^4.11.0",

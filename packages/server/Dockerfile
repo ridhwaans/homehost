@@ -11,7 +11,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Installs all node packages
-RUN npm install
+RUN yarn install
 
 RUN npx prisma generate
 
