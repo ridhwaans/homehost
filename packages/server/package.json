@@ -1,7 +1,8 @@
 {
     "name": "server",
     "scripts": {
-        "start:dev": "node --watch server",
+        "dev": "nodemon",
+        "build": "webpack",
         "start:demo": "DISABLE_SYNC=true NODE_ENV=production node --watch server",
         "start:prod": "NODE_ENV=production node server",
         "db:migrate": "rm -rf prisma/migrations; npx prisma migrate dev",
