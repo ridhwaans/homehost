@@ -1,3 +1,5 @@
+import { configDotenv } from 'dotenv';
+
 const chokidar = require('chokidar');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -10,7 +12,9 @@ const { Type } = require('../constants');
 var fileSystem = [];
 var ready;
 
-const fileWatcher = () => {
+configDotenv();
+
+export const fileWatcher = () => {
   if (process.env.DISABLE_SYNC != true) {
     if (
       new Set([
@@ -477,7 +481,7 @@ const fileWatcher = () => {
   return watcher;
 };
 
-const clearNotAvailable = async () => {
+export const clearNotAvailable = async () => {
   const result = await prisma.notAvailable.findMany();
 
   for (let notAvailable of result) {
@@ -495,7 +499,7 @@ const clearNotAvailable = async () => {
   process.exit();
 };
 
-const createDemoFsPaths = async () => {
+export const createDemoFsPaths = async () => {
   const video_path = './_demo/sample.mp4';
   const audio_path = './_demo/sample.mp3';
 
@@ -515,10 +519,4 @@ const createDemoFsPaths = async () => {
     },
   });
   process.exit();
-};
-
-module.exports = {
-  fileWatcher,
-  clearNotAvailable,
-  createDemoFsPaths,
 };

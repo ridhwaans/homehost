@@ -1,10 +1,14 @@
-const { shuffleArr, format } = require('../utils');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const metadataServiceConstructor = require('../services/metadata');
+import { shuffleArr, format } from '../utils';
+import { PrismaClient } from '@prisma/client';
+import { configDotenv } from 'dotenv';
+import { metadataServiceConstructor } from '../services/metadata';
+
+configDotenv();
+
 const metadataService = new metadataServiceConstructor();
 
-const getAbout = () => {
+const prisma = new PrismaClient();
+export const getAbout = () => {
   return {
     name: process.env.npm_package_name,
     version: process.env.npm_package_version,
@@ -12,7 +16,7 @@ const getAbout = () => {
   };
 };
 
-const getLibraryStats = async () => {
+export const getLibraryStats = async () => {
   return {
     movies: await prisma.movie.count(),
     tv_shows: await prisma.tVShow.count(),
@@ -25,16 +29,16 @@ const getLibraryStats = async () => {
   };
 };
 
-const getAllNotAvailable = async () => {
+export const getAllNotAvailable = async () => {
   const result = await prisma.notAvailable.findMany();
   return result;
 };
 
-const externalSearch = async (type, keyword) => {
+export const externalSearch = async (type, keyword) => {
   return await metadataService.search(type, keyword);
 };
 
-const searchMoviesAndTV = async (keyword) => {
+export const searchMoviesAndTV = async (keyword) => {
   const movies = await prisma.movie.findMany({
     include: {
       genres: true,
@@ -107,7 +111,7 @@ const searchMoviesAndTV = async (keyword) => {
   };
 };
 
-const searchMusic = async (keyword) => {
+export const searchMusic = async (keyword) => {
   if (keyword.trim() == '') {
     return { results: { songs: [], artists: [], albums: [] } };
   }
@@ -162,7 +166,7 @@ const searchMusic = async (keyword) => {
   };
 };
 
-const getAllMovies = async () => {
+export const getAllMovies = async () => {
   const result = await prisma.movie.findMany({
     include: {
       genres: true,
@@ -174,7 +178,7 @@ const getAllMovies = async () => {
   return format(result);
 };
 
-const getMostPopularMovies = async () => {
+export const getMostPopularMovies = async () => {
   const result = await prisma.movie.findMany({
     include: {
       genres: true,
@@ -190,7 +194,7 @@ const getMostPopularMovies = async () => {
   return format(result);
 };
 
-const getHighestRatedMovies = async () => {
+export const getHighestRatedMovies = async () => {
   const result = await prisma.movie.findMany({
     include: {
       genres: true,
@@ -206,7 +210,7 @@ const getHighestRatedMovies = async () => {
   return format(result);
 };
 
-const getRecentlyAddedMovies = async () => {
+export const getRecentlyAddedMovies = async () => {
   const result = await prisma.movie.findMany({
     include: {
       genres: true,
@@ -222,7 +226,7 @@ const getRecentlyAddedMovies = async () => {
   return format(result);
 };
 
-const getMovieGenres = async () => {
+export const getMovieGenres = async () => {
   const result = await prisma.genre.findMany({
     orderBy: {
       name: 'asc',
@@ -231,7 +235,7 @@ const getMovieGenres = async () => {
   return format(result);
 };
 
-const getMoviesByGenre = async (genre_name) => {
+export const getMoviesByGenre = async (genre_name) => {
   const result = await prisma.movie.findMany({
     include: {
       genres: true,
@@ -250,7 +254,7 @@ const getMoviesByGenre = async (genre_name) => {
   return shuffleArr(format(result));
 };
 
-const getMovie = async (movie_id) => {
+export const getMovie = async (movie_id) => {
   const result = await prisma.movie.findUnique({
     include: {
       genres: true,
@@ -265,7 +269,7 @@ const getMovie = async (movie_id) => {
   return format(result);
 };
 
-const getAllTVShows = async () => {
+export const getAllTVShows = async () => {
   const result = await prisma.tVShow.findMany({
     include: {
       genres: true,
@@ -278,7 +282,7 @@ const getAllTVShows = async () => {
   return format(result);
 };
 
-const getMostPopularTVShows = async () => {
+export const getMostPopularTVShows = async () => {
   const result = await prisma.tVShow.findMany({
     include: {
       genres: true,
@@ -295,7 +299,7 @@ const getMostPopularTVShows = async () => {
   return format(result);
 };
 
-const getHighestRatedTVShows = async () => {
+export const getHighestRatedTVShows = async () => {
   const result = await prisma.tVShow.findMany({
     include: {
       genres: true,
@@ -312,13 +316,13 @@ const getHighestRatedTVShows = async () => {
   return format(result);
 };
 
-const lastAddedEpisode = (tv_show) => {
+export const lastAddedEpisode = (tv_show) => {
   return Math.max(
     ...tv_show.seasons.map((s) => s.episodes.map((e) => e.mtime)).flat(Infinity)
   );
 };
 
-const getRecentlyAddedTVShows = async () => {
+export const getRecentlyAddedTVShows = async () => {
   const result = await prisma.tVShow.findMany({
     include: {
       genres: true,
@@ -333,7 +337,7 @@ const getRecentlyAddedTVShows = async () => {
   );
 };
 
-const getTVShowGenres = async () => {
+export const getTVShowGenres = async () => {
   const result = await prisma.genre.findMany({
     orderBy: {
       name: 'asc',
@@ -342,7 +346,7 @@ const getTVShowGenres = async () => {
   return format(result);
 };
 
-const getTVShowsByGenre = async (genre_name) => {
+export const getTVShowsByGenre = async (genre_name) => {
   const result = await prisma.tVShow.findMany({
     include: {
       genres: true,
@@ -362,7 +366,7 @@ const getTVShowsByGenre = async (genre_name) => {
   return shuffleArr(format(result));
 };
 
-const getTVShow = async (tv_show_id) => {
+export const getTVShow = async (tv_show_id) => {
   const result = await prisma.tVShow.findUnique({
     include: {
       genres: true,
@@ -378,12 +382,12 @@ const getTVShow = async (tv_show_id) => {
   return format(result);
 };
 
-const getAllArtists = async () => {
+export const getAllArtists = async () => {
   const result = await prisma.artist.findMany();
   return format(result);
 };
 
-const getMostPopularArtists = async () => {
+export const getMostPopularArtists = async () => {
   const result = await prisma.artist.findMany({
     orderBy: {
       popularity: 'desc',
@@ -392,7 +396,7 @@ const getMostPopularArtists = async () => {
   return format(result);
 };
 
-const getAllAlbums = async () => {
+export const getAllAlbums = async () => {
   const result = await prisma.album.findMany({
     include: {
       artists: true,
@@ -402,11 +406,11 @@ const getAllAlbums = async () => {
   return format(result);
 };
 
-const lastAddedSong = (album) => {
+export const lastAddedSong = (album) => {
   return Math.max(...album.songs.map((s) => s.mtime));
 };
 
-const getRecentlyAddedAlbums = async () => {
+export const getRecentlyAddedAlbums = async () => {
   const result = await prisma.album.findMany({
     include: {
       artists: true,
@@ -416,7 +420,7 @@ const getRecentlyAddedAlbums = async () => {
   return format(result.sort((a, b) => lastAddedSong(b) - lastAddedSong(a)));
 };
 
-const getLatestAlbumReleases = async () => {
+export const getLatestAlbumReleases = async () => {
   const result = await prisma.album.findMany({
     include: {
       artists: true,
@@ -429,7 +433,7 @@ const getLatestAlbumReleases = async () => {
   return format(result);
 };
 
-const getMusicAlbum = async (album_id) => {
+export const getMusicAlbum = async (album_id) => {
   const result = await prisma.album.findUnique({
     include: { artists: true, songs: { include: { artists: true } } },
     where: {
@@ -439,14 +443,14 @@ const getMusicAlbum = async (album_id) => {
   return format(result);
 };
 
-const getAllSongs = async () => {
+export const getAllSongs = async () => {
   const result = await prisma.song.findMany({
     include: { album: { include: { artists: true } } },
   });
   return format(result);
 };
 
-const getRecentlyAddedSongs = async () => {
+export const getRecentlyAddedSongs = async () => {
   const result = await prisma.song.findMany({
     include: { album: { include: { artists: true } } },
     orderBy: {
@@ -456,7 +460,7 @@ const getRecentlyAddedSongs = async () => {
   return format(result);
 };
 
-const getRandomMovieOrTVShow = async () => {
+export const getRandomMovieOrTVShow = async () => {
   const ratio = (await prisma.tVShow.count()) / (await prisma.movie.count());
   const result =
     (await Math.random()) < ratio
@@ -465,7 +469,7 @@ const getRandomMovieOrTVShow = async () => {
   return format(result);
 };
 
-const getRandomMovie = async () => {
+export const getRandomMovie = async () => {
   const id = Math.floor(Math.random() * (await prisma.movie.count())) + 1;
   const result = await prisma.movie.findUnique({
     include: {
@@ -481,7 +485,7 @@ const getRandomMovie = async () => {
   return format(result);
 };
 
-const getRandomTVShow = async () => {
+export const getRandomTVShow = async () => {
   const id = Math.floor(Math.random() * (await prisma.tVShow.count())) + 1;
   const result = await prisma.tVShow.findUnique({
     include: {
@@ -498,7 +502,7 @@ const getRandomTVShow = async () => {
   return format(result);
 };
 
-const getMovieFilePath = async (movie_id) => {
+export const getMovieFilePath = async (movie_id) => {
   const result = await prisma.movie.findUnique({
     select: {
       fs_path: true,
@@ -510,7 +514,7 @@ const getMovieFilePath = async (movie_id) => {
   return result.fs_path;
 };
 
-const getEpisodeFilePath = async (
+export const getEpisodeFilePath = async (
   tv_show_id,
   season_number,
   episode_number
@@ -536,7 +540,7 @@ const getEpisodeFilePath = async (
   return result.episodes[0].fs_path;
 };
 
-const getSongFilePath = async (album_id, disc_number, track_number) => {
+export const getSongFilePath = async (album_id, disc_number, track_number) => {
   const result = await prisma.album.findUnique({
     select: {
       songs: {

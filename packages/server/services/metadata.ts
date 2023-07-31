@@ -1,14 +1,14 @@
-const axios = require('axios');
-const Cookies = require('universal-cookie');
-const qs = require('qs');
-const { Type } = require('../constants');
+import axios from 'axios';
+import Cookies from 'universal-cookie';
+import qs from 'qs';
+import { Type } from '../constants';
 
 const TMDB_API = 'api.themoviedb.org/3';
 const SPOTIFY_API = 'api.spotify.com/v1';
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const cookies = new Cookies();
 
-class Metadata {
+export class Metadata {
   constructor() {}
 
   async get(item, delay = 0) {
@@ -106,5 +106,3 @@ const getAuth = async () => {
 
   return auth;
 };
-
-module.exports = Metadata;

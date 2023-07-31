@@ -1,8 +1,8 @@
 const fs = require('fs');
 const qs = require('qs');
 const path = require('path');
-const express = require('express');
-const {
+import express from 'express';
+import {
   getAbout,
   getLibraryStats,
   getAllNotAvailable,
@@ -37,9 +37,9 @@ const {
   searchMoviesAndTV,
   searchMusic,
   externalSearch,
-} = require('../data');
-const { moveMovieFile, moveEpisodeFile, moveSongFile } = require('../models');
-const router = express.Router();
+} from '../data';
+import { moveMovieFile, moveEpisodeFile, moveSongFile } from '../models';
+export const router = express.Router();
 
 const readStreamMp4 = (req, res, file_path) => {
   const stat = fs.statSync(file_path);

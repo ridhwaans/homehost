@@ -1,4 +1,4 @@
-const Type = Object.freeze({
+export const Type = Object.freeze({
   Movie: 'Movie',
   TV: {
     Show: 'Show',
@@ -11,5 +11,3 @@ const Type = Object.freeze({
     Song: 'Song',
   },
 });
-
-module.exports = { Type };

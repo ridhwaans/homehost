@@ -1,4 +1,4 @@
-const shuffleArr = (arr) => {
+export const shuffleArr = (arr) => {
   const newArr = arr.slice();
   for (let i = newArr.length - 1; i > 0; i--) {
     const rand = Math.floor(Math.random() * (i + 1));
@@ -11,7 +11,7 @@ BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
-const format = (result) => {
+export const format = (result) => {
   try {
     if (!result) return result;
     if (Array.isArray(result)) {
@@ -75,5 +75,3 @@ const format = (result) => {
     console.log('There was a problem', e);
   }
 };
-
-module.exports = { shuffleArr, format };
