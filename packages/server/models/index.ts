@@ -4,17 +4,17 @@ import { getAudioDurationInSeconds } from 'get-audio-duration';
 import { PrismaClient } from '@prisma/client';
 import { Metadata } from '../services/metadata';
 import { Type } from '../constants';
+import { getImdbId } from '../utils';
 
 const metadataService = new Metadata();
 const prisma = new PrismaClient();
-export const getMovieMetaData = async (file) => {
-  try {
-    let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
 
+export const getMovieMetaData = async (file: string) => {
+  try {
     console.log('GET: ' + file);
     let movie = await metadataService.get({
       type: Type.Movie,
-      id: file.match(re)[1],
+      id: getImdbId(file),
     });
     if (movie.status == 404 || movie.status_code == 34)
       throw 'API resource was not found';
