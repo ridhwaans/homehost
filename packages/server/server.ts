@@ -1,6 +1,7 @@
 import path from 'path';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 
 import figlet from 'figlet';
 import bodyParser from 'body-parser';
@@ -17,6 +18,7 @@ if (NODE_ENV == PROD_ENV) {
 }
 
 app.use(cors());
+app.use(helmet());
 
 app.use(bodyParser.json());
 app.use('/', require('./routes'));
