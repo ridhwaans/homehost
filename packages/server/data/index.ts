@@ -1,13 +1,11 @@
 import { shuffleArr, format } from '../utils';
 import { PrismaClient } from '@prisma/client';
-import { configDotenv } from 'dotenv';
-import { metadataServiceConstructor } from '../services/metadata';
+import { Metadata } from '../services/metadata';
 
-configDotenv();
-
-const metadataService = new metadataServiceConstructor();
+const metadataService = new Metadata();
 
 const prisma = new PrismaClient();
+
 export const getAbout = () => {
   return {
     name: process.env.npm_package_name,
@@ -558,41 +556,4 @@ export const getSongFilePath = async (album_id, disc_number, track_number) => {
     },
   });
   return result.songs[0].fs_path;
-};
-
-module.exports = {
-  getAbout,
-  getLibraryStats,
-  getAllNotAvailable,
-  getAllMovies,
-  getMostPopularMovies,
-  getHighestRatedMovies,
-  getRecentlyAddedMovies,
-  getMovieGenres,
-  getMoviesByGenre,
-  getRandomMovie,
-  getMovie,
-  getAllTVShows,
-  getMostPopularTVShows,
-  getHighestRatedTVShows,
-  getRecentlyAddedTVShows,
-  getTVShowGenres,
-  getTVShowsByGenre,
-  getRandomTVShow,
-  getTVShow,
-  getRandomMovieOrTVShow,
-  getAllAlbums,
-  getRecentlyAddedAlbums,
-  getLatestAlbumReleases,
-  getMusicAlbum,
-  getAllArtists,
-  getMostPopularArtists,
-  getAllSongs,
-  getRecentlyAddedSongs,
-  getMovieFilePath,
-  getSongFilePath,
-  getEpisodeFilePath,
-  searchMoviesAndTV,
-  searchMusic,
-  externalSearch,
 };
