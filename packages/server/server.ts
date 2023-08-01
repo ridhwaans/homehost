@@ -4,16 +4,15 @@ import cors from 'cors';
 
 import figlet from 'figlet';
 import bodyParser from 'body-parser';
-import { configDotenv } from 'dotenv';
 
-const app = express();
-const port = process.env.PORT || 5000;
 import { fileWatcher } from './jobs';
-configDotenv();
+import { NODE_ENV, PORT, PROD_ENV } from './constants';
 
 fileWatcher();
 
-if (process.env.NODE_ENV == 'production') {
+const app = express();
+
+if (NODE_ENV == PROD_ENV) {
   app.use(express.static(path.join(__dirname, '../client/build')));
 }
 
@@ -23,4 +22,4 @@ app.use(bodyParser.json());
 app.use('/', require('./routes'));
 
 console.log(figlet.textSync('homehost'));
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
