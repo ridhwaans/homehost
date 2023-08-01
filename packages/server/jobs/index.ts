@@ -1,18 +1,18 @@
 import chokidar from 'chokidar';
 import { PrismaClient } from '@prisma/client';
-import { Type } from '../constants';
-import {
-  getMovieMetaData,
-  getTVShowMetaData,
-  getAlbumMetaData,
-} from '../models';
 import {
   DISABLE_SYNC_ENV,
   MOVIES_PATH_ENV,
   MUSIC_PATH_ENV,
   TV_PATH_ENV,
-  isExtensionAllowed,
-} from '../utils';
+  Type,
+} from '../constants';
+import {
+  getMovieMetaData,
+  getTVShowMetaData,
+  getAlbumMetaData,
+} from '../models';
+import { isExtensionAllowed } from '../utils';
 
 const prisma = new PrismaClient();
 

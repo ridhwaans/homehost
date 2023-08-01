@@ -1,3 +1,5 @@
+export * from './environmentVariables';
+
 export const Type = Object.freeze({
   Movie: 'Movie',
   TV: {
