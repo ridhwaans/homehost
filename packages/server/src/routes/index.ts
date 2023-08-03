@@ -1,45 +1,45 @@
-const fs = require('fs');
-const qs = require('qs');
-const path = require('path');
-import express from 'express';
-import {
-  getAbout,
-  getLibraryStats,
-  getAllNotAvailable,
-  getAllMovies,
-  getMostPopularMovies,
-  getHighestRatedMovies,
-  getRecentlyAddedMovies,
-  getMovieGenres,
-  getMoviesByGenre,
-  getRandomMovie,
-  getMovie,
-  getAllTVShows,
-  getMostPopularTVShows,
-  getHighestRatedTVShows,
-  // getRecentlyAddedTVShows,
-  getTVShowGenres,
-  getTVShowsByGenre,
-  getRandomTVShow,
-  getTVShow,
-  getRandomMovieOrTVShow,
-  // getAllAlbums,
-  // getRecentlyAddedAlbums,
-  // getLatestAlbumReleases,
-  // getMusicAlbum,
-  // getAllArtists,
-  // getMostPopularArtists,
-  // getAllSongs,
-  // getRecentlyAddedSongs,
-  getMovieFilePath,
-  // getSongFilePath,
-  getEpisodeFilePath,
-  searchMoviesAndTV,
-  // searchMusic,
-  externalSearch,
-} from '../db';
-import { moveMovieFile, moveEpisodeFile, moveSongFile } from '../models';
-export const router = express.Router();
+// import fs from 'fs';
+// import qs from 'qs';
+// import path from 'path';
+// import express from 'express';
+// import {
+//   getAbout,
+//   getLibraryStats,
+//   getAllNotAvailable,
+//   getAllMovies,
+//   getMostPopularMovies,
+//   getHighestRatedMovies,
+//   getRecentlyAddedMovies,
+//   getMovieGenres,
+//   getMoviesByGenre,
+// getRandomMovie,
+// getMovie,
+// getAllTVShows,
+// getMostPopularTVShows,
+// getHighestRatedTVShows,
+// getRecentlyAddedTVShows,
+// getTVShowGenres,
+// getTVShowsByGenre,
+// getRandomTVShow,
+// getTVShow,
+// getRandomMovieOrTVShow,
+// getAllAlbums,
+// getRecentlyAddedAlbums,
+// getLatestAlbumReleases,
+// getMusicAlbum,
+// getAllArtists,
+// getMostPopularArtists,
+// getAllSongs,
+// getRecentlyAddedSongs,
+// getMovieFilePath,
+// getSongFilePath,
+// getEpisodeFilePath,
+// searchMoviesAndTV,
+// searchMusic,
+//   externalSearch,
+// } from '../db';
+// import { moveMovieFile, moveEpisodeFile, moveSongFile } from '../models';
+// export const router = express.Router();
 
 // const readStreamMp4 = (req, res, file_path) => {
 //   const stat = fs.statSync(file_path);
@@ -98,94 +98,94 @@ export const router = express.Router();
 //   }
 // };
 
-router.get('/api/about', (req, res) => {
-  res.json(getAbout());
-});
+// router.get('/api/about', (req, res) => {
+//   res.json(getAbout());
+// });
 
-router.get('/api/library/stats', async (req, res) => {
-  res.json(await getLibraryStats());
-});
+// router.get('/api/library/stats', async (req, res) => {
+//   res.json(await getLibraryStats());
+// });
 
-router.get('/api/not_available', async (req, res) => {
-  res.json(await getAllNotAvailable());
-});
+// router.get('/api/not_available', async (req, res) => {
+//   res.json(await getAllNotAvailable());
+// });
 
-router.get('/api/services/search', async (req, res) => {
-  res.json(await externalSearch(req.query.type, req.query.q));
-});
+// router.get('/api/services/search', async (req, res) => {
+//   res.json(await externalSearch(req.query.type, req.query.q));
+// });
 
-router.post('/api/movies/add', async (req, res) => {
-  console.log(req.body);
-  res.json(await moveMovieFile(req.body));
-});
+// router.post('/api/movies/add', async (req, res) => {
+//   console.log(req.body);
+//   res.json(await moveMovieFile(req.body));
+// });
 
-router.post('/api/tv/episodes/add', async (req, res) => {
-  res.json(await moveEpisodeFile(req.body));
-});
+// router.post('/api/tv/episodes/add', async (req, res) => {
+//   res.json(await moveEpisodeFile(req.body));
+// });
 
-router.post('/api/music/songs/add', async (req, res) => {
-  res.json(await moveSongFile(req.body));
-});
+// router.post('/api/music/songs/add', async (req, res) => {
+//   res.json(await moveSongFile(req.body));
+// });
 
-router.get('/api/movies', async (req, res) => {
-  res.json(await getAllMovies());
-});
+// router.get('/api/movies', async (req, res) => {
+//   res.json(await getAllMovies());
+// });
 
-router.get('/api/movies/most_popular', async (req, res) => {
-  res.json(await getMostPopularMovies());
-});
+// router.get('/api/movies/most_popular', async (req, res) => {
+//   res.json(await getMostPopularMovies());
+// });
 
-router.get('/api/movies/highest_rated', async (req, res) => {
-  res.json(await getHighestRatedMovies());
-});
+// router.get('/api/movies/highest_rated', async (req, res) => {
+//   res.json(await getHighestRatedMovies());
+// });
 
-router.get('/api/movies/recently_added', async (req, res) => {
-  res.json(await getRecentlyAddedMovies());
-});
+// router.get('/api/movies/recently_added', async (req, res) => {
+//   res.json(await getRecentlyAddedMovies());
+// });
 
-router.get('/api/movies/genres', async (req, res) => {
-  res.json(await getMovieGenres());
-});
+// router.get('/api/movies/genres', async (req, res) => {
+//   res.json(await getMovieGenres());
+// });
 
-router.get('/api/movies/genre/:name', async (req, res) => {
-  res.json(await getMoviesByGenre(req.params.name));
-});
+// router.get('/api/movies/genre/:name', async (req, res) => {
+//   res.json(await getMoviesByGenre(req.params.name));
+// });
 
-router.get('/api/movies/random', async (req, res) => {
-  res.json(await getRandomMovie());
-});
+// router.get('/api/movies/random', async (req, res) => {
+//   res.json(await getRandomMovie());
+// });
 
 // router.get('/api/movies/:id', async (req, res) => {
 //   res.json(await getMovie(req.params.id));
 // });
 
-router.get('/api/tv', async (req, res) => {
-  res.json(await getAllTVShows());
-});
+// router.get('/api/tv', async (req, res) => {
+//   res.json(await getAllTVShows());
+// });
 
-router.get('/api/tv/most_popular', async (req, res) => {
-  res.json(await getMostPopularTVShows());
-});
+// router.get('/api/tv/most_popular', async (req, res) => {
+//   res.json(await getMostPopularTVShows());
+// });
 
-router.get('/api/tv/highest_rated', async (req, res) => {
-  res.json(await getHighestRatedTVShows());
-});
+// router.get('/api/tv/highest_rated', async (req, res) => {
+//   res.json(await getHighestRatedTVShows());
+// });
 
 // router.get('/api/tv/recently_added', async (req, res) => {
 //   res.json(await getRecentlyAddedTVShows());
 // });
 
-router.get('/api/tv/genres', async (req, res) => {
-  res.json(await getTVShowGenres());
-});
+// router.get('/api/tv/genres', async (req, res) => {
+//   res.json(await getTVShowGenres());
+// });
 
-router.get('/api/tv/genre/:name', async (req, res) => {
-  res.json(await getTVShowsByGenre(req.params.name));
-});
+// router.get('/api/tv/genre/:name', async (req, res) => {
+//   res.json(await getTVShowsByGenre(req.params.name));
+// });
 
-router.get('/api/tv/random', async (req, res) => {
-  res.json(await getRandomTVShow());
-});
+// router.get('/api/tv/random', async (req, res) => {
+//   res.json(await getRandomTVShow());
+// });
 
 // router.get('/api/tv/:id', async (req, res) => {
 //   res.json(await getTVShow(req.params.id));
@@ -255,12 +255,12 @@ router.get('/api/tv/random', async (req, res) => {
 //   );
 // });
 
-router.get('/api/watch/search', async (req, res) => {
-  const keyword = qs.parse(req.query).q;
-  console.log(`keyword is "${keyword}"`);
-  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
-  res.json(await searchMoviesAndTV(keyword));
-});
+// router.get('/api/watch/search', async (req, res) => {
+//   const keyword = qs.parse(req.query).q;
+//   console.log(`keyword is "${keyword}"`);
+//   console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
+//   res.json(await searchMoviesAndTV(keyword));
+// });
 
 // router.get('/api/listen/search', async (req, res) => {
 //   const keyword = qs.parse(req.query).q;
@@ -269,17 +269,15 @@ router.get('/api/watch/search', async (req, res) => {
 //   res.json(await searchMusic(keyword));
 // });
 
-router.get('/api/watch/billboard', async (req, res) => {
-  const billboardItem = await getRandomMovieOrTVShow();
-  // get by id: getMovie(), getTVShow()
-  res.json(billboardItem);
-});
+// router.get('/api/watch/billboard', async (req, res) => {
+//   const billboardItem = await getRandomMovieOrTVShow();
+//   // get by id: getMovie(), getTVShow()
+//   res.json(billboardItem);
+// });
 
 // Handles any requests that don't match the routes above
-if (process.env.NODE_ENV == 'production') {
-  router.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../../client/build/index.html'));
-  });
-}
-
-module.exports = router;
+// if (process.env.NODE_ENV == 'production') {
+//   router.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, '../../client/build/index.html'));
+//   });
+// }

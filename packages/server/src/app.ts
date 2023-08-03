@@ -17,4 +17,4 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 // routes
-app.use('/', require('./routes'));
+// app.use('/', require('./routes'));

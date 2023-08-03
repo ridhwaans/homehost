@@ -1,8 +1,8 @@
 import figlet from 'figlet';
 
 // import { fileWatcher } from './jobs';
-import { PORT } from './constants';
-import { app } from './app';
+import { PORT } from './src/constants';
+import { app } from './src/app';
 
 // fileWatcher();
 

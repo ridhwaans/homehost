@@ -119,27 +119,27 @@ export const searchMoviesAndTV = async (keyword: string) => {
   };
 };
 
-export const getRandomMovieOrTVShow = async (): Promise<TVShow | Movie> => {
-  const ratio = (await TvShowsModel.count()) / (await MoviesModel.count());
-  const result =
-    (await Math.random()) < ratio
-      ? await getRandomTVShow()
-      : await getRandomMovie();
-  return result;
-};
+// export const getRandomMovieOrTVShow = async (): Promise<TVShow | Movie> => {
+//   const ratio = (await TvShowsModel.count()) / (await MoviesModel.count());
+//   const result =
+//     (await Math.random()) < ratio
+//       ? await getRandomTVShow()
+//       : await getRandomMovie();
+//   return result;
+// };
 
-export const getRandomMovie = async (): Promise<Movie> => {
-  const id = Math.floor(Math.random() * (await MoviesModel.count())) + 1;
-  const result = await MoviesModel.findUnique({
-    include: {
-      genres: true,
-      production_companies: true,
-      credits: true,
-      similar: true,
-    },
-    where: {
-      id: id,
-    },
-  });
-  return format(result);
-};
+// export const getRandomMovie = async (): Promise<Movie> => {
+//   const id = Math.floor(Math.random() * (await MoviesModel.count())) + 1;
+//   const result = await MoviesModel.findUnique({
+//     include: {
+//       genres: true,
+//       production_companies: true,
+//       credits: true,
+//       similar: true,
+//     },
+//     where: {
+//       id: id,
+//     },
+//   });
+//   return format(result);
+// };
