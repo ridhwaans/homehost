@@ -1,5 +1,6 @@
 {
     "name": "server",
+    "license": "MIT",
     "scripts": {
         "dev": "nodemon",
         "build": "webpack",
