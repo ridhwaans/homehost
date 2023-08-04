@@ -4,6 +4,7 @@
     "scripts": {
         "dev": "nodemon",
         "build": "webpack",
+        "lint": "eslint .",
         "start:prod": "NODE_ENV=production node server",
         "db:migrate": "rm -rf prisma/migrations; npx prisma migrate dev",
         "db:browse": "npx prisma studio",
