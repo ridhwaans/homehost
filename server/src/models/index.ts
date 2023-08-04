@@ -1,20 +1,20 @@
-const fs = require('fs');
-const path = require('path');
-const { getAudioDurationInSeconds } = require('get-audio-duration');
-const { PrismaClient } = require('@prisma/client');
+import fs from 'fs';
+import path from 'path';
+import { getAudioDurationInSeconds } from 'get-audio-duration';
+import { PrismaClient } from '@prisma/client';
+import { Metadata } from '../services/metadata';
+import { Type } from '../constants';
+import { getImdbId } from '../utils';
+
+const metadataService = new Metadata();
 const prisma = new PrismaClient();
-const metadataServiceConstructor = require('../services/metadata');
-const metadataService = new metadataServiceConstructor();
-const { Type } = require('../constants');
 
-const getMovieMetaData = async (file) => {
+export const getMovieMetaData = async (file: string) => {
   try {
-    let re = new RegExp(/(\d+)(.mp4|.mkv)$/); // movie_id
-
     console.log('GET: ' + file);
     let movie = await metadataService.get({
       type: Type.Movie,
-      id: file.match(re)[1],
+      id: getImdbId(file),
     });
     if (movie.status == 404 || movie.status_code == 34)
       throw 'API resource was not found';
@@ -126,7 +126,7 @@ const getTVEpisodeMetaData = async (file) => {
   }
 };
 
-const getTVShowMetaData = async (file) => {
+export const getTVShowMetaData = async (file) => {
   try {
     let re = new RegExp(/(\d+)$/); // tv_show_id
     let re2 = new RegExp(/S(\d{1,2})E(\d{1,2})/i); // S(season_number)E(episode_number)
@@ -292,7 +292,7 @@ const getUnknownAlbumMetaData = async (file) => {
   };
 };
 
-const getAlbumMetaData = async (file) => {
+export const getAlbumMetaData = async (file) => {
   try {
     let re = new RegExp(/(\w+)$/); // album_id
     let re2 = new RegExp(/((\d+)-)?(\d+)/); // disc_number - track_number
@@ -395,7 +395,7 @@ const getAlbumMetaData = async (file) => {
   }
 };
 
-const moveMovieFile = (item) => {
+export const moveMovieFile = (item) => {
   try {
     // https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     const filename = item.title.replace(/[/\\?%*:|"<>]/g, '-');
@@ -416,7 +416,7 @@ const moveMovieFile = (item) => {
   }
 };
 
-const moveEpisodeFile = (item) => {
+export const moveEpisodeFile = (item) => {
   try {
     const filetype = item.fs_path.match(/\.[0-9a-z]+$/i)[0];
     let filename;
@@ -445,7 +445,7 @@ const moveEpisodeFile = (item) => {
   }
 };
 
-const moveSongFile = (item) => {
+export const moveSongFile = (item) => {
   try {
     const filetype = item.fs_path.match(/\.[0-9a-z]+$/i)[0];
     let filename;
@@ -480,13 +480,4 @@ const moveSongFile = (item) => {
     console.log('There was an error moving this file');
     return { status: 500, fs_path: item.fs_path };
   }
-};
-
-module.exports = {
-  getMovieMetaData,
-  getTVShowMetaData,
-  getAlbumMetaData,
-  moveMovieFile,
-  moveEpisodeFile,
-  moveSongFile,
 };

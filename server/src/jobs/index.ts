@@ -1,34 +1,36 @@
-const chokidar = require('chokidar');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const {
+import chokidar from 'chokidar';
+import { PrismaClient } from '@prisma/client';
+import {
+  DISABLE_SYNC_ENV,
+  MOVIES_PATH_ENV,
+  MUSIC_PATH_ENV,
+  TV_PATH_ENV,
+  Type,
+} from '../constants';
+import {
   getMovieMetaData,
   getTVShowMetaData,
   getAlbumMetaData,
-} = require('../models');
-const { Type } = require('../constants');
-var fileSystem = [];
-var ready;
+} from '../models';
+import { isExtensionAllowed } from '../utils';
 
-const fileWatcher = () => {
-  if (process.env.DISABLE_SYNC != true) {
-    if (
-      new Set([
-        process.env.MOVIES_PATH,
-        process.env.TV_PATH,
-        process.env.MUSIC_PATH,
-      ]).size != 3
-    ) {
+const prisma = new PrismaClient();
+
+let fileSystem: string[] = [];
+let ready: boolean = false;
+
+export const fileWatcher = () => {
+  const directoryPathList = [MOVIES_PATH_ENV, TV_PATH_ENV, MUSIC_PATH_ENV];
+
+  if (DISABLE_SYNC_ENV) {
+    if (new Set(directoryPathList).size != 3) {
       throw 'Each media must be in a unique location and cannot share the same directory path(s)';
     }
 
-    var watcher = chokidar.watch(
-      [process.env.MOVIES_PATH, process.env.TV_PATH, process.env.MUSIC_PATH],
-      {
-        ignored: /(^|[\/\\])\../, // ignore dotfiles
-        persistent: true,
-      }
-    );
+    const watcher = chokidar.watch(directoryPathList, {
+      ignored: (filePath) => !isExtensionAllowed(filePath),
+      persistent: true,
+    });
 
     watcher.on('ready', () => {
       console.log('Initial scan complete. Ready for changes');
@@ -37,15 +39,15 @@ const fileWatcher = () => {
     });
 
     watcher
-      .on('add', (path) => {
+      .on('add', (path: string) => {
         console.log(`File ${path} has been added`);
         fileSystem.push(path);
         ready && sync();
       })
-      .on('change', (path) => {
+      .on('change', (path: string) => {
         console.log(`File ${path} has been changed`);
       })
-      .on('unlink', (path) => {
+      .on('unlink', (path: string) => {
         console.log(`File ${path} has been removed`);
         fileSystem = fileSystem.filter((e) => e !== path);
         ready && sync();
@@ -76,30 +78,30 @@ const fileWatcher = () => {
     // insert to db
     filesToInsert.length &&
       (await upsertManyMovies(
-        filesToInsert.filter((file) => file.startsWith(process.env.MOVIES_PATH))
+        filesToInsert.filter((file) => file.startsWith(MOVIES_PATH_ENV))
       ));
     filesToInsert.length &&
       (await upsertManyTVEpisodes(
-        filesToInsert.filter((file) => file.startsWith(process.env.TV_PATH))
+        filesToInsert.filter((file) => file.startsWith(TV_PATH_ENV))
       ));
     filesToInsert.length &&
       (await upsertManySongs(
-        filesToInsert.filter((file) => file.startsWith(process.env.MUSIC_PATH))
+        filesToInsert.filter((file) => file.startsWith(MUSIC_PATH_ENV))
       ));
 
     // delete from db
     filesToDelete.length && (await deleteManyNotAvailable(filesToDelete));
     filesToDelete.length &&
       (await deleteManyMovies(
-        filesToDelete.filter((file) => file.startsWith(process.env.MOVIES_PATH))
+        filesToDelete.filter((file) => file.startsWith(MOVIES_PATH_ENV))
       ));
     filesToDelete.length &&
       (await deleteManyTVEpisodes(
-        filesToDelete.filter((file) => file.startsWith(process.env.TV_PATH))
+        filesToDelete.filter((file) => file.startsWith(TV_PATH_ENV))
       ));
     filesToDelete.length &&
       (await deleteManySongs(
-        filesToDelete.filter((file) => file.startsWith(process.env.MUSIC_PATH))
+        filesToDelete.filter((file) => file.startsWith(MUSIC_PATH_ENV))
       ));
 
     await deleteEmptyAlbums();
@@ -109,7 +111,7 @@ const fileWatcher = () => {
     console.log('Sync complete');
   };
 
-  const upsertManyMovies = async (movies) => {
+  const upsertManyMovies = async (movies: string[]) => {
     console.log('Generating data for Movies...');
 
     for (let file of movies) {
@@ -477,7 +479,7 @@ const fileWatcher = () => {
   return watcher;
 };
 
-const clearNotAvailable = async () => {
+export const clearNotAvailable = async () => {
   const result = await prisma.notAvailable.findMany();
 
   for (let notAvailable of result) {
@@ -495,7 +497,7 @@ const clearNotAvailable = async () => {
   process.exit();
 };
 
-const createDemoFsPaths = async () => {
+export const createDemoFsPaths = async () => {
   const video_path = './_demo/sample.mp4';
   const audio_path = './_demo/sample.mp3';
 
@@ -515,10 +517,4 @@ const createDemoFsPaths = async () => {
     },
   });
   process.exit();
-};
-
-module.exports = {
-  fileWatcher,
-  clearNotAvailable,
-  createDemoFsPaths,
 };

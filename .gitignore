@@ -4,11 +4,12 @@
 _demo/
 **/*.db
 **/*.db-journal
+**/dist/
 
 # client
 build/
 
-# docs 
+# docs
 .next/
 
 # common
