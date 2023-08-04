@@ -5,6 +5,7 @@ import helmet from 'helmet';
 
 import bodyParser from 'body-parser';
 import { NODE_ENV, PROD_ENV } from './constants';
+import { moviesRouter } from './routes';
 
 export const app = express();
 
@@ -16,5 +17,4 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 
-// routes
-// app.use('/', require('./routes'));
+app.use('/movies', moviesRouter);
