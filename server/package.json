@@ -7,7 +7,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "start:prod": "NODE_ENV=production node server",
-        "db:migrate": "rm -rf prisma/migrations; npx prisma migrate dev",
+        "db:migrate": "rm -rf ./src/prisma/migrations; npx prisma migrate dev --schema=./src/prisma/schema.prisma",
         "db:browse": "npx prisma studio",
         "db:clear": "npx prisma migrate reset",
         "db:clear-not-available": "DISABLE_SYNC=true node -e 'require(\"./jobs\").clearNotAvailable()'"
