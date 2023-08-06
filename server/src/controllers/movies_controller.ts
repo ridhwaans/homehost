@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { BaseController } from './base_controller';
+import { getAllMovies, getMovie } from '../db';
 import { CREATED, OK } from '../constants/statusCodes';
 
 class MoviesController extends BaseController {
@@ -7,17 +8,24 @@ class MoviesController extends BaseController {
     super();
   }
   index = (req: Request, res: Response) => {
-    this.sendJson(req, res, OK, true, { from: 'MoviesController#index' });
+    const movies = getAllMovies();
+    this.sendJson(req, res, OK, true, { movies });
   };
+
   show = (req: Request, res: Response) => {
-    this.sendJson(req, res, OK, true, { from: 'MoviesController#show' });
+    const tmdb_id = parseInt(req.params.tmdb_id);
+    const movie = getMovie(tmdb_id);
+    this.sendJson(req, res, OK, true, { movie });
   };
+
   create = (req: Request, res: Response) => {
     this.sendJson(req, res, CREATED, true, { from: 'MoviesController#create' });
   };
+
   update = (req: Request, res: Response) => {
     this.sendJson(req, res, OK, true, { from: 'MoviesController#update' });
   };
+
   delete = (req: Request, res: Response) => {
     this.sendJson(req, res, OK, true, { from: 'MoviesController#delete' });
   };
