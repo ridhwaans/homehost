@@ -8,6 +8,7 @@ class MoviesController extends BaseController {
   constructor() {
     super();
   }
+
   index = async (req: Request, res: Response) => {
     const movies = await getAllMovies();
     this.sendJson(req, res, OK, true, { movies });
