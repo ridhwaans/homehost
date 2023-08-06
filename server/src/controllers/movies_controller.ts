@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { BaseController } from './base_controller';
 import { getAllMovies, getMovie } from '../db';
-import { CREATED, OK } from '../constants/statusCodes';
+import { CREATED, NOT_FOUND, OK } from '../constants/statusCodes';
 
 class MoviesController extends BaseController {
   constructor() {
@@ -14,8 +14,13 @@ class MoviesController extends BaseController {
 
   show = (req: Request, res: Response) => {
     const tmdb_id = parseInt(req.params.tmdb_id);
-    const movie = getMovie(tmdb_id);
-    this.sendJson(req, res, OK, true, { movie });
+    if (tmdb_id) {
+      const movie = getMovie(tmdb_id);
+      this.sendJson(req, res, OK, true, { movie });
+    } else
+      this.sendJson(req, res, NOT_FOUND, false, {
+        error: 'Movie ID is not valid',
+      });
   };
 
   create = (req: Request, res: Response) => {
