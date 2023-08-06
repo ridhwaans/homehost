@@ -1,4 +1,3 @@
-import { shuffleArr } from '../utils';
 import { GenresModel, MoviesModel } from './prismaClient';
 
 export const getAllMovies = async () => {
@@ -95,7 +94,7 @@ export const getMoviesByGenre = async (genre_name: string) => {
   return result;
 };
 
-export const getMovie = async (movie_id: number) => {
+export const getMovie = async (tmdb_id: number) => {
   const result = await MoviesModel.findUnique({
     include: {
       genres: true,
@@ -104,7 +103,7 @@ export const getMovie = async (movie_id: number) => {
       similar: true,
     },
     where: {
-      tmdb_id: movie_id,
+      tmdb_id: tmdb_id,
     },
   });
   // return format(result);
