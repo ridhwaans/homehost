@@ -5,5 +5,5 @@ export type PathType = string | undefined;
 export type ServiceReturnType = {
   success: boolean;
   error?: any;
-  data?: Movie[];
+  data?: any;
 };
