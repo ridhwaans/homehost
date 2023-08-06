@@ -30,6 +30,7 @@
         "get-audio-duration": "^3.1.1",
         "helmet": "^7.0.0",
         "morgan": "^1.10.0",
+        "multer": "^1.4.5-lts.1",
         "qs": "^6.11.0",
         "universal-cookie": "^4.0.4"
     },
@@ -41,6 +42,7 @@
         "@types/express": "^4.17.17",
         "@types/figlet": "^1.5.6",
         "@types/morgan": "^1.9.4",
+        "@types/multer": "^1.4.7",
         "@types/node": "^20.4.5",
         "dotenv": "^16.0.3",
         "eslint": "^8.46.0",
