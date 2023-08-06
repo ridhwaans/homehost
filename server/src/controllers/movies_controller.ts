@@ -1,21 +1,22 @@
 import { Request, Response } from 'express';
 import { BaseController } from './base_controller';
-import { getAllMovies, getMovie } from '../db';
+import { NotAvailableModel, getAllMovies, getMovie } from '../db';
 import { CREATED, NOT_FOUND, OK } from '../constants/statusCodes';
+import { createMovieService, uploadVedio } from '../services';
 
 class MoviesController extends BaseController {
   constructor() {
     super();
   }
-  index = (req: Request, res: Response) => {
-    const movies = getAllMovies();
+  index = async (req: Request, res: Response) => {
+    const movies = await getAllMovies();
     this.sendJson(req, res, OK, true, { movies });
   };
 
-  show = (req: Request, res: Response) => {
+  show = async (req: Request, res: Response) => {
     const tmdb_id = parseInt(req.params.tmdb_id);
     if (tmdb_id) {
-      const movie = getMovie(tmdb_id);
+      const movie = await getMovie(tmdb_id);
       this.sendJson(req, res, OK, true, { movie });
     } else
       this.sendJson(req, res, NOT_FOUND, false, {
@@ -23,13 +24,10 @@ class MoviesController extends BaseController {
       });
   };
 
-  create = (req: Request, res: Response) => {
-    const { title, imdb_id } = req.params;
-    if (title && imdb_id) {
-    }
-    this.sendJson(req, res, CREATED, true, {
-      from: 'MoviesController#create',
-    });
+  create = async (req: Request, res: Response) => {
+    const response = await createMovieService(req, res);
+    console.log(response);
+    this.sendJson(req, res, CREATED, true, response.data);
   };
 
   update = (req: Request, res: Response) => {
