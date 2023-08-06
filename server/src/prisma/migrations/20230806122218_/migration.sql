@@ -1,55 +1,65 @@
 -- CreateTable
 CREATE TABLE "NotAvailable" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "fs_path" TEXT NOT NULL,
-    "type" TEXT NOT NULL
+    "type" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "imdb_id" TEXT NOT NULL,
+
+    CONSTRAINT "NotAvailable_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Movie" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
     "fs_path" TEXT NOT NULL,
     "url_path" TEXT NOT NULL,
-    "ctime" DATETIME NOT NULL,
-    "mtime" DATETIME NOT NULL,
+    "ctime" TIMESTAMP(3) NOT NULL,
+    "mtime" TIMESTAMP(3) NOT NULL,
     "adult" BOOLEAN NOT NULL,
     "backdrop_path" TEXT NOT NULL,
     "budget" INTEGER NOT NULL,
     "imdb_id" TEXT NOT NULL,
     "overview" TEXT NOT NULL,
-    "popularity" REAL NOT NULL,
+    "popularity" DOUBLE PRECISION NOT NULL,
     "poster_path" TEXT NOT NULL,
     "release_date" TEXT NOT NULL,
     "revenue" BIGINT NOT NULL,
     "runtime" INTEGER NOT NULL,
     "tagline" TEXT,
     "title" TEXT NOT NULL,
-    "vote_average" REAL NOT NULL,
+    "vote_average" DOUBLE PRECISION NOT NULL,
     "vote_count" INTEGER NOT NULL,
-    "logo_path" TEXT
+    "logo_path" TEXT,
+
+    CONSTRAINT "Movie_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Genre" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
-    "name" TEXT NOT NULL
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "Genre_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ProductionCompany" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
     "logo_path" TEXT,
     "name" TEXT NOT NULL,
-    "origin_country" TEXT NOT NULL
+    "origin_country" TEXT NOT NULL,
+
+    CONSTRAINT "ProductionCompany_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Credit" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "movie_tmdb_id" INTEGER,
     "tv_show_tmdb_id" INTEGER,
     "tmdb_id" INTEGER NOT NULL,
@@ -57,20 +67,20 @@ CREATE TABLE "Credit" (
     "gender" INTEGER NOT NULL,
     "known_for_department" TEXT,
     "name" TEXT NOT NULL,
-    "popularity" REAL,
+    "popularity" DOUBLE PRECISION,
     "profile_path" TEXT,
     "character" TEXT,
     "credit_id" TEXT NOT NULL,
     "order" INTEGER,
     "department" TEXT,
     "job" TEXT,
-    CONSTRAINT "Credit_movie_tmdb_id_fkey" FOREIGN KEY ("movie_tmdb_id") REFERENCES "Movie" ("tmdb_id") ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT "Credit_tv_show_tmdb_id_fkey" FOREIGN KEY ("tv_show_tmdb_id") REFERENCES "TVShow" ("tmdb_id") ON DELETE SET NULL ON UPDATE CASCADE
+
+    CONSTRAINT "Credit_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Similar" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
     "title" TEXT,
     "name" TEXT,
@@ -78,29 +88,33 @@ CREATE TABLE "Similar" (
     "first_air_date" TEXT,
     "overview" TEXT NOT NULL,
     "backdrop_path" TEXT,
-    "poster_path" TEXT
+    "poster_path" TEXT,
+
+    CONSTRAINT "Similar_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "TVShow" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
     "backdrop_path" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "overview" TEXT NOT NULL,
-    "popularity" REAL NOT NULL,
+    "popularity" DOUBLE PRECISION NOT NULL,
     "poster_path" TEXT NOT NULL,
     "tagline" TEXT,
-    "vote_average" REAL NOT NULL,
+    "vote_average" DOUBLE PRECISION NOT NULL,
     "vote_count" INTEGER NOT NULL,
     "logo_path" TEXT,
-    "imdb_id" TEXT NOT NULL
+    "imdb_id" TEXT NOT NULL,
+
+    CONSTRAINT "TVShow_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Season" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "tv_show_tmdb_id" INTEGER NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
     "air_date" TEXT NOT NULL,
@@ -108,33 +122,35 @@ CREATE TABLE "Season" (
     "overview" TEXT NOT NULL,
     "poster_path" TEXT NOT NULL,
     "season_number" INTEGER NOT NULL,
-    CONSTRAINT "Season_tv_show_tmdb_id_fkey" FOREIGN KEY ("tv_show_tmdb_id") REFERENCES "TVShow" ("tmdb_id") ON DELETE CASCADE ON UPDATE CASCADE
+
+    CONSTRAINT "Season_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Episode" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
     "season_tmdb_id" INTEGER NOT NULL,
     "tmdb_id" INTEGER NOT NULL,
     "fs_path" TEXT NOT NULL,
     "url_path" TEXT NOT NULL,
-    "ctime" DATETIME NOT NULL,
-    "mtime" DATETIME NOT NULL,
+    "ctime" TIMESTAMP(3) NOT NULL,
+    "mtime" TIMESTAMP(3) NOT NULL,
     "air_date" TEXT NOT NULL,
     "episode_number" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "overview" TEXT NOT NULL,
     "season_number" INTEGER NOT NULL,
     "still_path" TEXT NOT NULL,
-    "vote_average" REAL NOT NULL,
+    "vote_average" DOUBLE PRECISION NOT NULL,
     "vote_count" INTEGER NOT NULL,
-    CONSTRAINT "Episode_season_tmdb_id_fkey" FOREIGN KEY ("season_tmdb_id") REFERENCES "Season" ("tmdb_id") ON DELETE CASCADE ON UPDATE CASCADE
+
+    CONSTRAINT "Episode_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Album" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
     "spotify_id" TEXT NOT NULL,
     "album_type" TEXT NOT NULL,
@@ -143,99 +159,88 @@ CREATE TABLE "Album" (
     "name" TEXT NOT NULL,
     "popularity" INTEGER,
     "release_date" TEXT NOT NULL,
-    "total_tracks" INTEGER NOT NULL
+    "total_tracks" INTEGER NOT NULL,
+
+    CONSTRAINT "Album_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Artist" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "type" TEXT NOT NULL,
     "spotify_id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "image_url" TEXT NOT NULL,
-    "popularity" INTEGER
+    "popularity" INTEGER,
+
+    CONSTRAINT "Artist_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Song" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" SERIAL NOT NULL,
     "album_spotify_id" TEXT NOT NULL,
     "spotify_id" TEXT NOT NULL,
     "fs_path" TEXT NOT NULL,
     "url_path" TEXT NOT NULL,
-    "ctime" DATETIME NOT NULL,
-    "mtime" DATETIME NOT NULL,
+    "ctime" TIMESTAMP(3) NOT NULL,
+    "mtime" TIMESTAMP(3) NOT NULL,
     "disc_number" INTEGER NOT NULL,
     "duration_ms" INTEGER NOT NULL,
     "explicit" BOOLEAN NOT NULL,
     "name" TEXT NOT NULL,
     "preview_url" TEXT,
     "track_number" INTEGER NOT NULL,
-    CONSTRAINT "Song_album_spotify_id_fkey" FOREIGN KEY ("album_spotify_id") REFERENCES "Album" ("spotify_id") ON DELETE CASCADE ON UPDATE CASCADE
+
+    CONSTRAINT "Song_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "_MovieToProductionCompany" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_MovieToProductionCompany_A_fkey" FOREIGN KEY ("A") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_MovieToProductionCompany_B_fkey" FOREIGN KEY ("B") REFERENCES "ProductionCompany" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_MovieToSimilar" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_MovieToSimilar_A_fkey" FOREIGN KEY ("A") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_MovieToSimilar_B_fkey" FOREIGN KEY ("B") REFERENCES "Similar" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_GenreToMovie" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_GenreToMovie_A_fkey" FOREIGN KEY ("A") REFERENCES "Genre" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_GenreToMovie_B_fkey" FOREIGN KEY ("B") REFERENCES "Movie" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_GenreToTVShow" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_GenreToTVShow_A_fkey" FOREIGN KEY ("A") REFERENCES "Genre" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_GenreToTVShow_B_fkey" FOREIGN KEY ("B") REFERENCES "TVShow" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_ProductionCompanyToTVShow" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_ProductionCompanyToTVShow_A_fkey" FOREIGN KEY ("A") REFERENCES "ProductionCompany" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_ProductionCompanyToTVShow_B_fkey" FOREIGN KEY ("B") REFERENCES "TVShow" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_SimilarToTVShow" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_SimilarToTVShow_A_fkey" FOREIGN KEY ("A") REFERENCES "Similar" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_SimilarToTVShow_B_fkey" FOREIGN KEY ("B") REFERENCES "TVShow" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_AlbumToArtist" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_AlbumToArtist_A_fkey" FOREIGN KEY ("A") REFERENCES "Album" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_AlbumToArtist_B_fkey" FOREIGN KEY ("B") REFERENCES "Artist" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "_ArtistToSong" (
     "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_ArtistToSong_A_fkey" FOREIGN KEY ("A") REFERENCES "Artist" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_ArtistToSong_B_fkey" FOREIGN KEY ("B") REFERENCES "Song" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "B" INTEGER NOT NULL
 );
 
 -- CreateIndex
@@ -342,3 +347,66 @@ CREATE UNIQUE INDEX "_ArtistToSong_AB_unique" ON "_ArtistToSong"("A", "B");
 
 -- CreateIndex
 CREATE INDEX "_ArtistToSong_B_index" ON "_ArtistToSong"("B");
+
+-- AddForeignKey
+ALTER TABLE "Credit" ADD CONSTRAINT "Credit_movie_tmdb_id_fkey" FOREIGN KEY ("movie_tmdb_id") REFERENCES "Movie"("tmdb_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Credit" ADD CONSTRAINT "Credit_tv_show_tmdb_id_fkey" FOREIGN KEY ("tv_show_tmdb_id") REFERENCES "TVShow"("tmdb_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Season" ADD CONSTRAINT "Season_tv_show_tmdb_id_fkey" FOREIGN KEY ("tv_show_tmdb_id") REFERENCES "TVShow"("tmdb_id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Episode" ADD CONSTRAINT "Episode_season_tmdb_id_fkey" FOREIGN KEY ("season_tmdb_id") REFERENCES "Season"("tmdb_id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Song" ADD CONSTRAINT "Song_album_spotify_id_fkey" FOREIGN KEY ("album_spotify_id") REFERENCES "Album"("spotify_id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MovieToProductionCompany" ADD CONSTRAINT "_MovieToProductionCompany_A_fkey" FOREIGN KEY ("A") REFERENCES "Movie"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MovieToProductionCompany" ADD CONSTRAINT "_MovieToProductionCompany_B_fkey" FOREIGN KEY ("B") REFERENCES "ProductionCompany"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MovieToSimilar" ADD CONSTRAINT "_MovieToSimilar_A_fkey" FOREIGN KEY ("A") REFERENCES "Movie"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_MovieToSimilar" ADD CONSTRAINT "_MovieToSimilar_B_fkey" FOREIGN KEY ("B") REFERENCES "Similar"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GenreToMovie" ADD CONSTRAINT "_GenreToMovie_A_fkey" FOREIGN KEY ("A") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GenreToMovie" ADD CONSTRAINT "_GenreToMovie_B_fkey" FOREIGN KEY ("B") REFERENCES "Movie"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GenreToTVShow" ADD CONSTRAINT "_GenreToTVShow_A_fkey" FOREIGN KEY ("A") REFERENCES "Genre"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_GenreToTVShow" ADD CONSTRAINT "_GenreToTVShow_B_fkey" FOREIGN KEY ("B") REFERENCES "TVShow"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProductionCompanyToTVShow" ADD CONSTRAINT "_ProductionCompanyToTVShow_A_fkey" FOREIGN KEY ("A") REFERENCES "ProductionCompany"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProductionCompanyToTVShow" ADD CONSTRAINT "_ProductionCompanyToTVShow_B_fkey" FOREIGN KEY ("B") REFERENCES "TVShow"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_SimilarToTVShow" ADD CONSTRAINT "_SimilarToTVShow_A_fkey" FOREIGN KEY ("A") REFERENCES "Similar"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_SimilarToTVShow" ADD CONSTRAINT "_SimilarToTVShow_B_fkey" FOREIGN KEY ("B") REFERENCES "TVShow"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AlbumToArtist" ADD CONSTRAINT "_AlbumToArtist_A_fkey" FOREIGN KEY ("A") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_AlbumToArtist" ADD CONSTRAINT "_AlbumToArtist_B_fkey" FOREIGN KEY ("B") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ArtistToSong" ADD CONSTRAINT "_ArtistToSong_A_fkey" FOREIGN KEY ("A") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ArtistToSong" ADD CONSTRAINT "_ArtistToSong_B_fkey" FOREIGN KEY ("B") REFERENCES "Song"("id") ON DELETE CASCADE ON UPDATE CASCADE;

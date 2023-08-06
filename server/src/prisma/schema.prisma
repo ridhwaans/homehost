@@ -12,6 +12,8 @@ model NotAvailable {
   id      Int    @id @default(autoincrement())
   fs_path String @unique
   type    String
+  title   String
+  imdb_id String
 }
 
 model Movie {

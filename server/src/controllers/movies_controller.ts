@@ -24,7 +24,12 @@ class MoviesController extends BaseController {
   };
 
   create = (req: Request, res: Response) => {
-    this.sendJson(req, res, CREATED, true, { from: 'MoviesController#create' });
+    const { title, imdb_id } = req.params;
+    if (title && imdb_id) {
+    }
+    this.sendJson(req, res, CREATED, true, {
+      from: 'MoviesController#create',
+    });
   };
 
   update = (req: Request, res: Response) => {
