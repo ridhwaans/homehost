@@ -32,6 +32,6 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.1.2",
     "npm-check-updates": "^16.7.10",
-    "prettier": "^2.8.4"
+    "prettier": "^3.0.1"
   }
 }
