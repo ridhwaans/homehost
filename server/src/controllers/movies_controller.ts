@@ -31,8 +31,15 @@ class MoviesController extends BaseController {
     this.sendJson(req, res, CREATED, true, response.data);
   };
 
-  update = (req: Request, res: Response) => {
-    this.sendJson(req, res, OK, true, { from: 'MoviesController#update' });
+  update = async (req: Request, res: Response) => {
+    const tmdb_id = parseInt(req.params.tmdb_id);
+    if (tmdb_id) {
+      const movie = await getMovie(tmdb_id);
+      this.sendJson(req, res, OK, true, { movie });
+    } else
+      this.sendJson(req, res, NOT_FOUND, false, {
+        error: 'Movie ID is not valid',
+      });
   };
 
   delete = (req: Request, res: Response) => {
