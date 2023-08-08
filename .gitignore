@@ -4,11 +4,12 @@
 _demo/
 **/*.db
 **/*.db-journal
+**/dist/
 
 # client
 build/
 
-# docs 
+# docs
 .next/
 
 # common
@@ -18,3 +19,5 @@ node_modules/
 # misc
 .DS_Store
 *Zone.Identifier
+
+uploads/

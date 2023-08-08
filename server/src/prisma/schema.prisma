@@ -1,0 +1,198 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+model NotAvailable {
+  id      Int    @id @default(autoincrement())
+  fs_path String @unique
+  type    String
+  title   String
+  imdb_id String
+}
+
+model Movie {
+  id                   Int                 @id @default(autoincrement())
+  type                 String
+  tmdb_id              Int                 @unique
+  fs_path              String              @unique
+  url_path             String              @unique
+  ctime                DateTime
+  mtime                DateTime
+  adult                Boolean
+  backdrop_path        String
+  budget               Int
+  genres               Genre[]
+  imdb_id              String
+  overview             String
+  popularity           Float
+  poster_path          String
+  production_companies ProductionCompany[]
+  release_date         String
+  revenue              BigInt
+  runtime              Int
+  tagline              String?
+  title                String
+  vote_average         Float
+  vote_count           Int
+  logo_path            String?
+  credits              Credit[]
+  similar              Similar[]
+}
+
+model Genre {
+  id       Int      @id @default(autoincrement())
+  tmdb_id  Int      @unique
+  name     String
+  movies   Movie[]
+  tv_shows TVShow[]
+}
+
+model ProductionCompany {
+  id             Int      @id @default(autoincrement())
+  tmdb_id        Int      @unique
+  logo_path      String?
+  name           String
+  origin_country String
+  movies         Movie[]
+  tv_shows       TVShow[]
+}
+
+model Credit {
+  id                   Int      @id @default(autoincrement())
+  movie_tmdb_id        Int?
+  tv_show_tmdb_id      Int?
+  movie                Movie?   @relation(fields: [movie_tmdb_id], references: [tmdb_id])
+  tv_show              TVShow?  @relation(fields: [tv_show_tmdb_id], references: [tmdb_id])
+  tmdb_id              Int
+  adult                Boolean?
+  gender               Int
+  known_for_department String?
+  name                 String
+  popularity           Float?
+  profile_path         String?
+  character            String?
+  credit_id            String   @unique
+  order                Int?
+  department           String?
+  job                  String?
+}
+
+model Similar {
+  id             Int      @id @default(autoincrement())
+  movies         Movie[]
+  tv_shows       TVShow[]
+  tmdb_id        Int      @unique
+  title          String?
+  name           String?
+  release_date   String?
+  first_air_date String?
+  overview       String
+  backdrop_path  String?
+  poster_path    String?
+}
+
+model TVShow {
+  id                   Int                 @id @default(autoincrement())
+  type                 String
+  tmdb_id              Int                 @unique
+  backdrop_path        String
+  genres               Genre[]
+  name                 String
+  overview             String
+  popularity           Float
+  poster_path          String
+  production_companies ProductionCompany[]
+  seasons              Season[]
+  tagline              String?
+  vote_average         Float
+  vote_count           Int
+  logo_path            String?
+  credits              Credit[]
+  similar              Similar[]
+  imdb_id              String
+}
+
+model Season {
+  id              Int       @id @default(autoincrement())
+  tv_show_tmdb_id Int
+  tv_show         TVShow    @relation(fields: [tv_show_tmdb_id], references: [tmdb_id], onDelete: Cascade)
+  tmdb_id         Int       @unique
+  air_date        String
+  name            String
+  overview        String
+  poster_path     String
+  season_number   Int
+  episodes        Episode[]
+
+  @@unique([tv_show_tmdb_id, season_number])
+}
+
+model Episode {
+  id             Int      @id @default(autoincrement())
+  type           String
+  season_tmdb_id Int
+  season         Season   @relation(fields: [season_tmdb_id], references: [tmdb_id], onDelete: Cascade)
+  tmdb_id        Int      @unique
+  fs_path        String   @unique
+  url_path       String   @unique
+  ctime          DateTime
+  mtime          DateTime
+  air_date       String
+  episode_number Int
+  name           String
+  overview       String
+  season_number  Int
+  still_path     String
+  vote_average   Float
+  vote_count     Int
+}
+
+model Album {
+  id           Int      @id @default(autoincrement())
+  type         String
+  spotify_id   String   @unique
+  album_type   String
+  artists      Artist[]
+  image_url    String
+  label        String
+  name         String
+  popularity   Int?
+  release_date String
+  songs        Song[]
+  total_tracks Int
+}
+
+model Artist {
+  id         Int     @id @default(autoincrement())
+  type       String
+  spotify_id String  @unique
+  name       String
+  image_url  String
+  popularity Int?
+  albums     Album[]
+  songs      Song[]
+}
+
+model Song {
+  id               Int      @id @default(autoincrement())
+  album_spotify_id String
+  album            Album    @relation(fields: [album_spotify_id], references: [spotify_id], onDelete: Cascade)
+  artists          Artist[]
+  spotify_id       String   @unique
+  fs_path          String   @unique
+  url_path         String   @unique
+  ctime            DateTime
+  mtime            DateTime
+  disc_number      Int
+  duration_ms      Int
+  explicit         Boolean
+  name             String
+  preview_url      String?
+  track_number     Int
+}
