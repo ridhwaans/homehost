@@ -9,11 +9,11 @@ import {
   TvShowsModel,
 } from './prismaClient';
 import { shuffleArr } from '../utils';
-import { Metadata } from '../services/metadata';
-import { getRandomTVShow } from './tvShow_helpers';
+// import { Metadata } from '../services/metadata';
+// import { getRandomTVShow } from './tvShow_helpers';
 import { Movie, TVShow } from '@prisma/client';
 
-const metadataService = new Metadata();
+// const metadataService = new Metadata();
 
 export const getAbout = () => {
   return {
@@ -41,9 +41,9 @@ export const getAllNotAvailable = async () => {
   return result;
 };
 
-export const externalSearch = async (type, keyword) => {
-  return await metadataService.search(type, keyword);
-};
+// export const externalSearch = async (type, keyword) => {
+//   return await metadataService.search(type, keyword);
+// };
 
 export const searchMoviesAndTV = async (keyword: string) => {
   const movies = await MoviesModel.findMany({

@@ -1,3 +1,6 @@
+import path from 'path';
+import { BASE_DIR } from '../constants';
+
 export const getImdbId = (file_path: string): string => {
   const splited_file_path = file_path.split('/');
   const fullName = splited_file_path[splited_file_path.length - 1];
@@ -89,4 +92,12 @@ const allowedExtensions = /\.(mp4|mkv|mp3|wav)$/i;
 
 export const isExtensionAllowed = (testString: string): boolean => {
   return allowedExtensions.test(testString);
+};
+
+export const pathFromBaseDir = (...dirs: string[]): string => {
+  let tempPath = BASE_DIR;
+  for (const dir of dirs) {
+    tempPath = path.join(tempPath, dir);
+  }
+  return tempPath;
 };

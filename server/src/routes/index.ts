@@ -281,3 +281,5 @@
 //     res.sendFile(path.resolve(__dirname, '../../client/build/index.html'));
 //   });
 // }
+
+export * from './movies_router';

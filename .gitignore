@@ -19,3 +19,5 @@ node_modules/
 # misc
 .DS_Store
 *Zone.Identifier
+
+uploads/

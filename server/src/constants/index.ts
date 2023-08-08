@@ -1,5 +1,6 @@
 export * from './constants';
 export * from './environmentVariables';
+export * from './statusCodes';
 
 export const Type = Object.freeze({
   Movie: 'Movie',
