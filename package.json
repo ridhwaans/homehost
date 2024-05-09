@@ -32,14 +32,14 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.2.0",
-    "npm-check-updates": "^16.14.12",
-    "prettier": "^3.1.1"
+    "eslint": "^9.2.0",
+    "eslint-plugin-react": "^7.34.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "npm-check-updates": "^16.14.20",
+    "prettier": "^3.2.5"
   },
   "dependencies": {
-    "turbo": "^1.11.2"
+    "turbo": "^1.13.3"
   }
 }
