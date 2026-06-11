@@ -1,0 +1,47 @@
+<% page_title @collection.name %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow"><%= selected_profile.name %> collection</p>
+    <h1><%= @collection.name %></h1>
+    <p class="muted"><%= @collection.description.presence || "No description" %></p>
+  </div>
+  <%= button_to "Delete collection", collection_path(@collection, profile_id: selected_profile.id), method: :delete, class: "button button--danger" %>
+</header>
+
+<div class="content-grid content-grid--sidebar">
+  <section class="panel">
+    <div class="panel-header"><h2>Collection items</h2><span class="profile-pill"><%= @collection.collection_items.size %> items</span></div>
+    <% if @collection.collection_items.any? %>
+      <div class="list">
+        <% @collection.collection_items.includes(:media_asset).each do |item| %>
+          <div class="list-row">
+            <span class="list-icon"><%= item.media_asset.kind == "video" ? "VI" : "AU" %></span>
+            <span class="list-main">
+              <%= link_to media_name(item.media_asset), media_asset_path(item.media_asset), class: "table-title" %>
+              <small><%= item.media_asset.kind.titleize %> · <%= format_bytes(item.media_asset.byte_size) %></small>
+            </span>
+            <%= button_to "Remove", collection_item_path(@collection, item, profile_id: selected_profile.id), method: :delete, class: "text-button text-button--danger" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">No media has been added.</div>
+    <% end %>
+  </section>
+
+  <aside class="panel">
+    <div class="panel-header"><h2>Add media</h2></div>
+    <% if @available_assets.any? %>
+      <%= form_with url: collection_items_path(@collection, profile_id: selected_profile.id), class: "stack" do |form| %>
+        <div class="field">
+          <%= form.label :media_asset_id, "Media asset" %>
+          <%= form.select :media_asset_id, @available_assets.map { |asset| [media_name(asset), asset.id] } %>
+        </div>
+        <%= form.submit "Add to collection", class: "button button--primary button--full" %>
+      <% end %>
+    <% else %>
+      <p class="muted">Every available asset is already in this collection.</p>
+    <% end %>
+  </aside>
+</div>

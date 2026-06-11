@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= page_title %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" href="/control-plane.css">
+    <%= yield :head %>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <%= link_to dashboard_path, class: "brand" do %>
+          <span class="brand-mark">H</span>
+          <span>
+            <strong>homehost</strong>
+            <small>control plane</small>
+          </span>
+        <% end %>
+
+        <nav class="nav">
+          <%= navigation_link "Dashboard", dashboard_path %>
+          <%= navigation_link "Media", media_assets_path %>
+          <%= navigation_link "Jobs", processing_jobs_path %>
+          <%= navigation_link "Collections", collections_path(profile_id: selected_profile&.id) %>
+          <%= navigation_link "Profiles", profiles_path %>
+          <% if current_user&.admin? %>
+            <%= navigation_link "Users", users_path %>
+            <%= navigation_link "Audit", audit_events_path %>
+          <% end %>
+        </nav>
+
+        <div class="sidebar-footer">
+          <span class="account-email"><%= current_user&.email %></span>
+          <span class="account-role"><%= current_user&.admin? ? "Administrator" : "Household user" %></span>
+          <%= button_to "Log out", logout_path, method: :delete, class: "button button--ghost button--full" %>
+        </div>
+      </aside>
+
+      <main class="main">
+        <% if notice %><div class="flash flash--notice"><%= notice %></div><% end %>
+        <% if alert %><div class="flash flash--alert"><%= alert %></div><% end %>
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>

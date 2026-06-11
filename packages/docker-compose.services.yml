@@ -1,0 +1,41 @@
+services:
+  media-engine:
+    build:
+      context: ./media-engine
+    environment:
+      MEDIA_ENGINE_ADDRESS: :5100
+      MEDIA_ENGINE_API_KEY: ${MEDIA_ENGINE_API_KEY}
+      MEDIA_ENGINE_ROOTS: /media/movies:/media/tv:/media/music
+      MEDIA_ENGINE_TRANSCODE_DIR: /transcodes
+      MEDIA_ENGINE_WEBHOOK_URL: http://control-plane:5200/api/v1/media_engine/events
+      MEDIA_ENGINE_WEBHOOK_TOKEN: ${MEDIA_ENGINE_WEBHOOK_TOKEN}
+    ports:
+      - "5100:5100"
+    volumes:
+      - ${MOVIES_PATH}:/media/movies:ro
+      - ${TV_PATH}:/media/tv:ro
+      - ${MUSIC_PATH}:/media/music:ro
+      - transcodes:/transcodes
+
+  control-plane:
+    build:
+      context: ./control-plane
+    depends_on:
+      - media-engine
+    environment:
+      PORT: 5200
+      RAILS_ENV: production
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      DATABASE_PATH: /data/control-plane.sqlite3
+      MEDIA_ENGINE_URL: http://media-engine:5100
+      MEDIA_ENGINE_API_KEY: ${MEDIA_ENGINE_API_KEY}
+      MEDIA_ENGINE_WEBHOOK_TOKEN: ${MEDIA_ENGINE_WEBHOOK_TOKEN}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@homehost.local}
+    ports:
+      - "5200:5200"
+    volumes:
+      - control-plane-data:/data
+
+volumes:
+  control-plane-data:
+  transcodes:

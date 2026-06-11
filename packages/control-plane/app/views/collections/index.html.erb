@@ -1,0 +1,47 @@
+<% page_title "Collections" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Curated media</p>
+    <h1>Collections</h1>
+    <p class="muted">Lists for <%= selected_profile.name %>.</p>
+  </div>
+  <div class="profile-switcher">
+    <% current_user.profiles.order(:name).each do |profile| %>
+      <%= link_to profile.name, collections_path(profile_id: profile.id), class: ["profile-pill", ("profile-pill--active" if profile == selected_profile)].compact.join(" ") %>
+    <% end %>
+  </div>
+</header>
+
+<div class="content-grid content-grid--sidebar">
+  <section class="panel">
+    <% if @collections.any? %>
+      <div class="collection-grid">
+        <% @collections.each do |collection| %>
+          <%= link_to collection_path(collection, profile_id: selected_profile.id), class: "collection-card" do %>
+            <span class="collection-count"><%= collection.media_assets.size %></span>
+            <strong><%= collection.name %></strong>
+            <p><%= collection.description.presence || "No description" %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">Create the first collection for this profile.</div>
+    <% end %>
+  </section>
+
+  <aside class="panel">
+    <div class="panel-header"><h2>New collection</h2></div>
+    <%= form_with url: collections_path(profile_id: selected_profile.id), class: "stack" do |form| %>
+      <div class="field">
+        <%= form.label :name %>
+        <%= form.text_field :name, required: true, placeholder: "Weekend movies" %>
+      </div>
+      <div class="field">
+        <%= form.label :description %>
+        <%= form.text_area :description, rows: 4 %>
+      </div>
+      <%= form.submit "Create collection", class: "button button--primary button--full" %>
+    <% end %>
+  </aside>
+</div>

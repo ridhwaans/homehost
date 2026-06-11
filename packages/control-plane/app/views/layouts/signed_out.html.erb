@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= page_title %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" href="/control-plane.css">
+  </head>
+  <body class="signed-out">
+    <% if notice %><div class="flash flash--notice flash--floating"><%= notice %></div><% end %>
+    <%= yield %>
+  </body>
+</html>

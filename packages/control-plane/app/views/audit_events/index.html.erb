@@ -1,0 +1,28 @@
+<% page_title "Audit" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Activity history</p>
+    <h1>Audit</h1>
+    <p class="muted">Recent actions from users and the media engine.</p>
+  </div>
+</header>
+
+<section class="panel">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Action</th><th>Actor</th><th>Resource</th><th>Metadata</th><th>Time</th></tr></thead>
+      <tbody>
+        <% @audit_events.each do |event| %>
+          <tr>
+            <td><strong><%= event.action %></strong></td>
+            <td><%= event.actor.respond_to?(:email) ? event.actor.email : "Media engine" %></td>
+            <td><%= event.auditable ? "#{event.auditable_type} ##{event.auditable_id}" : "—" %></td>
+            <td><code><%= event.metadata.to_json.truncate(90) %></code></td>
+            <td><%= time_ago_in_words(event.created_at) %> ago</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

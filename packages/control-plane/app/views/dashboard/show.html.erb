@@ -1,0 +1,117 @@
+<% page_title "Dashboard" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">System overview</p>
+    <h1>Dashboard</h1>
+    <p class="muted">Library health, processing activity, and household playback.</p>
+  </div>
+  <% if current_user.admin? %>
+    <%= form_with url: processing_jobs_path, class: "inline-form" do |form| %>
+      <%= form.hidden_field :job_type, value: "scan" %>
+      <%= form.submit "Scan library", class: "button button--primary" %>
+    <% end %>
+  <% end %>
+</header>
+
+<section class="stat-grid">
+  <article class="stat-card">
+    <span>Video assets</span>
+    <strong><%= @asset_counts.fetch("video", 0) %></strong>
+    <small><%= @status_counts.fetch("available", 0) %> available across the library</small>
+  </article>
+  <article class="stat-card">
+    <span>Audio assets</span>
+    <strong><%= @asset_counts.fetch("audio", 0) %></strong>
+    <small>Tracks discovered by the media engine</small>
+  </article>
+  <article class="stat-card">
+    <span>Active jobs</span>
+    <strong><%= @job_counts.fetch("queued", 0) + @job_counts.fetch("running", 0) %></strong>
+    <small><%= @job_counts.fetch("completed", 0) %> jobs completed</small>
+  </article>
+  <article class="stat-card">
+    <span>Profiles</span>
+    <strong><%= current_user.profiles.count %></strong>
+    <small>Signed in as <%= current_user.email %></small>
+  </article>
+</section>
+
+<div class="content-grid">
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Processing</p>
+        <h2>Recent jobs</h2>
+      </div>
+      <%= link_to "View all", processing_jobs_path, class: "text-link" %>
+    </div>
+    <% if @recent_jobs.any? %>
+      <div class="list">
+        <% @recent_jobs.each do |job| %>
+          <%= link_to processing_job_path(job), class: "list-row" do %>
+            <span class="list-icon"><%= job.job_type == "scan" ? "SC" : "HL" %></span>
+            <span class="list-main">
+              <strong><%= job.job_type.titleize %></strong>
+              <small><%= time_ago_in_words(job.created_at) %> ago</small>
+            </span>
+            <%= status_badge(job.state) %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">No processing jobs have run yet.</div>
+    <% end %>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Library</p>
+        <h2>Recently discovered</h2>
+      </div>
+      <%= link_to "Browse media", media_assets_path, class: "text-link" %>
+    </div>
+    <% if @recent_assets.any? %>
+      <div class="list">
+        <% @recent_assets.each do |asset| %>
+          <%= link_to media_asset_path(asset), class: "list-row" do %>
+            <span class="list-icon"><%= asset.kind == "video" ? "VI" : "AU" %></span>
+            <span class="list-main">
+              <strong><%= media_name(asset) %></strong>
+              <small><%= asset.kind.titleize %> · <%= format_bytes(asset.byte_size) %></small>
+            </span>
+            <%= status_badge(asset.status) %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">Run a library scan to discover media.</div>
+    <% end %>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-header">
+    <div>
+      <p class="eyebrow">Profile activity</p>
+      <h2>Continue watching</h2>
+    </div>
+    <% if selected_profile %>
+      <span class="profile-pill"><%= selected_profile.name %></span>
+    <% end %>
+  </div>
+  <% if @continue_watching.any? %>
+    <div class="media-grid">
+      <% @continue_watching.each do |position| %>
+        <%= link_to media_asset_path(position.media_asset, profile_id: selected_profile.id), class: "media-card" do %>
+          <span class="media-card-type"><%= position.media_asset.kind %></span>
+          <strong><%= media_name(position.media_asset) %></strong>
+          <div class="progress"><span style="width: <%= position.duration_ms.positive? ? (position.position_ms * 100 / position.duration_ms) : 0 %>%"></span></div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-state">Playback progress will appear here.</div>
+  <% end %>
+</section>

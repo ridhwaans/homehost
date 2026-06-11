@@ -1,0 +1,51 @@
+<% page_title "Profiles" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Personalization</p>
+    <h1>Profiles</h1>
+    <p class="muted">Separate playback progress and collections for each viewer.</p>
+  </div>
+</header>
+
+<div class="content-grid content-grid--sidebar">
+  <section class="panel">
+    <div class="panel-header"><h2>Your profiles</h2></div>
+    <div class="profile-grid">
+      <% @profiles.each do |profile| %>
+        <article class="profile-card">
+          <span class="avatar avatar--large"><%= profile.name.first.upcase %></span>
+          <%= form_with model: profile, class: "stack stack--compact" do |form| %>
+            <div class="field">
+              <%= form.label :name %>
+              <%= form.text_field :name, required: true %>
+            </div>
+            <div class="field">
+              <%= form.label :content_rating_limit, "Rating limit" %>
+              <%= form.text_field :content_rating_limit, placeholder: "PG-13" %>
+            </div>
+            <%= form.submit "Save", class: "button button--secondary button--full" %>
+          <% end %>
+          <% if @profiles.size > 1 %>
+            <%= button_to "Delete profile", profile_path(profile), method: :delete, class: "text-button text-button--danger" %>
+          <% end %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="panel-header"><h2>New profile</h2></div>
+    <%= form_with url: profiles_path, class: "stack" do |form| %>
+      <div class="field">
+        <%= form.label :name %>
+        <%= form.text_field :name, required: true, placeholder: "Living room" %>
+      </div>
+      <div class="field">
+        <%= form.label :content_rating_limit, "Rating limit" %>
+        <%= form.text_field :content_rating_limit, placeholder: "Optional" %>
+      </div>
+      <%= form.submit "Create profile", class: "button button--primary button--full" %>
+    <% end %>
+  </aside>
+</div>

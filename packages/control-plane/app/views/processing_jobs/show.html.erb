@@ -1,0 +1,45 @@
+<% page_title "#{@processing_job.job_type.titleize} job" %>
+<% content_for :head do %>
+  <% unless @processing_job.terminal? %><meta http-equiv="refresh" content="3"><% end %>
+<% end %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Processing job</p>
+    <h1><%= @processing_job.job_type.titleize %></h1>
+    <p class="muted"><%= @processing_job.engine_job_id %></p>
+  </div>
+  <%= status_badge(@processing_job.state) %>
+</header>
+
+<section class="panel">
+  <div class="job-progress">
+    <div>
+      <strong><%= @processing_job.progress %>%</strong>
+      <span><%= @processing_job.state.titleize %></span>
+    </div>
+    <div class="progress progress--large"><span style="width: <%= @processing_job.progress %>%"></span></div>
+  </div>
+
+  <dl class="detail-list">
+    <div><dt>Requested by</dt><dd><%= @processing_job.requested_by&.email || "Media engine" %></dd></div>
+    <div><dt>Created</dt><dd><%= l(@processing_job.created_at, format: :long) %></dd></div>
+    <div><dt>Started</dt><dd><%= @processing_job.started_at ? l(@processing_job.started_at, format: :long) : "Waiting" %></dd></div>
+    <div><dt>Finished</dt><dd><%= @processing_job.finished_at ? l(@processing_job.finished_at, format: :long) : "Not finished" %></dd></div>
+  </dl>
+
+  <% if @processing_job.error.present? %>
+    <div class="flash flash--alert"><%= @processing_job.error %></div>
+  <% end %>
+</section>
+
+<div class="content-grid">
+  <section class="panel">
+    <div class="panel-header"><h2>Request</h2></div>
+    <pre class="code-block"><%= JSON.pretty_generate(@processing_job.request_payload) %></pre>
+  </section>
+  <section class="panel">
+    <div class="panel-header"><h2>Result</h2></div>
+    <pre class="code-block"><%= JSON.pretty_generate(@processing_job.result) %></pre>
+  </section>
+</div>

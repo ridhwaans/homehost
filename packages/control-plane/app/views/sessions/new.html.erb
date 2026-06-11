@@ -1,0 +1,27 @@
+<% page_title "Log in" %>
+
+<section class="login-card">
+  <div class="brand brand--login">
+    <span class="brand-mark">H</span>
+    <span>
+      <strong>homehost</strong>
+      <small>control plane</small>
+    </span>
+  </div>
+
+  <div>
+    <p class="eyebrow">Passwordless access</p>
+    <h1>Choose your account</h1>
+    <p class="muted">Enter the email address of an existing Homehost user.</p>
+  </div>
+
+  <% if alert %><div class="flash flash--alert"><%= alert %></div><% end %>
+
+  <%= form_with url: login_path, class: "stack" do |form| %>
+    <div class="field">
+      <%= form.label :email, "Email address" %>
+      <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", placeholder: "admin@homehost.local" %>
+    </div>
+    <%= form.submit "Continue", class: "button button--primary button--full" %>
+  <% end %>
+</section>

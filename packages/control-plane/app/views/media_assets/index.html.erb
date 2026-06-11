@@ -1,0 +1,40 @@
+<% page_title "Media" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Library inventory</p>
+    <h1>Media</h1>
+    <p class="muted"><%= @media_assets.size %> assets shown</p>
+  </div>
+</header>
+
+<section class="panel">
+  <%= form_with url: media_assets_path, method: :get, class: "filter-bar" do |form| %>
+    <%= form.search_field :query, value: params[:query], placeholder: "Search file paths" %>
+    <%= form.select :kind, [["All types", ""], ["Video", "video"], ["Audio", "audio"]], selected: params[:kind] %>
+    <%= form.select :status, [["All statuses", ""], ["Available", "available"], ["Missing", "missing"], ["Failed", "failed"]], selected: params[:status] %>
+    <%= form.submit "Filter", class: "button button--secondary" %>
+  <% end %>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Media</th><th>Type</th><th>Size</th><th>Modified</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% @media_assets.each do |asset| %>
+          <tr>
+            <td>
+              <%= link_to media_name(asset), media_asset_path(asset), class: "table-title" %>
+              <small class="table-subtitle"><%= asset.path %></small>
+            </td>
+            <td><%= asset.kind.titleize %></td>
+            <td><%= format_bytes(asset.byte_size) %></td>
+            <td><%= l(asset.modified_at, format: :short) %></td>
+            <td><%= status_badge(asset.status) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,39 @@
+<% page_title "Jobs" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Media processing</p>
+    <h1>Jobs</h1>
+    <p class="muted">Scans and HLS transcodes dispatched to the Go media engine.</p>
+  </div>
+  <% if current_user.admin? %>
+    <%= form_with url: processing_jobs_path do |form| %>
+      <%= form.hidden_field :job_type, value: "scan" %>
+      <%= form.submit "Scan library", class: "button button--primary" %>
+    <% end %>
+  <% end %>
+</header>
+
+<section class="panel">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Job</th><th>Requested by</th><th>Progress</th><th>Created</th><th>Status</th></tr></thead>
+      <tbody>
+        <% @processing_jobs.each do |job| %>
+          <tr>
+            <td>
+              <%= link_to "#{job.job_type.titleize} #{job.engine_job_id}", processing_job_path(job), class: "table-title" %>
+            </td>
+            <td><%= job.requested_by&.email || "Media engine" %></td>
+            <td>
+              <div class="progress progress--table"><span style="width: <%= job.progress %>%"></span></div>
+              <small><%= job.progress %>%</small>
+            </td>
+            <td><%= time_ago_in_words(job.created_at) %> ago</td>
+            <td><%= status_badge(job.state) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

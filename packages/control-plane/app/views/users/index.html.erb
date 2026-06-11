@@ -1,0 +1,46 @@
+<% page_title "Users" %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Household access</p>
+    <h1>Users</h1>
+    <p class="muted">Accounts sign in by entering their email address.</p>
+  </div>
+</header>
+
+<div class="content-grid content-grid--sidebar">
+  <section class="panel">
+    <div class="panel-header"><h2>Accounts</h2><span class="profile-pill"><%= @users.size %> users</span></div>
+    <div class="list">
+      <% @users.each do |user| %>
+        <div class="list-row">
+          <span class="avatar"><%= user.email.first.upcase %></span>
+          <span class="list-main">
+            <strong><%= user.email %></strong>
+            <small><%= user.profiles.size %> profiles · <%= user.admin? ? "Administrator" : "Household user" %></small>
+          </span>
+          <% unless user == current_user %>
+            <%= button_to "Delete", user_path(user), method: :delete, class: "button button--danger button--small", data: { turbo_confirm: "Delete this account?" } %>
+          <% else %>
+            <span class="badge">Current</span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="panel-header"><h2>Add account</h2></div>
+    <%= form_with url: users_path, class: "stack" do |form| %>
+      <div class="field">
+        <%= form.label :email, "Email address" %>
+        <%= form.email_field :email, required: true, placeholder: "viewer@example.com" %>
+      </div>
+      <label class="checkbox">
+        <%= form.check_box :admin %>
+        <span>Administrator</span>
+      </label>
+      <%= form.submit "Create account", class: "button button--primary button--full" %>
+    <% end %>
+  </aside>
+</div>

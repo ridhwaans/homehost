@@ -1,0 +1,52 @@
+<% page_title media_name(@media_asset) %>
+
+<header class="page-header">
+  <div>
+    <p class="eyebrow"><%= @media_asset.kind %> asset</p>
+    <h1><%= media_name(@media_asset) %></h1>
+    <p class="muted path"><%= @media_asset.path %></p>
+  </div>
+  <%= status_badge(@media_asset.status) %>
+</header>
+
+<div class="content-grid">
+  <section class="panel">
+    <div class="panel-header"><h2>File details</h2></div>
+    <dl class="detail-list">
+      <div><dt>Engine ID</dt><dd><%= @media_asset.engine_id %></dd></div>
+      <div><dt>Checksum</dt><dd><%= @media_asset.checksum %></dd></div>
+      <div><dt>Size</dt><dd><%= format_bytes(@media_asset.byte_size) %></dd></div>
+      <div><dt>Modified</dt><dd><%= l(@media_asset.modified_at, format: :long) %></dd></div>
+      <div><dt>Format</dt><dd><%= @media_asset.metadata["format"].presence || "Unknown" %></dd></div>
+      <div><dt>Duration</dt><dd><%= number_with_precision(@media_asset.metadata.fetch("duration_ms", 0).to_i / 1000.0, precision: 1) %> seconds</dd></div>
+    </dl>
+  </section>
+
+  <section class="panel">
+    <div class="panel-header"><h2>Actions</h2></div>
+    <% if current_user.admin? && @media_asset.kind == "video" %>
+      <%= form_with url: processing_jobs_path, class: "stack" do |form| %>
+        <%= form.hidden_field :job_type, value: "transcode" %>
+        <%= form.hidden_field :path, value: @media_asset.path %>
+        <div class="field">
+          <%= form.label :video_height, "HLS output height" %>
+          <%= form.select :video_height, [["480p", 480], ["720p", 720], ["1080p", 1080]], selected: 720 %>
+        </div>
+        <%= form.submit "Start HLS transcode", class: "button button--primary" %>
+      <% end %>
+    <% else %>
+      <p class="muted">No processing actions are available for this asset.</p>
+    <% end %>
+
+    <% if @playback_position %>
+      <hr>
+      <p class="eyebrow">Playback</p>
+      <strong><%= number_to_percentage(@playback_position.position_ms * 100.0 / [@playback_position.duration_ms, 1].max, precision: 0) %> complete</strong>
+    <% end %>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-header"><h2>Probe metadata</h2></div>
+  <pre class="code-block"><%= JSON.pretty_generate(@media_asset.metadata) %></pre>
+</section>
