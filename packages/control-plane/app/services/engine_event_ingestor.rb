@@ -26,6 +26,10 @@ class EngineEventIngestor
     return unless attributes
 
     job = ProcessingJob.find_or_initialize_by(engine_job_id: attributes.fetch("id"))
+    if job.persisted? && terminal_job_state?(job.state) && !terminal_job_state?(attributes.fetch("state"))
+      return job
+    end
+
     job.assign_attributes(
       job_type: attributes.fetch("type"),
       state: attributes.fetch("state"),
@@ -37,6 +41,10 @@ class EngineEventIngestor
     )
     job.save!
     job
+  end
+
+  def terminal_job_state?(state)
+    %w[completed failed cancelled].include?(state)
   end
 
   def upsert_asset
