@@ -28,4 +28,21 @@ class EngineEventIngestorTest < ActiveSupport::TestCase
 
     assert_equal "matroska", MediaAsset.find_by!(engine_id: "asset-1").metadata["format"]
   end
+
+  test "does not regress a terminal job from a delayed running event" do
+    job = ProcessingJob.create!(
+      engine_job_id: "scan-1",
+      job_type: "scan",
+      state: "completed",
+      progress: 100
+    )
+
+    EngineEventIngestor.new({
+      type: "asset.discovered",
+      job: { id: "scan-1", type: "scan", state: "running", progress: 0 }
+    }).call
+
+    assert_equal "completed", job.reload.state
+    assert_equal 100, job.progress
+  end
 end
