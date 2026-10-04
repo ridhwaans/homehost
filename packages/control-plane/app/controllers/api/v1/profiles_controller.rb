@@ -21,6 +21,10 @@ module Api
       end
 
       def destroy
+        if current_user.profiles.count == 1
+          return render json: { error: "keep at least one profile" }, status: :unprocessable_entity
+        end
+
         AuditEvent.record!(actor: current_user, action: "profile.deleted", auditable: @profile)
         @profile.destroy!
         head :no_content
