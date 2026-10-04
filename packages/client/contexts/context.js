@@ -1,4 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+  getNextIndex,
+  getPreviousIndex,
+} from '../utils/playlistNavigation.cjs';
 
 const AppContext = React.createContext();
 
@@ -156,39 +160,35 @@ const AppProvider = ({ children }) => {
       audioPlayer.current.currentTime = 0;
       return;
     }
-    setPlayerState((playerState) => {
-      if (playerState.currentIndex >= playerState.playlist.length - 1) {
-        return { ...playerState, currentIndex: 0 };
-      } else {
-        return { ...playerState, currentIndex: playerState.currentIndex + 1 };
-      }
-    });
+    setPlayerState((previousState) => {
+      const currentIndex = getNextIndex(
+        previousState.currentIndex,
+        previousState.playlist.length
+      );
+      if (currentIndex === null) return previousState;
 
-    //console.log(`playerState.currentIndex: ${playerState.currentIndex}, playerState.playlist.length: ${playerState.playlist.length}`)
-    if (playerState.currentIndex !== playerState.playlist.length) {
-      setPlayerState((playerState) => ({
-        ...playerState,
-        currentSong: playerState.playlist[playerState.currentIndex],
-      }));
-    }
+      return {
+        ...previousState,
+        currentIndex,
+        currentSong: previousState.playlist[currentIndex],
+      };
+    });
   };
 
   const previousSong = () => {
-    setPlayerState((playerState) => {
-      if (playerState.currentIndex <= 0) {
-        return {
-          ...playerState,
-          currentIndex: playerState.playlist.length - 1,
-        };
-      } else {
-        return { ...playerState, currentIndex: playerState.currentIndex - 1 };
-      }
-    });
+    setPlayerState((previousState) => {
+      const currentIndex = getPreviousIndex(
+        previousState.currentIndex,
+        previousState.playlist.length
+      );
+      if (currentIndex === null) return previousState;
 
-    setPlayerState((playerState) => ({
-      ...playerState,
-      currentSong: playerState.playlist[playerState.currentIndex],
-    }));
+      return {
+        ...previousState,
+        currentIndex,
+        currentSong: previousState.playlist[currentIndex],
+      };
+    });
   };
 
   const toggleRepeat = () => {
