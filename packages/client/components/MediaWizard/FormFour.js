@@ -1,40 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useGlobalContext } from '../../contexts/context';
 import './styles.css';
 
-const addItem = (resource, data) =>
-  fetch(`${process.env.REACT_APP_HOMEHOST_BASE}/api` + resource, {
-    method: 'POST', // or 'PUT'
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }).then((res) => res.json());
+const addItem = async (resource, data) => {
+  const response = await fetch(
+    `${process.env.REACT_APP_HOMEHOST_BASE}/api/${resource}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Import failed (HTTP ${response.status}). Please try again.`
+    );
+  }
+  return response.json();
+};
 
 const FormFour = () => {
   const { mediaWizard, setMediaWizard } = useGlobalContext();
+  const [error, setError] = useState('');
 
   const next = async () => {
     const { selectedFile, selectedMetadata, unknownAlbum } = mediaWizard;
     if (!selectedFile) return;
 
-    if (selectedFile.type === 'Song' && unknownAlbum) {
-      await applyUnknownAlbumSong();
-    } else if (selectedFile.type === 'Song' && selectedMetadata) {
-      await applySong(selectedMetadata);
-    } else if (selectedFile.type === 'Episode' && selectedMetadata) {
-      await applyEpisode(selectedMetadata);
-    } else if (selectedFile.type === 'Movie' && selectedMetadata) {
-      await applyMovie(selectedMetadata);
-    } else {
-      return;
-    }
+    setError('');
+    try {
+      if (selectedFile.type === 'Song' && unknownAlbum) {
+        await applyUnknownAlbumSong();
+      } else if (selectedFile.type === 'Song' && selectedMetadata) {
+        await applySong(selectedMetadata);
+      } else if (selectedFile.type === 'Episode' && selectedMetadata) {
+        await applyEpisode(selectedMetadata);
+      } else if (selectedFile.type === 'Movie' && selectedMetadata) {
+        await applyMovie(selectedMetadata);
+      } else {
+        return;
+      }
 
-    setMediaWizard((mediaWizard) => ({
-      ...mediaWizard,
-      currentStep: mediaWizard.currentStep + 1,
-    }));
+      setMediaWizard((mediaWizard) => ({
+        ...mediaWizard,
+        currentStep: mediaWizard.currentStep + 1,
+      }));
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const previous = () => {
@@ -55,8 +71,13 @@ const FormFour = () => {
   };
 
   const applyEpisode = async (item) => {
-    const episode = mediaWizard.selectedFile.fs_path.match(/S(\d{1,2})E(\d{1,2})/i);
-    if (!episode) return;
+    const episode =
+      mediaWizard.selectedFile.fs_path.match(/S(\d{1,2})E(\d{1,2})/i);
+    if (!episode) {
+      throw new Error(
+        'Use a filename containing season and episode numbers, such as S01E02.'
+      );
+    }
 
     await addItem('tv/episodes/add', {
       type: mediaWizard.selectedFile.type,
@@ -93,6 +114,7 @@ const FormFour = () => {
   return (
     <div className="container">
       <p>Is this information correct?</p>
+      {error && <p role="alert">{error}</p>}
       <div className="formContainer">
         <form className="form">
           <button
