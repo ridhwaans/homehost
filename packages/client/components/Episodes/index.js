@@ -34,9 +34,9 @@ const Episodes = ({ currentSlide, noEpisodesTab }) => {
         <div className="menu-episode-content">
           {currentSlide.seasons
             .find((season) => season.season_number === seasonNumber)
-            .episodes.map((episode, index) => {
+            .episodes.map((episode) => {
               return (
-                <div className="episode-item" key={index}>
+                <div className="episode-item" key={episode.id}>
                   <div
                     className="episode-item-image"
                     onMouseLeave={() => onHoverLeave()}
@@ -54,7 +54,7 @@ const Episodes = ({ currentSlide, noEpisodesTab }) => {
                         setMoviesAndTVPlayerState({
                           data: currentSlide,
                           season_number: seasonNumber,
-                          episode_number: index + 1,
+                          episode_number: episode.episode_number,
                         })
                       }
                       src={`${process.env.REACT_APP_IMAGE_BASE}w500_and_h282_face/${episode.still_path}`}
