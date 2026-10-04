@@ -11,7 +11,7 @@ var fileSystem = [];
 var ready;
 
 const fileWatcher = () => {
-  if (process.env.DISABLE_SYNC != true) {
+  if (process.env.DISABLE_SYNC !== 'true') {
     if (
       new Set([
         process.env.MOVIES_PATH,
