@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -76,5 +77,62 @@ func TestWebhookEventsAreDeliveredInEnqueueOrder(t *testing.T) {
 		case <-time.After(2 * time.Second):
 			t.Fatalf("timed out waiting for %q webhook", expected)
 		}
+	}
+}
+
+func TestInspectionFailurePreservesKnownAssets(t *testing.T) {
+	if runtime.GOOS == "windows" || os.Geteuid() == 0 {
+		t.Skip("requires a POSIX user without permission to read mode-000 files")
+	}
+	root := t.TempDir()
+	unreadable := filepath.Join(root, "unreadable.mp3")
+	if err := os.WriteFile(unreadable, []byte("audio"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chmod(unreadable, 0); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chmod(unreadable, 0o600) })
+
+	mediaEngine := New(config.Config{
+		Roots:        []string{root},
+		Workers:      1,
+		FFprobePath:  "missing-ffprobe",
+		TranscodeDir: t.TempDir(),
+	}, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	t.Cleanup(mediaEngine.Close)
+	mediaEngine.assets["unreadable"] = Asset{ID: "unreadable", Path: unreadable}
+	mediaEngine.assets["absent"] = Asset{ID: "absent", Path: filepath.Join(root, "gone.mp3")}
+
+	job, ctx := mediaEngine.newJob("scan")
+	mediaEngine.scan(ctx, job.ID, []string{root})
+
+	for _, id := range []string{"unreadable", "absent"} {
+		if _, exists := mediaEngine.Asset(id); !exists {
+			t.Errorf("incomplete scan must retain known asset %q", id)
+		}
+	}
+	result, _ := mediaEngine.Job(job.ID)
+	if result.State != "failed" {
+		t.Errorf("inspection failure must fail the scan, got %q", result.State)
+	}
+}
+
+func TestRecordingMultipleScanErrorsDoesNotBlock(t *testing.T) {
+	errorsFound := make(chan error, 1)
+	first := os.ErrPermission
+	recordScanError(errorsFound, first)
+	done := make(chan struct{})
+	go func() {
+		recordScanError(errorsFound, os.ErrNotExist)
+		close(done)
+	}()
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("additional scan errors must not block workers or directory walking")
+	}
+	if actual := <-errorsFound; actual != first {
+		t.Fatalf("expected first scan error to be retained, got %v", actual)
 	}
 }

@@ -245,6 +245,7 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 				asset, err := e.inspect(ctx, path)
 				if err != nil {
 					e.logger.Warn("inspect failed", "path", path, "error", err)
+					recordScanError(errorsFound, err)
 					continue
 				}
 				results <- asset
@@ -268,7 +269,7 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 				return nil
 			})
 			if err != nil {
-				errorsFound <- err
+				recordScanError(errorsFound, err)
 				return
 			}
 		}
@@ -305,6 +306,13 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 		e.metrics.scansCompleted.Add(1)
 		e.reconcileScanAssets(jobID, roots, seenPaths)
 		e.finishJob(jobID, "completed", nil, map[string]any{"assets": count})
+	}
+}
+
+func recordScanError(errorsFound chan<- error, err error) {
+	select {
+	case errorsFound <- err:
+	default:
 	}
 }
 
