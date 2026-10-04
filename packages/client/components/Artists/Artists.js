@@ -1,12 +1,16 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import useSWR from 'swr';
 
 import ArtistItem from './ArtistItem/ArtistItem';
 import style from './Artists.module.css';
 
 const Artists = () => {
   const location = useLocation();
-  const { data } = location.state;
+  const { data: fetchedData } = useSWR(
+    location.state?.data ? null : '/music/artists'
+  );
+  const data = location.state?.data ?? fetchedData;
 
   return (
     <React.Fragment>

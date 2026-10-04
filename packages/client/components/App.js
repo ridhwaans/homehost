@@ -5,6 +5,7 @@ import { SWRConfig } from 'swr';
 import Admin from './Admin';
 import AlbumDetail from './AlbumDetail/AlbumDetail';
 import Albums from './Albums/Albums';
+import ArtistDetail from './Artists/ArtistDetail';
 import Artists from './Artists/Artists';
 import Movies from './Movies';
 import Music from './Music';
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="albums" element={<Albums />} />
               <Route path="album/:id" element={<AlbumDetail />} />
               <Route path="artists" element={<Artists />} />
+              <Route path="artist/:id" element={<ArtistDetail />} />
               <Route path="songs" element={<Songs />} />
             </Route>
             <Route path="/admin" element={<Admin />} />
