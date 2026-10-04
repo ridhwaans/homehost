@@ -6,6 +6,8 @@ const AppProvider = ({ children }) => {
   const [mediaWizard, setMediaWizard] = useState({
     currentStep: 0,
     selectedFile: null,
+    selectedMetadata: null,
+    unknownAlbum: false,
   });
 
   const [moviesAndTVSearchInput, setMoviesAndTVSearchInput] = useState('');

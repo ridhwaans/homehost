@@ -15,16 +15,26 @@ const addItem = (resource, data) =>
 const FormFour = () => {
   const { mediaWizard, setMediaWizard } = useGlobalContext();
 
-  const next = () => {
+  const next = async () => {
+    const { selectedFile, selectedMetadata, unknownAlbum } = mediaWizard;
+    if (!selectedFile) return;
+
+    if (selectedFile.type === 'Song' && unknownAlbum) {
+      await applyUnknownAlbumSong();
+    } else if (selectedFile.type === 'Song' && selectedMetadata) {
+      await applySong(selectedMetadata);
+    } else if (selectedFile.type === 'Episode' && selectedMetadata) {
+      await applyEpisode(selectedMetadata);
+    } else if (selectedFile.type === 'Movie' && selectedMetadata) {
+      await applyMovie(selectedMetadata);
+    } else {
+      return;
+    }
+
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
       currentStep: mediaWizard.currentStep + 1,
     }));
-    if (mediaWizard.selectedFile.name === 'Unknown Album')
-      applyUnknownAlbumSong();
-    if (mediaWizard.selectedFile.type === 'Song') applySong();
-    if (mediaWizard.selectedFile.type === 'Episode') applyEpisode();
-    if (mediaWizard.selectedFile.name === 'Movie') applyMovie();
   };
 
   const previous = () => {
@@ -45,11 +55,17 @@ const FormFour = () => {
   };
 
   const applyEpisode = async (item) => {
+    const episode = mediaWizard.selectedFile.fs_path.match(/S(\d{1,2})E(\d{1,2})/i);
+    if (!episode) return;
+
     await addItem('tv/episodes/add', {
       type: mediaWizard.selectedFile.type,
       fs_path: mediaWizard.selectedFile.fs_path,
       id: item.id,
-      title: item.title,
+      tv_show_id: item.id,
+      tv_show_name: item.name,
+      season_number: parseInt(episode[1]),
+      episode_number: parseInt(episode[2]),
     });
   };
 
@@ -82,7 +98,7 @@ const FormFour = () => {
           <button
             className="formSubmit"
             value="Next"
-            type="submit"
+            type="button"
             onClick={next}
           >
             Next{' '}
@@ -90,7 +106,7 @@ const FormFour = () => {
           <button
             className="formSubmit"
             value="Previous"
-            type="submit"
+            type="button"
             onClick={previous}
           >
             Go Back{' '}

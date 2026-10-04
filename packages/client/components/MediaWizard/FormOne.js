@@ -21,6 +21,8 @@ const FormOne = () => {
       setMediaWizard((mediaWizard) => ({
         ...mediaWizard,
         selectedFile: item,
+        selectedMetadata: null,
+        unknownAlbum: false,
         currentStep: parseInt(mediaWizard.currentStep) + 1,
       }));
     }
