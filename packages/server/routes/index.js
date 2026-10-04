@@ -86,7 +86,7 @@ const readStreamMpeg = (req, res, file_path) => {
       'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
       'Accept-Ranges': 'bytes',
       'Content-Length': chunksize,
-      'Content-Type': 'video/mp4',
+      'Content-Type': 'audio/mpeg',
     });
     readStream.pipe(res);
   } else {
