@@ -30,30 +30,43 @@ var mediaExtensions = map[string]string{
 }
 
 type Engine struct {
-	cfg      config.Config
-	logger   *slog.Logger
-	client   *http.Client
-	jobs     map[string]*Job
-	assets   map[string]Asset
-	cancel   map[string]context.CancelFunc
-	mu       sync.RWMutex
-	sequence atomic.Uint64
-	metrics  metrics
+	cfg           config.Config
+	logger        *slog.Logger
+	client        *http.Client
+	jobs          map[string]*Job
+	assets        map[string]Asset
+	cancel        map[string]context.CancelFunc
+	mu            sync.RWMutex
+	scanMu        sync.Mutex
+	webhookEvents chan Event
+	webhookCtx    context.Context
+	webhookCancel context.CancelFunc
+	sequence      atomic.Uint64
+	metrics       metrics
 }
 
 func New(cfg config.Config, logger *slog.Logger) *Engine {
 	_ = os.MkdirAll(cfg.TranscodeDir, 0o755)
-	return &Engine{
-		cfg:    cfg,
-		logger: logger,
-		client: &http.Client{Timeout: 10 * time.Second},
-		jobs:   make(map[string]*Job),
-		assets: make(map[string]Asset),
-		cancel: make(map[string]context.CancelFunc),
+	webhookCtx, webhookCancel := context.WithCancel(context.Background())
+	engine := &Engine{
+		cfg:           cfg,
+		logger:        logger,
+		client:        &http.Client{Timeout: 10 * time.Second},
+		jobs:          make(map[string]*Job),
+		assets:        make(map[string]Asset),
+		cancel:        make(map[string]context.CancelFunc),
+		webhookEvents: make(chan Event, 256),
+		webhookCtx:    webhookCtx,
+		webhookCancel: webhookCancel,
 	}
+	if cfg.WebhookURL != "" {
+		go engine.deliverWebhooks()
+	}
+	return engine
 }
 
 func (e *Engine) Close() {
+	e.webhookCancel()
 	e.mu.Lock()
 	defer e.mu.Unlock()
 	for _, cancel := range e.cancel {
@@ -211,6 +224,8 @@ func (e *Engine) newJob(jobType string) (Job, context.Context) {
 }
 
 func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
+	e.scanMu.Lock()
+	defer e.scanMu.Unlock()
 	e.setRunning(jobID)
 	paths := make(chan string)
 	results := make(chan Asset)
@@ -265,8 +280,10 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 	}()
 
 	count := 0
+	seenPaths := make(map[string]struct{})
 	for asset := range results {
 		count++
+		seenPaths[asset.Path] = struct{}{}
 		e.mu.Lock()
 		e.assets[asset.ID] = asset
 		e.mu.Unlock()
@@ -286,8 +303,39 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 			return
 		}
 		e.metrics.scansCompleted.Add(1)
+		e.reconcileScanAssets(jobID, roots, seenPaths)
 		e.finishJob(jobID, "completed", nil, map[string]any{"assets": count})
 	}
+}
+
+func (e *Engine) reconcileScanAssets(jobID string, roots []string, seenPaths map[string]struct{}) {
+	removed := make([]Asset, 0)
+	e.mu.Lock()
+	for id, asset := range e.assets {
+		if pathWithinRoots(asset.Path, roots) {
+			if _, found := seenPaths[asset.Path]; !found {
+				removed = append(removed, asset)
+				delete(e.assets, id)
+			}
+		}
+	}
+	e.mu.Unlock()
+
+	job, _ := e.Job(jobID)
+	for i := range removed {
+		asset := removed[i]
+		e.emit(Event{Type: "asset.missing", OccurredAt: time.Now().UTC(), Job: job, Asset: &asset})
+	}
+}
+
+func pathWithinRoots(path string, roots []string) bool {
+	for _, root := range roots {
+		relative, err := filepath.Rel(root, path)
+		if err == nil && relative != ".." && !strings.HasPrefix(relative, ".."+string(os.PathSeparator)) && !filepath.IsAbs(relative) {
+			return true
+		}
+	}
+	return false
 }
 
 func (e *Engine) inspect(ctx context.Context, path string) (Asset, error) {
@@ -422,26 +470,42 @@ func (e *Engine) emit(event Event) {
 	if e.cfg.WebhookURL == "" {
 		return
 	}
-	go func() {
-		payload, err := json.Marshal(event)
-		if err != nil {
+	select {
+	case e.webhookEvents <- event:
+	case <-e.webhookCtx.Done():
+	}
+}
+
+func (e *Engine) deliverWebhooks() {
+	for {
+		select {
+		case <-e.webhookCtx.Done():
 			return
+		case event := <-e.webhookEvents:
+			e.deliverWebhook(event)
 		}
-		request, err := http.NewRequest(http.MethodPost, e.cfg.WebhookURL, bytes.NewReader(payload))
-		if err != nil {
-			return
-		}
-		request.Header.Set("Content-Type", "application/json")
-		if e.cfg.WebhookToken != "" {
-			request.Header.Set("Authorization", "Bearer "+e.cfg.WebhookToken)
-		}
-		response, err := e.client.Do(request)
-		if err != nil {
-			e.logger.Warn("webhook failed", "error", err)
-			return
-		}
-		response.Body.Close()
-	}()
+	}
+}
+
+func (e *Engine) deliverWebhook(event Event) {
+	payload, err := json.Marshal(event)
+	if err != nil {
+		return
+	}
+	request, err := http.NewRequest(http.MethodPost, e.cfg.WebhookURL, bytes.NewReader(payload))
+	if err != nil {
+		return
+	}
+	request.Header.Set("Content-Type", "application/json")
+	if e.cfg.WebhookToken != "" {
+		request.Header.Set("Authorization", "Bearer "+e.cfg.WebhookToken)
+	}
+	response, err := e.client.Do(request)
+	if err != nil {
+		e.logger.Warn("webhook failed", "error", err)
+		return
+	}
+	response.Body.Close()
 }
 
 func cloneJob(job Job) Job {

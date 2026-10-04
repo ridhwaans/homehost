@@ -43,6 +43,12 @@ class EngineEventIngestor
     attributes = payload["asset"]
     return unless attributes
 
+    if payload["type"] == "asset.missing"
+      asset = MediaAsset.find_by(engine_id: attributes.fetch("id"))
+      asset&.update!(status: "missing")
+      return asset
+    end
+
     asset = MediaAsset.find_or_initialize_by(engine_id: attributes.fetch("id"))
     asset.assign_attributes(
       path: attributes.fetch("path"),
