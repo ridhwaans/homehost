@@ -15,9 +15,9 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
 
   useEffect(() => {
     const container = containerRef.current;
-    const firstItem = container?.firstElementChild;
+    const firstItem = container.firstElementChild;
 
-    if (!container || countElements === 0 || !firstItem) {
+    if (!firstItem) {
       setSlider(null);
       setContainerWidth(0);
       setTotalInViewport(0);
@@ -27,14 +27,6 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
 
     const containerWidth = container.clientWidth;
     const itemWidth = firstItem.clientWidth;
-    if (containerWidth <= 0 || itemWidth <= 0) {
-      setSlider(null);
-      setContainerWidth(0);
-      setTotalInViewport(0);
-      setSliderPages(0);
-      return;
-    }
-
     const totalInViewport = Math.ceil(containerWidth / itemWidth);
     setSlider(container.children);
     setContainerWidth(containerWidth);
