@@ -14,16 +14,24 @@ const useSlider = (elementWidth, containerRef, countElements, data, poster) => {
   const hasNext = viewed + totalInViewport < countElements;
 
   useEffect(() => {
-    if (containerRef.current && data) {
-      const containerWidth = containerRef.current.clientWidth;
-      const itemWidth = containerRef.current.firstChild.clientWidth;
-      const totalInViewport = Math.ceil(containerWidth / itemWidth);
+    const container = containerRef.current;
+    const firstItem = container.firstElementChild;
 
-      setSlider(containerRef.current.children);
-      setContainerWidth(containerWidth);
-      setTotalInViewport(totalInViewport);
-      setSliderPages(countElements / totalInViewport);
+    if (!firstItem) {
+      setSlider(null);
+      setContainerWidth(0);
+      setTotalInViewport(0);
+      setSliderPages(0);
+      return;
     }
+
+    const containerWidth = container.clientWidth;
+    const itemWidth = firstItem.clientWidth;
+    const totalInViewport = Math.ceil(containerWidth / itemWidth);
+    setSlider(container.children);
+    setContainerWidth(containerWidth);
+    setTotalInViewport(totalInViewport);
+    setSliderPages(countElements / totalInViewport);
   }, [containerRef, data, countElements, elementWidth]);
 
   let slideProps = {
