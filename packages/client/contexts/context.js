@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { sliderValueToVolume } from '../utils/volume.cjs';
 
 const AppContext = React.createContext();
 
@@ -33,7 +34,7 @@ const AppProvider = ({ children }) => {
     currentTime: null,
     duration: null,
     isMuted: false,
-    currentVolume: 0.7,
+    currentVolume: 70,
     repeat: REPEAT_STATES.REPEAT_OFF,
     shuffle: false,
   });
@@ -95,14 +96,14 @@ const AppProvider = ({ children }) => {
   const changeVolume = () => {
     audioPlayer.current.volume = playerState.isMuted
       ? 0
-      : volumeBar.current.value / 100;
+      : sliderValueToVolume(volumeBar.current.value);
     volumeBar.current.style.setProperty(
       '--seek-before-width',
       `${volumeBar.current.value}%`
     );
     setPlayerState((playerState) => ({
       ...playerState,
-      currentVolume: volumeBar.current.value,
+      currentVolume: Number(volumeBar.current.value),
     }));
     //console.log(`volumeBar.current.value: ${volumeBar.current.value}, playerState.currentVolume: ${playerState.currentVolume}`)
   };
@@ -117,13 +118,18 @@ const AppProvider = ({ children }) => {
     if (!prevValue) {
       audioPlayer.current.volume = 0;
     } else {
-      audioPlayer.current.volume = playerState.currentVolume / 100;
+      audioPlayer.current.volume = sliderValueToVolume(
+        playerState.currentVolume
+      );
     }
   };
 
   const songChanged = () => {
     //console.log(`audioPlayer.current.duration: ${audioPlayer.current.duration}`)
     const seconds = Math.floor(audioPlayer.current.duration);
+    audioPlayer.current.volume = playerState.isMuted
+      ? 0
+      : sliderValueToVolume(playerState.currentVolume);
 
     setPlayerState((playerState) => ({
       ...playerState,
