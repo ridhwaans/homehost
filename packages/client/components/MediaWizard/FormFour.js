@@ -28,20 +28,16 @@ const FormFour = () => {
 
   const next = async () => {
     const { selectedFile, selectedMetadata, unknownAlbum } = mediaWizard;
-    if (!selectedFile) return;
-
     setError('');
     try {
       if (selectedFile.type === 'Song' && unknownAlbum) {
         await applyUnknownAlbumSong();
-      } else if (selectedFile.type === 'Song' && selectedMetadata) {
+      } else if (selectedFile.type === 'Song') {
         await applySong(selectedMetadata);
-      } else if (selectedFile.type === 'Episode' && selectedMetadata) {
+      } else if (selectedFile.type === 'Episode') {
         await applyEpisode(selectedMetadata);
-      } else if (selectedFile.type === 'Movie' && selectedMetadata) {
-        await applyMovie(selectedMetadata);
       } else {
-        return;
+        await applyMovie(selectedMetadata);
       }
 
       setMediaWizard((mediaWizard) => ({
