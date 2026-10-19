@@ -24,7 +24,7 @@ const ArtistDetail = () => {
 
       <h2 className={style.Title}>Albums</h2>
       <div className={style.Container}>
-        {artist.albums?.map((album) => (
+        {artist.albums.map((album) => (
           <AlbumItem key={album.id} album={album} />
         ))}
       </div>
