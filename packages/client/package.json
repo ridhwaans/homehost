@@ -1,6 +1,7 @@
 {
     "name": "client",
     "scripts": {
+    "test:media-wizard": "node --test tests/mediaWizard.test.cjs",
     "start:dev": "webpack serve --config webpack.dev.js",
     "start:prod": "webpack --config webpack.prod.js"
     },
@@ -17,6 +18,7 @@
     "swr": "^2.0.4"
     },
     "devDependencies": {
+    "react-test-renderer": "^18.2.0",
     "@babel/cli": "^7.21.0",
     "@babel/core": "^7.21.0",
     "@babel/eslint-parser": "^7.19.1",

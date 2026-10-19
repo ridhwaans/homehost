@@ -10,6 +10,8 @@ const FormTwo = () => {
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
       selectedFile: { ...mediaWizard.selectedFile, type: type },
+      selectedMetadata: null,
+      unknownAlbum: false,
       currentStep: mediaWizard.currentStep + 1,
     }));
   };

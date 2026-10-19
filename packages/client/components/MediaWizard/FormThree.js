@@ -15,7 +15,7 @@ const FormThree = () => {
   const { mediaWizard, setMediaWizard } = useGlobalContext();
 
   const { data: searchResults } = useSWR(
-    mediaWizard?.selectedFile?.type !== 'Episode'
+    mediaWizard?.selectedFile && debouncedSearch
       ? `/services/search?type=${mediaWizard.selectedFile.type}&q=${debouncedSearch}`
       : null
   );
@@ -25,11 +25,31 @@ const FormThree = () => {
     setSearchBox((prevState) => !prevState);
   };
 
-  const next = () => {
+  const selectMetadata = (item) => {
     setMediaWizard((mediaWizard) => ({
       ...mediaWizard,
+      selectedMetadata: item,
+      unknownAlbum: false,
       currentStep: mediaWizard.currentStep + 1,
     }));
+  };
+
+  const selectUnknownAlbum = () => {
+    setMediaWizard((mediaWizard) => ({
+      ...mediaWizard,
+      selectedMetadata: null,
+      unknownAlbum: true,
+      currentStep: mediaWizard.currentStep + 1,
+    }));
+  };
+
+  const next = () => {
+    if (mediaWizard.selectedMetadata || mediaWizard.unknownAlbum) {
+      setMediaWizard((mediaWizard) => ({
+        ...mediaWizard,
+        currentStep: mediaWizard.currentStep + 1,
+      }));
+    }
   };
 
   const previous = () => {
@@ -39,12 +59,12 @@ const FormThree = () => {
     }));
   };
 
-  const unknownAlbum = (
+  const unknownAlbumResult = (
     <div className="search-result-item">
       <img src={`http://i.imgur.com/bVnx0IY.png`} width="125" height="125" />
       <div>
         <h2>{`Didn't find anything? Add to Unknown Album`}</h2>
-        <button onClick={next}>Apply</button>
+        <button type="button" onClick={selectUnknownAlbum}>Apply</button>
       </div>
     </div>
   );
@@ -56,7 +76,7 @@ const FormThree = () => {
         <b>{mediaWizard.selectedFile.fs_path}</b>
       </p>
       <div className="formContain">
-        <form className="form">
+        <form className="form" onSubmit={(event) => event.preventDefault()}>
           {mediaWizard.selectedFile && (
             <div className="tabcontent">
               <div className={`${searchBox ? 'searchBox' : 'searchIcon'}`}>
@@ -88,11 +108,27 @@ const FormThree = () => {
                         item.original_language
                       }, ${parseInt(item.release_date)})`}</h2>
                       <h3>{`TMDB ID: ${item.id}`}</h3>
-                      <button onClick={next}>Apply</button>
+                      <button type="button" onClick={() => selectMetadata(item)}>Apply</button>
                     </div>
                   </div>
                 ))}
-              {mediaWizard.selectedFile.type === 'Song' && unknownAlbum}
+              {mediaWizard.selectedFile.type === 'Episode' &&
+                searchResults &&
+                searchResults.results.map((item) => (
+                  <div key={item.id} className="search-result-item">
+                    <img
+                      src={`${process.env.REACT_APP_IMAGE_BASE}original/${item.poster_path}`}
+                      width="100"
+                      height="150"
+                    />
+                    <div>
+                      <h2>{`${item.name} (${parseInt(item.first_air_date)})`}</h2>
+                      <h3>{`TMDB ID: ${item.id}`}</h3>
+                      <button type="button" onClick={() => selectMetadata(item)}>Apply</button>
+                    </div>
+                  </div>
+                ))}
+              {mediaWizard.selectedFile.type === 'Song' && unknownAlbumResult}
               {mediaWizard.selectedFile.type === 'Song' &&
                 searchResults &&
                 searchResults.tracks.items.map((item) => (
@@ -108,7 +144,7 @@ const FormThree = () => {
                         item.album.release_date
                       )})`}</h3>
                       <h4>{`Spotify Album ID: ${item.album.id}`}</h4>
-                      <button onClick={next}>Apply</button>
+                      <button type="button" onClick={() => selectMetadata(item)}>Apply</button>
                     </div>
                   </div>
                 ))}
@@ -118,7 +154,7 @@ const FormThree = () => {
           <button
             className="formSubmit"
             value="Next"
-            type="submit"
+            type="button"
             onClick={next}
           >
             Next{' '}
@@ -126,7 +162,7 @@ const FormThree = () => {
           <button
             className="formSubmit"
             value="Previous"
-            type="submit"
+            type="button"
             onClick={previous}
           >
             Previous{' '}
