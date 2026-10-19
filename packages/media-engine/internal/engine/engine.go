@@ -248,10 +248,15 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 					return ctx.Err()
 				}
 				if entry.Type().IsRegular() && mediaExtensions[strings.ToLower(filepath.Ext(path))] != "" {
-					paths <- path
+					if !sendScanPath(ctx, paths, path) {
+						return ctx.Err()
+					}
 				}
 				return nil
 			})
+			if err == context.Canceled {
+				return
+			}
 			if err != nil {
 				errorsFound <- err
 				return
@@ -287,6 +292,15 @@ func (e *Engine) scan(ctx context.Context, jobID string, roots []string) {
 		}
 		e.metrics.scansCompleted.Add(1)
 		e.finishJob(jobID, "completed", nil, map[string]any{"assets": count})
+	}
+}
+
+func sendScanPath(ctx context.Context, paths chan<- string, path string) bool {
+	select {
+	case paths <- path:
+		return true
+	case <-ctx.Done():
+		return false
 	}
 }
 
