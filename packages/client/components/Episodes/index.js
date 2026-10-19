@@ -34,7 +34,7 @@ const Episodes = ({ currentSlide, noEpisodesTab }) => {
         <div className="menu-episode-content">
           {currentSlide.seasons
             .find((season) => season.season_number === seasonNumber)
-            .episodes.map((episode) => {
+            .episodes.map((episode, index) => {
               return (
                 <div className="episode-item" key={episode.id}>
                   <div
