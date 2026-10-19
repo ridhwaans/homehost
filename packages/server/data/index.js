@@ -383,6 +383,14 @@ const getAllArtists = async () => {
   return format(result);
 };
 
+const getMusicArtist = async (artist_id) => {
+  const result = await prisma.artist.findUnique({
+    include: { albums: { include: { artists: true } } },
+    where: { spotify_id: artist_id },
+  });
+  return format(result);
+};
+
 const getMostPopularArtists = async () => {
   const result = await prisma.artist.findMany({
     orderBy: {
@@ -582,6 +590,7 @@ module.exports = {
   getLatestAlbumReleases,
   getMusicAlbum,
   getAllArtists,
+  getMusicArtist,
   getMostPopularArtists,
   getAllSongs,
   getRecentlyAddedSongs,

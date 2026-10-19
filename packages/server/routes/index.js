@@ -28,6 +28,7 @@ const {
   getLatestAlbumReleases,
   getMusicAlbum,
   getAllArtists,
+  getMusicArtist,
   getMostPopularArtists,
   getAllSongs,
   getRecentlyAddedSongs,
@@ -205,6 +206,10 @@ router.get('/api/music/artists', async (req, res) => {
 
 router.get('/api/music/artists/most_popular', async (req, res) => {
   res.json(await getMostPopularArtists());
+});
+
+router.get('/api/music/artists/:id', async (req, res) => {
+  res.json(await getMusicArtist(req.params.id));
 });
 
 router.get('/api/music/albums', async (req, res) => {

@@ -1,14 +1,16 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import useSWR from 'swr';
 
 import AlbumItem from './AlbumItem/AlbumItem';
 import style from './Albums.module.css';
 
 const Albums = () => {
   const location = useLocation();
-  //console.log("Albums location is")
-  console.log(location);
-  const { data } = location.state;
+  const { data: fetchedData } = useSWR(
+    location.state?.data ? null : '/music/albums'
+  );
+  const data = location.state?.data ?? fetchedData;
 
   return (
     <React.Fragment>
