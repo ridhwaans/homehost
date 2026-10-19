@@ -57,11 +57,10 @@ const Player = () => {
   }
   var nextEpisode = null;
   if (episode != null) {
-    if (moviesAndTVPlayerState.episode_number === episodeList.length) {
-      nextEpisode = {};
-    } else {
-      nextEpisode = episodeList[moviesAndTVPlayerState.episode_number];
-    }
+    const currentEpisodeIndex = episodeList.findIndex(
+      (item) => item.id === moviesAndTVPlayerState.episode_number
+    );
+    nextEpisode = episodeList[currentEpisodeIndex + 1] || {};
   }
 
   return (
